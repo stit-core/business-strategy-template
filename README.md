@@ -13,12 +13,14 @@ Design-time источник истины **стратегии бизнеса**.
 stable-артефакты потом **читают** код-репо.
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-2563eb)](LICENSE)
-[![Часть stit](https://img.shields.io/badge/stit-открытые_шаблоны-6366f1)](https://git.stit.tech/stit-core/stit-public)
+[![Часть stit](https://img.shields.io/badge/stit-открытые_шаблоны-6366f1)](https://github.com/stit-core)
 [![Method](https://img.shields.io/badge/method-LinkedSWOT_%2B_Карта_гипотез-0ea5e9)](#методология-в-двух-словах)
 [![Process](https://img.shields.io/badge/process-AI--driven_скиллы-8b5cf6)](#воркфлоу)
 [![SoT](https://img.shields.io/badge/role-design--time_SoT-22c55e)](#место-в-экосистеме)
 
 </div>
+
+> Разработка идёт в приватном Gitea (`git.stit.tech/stit-core/business-strategy-template`), публичное зеркало — [github.com/stit-core/business-strategy-template](https://github.com/stit-core/business-strategy-template). Как с ним работать вне инфраструктуры stit — в [профиле stit-core](https://github.com/stit-core).
 
 ---
 
@@ -112,12 +114,12 @@ sibling-checkout'ами:
 | Шаблон → форк | Роль |
 |---|---|
 | `business-strategy-template` → `<org>/strategy` | **этот**: бизнес, AJTBD, SWOT, Карта гипотез, продукты (vision/surface, interface, screens, fsd, telegram-bot-flow, mobile, services + domains, страницы сайта и лендинга, облик продукта), ИТ-периметр |
-| [`project-infra-template-compose`](https://git.stit.tech/stit-core/project-infra-template-compose) → `<org>/infra` | runtime проекта (docker-compose на VPS) и операционный хаб: общий план, рассылка агентов по сиблингам, выкатка тегов |
-| [`go-backend-template`](https://git.stit.tech/stit-core/go-backend-template) → `<org>/backend` | Go-сервис |
-| [`spa-frontend-template`](https://git.stit.tech/stit-core/spa-frontend-template) → `<org>/frontend` | React SPA (кабинет, всё за логином) |
-| [`ssr-frontend-template`](https://git.stit.tech/stit-core/ssr-frontend-template) → `<org>/site` | Astro SSR-сайт (индексируемый контент) |
-| [`telegram-bot-template`](https://git.stit.tech/stit-core/telegram-bot-template) → `<org>/<bot>` | Telegram-бот |
-| [`mobile-template`](https://git.stit.tech/stit-core/mobile-template) → `<org>/mobile` | KMP-приложение Android + iOS |
+| [`project-infra-template-compose`](https://github.com/stit-core/project-infra-template-compose) → `<org>/infra` | runtime проекта (docker-compose на VPS) и операционный хаб: общий план, рассылка агентов по сиблингам, выкатка тегов |
+| [`go-backend-template`](https://github.com/stit-core/go-backend-template) → `<org>/backend` | Go-сервис |
+| [`spa-frontend-template`](https://github.com/stit-core/spa-frontend-template) → `<org>/frontend` | React SPA (кабинет, всё за логином) |
+| [`ssr-frontend-template`](https://github.com/stit-core/ssr-frontend-template) → `<org>/site` | Astro SSR-сайт (индексируемый контент) |
+| [`telegram-bot-template`](https://github.com/stit-core/telegram-bot-template) → `<org>/<bot>` | Telegram-бот |
+| [`mobile-template`](https://github.com/stit-core/mobile-template) → `<org>/mobile` | KMP-приложение Android + iOS |
 
 Библиотеки: `golibinfra` (Go-киты), `pylibinfra` (Python-киты).
 
@@ -144,7 +146,7 @@ sibling-checkout'ами:
 
 Полный контракт — [`docs/README.md`](docs/README.md), раздел «Что docs отдаёт соседям».
 Канон карты экосистемы и флоу —
-[`docs/reference/ecosystem.md` шаблона хаба](https://git.stit.tech/stit-core/project-infra-template-compose/src/branch/main/docs/reference/ecosystem.md).
+[`docs/reference/ecosystem.md` шаблона хаба](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/ecosystem.md).
 
 ## Путь форка
 
@@ -223,7 +225,7 @@ README каждого слоя; гайд для агента — [`CLAUDE.md`](C
 
 Это один из открытых шаблонов stit (Apache-2.0) — фундамент «-1 уровня»,
 берите бесплатно и владейте. Карта всех шаблонов и точка входа —
-**[витрина stit](https://git.stit.tech/stit-core/stit-public)**. Нужна
+**[витрина stit](https://github.com/stit-core)**. Нужна
 команда аналитиков, методология или поддержка —
 **[наш подход и контакты (vision)](https://git.stit.tech/stit/vision)**.
 
