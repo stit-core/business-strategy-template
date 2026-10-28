@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Прокрутка и маски — набор движения</title>
+<meta name="description" content="Вход первого экрана, система появления, прогресс, параллакс, линия, маски и текст-окно набора движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html">Текст</a>
+      <a href="scroll.html" aria-current="page">Прокрутка</a>
+      <a href="pin.html">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html">Петли</a>
+      <a href="transition-a.html">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec" data-section="intro" id="hero-entrance-once" style="padding-bottom: clamp(48px, 7vw, 96px)">
+  <div class="wrap head" style="margin-bottom: 0">
+    <p class="label">Семейства scroll и mask</p>
+    <h1 class="display" data-mk="entrance" data-mk-lcp style="--i: 0">Появление — система, а не fade на всём</h1>
+    <p class="lead" data-mk="entrance" style="--i: 1">Вход первого экрана — CSS на загрузке; ниже — три приёма по ролям, шкалы прокрутки на CSS и маски.</p>
+  </div>
+</section>
+
+<section class="sec" id="scroll-driven-progress" data-section="progress" style="padding-top: 0">
+  <div class="wrap"><div class="head"><p class="label"><b>01</b> — Полоса прогресса · <code>scroll-driven-progress</code></p><p class="muted" style="margin: 0; max-width: 40rem">Под шапкой: scaleX по шкале прокрутки документа, 0 КБ JS. Это индикатор — остаётся и в reduce; без поддержки шкал полосы нет.</p></div></div>
+</section>
+<section class="sec" id="scroll-reveal-system" data-section="system" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>02</b> — Система появления · <code>scroll-reveal-system</code></p><p class="muted" style="margin: 0; max-width: 40rem">Маска — заголовкам, подъём — тексту и карточкам (каскад ≤ 600 мс), проявление с масштабом — фигурам, рисование — схемам. Один раз.</p></div>
+    <h2 class="h2" data-mk="unmask" style="margin-bottom: 32px">Заголовок поднимается из маски</h2>
+    <p class="lead" data-mk="rise" style="margin-bottom: 48px">Лид — подъём на 16 px; прозрачность короче сдвига. Карточки ниже — каскадом по месту в группе.</p>
+    <div class="cards" data-mk-stagger>
+      <article class="card" data-mk="rise"><span class="k">01</span><h3 class="h3">Первая</h3><p>Задержка 0 мс.</p></article>
+      <article class="card" data-mk="rise"><span class="k">02</span><h3 class="h3">Вторая</h3><p>Задержка — шаг группы, 60 мс.</p></article>
+      <article class="card" data-mk="rise"><span class="k">03</span><h3 class="h3">Третья</h3><p>Сумма каскада ≤ 600 мс.</p></article>
+    </div>
+    <div class="pair" style="margin-top: 56px">
+      <div class="plate plate--sea" style="aspect-ratio: 16 / 10" data-mk="scale-in" data-mk-blur><div class="fill"></div></div>
+      <svg viewBox="0 0 600 375" data-mk="draw" aria-hidden="true" style="width: 100%; height: auto">
+        <rect x="1" y="1" width="598" height="373" fill="none" stroke="rgb(20 19 15 / .14)"/>
+        <path pathLength="1" d="M40 320 L 160 220 L 280 260 L 400 120 L 560 60" fill="none" stroke="#b8431f" stroke-width="2.5"/>
+        <path pathLength="1" d="M40 340 H 560" fill="none" stroke="rgb(20 19 15 / .3)"/>
+      </svg>
+    </div>
+  </div>
+</section>
+<section class="sec dark" id="mask-reveal" data-section="mask-reveal">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>03</b> — Раскрытие маской · <code>mask-reveal</code></p><p class="muted" style="margin: 0; max-width: 40rem">Разово (шторка снизу и обратный масштаб 1,06 → 1) и по шкале самого кадра (scroll-mask). Кадр под маской — без loading="lazy".</p></div>
+    <div class="pair">
+      <figure style="margin: 0"><div class="plate plate--ember" style="aspect-ratio: 4 / 5; --mk-r: 4px" data-mk="sweep" data-mk-from="bottom"><div data-mk-inner></div></div><figcaption class="cap">Разово, 800 мс.</figcaption></figure>
+      <figure style="margin: 0"><div class="plate plate--night" style="aspect-ratio: 4 / 5" data-mk="scroll-mask"><div data-mk-inner></div></div><figcaption class="cap">По прокрутке: окно открывается к середине экрана.</figcaption></figure>
+    </div>
+  </div>
+</section>
+<section class="sec" id="parallax-layers" data-section="parallax">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>04</b> — Параллакс слоёв · <code>parallax-layers</code></p><p class="muted" style="margin: 0; max-width: 40rem">Разница скоростей ≤ 40 % (здесь 22 / 10 / −6 %), без масштаба; текст едет со страницей; на телефоне — половина.</p></div>
+    <div class="layers">
+      <div class="plate plate--dune l1" data-mk="parallax" style="--mk-depth: 0.22"><div class="fill"></div></div>
+      <div class="plate plate--sea l2" data-mk="parallax" style="--mk-depth: 0.1"><div class="fill"></div></div>
+      <div class="plate plate--ember l3" data-mk="parallax" style="--mk-depth: -0.06"><div class="fill"></div></div>
+    </div>
+  </div>
+</section>
+<section class="sec" id="svg-line-draw" data-section="line" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>05</b> — Линия по прокрутке · <code>svg-line-draw</code></p><p class="muted" style="margin: 0; max-width: 40rem">pathLength="1" и stroke-dasharray: 1 — длина пути не считается в JS; шкала — у коробки SVG.</p></div>
+    <div data-mk="scroll-draw" style="--mk-from: cover 15%; --mk-to: cover 65%">
+      <svg viewBox="0 0 1200 300" aria-hidden="true" style="width: 100%; height: auto; overflow: visible">
+        <path pathLength="1" d="M0 250 C 200 250 250 60 450 60 S 700 250 900 200 1100 40 1200 40" fill="none" stroke="#b8431f" stroke-width="3"/>
+      </svg>
+    </div>
+  </div>
+</section>
+<section class="sec" id="text-mask-media" data-section="text-mask">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>06</b> — Текст-окно · <code>text-mask-media</code></p><p class="muted" style="margin: 0; max-width: 40rem">background-clip: text; положение кадра — зарегистрированная переменная по шкале слова. Настоящий текст: выделяется и читается.</p></div>
+    <p class="word" data-mk="text-mask" style="--mk-media: linear-gradient(180deg, #cfd9d6 0%, #8fa9ad 25%, #2f4c5a 55%, #13222a 80%, #14130f 100%); --mk-media-size: 100% 240%">Глубина</p>
+  </div>
+</section>
+<section class="fx dark" id="scroll-mask-expand" data-section="expand" data-mk="frame-expand">
+  <div data-mk-stage>
+    <div class="plate plate--dune" data-mk-frame><div class="fill"></div></div>
+    <div data-mk-caption><p class="label"><b>07</b> — Кадр до вылета · <code>scroll-mask-expand</code></p><h3 class="h2">inset(22% 30%) → 0 за 70 % пути</h3></div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Конец страницы: дальше — закрепление и сцены.</p></div></section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

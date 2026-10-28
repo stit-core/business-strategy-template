@@ -20,7 +20,7 @@
 8. **Опиши выход и прерывание**: `transition_type` (entrance / exit / persistent), `exit`, `interrupt` — иначе исполнитель анимирует только вход. → §1.5 `[практика: V Ug_dwJa07Os, v5oxrZWAq78]`
 9. **У каждого движения — функция** (`purpose`): attention, guide, inform, continuity, orient, narrate, feedback, personality, loading; без функции — удалить. → §1.2 `[мнение: V J6aNMFZogyk]`
 10. **Характер — прилагательными бренда из словаря** (energetic … heavy), приёмы — из таблицы Val Head. → §1.4 `[практика: V OqvQhZ0bTYY]`
-11. **Ветки без JS и без поддержки** (`fallback`) — отдельно от reduce: Firefox без CSS scroll-driven получает конечное состояние. → §1.6 `[документация: E §3.1]`
+11. **Ветки без JS и без поддержки** (`fallback`) — отдельно от reduce: браузер без CSS scroll-driven (Safari < 26, Firefox < 159) и страница без JS получают конечное состояние. → §1.6 `[документация: E §3.1]`
 12. **Разметка по контракту**: `data-section`, `data-slot`, `data-group`, `data-fx`, `data-moment`, `data-effect` — проверка находит цели без угадывания. → §1.7 `[практика: K]`
 13. **Раскадровка — кадры станций + кадр телефона + кадр reduce**, у каждого `check`, измеримый на записи. → §2 `[практика: V Ulgy6xIrdPg 14:57, 5MMm5DUjh78 34:51]`
 14. **Запись прокрутки в паузах не видит скраб**: у scroll-linked в покое 0 % и при работе, и при поломке — проверяй зондом станций (геометрия на якорях). → §2.4 `[проверено]`
@@ -84,7 +84,7 @@ MS-19 появление из opacity 0 в первом экране; MS-22 во
 
 ### 1.4. Числа, характер, база
 
-- Длительности и кривые — токены `motion.marketing` (`04-visual-language/marketing-tokens.json`, CSS `--mm-*`): duration.feedback 120, hover 200,
+- Длительности и кривые — токены `motion.marketing` (`../04-visual-language/marketing-tokens.json`, CSS `--motion-marketing-*`): duration.feedback 120, hover 200,
   state 320, page 400, reveal 560, split-line 800, hero-scene 900, counter 1 200; stagger.group 60; easing.out-expo `(0.16, 1, 0.3, 1)`,
   in-out `(0.65, 0, 0.35, 1)`; длина закрепления — токены `scroll.pin-l1-max-vh` и `scroll.pin-l2-max-vh`; loop.marquee-speed 40 `[практика: E]`.
 - `page.base.duration_ms` + `share` у моментов: темп страницы меняется одной правкой; у «Отвеса» база 400, подъём текста 0,8 × 400 = 320 мс.
@@ -104,12 +104,12 @@ MS-19 появление из opacity 0 в первом экране; MS-22 во
 - Выход: `exit.behavior` none / reverse / fade / remove-after; для переходов состояний — `transition_type: persistent` и FLIP или View Transitions.
 
 ```css
-/* Chrome 115+ · Safari 26+ · Firefox — конечное состояние · 2026-09-25 · [проверено] */
+/* Chrome 115+ · Safari 26+ · Firefox 159+ (BCD); без поддержки — конечное состояние · [проверено: Chromium, WebKit] */
 .steps { position: relative; timeline-scope: --line; }                 /* грузик видит таймлайн линии-соседа */
 .steps__line { position: absolute; left: 5px; top: calc(.35em + 6px); bottom: 0; width: 2px; transform-origin: top; view-timeline: --line block; }
 .steps__bob  { position: absolute; left: 0; top: calc(.35em + 6px); bottom: 0; width: 12px; }   /* ромб — ::before у низа */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
+  @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
     .steps__line { animation: drop linear both; animation-timeline: --line; animation-range: cover 50vh cover calc(100% - 50vh); }
     .steps__bob  { animation: bob  linear both; animation-timeline: --line; animation-range: cover 50vh cover calc(100% - 50vh); }
     .step__marker { animation: fill linear both; animation-timeline: --marker; animation-range: cover calc(50vh - 6px) cover calc(50vh + 6px); }
@@ -130,8 +130,8 @@ MS-19 появление из opacity 0 в первом экране; MS-22 во
   кандидатов LCP) `[данные: у E]`.
 - `page.toggle`: L2 — всегда, L1 — при петле с `page-toggle` или ≥ 2 scroll-linked секциях; `data-motion` на `<html>`: нет — как в системе,
   `reduced`, `full`, `paused`; кнопка с `aria-pressed` (E §4.4). У G `reduce` — K принимает оба; предложение G — `reduced`.
-- `section.fallback {no_js, unsupported}`: CSS scroll-driven — Chrome 115+, Safari 26+, Firefox только Nightly — BCD `preview` (E `05/02` §3.1,
-  2026-09-24) → без поддержки — конечное состояние; sticky без смены состояний не оставлять (окно показывало бы только первое состояние).
+- `section.fallback {no_js, unsupported}`: CSS scroll-driven — Chrome 115+, Safari 26+, Firefox 159+ (`05/02` §3.1) → без поддержки и
+  без JS — конечное состояние; sticky без смены состояний не оставлять (окно показывало бы только первое состояние).
 
 ### 1.7. Контракт разметки
 
@@ -295,7 +295,7 @@ T7 («animate only transform and opacity»), `ACCEPTANCE` E1 и строки `bu
 // K3 · Kimi Code 2.0.2 · 2026-09-25 · [не проверено] · T7s — проход движения по MOTION.md (маркетинговая страница L1–L2)
 Non-interactive run: follow your agent instructions. Add motion to the existing page exactly as MOTION.md specifies; do not change layout, copy or colors.
 Read MOTION.md first. Implement only the moments listed there, each on the element marked data-moment="<moment id>" (add data-section, data-slot,
-data-group, data-fx attributes as MOTION.md "Markup contract" says). Take numbers only from src/styles/tokens.css (--mm-*) or from motion/<section>.motion.json;
+data-group, data-fx attributes as MOTION.md "Markup contract" says). Take numbers only from src/styles/tokens.css (--motion-marketing-*) or from motion/<section>.motion.json;
 never invent durations.
 Rules: animate only the properties MOTION.md allows for this page; never width, height, top, left, margin, padding; no "transition: all".
 The LCP element named in MOTION.md never animates from opacity 0 or behind a line mask — transform (shift at most 24 px), clip-path or opacity from 0.01 only.
@@ -358,14 +358,13 @@ describe in REPORT.md each moment (trigger, element, timing) and what each stati
 - G ↔ E/D: `data-motion="reduce"` против `reduced` (§1.6) — закрыто X 2026-09-25: `07/02` приведён к `reduced` (`CONTRADICTIONS.md` X-12); K принимает оба.
 - `range` с длинами (`cover calc(100% - 50vh)`) и `timeline-scope` проверены в Chromium 1243 и WebKit 2359 (Playwright), не в выпущенном Safari
   и не в Firefox (нет в Playwright на машине — открытый вопрос 6 заказчику).
-- Зонд станций пока в опыте I (`shoot_stations.py`), а не в `motion_check.py` K — предложение K.
 - Эскизы кадров (`sketch`) без генерации — только кадры прототипа; SVG-эскизы по раскадровке не делались.
 
 ## Источники
 
 - [S1] creative E, `../05-motion/01-motion-principles-and-access.md` — классы §1.3, 2.2.2 §3, reduce §4, бюджет §5, длительности и кривые §7, П11–П12.
 - [S2] creative E, `../05-motion/02-choreography-scroll-transitions.md` — хореография §1.4, примитивы §2.2, поддержка SDA §3.1, pin §4, переходы §8, LCP §10.
-- [S3] creative D/E, `../04-visual-language/marketing-tokens.json` и `.css` (`motion.marketing`, `--mm-*`, ветки reduce и `data-motion`).
+- [S3] creative D/E, `../04-visual-language/marketing-tokens.json` и `.css` (`motion.marketing`, `--motion-marketing-*`, ветки reduce и `data-motion`).
 - [S4] creative F, `../06-effects-catalog/effects.yaml` 0.1 — `motion.kind`, `limits`, reduce; лаборатория `lab/scroll-driven-progress`, `lab/svg-line-draw`, `_vendor/fonts`.
 - [S5] creative G, `../07-stack-implementation/02-implementation-patterns.md` §2.1–2.2, §6 — режим, переключатель, модуль эффекта.
 - [S6] creative H, `../08-uniqueness-anti-slop/02-uniqueness-and-variation.md` §4 — почерк генераторов; `01-cliche-policy.md` §6.2 — блок K3.

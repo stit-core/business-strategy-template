@@ -8,6 +8,7 @@
 | `02-motion-spec-storyboard-handoff.md` | I | `motion-spec` v1 (моменты, станции, геометрия, ветки, контракт разметки), раскадровка, опыт «достаточность спецификации», видео-референсы для K3, «почерк» и предложения kimi (T7s) |
 | `treatment.schema.json` | I | подсхема `treatment` v1 (`urn:…:treatment:1`), совместима с 69 документами v0 |
 | `motion-spec.schema.json` | I | схема спецификации движения v1 (`urn:…:motion-spec:1`), `x-dom-contract` |
+| `motion-passport.schema.json` | — | паспорт движения референса или прототипа (`motion_probe.py probe`): моменты, кривые, стаггер, прокрутка, закрепления, станции, библиотеки, пределы замера; пороги сверки — `x-compare` (`[мнение]`) |
 | `block-treatments.yaml` | I | визуальные варианты и эффекты по уровням для 84 блоков site (16 семейств) |
 | `art-direction.v1.schema.json` | I | art-direction v1 = v0 A + эмоциональная цель, money idea, мотив, характер и примитивы движения, прототип, вариативность (генерируется `build_ad_v1.py`; владелец формата — A) |
 | `examples/` | I | «Отвес» (скраб-линия CSS), «Окошко» (sticky-окно и смена состояний), «Сталькон» (View Transition): overlay treatment + motion-spec; `art-direction-okoshko.v1.json` |

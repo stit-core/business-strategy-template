@@ -49,7 +49,7 @@ sections:
         trigger: {type: load}
         model: time
         tracks:
-          - {property: transform, from: "translateY(var(--mm-shift-reveal))", to: "none", unit_note: "--mm-shift-reveal = 16px"}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none", unit_note: "--motion-marketing-distance-shift-reveal = 16px"}
           - {property: opacity, from: 0.01, to: 1}
         duration: {token: motion.marketing.duration.reveal}
         easing: {token: motion.marketing.easing.out-expo}

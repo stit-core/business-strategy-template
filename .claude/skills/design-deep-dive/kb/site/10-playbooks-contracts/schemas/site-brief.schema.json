@@ -3020,7 +3020,7 @@
           "type": "object",
           "additionalProperties": false,
           "minProperties": 1,
-          "description": "Значения референса текстом: measured — замер живого сайта (shot.py + measure_ui.py), estimated — оценка по картинке.",
+          "description": "Значения референса текстом: measured — замер живого сайта (shot.py + measure_ui.py; движение — motion_probe.py probe), estimated — оценка по картинке; method и passport — способ замера и паспорт движения.",
           "properties": {
             "measured": {
               "type": "array",
@@ -3037,6 +3037,25 @@
                 "type": "string",
                 "minLength": 3
               }
+            },
+            "method": {
+              "type": "array",
+              "uniqueItems": true,
+              "minItems": 1,
+              "items": {
+                "enum": [
+                  "shot",
+                  "measure_ui",
+                  "probe",
+                  "code"
+                ]
+              },
+              "description": "Чем сняты measured: shot.py и measure_ui.py (облик), probe — замер движения motion_probe.py (creative 03/03), code — значения из кода страницы без кадров."
+            },
+            "passport": {
+              "type": "string",
+              "minLength": 3,
+              "description": "Паспорт движения референса (motion-passport.schema.json): id или путь выхода motion_probe.py — числа взяты из него; кадры паспорта в git не идут."
             }
           }
         },

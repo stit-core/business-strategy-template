@@ -221,7 +221,7 @@ root.addEventListener('pointerleave', () => root.style.setProperty('--r', '0px')
 ```css
 /* подложка отстаёт, объект уходит быстрее; только no-preference и поддержка scroll-driven animations · [проверено: pages/03] */
 @media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: scroll()) {
+  @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
     .layer--back { animation: back linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
     .object, .shadow { animation: front linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
     @keyframes back { to { transform: translateY(24vh); } }       /* ≈ 40 % медленнее страницы (W5) */

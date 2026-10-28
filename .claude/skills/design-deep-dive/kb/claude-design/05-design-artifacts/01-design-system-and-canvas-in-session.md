@@ -28,8 +28,8 @@
    `--font-<ключ>`, стиль текста → класс; семейства движения нет. Называй токены как в коде (`color-accent`, `space-4`) — стили кода
    переносятся без правок. `[проверено: демо]` → §3.2, §4
 9. Делай: артборд — самодостаточный `.dc.html`: строка `support.js` дословно, корень фиксированного размера, равного рамке, стили инлайн
-   (их правит панель свойств), `<helmet>` — только база и шрифты Google, блок `data-dc-script` с `class Component extends DCLogic`.
-   `[документация типа]` → §3.1
+   (их правит панель свойств), `<helmet>` — база, шрифты Google и правила состояний и движения по атрибутам (CSS набора
+   движения), блок `data-dc-script` с `class Component extends DCLogic`. `[документация типа; практика]` → §3.1
 10. Делай: твики — рычаги, а не тексты: акцент (цвет с 3–4 образцами), радиус, тема, плотность; дырка `{{…}}` в стиле — только для твика
     или состояния, остальные цвета — литералами. `[документация типа]` `[проверено: опубликовано]` → §3.1, §5
 11. Делай: кликабельный прототип — `is_interactive: true` + ссылки `<a href="Booking.dc.html">`; состояние внутри артборда — `setState` +
@@ -103,7 +103,7 @@ screens, UI mockups, wireframes…: live artboards laid out on a canvas» — и
   без `kind` — стикер с `w`, `maxH`, `fill`; `rect|oval|pen|line|arrow|image` — фигуры пользователя, не трогать; ≤ 200);
   `designSystems [{title, namespace, artifact, version, copiedAt}]`. Редактор добавляет свои ключи (26.09 — `attachments`).
 - **`project/<Имя>.dc.html`** — артборд, самодостаточная страница: `<script src="./support.js"></script>` в `<head>` дословно; `<x-dc>`
-  с `<helmet>` (только база, цвета `a`/`a:hover`, `<link>` Google Fonts css2) и разметкой; корень фиксированного размера, равного рамке
+  с `<helmet>` (база страницы, цвета `a`/`a:hover`, `<link>` Google Fonts css2, правила состояний и движения по атрибутам `[data-…]` — без классов и без смены раскладки, CSS набора движения `kb/creative/11-motion-code/` — сюда же; на холсте его движение принимают в Play `[практика]`) и разметкой; корень фиксированного размера, равного рамке
   и `$preview` (у артборда страницы — резиновый корень и `expand: fill`); блок `<script type="text/x-dc" data-dc-script data-props='…'>` с `class Component extends DCLogic { renderVals() {…} }`.
 - **Синтаксис**: `{{путь}}` — только поиск по точкам, без выражений (вычислять в `renderVals`); события — `onClick="{{f}}"`, `onSubmit`,
   `onChange` (JSX camelCase); `<sc-if value hint-placeholder-val>`, `<sc-for list as hint-placeholder-count>`, `<dc-import name …>` (дочерний

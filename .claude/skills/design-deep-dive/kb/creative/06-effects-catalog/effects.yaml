@@ -46,10 +46,11 @@ effects:
     libs:
     - {name: gsap, version: 3.15.0, kb_br: 25.7, license: GSAP Standard No Charge, optional: true}
     - {name: gsap/SplitText, version: 3.15.0, kb_br: 3.3, license: GSAP Standard No Charge, optional: true}
-    demo: lab/split-text-reveal/
+    demo: ../11-motion-code/examples/demos/text.html#split-text-reveal
+    kit: [split]
     variants:
-    - {id: own, type: js, demo: 'lab/split-text-reveal/?v=own', note: 'свой split по словам ≈ 0,5 КБ br + CSS-переходы'}
-    - {id: none, type: css, demo: 'lab/split-text-reveal/?v=none', note: контроль LCP без эффекта}
+    - {id: own, type: js, note: 'свой split по словам ≈ 0,5 КБ br + CSS-переходы'}
+    - {id: none, type: css, note: контроль LCP без эффекта}
     stack_ref: 07-stack-implementation/stack.yaml#gsap-splittext
     code_ref: 01-effects-catalog.md §2.1
   fallback:
@@ -123,9 +124,9 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/text-scramble/
+    demo: null
     variants:
-    - {id: naive, type: js, demo: 'lab/text-scramble/?v=naive', note: 'антипример: только min-width → кнопка растёт'}
+    - {id: naive, type: js, note: 'антипример: только min-width → кнопка растёт'}
     - id: gsap-scrambletext
       type: js
       libs: [gsap 3.15.0, 'ScrambleTextPlugin 3,3 КБ br']
@@ -197,9 +198,9 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/kinetic-headline/
+    demo: null
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §2.3
   fallback:
@@ -267,9 +268,9 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/kinetic-headline/?v=pointer
+    demo: null
     variants:
-    - {id: no-cells, type: js, demo: 'lab/kinetic-headline/?v=pointer&cells=0', note: 'антипример: без ячеек фиксированной ширины'}
+    - {id: no-cells, type: js, note: 'антипример: без ячеек фиксированной ширины'}
     code_ref: 01-effects-catalog.md §2.3
   fallback:
     no_js:
@@ -332,7 +333,8 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/text-path/
+    demo: ../11-motion-code/examples/demos/text.html#text-path
+    kit: [text-path]
     code_ref: 01-effects-catalog.md §2.4
   fallback:
     no_js:
@@ -398,9 +400,10 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/text-path/?v=badge-div
+    demo: ../11-motion-code/examples/demos/marquee.html#rotating-badge
+    kit: [drift]
     variants:
-    - {id: svg-rotate, type: css, demo: 'lab/text-path/?v=badge', note: 'антипример: вращается сам <svg> — перерисовка каждый кадр'}
+    - {id: svg-rotate, type: css, note: 'антипример: вращается сам <svg> — перерисовка каждый кадр'}
     code_ref: 01-effects-catalog.md §2.4
   fallback:
     no_js:
@@ -417,7 +420,7 @@ effects:
     flashes: none
   cliche: {risk: mid, status: saturated, registry_id: 'cliche:circular-rotating-text'}
   rules: ['вращать обёртку div с will-change: transform, а не <svg>: вращение <svg> в Chromium не композитится — 36 мс/с главного потока на десктопе и 127
-      мс/с на телефоне CPU ×4', оборот 15–30 с; не больше одного на страницу]
+      мс/с на телефоне CPU ×4', 'трансформ SVG — на обёртке <g> с transform-box: fill-box и transform-origin: center (Vercel Web Interface Guidelines, 02-references-moodboards/04)', оборот 15–30 с; не больше одного на страницу]
   evidence: ['[проверено]', '[проверено: вариант div]']
   checked_at: '2026-09-25'
   cost:
@@ -463,9 +466,10 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/scroll-text-highlight/
+    demo: ../11-motion-code/examples/demos/text.html#scroll-text-highlight
+    kit: [highlight]
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §2.5
   fallback:
@@ -533,7 +537,8 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/counter-up/
+    demo: ../11-motion-code/examples/demos/text.html#counter-up
+    kit: [count]
     code_ref: 01-effects-catalog.md §2.6
   fallback:
     no_js:
@@ -548,7 +553,7 @@ effects:
     wcag: [2.3.3, 1.3.1]
     pause_required: false
     flashes: none
-    note: анимируется aria-hidden копия; итог — sr-only
+    note: 'итог стоит в HTML и читается всегда; цифры счёта рисует ::after поверх итога (CSS-счётчик примитива count набора движения), копий числа нет'
   cliche: {risk: low, status: н/д, registry_id: null}
   rules: ['итог стоит в HTML (SEO, без JS, reduce); число — ссылка на fact:<id> (text), без «+» и округления вверх', 'один раз, 1,2 с, ease-out, font-variant-numeric:
       tabular-nums', 'не в тарифах, ценах и формах']
@@ -600,7 +605,8 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/marquee-logos/
+    demo: ../11-motion-code/examples/demos/marquee.html#marquee-logos
+    kit: [marquee]
     stack_ref: 07-stack-implementation/stack.yaml#css-animations
     code_ref: 01-effects-catalog.md §3.1
   fallback:
@@ -668,9 +674,10 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/marquee-text/
+    demo: ../11-motion-code/examples/demos/marquee.html#marquee-text
+    kit: [marquee]
     variants:
-    - {id: css, type: css, demo: 'lab/marquee-text/?v=css', note: 'постоянная скорость, 0 КБ JS'}
+    - {id: css, type: css, note: 'постоянная скорость, 0 КБ JS'}
     code_ref: 01-effects-catalog.md §3.2
   fallback:
     no_js:
@@ -743,10 +750,11 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/hero-entrance-once/
+    demo: ../11-motion-code/examples/demos/scroll.html#hero-entrance-once
+    kit: [entrance]
     variants:
-    - {id: fade, type: css, demo: 'lab/hero-entrance-once/?v=fade', note: 'антипример: H1 из opacity 0'}
-    - {id: none, type: css, demo: 'lab/hero-entrance-once/?v=none', note: контроль LCP}
+    - {id: fade, type: css, note: 'антипример: H1 из opacity 0'}
+    - {id: none, type: css, note: контроль LCP}
     stack_ref: 07-stack-implementation/stack.yaml#css-animations
     code_ref: 01-effects-catalog.md §4.1
   fallback:
@@ -817,11 +825,12 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/scroll-reveal-system/
+    demo: ../11-motion-code/examples/demos/scroll.html#scroll-reveal-system
+    kit: [rise, unmask, sweep, scale-in, draw]
     variants:
-    - {id: sda, type: css, demo: 'lab/scroll-reveal-system/?v=sda', note: 'animation-timeline: view(), 0 КБ JS, обратимо'}
+    - {id: sda, type: css, note: 'animation-timeline: view(), 0 КБ JS, обратимо'}
     stack_ref: 07-stack-implementation/stack.yaml#intersection-observer
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.2
   fallback:
@@ -892,9 +901,10 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/scroll-driven-progress/
+    demo: ../11-motion-code/examples/demos/scroll.html#scroll-driven-progress
+    kit: [progress]
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.3
   fallback:
@@ -913,7 +923,7 @@ effects:
     flashes: none
     note: декоративный, aria-hidden
   cliche: {risk: low, status: н/д, registry_id: null}
-  rules: ['анимировать transform: scaleX(), не width', 'вне @supports (animation-timeline: scroll()) полосу не показывать']
+  rules: ['анимировать transform: scaleX(), не width', 'вне @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) полосу не показывать']
   evidence: ['[проверено]', '[проверено у 3d: 09/03 §3.1 — антипример .bar scaleX(0) без поддержки]']
   checked_at: '2026-09-25'
   cost:
@@ -962,10 +972,11 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/parallax-layers/
+    demo: ../11-motion-code/examples/demos/scroll.html#parallax-layers
+    kit: [parallax]
     external_ref: ['ai-media:10-03#4.4', '3d:01-01#9.5', '3d:09-03#7.2']
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.4
   fallback:
@@ -1036,8 +1047,9 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/svg-line-draw/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    demo: ../11-motion-code/examples/demos/scroll.html#svg-line-draw
+    kit: [scroll-draw]
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.5
   fallback:
@@ -1110,11 +1122,12 @@ effects:
     libs:
     - {name: gsap, version: 3.15.0, kb_br: 25.7, license: GSAP Standard No Charge}
     - {name: gsap/ScrollTrigger, version: 3.15.0, kb_br: 16.2, license: GSAP Standard No Charge}
-    demo: lab/pin-scrub-story/
+    demo: ../11-motion-code/examples/demos/pin.html#pin-scrub-story
+    kit: [scene]
     variants:
-    - {id: css, type: css, demo: 'lab/pin-scrub-story/?v=css', note: 'sticky + view-timeline, 0 КБ JS'}
+    - {id: css, type: css, note: 'sticky + view-timeline, 0 КБ JS'}
     stack_ref: 07-stack-implementation/stack.yaml#gsap-scrolltrigger
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §5.1
   fallback:
@@ -1135,7 +1148,7 @@ effects:
   cliche: {risk: low, status: 'норма жанра L1–L2 (watchlist реестра клише: scroll-film)', registry_id: null}
   rules: ['длина закрепления — одно число на уровень, токены motion.marketing.scroll: pin-l1-max-vh — одна сцена L1, pin-l2-max-vh — одна секция
       L2 (сверяет spec_check.py); шаги делят длину сцены: число шагов × длина шага — не больше предела уровня', 'GSAP грузить только при ≥ 768 px и без reduce: 45,7 КБ br десктоп, 3,9 КБ телефон', 'scrub 0,5–1;
-      не закреплять форму и тарифы', 'вариант CSS (sticky + view-timeline) — 0 КБ JS, но без поддержки Firefox — остаётся стопка']
+      не закреплять форму и тарифы', 'вариант CSS (sticky + view-timeline) — 0 КБ JS; без поддержки (Safari < 26, Firefox < 159) — остаётся стопка']
   evidence: ['[проверено]', '[данные: creative 03/01 §4 — ScrollTrigger 19 из 49, закрепление 5]']
   checked_at: '2026-09-24'
   cost:
@@ -1182,8 +1195,9 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/sticky-stack/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    demo: ../11-motion-code/examples/demos/pin.html#sticky-stack
+    kit: [stack]
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]', timeline-scope: 'Chrome 116+, Safari 26+ (сверить по 07-stack-implementation/stack.yaml)'}
     code_ref: 01-effects-catalog.md §5.2
   fallback:
@@ -1286,13 +1300,14 @@ effects:
     libs:
     - {name: gsap, version: 3.15.0, kb_br: 25.7, license: GSAP Standard No Charge}
     - {name: gsap/ScrollTrigger, version: 3.15.0, kb_br: 16.2, license: GSAP Standard No Charge}
-    demo: lab/horizontal-scroll/
+    demo: ../11-motion-code/examples/demos/pin.html#horizontal-scroll
+    kit: [horizontal]
     variants:
-    - {id: css, type: css, demo: 'lab/horizontal-scroll/?v=css', note: 'sticky + view-timeline, 0 КБ JS'}
-    - {id: native, type: css, demo: 'lab/horizontal-scroll/?v=native', note: нативная лента со snap — фолбэк и телефон}
-    - {id: pin-transform, type: js, demo: 'lab/horizontal-scroll/?pin=transform', note: 'pinType: ''transform'' — CLS 0; риск дрожания на нативной прокрутке
+    - {id: css, type: css, note: 'sticky + view-timeline, 0 КБ JS'}
+    - {id: native, type: css, note: нативная лента со snap — фолбэк и телефон}
+    - {id: pin-transform, type: js, note: 'pinType: ''transform'' — CLS 0; риск дрожания на нативной прокрутке
         документа'}
-    - {id: pin-sticky, type: js, demo: 'lab/horizontal-scroll/?pin=sticky', note: 'CSS sticky + скраб GSAP без pin — CLS 0, рекомендуемая схема'}
+    - {id: pin-sticky, type: js, note: 'CSS sticky + скраб GSAP без pin — CLS 0, рекомендуемая схема'}
     stack_ref: 07-stack-implementation/stack.yaml#gsap-scrolltrigger
     code_ref: 01-effects-catalog.md §5.3
   fallback:
@@ -1338,10 +1353,10 @@ effects:
     type: js
     libs:
     - {name: lenis, version: 1.3.26, kb_br: 4.9, license: MIT}
-    demo: lab/smooth-scroll/
+    demo: null
     variants:
-    - {id: lerp-0.2, type: js, demo: 'lab/smooth-scroll/?lerp=0.2', note: короче хвост}
-    - {id: native, type: css, demo: 'lab/smooth-scroll/?v=native', note: контроль}
+    - {id: lerp-0.2, type: js, note: короче хвост}
+    - {id: native, type: css, note: контроль}
     stack_ref: 07-stack-implementation/stack.yaml#lenis
     code_ref: 01-effects-catalog.md §5.4
   fallback:
@@ -1362,8 +1377,8 @@ effects:
   rules: ['хвост после шага колеса ≤ 1,0 с (Lenis 0,8–1,4 с, нативно ≤ 0,06 с)', 'autoRaf: true, anchors: true; не на L0–L1', 'lerp по умолчанию 0,15:
       хвост по motion_check 0.1.3 (десктоп) — 0,1 → 1,28 с, 0,12 → 1,09–1,13 с (FAIL EG-PERF-03), 0,15 → 0,90 с, 0,2 → 0,72
       с; формула 99 % (0,6 с при 0,12) занижает хвост — мерить; cost.measured ниже снят при lerp 0,1 (974 мс); токен motion.marketing.scroll.lenis-lerp
-      = 0,15', 'на L2-странице — только вместе с effect:motion-toggle (EG-A11Y-12): «Меньше движения» — lenis.destroy(); демо lab/smooth-scroll — страница
-      эффекта без переключателя, прогон L2 даёт S EG-A11Y-12 ожидаемо (lab.json gate_note)']
+      = 0,15', 'на L2-странице — только вместе с effect:motion-toggle (EG-A11Y-12): «Меньше движения» — lenis.destroy(); страница
+      эффекта без переключателя на прогоне L2 даёт S EG-A11Y-12 ожидаемо']
   evidence: ['[проверено]', '[документация: lenis README 1.3.26 — respectReducedMotion, autoRaf, anchors]', '[данные:
       creative 03/01 §10]', '[проверено]']
   checked_at: '2026-09-25'
@@ -1418,8 +1433,9 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/scroll-mask-expand/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    demo: ../11-motion-code/examples/demos/scroll.html#scroll-mask-expand
+    kit: [frame-expand]
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §10.2
   fallback:
@@ -1486,9 +1502,10 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/view-transition/
+    demo: ../11-motion-code/examples/demos/transition-a.html#view-transition
+    kit: [state]
     stack_ref: 07-stack-implementation/stack.yaml#view-transitions-same-document
-    support: {startViewTransition: 'Chrome 111+, Safari 18+; Firefox — по 07-stack-implementation (BCD); работает в Chromium 153 и WebKit 26.6 [проверено]'}
+    support: {startViewTransition: 'Chrome 111+, Safari 18+, Firefox 144+ (Baseline 2025-10-14); работает в Chromium 153 и WebKit 26.6 [проверено]'}
     code_ref: 01-effects-catalog.md §6.1
   fallback:
     no_js:
@@ -1552,9 +1569,10 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/page-transition/
+    demo: ../11-motion-code/examples/demos/transition-a.html#page-transition
+    kit: [page-transition]
     stack_ref: 07-stack-implementation/stack.yaml#view-transitions-cross-document
-    support: {'@view-transition': 'Chrome 126+, Safari 18.2+; Firefox — нет (не Baseline) по _common.md/G; проверено в Chromium 153 и WebKit 26.6'}
+    support: {'@view-transition': 'Chrome 126+, Safari 18.2+; Firefox — нет (не Baseline; направление Interop 2026); проверено в Chromium 153 и WebKit 26.6'}
     code_ref: 01-effects-catalog.md §6.2
   fallback:
     no_js:
@@ -1617,7 +1635,7 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/custom-cursor/
+    demo: null
     code_ref: 01-effects-catalog.md §7.1
   fallback:
     no_js:
@@ -1681,9 +1699,10 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/cursor-accent/
+    demo: ../11-motion-code/examples/demos/pointer.html#cursor-accent
+    kit: [spotlight]
     variants:
-    - {id: border, type: js, demo: 'lab/cursor-accent/?v=border', note: подсветка рамок карточек (маска на псевдоэлементе)}
+    - {id: border, type: js, note: подсветка рамок карточек (маска на псевдоэлементе)}
     external_ref: ['ai-media:10-03#4.1']
     code_ref: 01-effects-catalog.md §7.2
   fallback:
@@ -1691,8 +1710,8 @@ effects:
       behavior: пятно в точке 70 %/30 %
       measured: {content_ok: true, idle_motion_pct_s: 0.0}
     reduce:
-      strategy: final-state
-      note: пятно закреплено, акцент остаётся (Hallmark HP3)
+      strategy: custom
+      note: 'прямое управление остаётся: свет идёт за курсором без хвоста и инерции (05-motion/03 §1.5); без указателя — пятно в 70 %/30 %'
       measured: {idle_motion_pct_s: 0.0, infinite_running: 0, draw_calls_per_frame: 0.0, videos_playing: 0, content_ok: true, bytes_br: 2249}
   mobile: {behavior: static}
   a11y:
@@ -1751,7 +1770,8 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/magnetic-cta/
+    demo: ../11-motion-code/examples/demos/pointer.html#magnetic-cta
+    kit: [magnet]
     external_ref: ['3d:01-01#10.1']
     code_ref: 01-effects-catalog.md §7.3
   fallback:
@@ -1816,7 +1836,8 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/tilt-card/
+    demo: ../11-motion-code/examples/demos/pointer.html#tilt-card
+    kit: [tilt]
     external_ref: ['3d:01-01#10.1']
     code_ref: 01-effects-catalog.md §7.4
   fallback:
@@ -1880,7 +1901,7 @@ effects:
   implementation:
     type: svg
     libs: []
-    demo: lab/hover-distort-dom/
+    demo: null
     external_ref: ['3d:01-01#9.1']
     code_ref: 01-effects-catalog.md §7.5
   fallback:
@@ -1945,7 +1966,7 @@ effects:
   implementation:
     type: webgl
     libs: []
-    demo: lab/shader-bg/
+    demo: null
     external_ref: ['3d:01-01#5.1', '3d:09-04#2.1']
     stack_ref: 07-stack-implementation/stack.yaml#shader-code
     code_ref: 01-effects-catalog.md §8.1
@@ -2021,10 +2042,11 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/mesh-gradient-css/
+    demo: ../11-motion-code/examples/demos/marquee.html#mesh-gradient-css
+    kit: [drift]
     variants:
-    - {id: blobs, type: css, demo: 'lab/mesh-gradient-css/?v=blobs', note: размытые пятна на transform (композитор + blur)}
-    - {id: static, type: css, demo: 'lab/mesh-gradient-css/?v=static', note: L0}
+    - {id: blobs, type: css, note: размытые пятна на transform (композитор + blur)}
+    - {id: static, type: css, note: L0}
     stack_ref: 07-stack-implementation/stack.yaml#css-registered-properties
     code_ref: 01-effects-catalog.md §8.2
   fallback:
@@ -2094,9 +2116,9 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/aurora-css/
+    demo: null
     variants:
-    - {id: drive-js, type: js, demo: 'lab/aurora-css/?drive=js', note: та же траектория из rAF — для замера без vsync}
+    - {id: drive-js, type: js, note: та же траектория из rAF — для замера без vsync}
     external_ref: ['3d:01-01#5.7']
     code_ref: 01-effects-catalog.md §8.3
   fallback:
@@ -2165,11 +2187,11 @@ effects:
   implementation:
     type: webgl
     libs: []
-    demo: lab/holo-shader-bg/
+    demo: null
     variants:
-    - {id: brand, type: webgl, demo: 'lab/holo-shader-bg/?palette=brand', note: 'окно тонов марки: спектр заменён рампой --sea → --sun → --accent (рекомендуемый
+    - {id: brand, type: webgl, note: 'окно тонов марки: спектр заменён рампой --sea → --sun → --accent (рекомендуемый
         по умолчанию для маркетинга)'}
-    - {id: css-foil, type: css, demo: 'lab/holo-shader-bg/?v=css', note: 'полоса перелива тонов марки на @property --p от курсора + штрихи, 0 WebGL — фолбэк
+    - {id: css-foil, type: css, note: 'полоса перелива тонов марки на @property --p от курсора + штрихи, 0 WebGL — фолбэк
         и L0–L1'}
     external_ref: ['3d:01-01#7.4', '3d:06-01#3.5']
     stack_ref: 07-stack-implementation/stack.yaml#shader-code
@@ -2253,10 +2275,10 @@ effects:
   implementation:
     type: svg
     libs: []
-    demo: lab/grain-overlay/
+    demo: null
     variants:
-    - {id: animated, type: css, demo: 'lab/grain-overlay/?v=animated', note: '8 шагов/с — петля, пауза обязательна'}
-    - {id: canvas, type: js, demo: 'lab/grain-overlay/?v=canvas', note: 'антипример: новый шум каждый кадр'}
+    - {id: animated, type: css, note: '8 шагов/с — петля, пауза обязательна'}
+    - {id: canvas, type: js, note: 'антипример: новый шум каждый кадр'}
     external_ref: ['ai-media:10-03#4.3', '3d:09-04#9']
     code_ref: 01-effects-catalog.md §8.5
   fallback:
@@ -2352,14 +2374,14 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/glass-panel/
+    demo: null
     variants:
-    - {id: n1, type: css, demo: 'lab/glass-panel/?n=1'}
-    - {id: n6, type: css, demo: 'lab/glass-panel/?n=6'}
-    - {id: blur12, type: css, demo: 'lab/glass-panel/?blur=12'}
-    - {id: blur48, type: css, demo: 'lab/glass-panel/?blur=48'}
-    - {id: drive-js, type: js, demo: 'lab/glass-panel/?drive=js'}
-    - {id: drive-js-n6-b48, type: js, demo: 'lab/glass-panel/?drive=js&n=6&blur=48'}
+    - {id: n1, type: css}
+    - {id: n6, type: css}
+    - {id: blur12, type: css}
+    - {id: blur48, type: css}
+    - {id: drive-js, type: js}
+    - {id: drive-js-n6-b48, type: js}
     code_ref: 01-effects-catalog.md §9.1
   fallback:
     no_js:
@@ -2434,10 +2456,11 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/glow-accent/
+    demo: ../11-motion-code/examples/demos/marquee.html#glow-accent
+    kit: [drift]
     variants:
-    - {id: shadow, type: css, demo: 'lab/glow-accent/?v=shadow', note: 'антипример: анимация box-shadow'}
-    - {id: static, type: css, demo: 'lab/glow-accent/?v=static', note: L0}
+    - {id: shadow, type: css, note: 'антипример: анимация box-shadow'}
+    - {id: static, type: css, note: L0}
     code_ref: 01-effects-catalog.md §9.2
   fallback:
     no_js:
@@ -2507,9 +2530,10 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/mask-reveal/
+    demo: ../11-motion-code/examples/demos/scroll.html#mask-reveal
+    kit: [sweep, scroll-mask]
     variants:
-    - {id: shape, type: css, demo: 'lab/mask-reveal/?v=shape', note: 'окно-арка mask-image (SVG 0,2 КБ) растёт по view()'}
+    - {id: shape, type: css, note: 'окно-арка mask-image (SVG 0,2 КБ) растёт по view()'}
     code_ref: 01-effects-catalog.md §10.1
   fallback:
     no_js:
@@ -2578,7 +2602,8 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/text-mask-media/
+    demo: ../11-motion-code/examples/demos/scroll.html#text-mask-media
+    kit: [text-mask]
     code_ref: 01-effects-catalog.md §10.3
   fallback:
     no_js:
@@ -2648,10 +2673,10 @@ effects:
   implementation:
     type: video
     libs: []
-    demo: lab/video-loop-hero/
+    demo: null
     variants:
-    - {id: h264, type: video, demo: 'lab/video-loop-hero/?codec=h264'}
-    - {id: naive, type: video, demo: 'lab/video-loop-hero/?v=naive', note: 'как у практики: без постера и паузы'}
+    - {id: h264, type: video}
+    - {id: naive, type: video, note: 'как у практики: без постера и паузы'}
     external_ref: ['ai-media:10-02#4', '3d:01-01#15.1']
     stack_ref: 07-stack-implementation/stack.yaml#html-media
     code_ref: 02-hero-video-background.md
@@ -2673,7 +2698,7 @@ effects:
     ai_media: [VID-HERO-LOOP]
     3d: ['3d:01-01#15.1', '3d:12-08']
   cliche: {risk: mid, status: saturated (hero-media-veil; eternal-slowmo), registry_id: 'cliche:hero-media-veil'}
-  rules: [рецепт — 02-hero-video-background.md, 'демо lab/video-loop-hero — «громкая» петля 56–63 %/с: образец L2 (первый экран, пауза видна сразу,
+  rules: [рецепт — 02-hero-video-background.md, '«громкая» петля 56–63 %/с: образец L2 (первый экран, пауза видна сразу,
       текст на подложке); для L1 — антипример ворот EG-A11Y-22 (громких окон L1 — 0; motion_check 0.1.3: 3 окна, S) — на L1 петля ≤ 5 %/с или effect:cinemagraph
       (creative 05/01 §5.4)', 'текст над петлёй — на подложке ≥ 0,6: лид rgb(13 15 18 / .72), скрим телефона до надзаголовка:
       F83 (motion_check --f83) H1 4,82 : 1, лид 11,01 : 1']
@@ -2726,7 +2751,7 @@ effects:
   implementation:
     type: video
     libs: []
-    demo: lab/cinemagraph/
+    demo: null
     code_ref: 02-hero-video-background.md §7
   fallback:
     no_js:
@@ -3070,14 +3095,15 @@ effects:
   implementation:
     type: js
     libs: []
-    demo: lab/motion-toggle/
+    demo: ../11-motion-code/examples/demos/micro.html#motion-toggle
+    kit: [toggle, pause]
     code_ref: 01-effects-catalog.md §1.5
     variants:
-    - {id: start-reduced, type: js, demo: 'lab/motion-toggle/?start=reduced', note: 'повторный визит с сохранённым «Меньше»; клик «Полное» запускает WebGL,
+    - {id: start-reduced, type: js, note: 'повторный визит с сохранённым «Меньше»; клик «Полное» запускает WebGL,
         видео, скраб GSAP и Lenis без перезагрузки'}
-    - {id: start-full, type: js, demo: 'lab/motion-toggle/?start=full', note: сохранённое «Полное» побеждает системный reduce (режим rm)}
-    - {id: scroll, type: js, demo: 'lab/motion-toggle/?scroll=1', note: 'прокрутка всей сцены: Lenis, скраб без pin, видео, появления'}
-    - {id: lab-pause, type: css, demo: lab/marquee-logos/, note: 'минимум L0–L1: чекбокс #lab-pause + :has() — есть на всех страницах лаборатории с петлями'}
+    - {id: start-full, type: js, note: сохранённое «Полное» побеждает системный reduce (режим rm)}
+    - {id: scroll, type: js, note: 'прокрутка всей сцены: Lenis, скраб без pin, видео, появления'}
+    - {id: lab-pause, type: css, note: 'минимум L0–L1: чекбокс #lab-pause + :has() — есть на всех страницах лаборатории с петлями'}
     support: {':has()': 'Chrome 105+, Safari 15.4+, Firefox 121+ (Baseline 2023-12) — пауза CSS-петель без JS'}
   cost:
     gpu: none
@@ -3132,7 +3158,7 @@ effects:
   cliche: {risk: low, status: 'н/д (переключателя нет ни у одной из 49)', registry_id: null}
   rules: ['три состояния на <html data-motion>: нет атрибута — как в системе, reduced — меньше, full — полное вопреки ОС; выбор — localStorage, ставится
       строкой в <head> до стилей (повторный визит не «взрывается»)', 'CSS-движение объявлять только когда оно разрешено: @media (prefers-reduced-motion:
-      no-preference) { :root:not([data-motion=reduced]) … } и :root[data-motion=full] …; токены --mm-* сами дают 0 мс и 0 px, роли движения ДС
+      no-preference) { :root:not([data-motion=reduced]) … } и :root[data-motion=full] …; токены --motion-marketing-* сами дают 0 мс и 0 px, роли движения ДС
       (system.tokens.css) — сокращённые значения при тех же трёх состояниях', 'JS-движение подписывать
       на Motion.on(): WebGL — один статичный кадр и cancelAnimationFrame (0 вызовов), видео — pause() + hidden (постер, 0 новых байт), GSAP — gsap.context().revert(),
       Lenis — destroy() и new Lenis({respectReducedMotion: false})', 'Lenis 1.3.26 (respectReducedMotion: true по умолчанию) и gsap.matchMedia видят только
@@ -3163,11 +3189,12 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/dialog-entry-exit/
+    demo: ../11-motion-code/examples/demos/micro.html#dialog-entry-exit
+    kit: [dialog]
     stack_ref: 07-stack-implementation/stack.yaml#css-animations
     code_ref: 01-effects-catalog.md §12.1
     variants:
-    - {id: none, type: css, demo: 'lab/dialog-entry-exit/?v=none', note: 'контроль: окно без перехода'}
+    - {id: none, type: css, note: 'контроль: окно без перехода'}
     support: {'@starting-style': 'Chrome 117, Safari 17.5, Firefox 129 (Baseline 2024-08-06)', overlay: 'только Chromium 117+ (BCD 2026-09-24): в WebKit
         26.6 и Firefox выход обрывается [проверено в WebKit 26.6]'}
   fallback:
@@ -3238,12 +3265,13 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/details-accordion/
+    demo: ../11-motion-code/examples/demos/micro.html#details-accordion
+    kit: [accordion]
     stack_ref: 07-stack-implementation/stack.yaml#css-animations
     code_ref: 01-effects-catalog.md §12.2
     variants:
-    - {id: dur-800, type: css, demo: 'lab/details-accordion/?dur=800', note: 'антипример: раскрытие дольше окна 500 мс после клика'}
-    - {id: none, type: css, demo: 'lab/details-accordion/?v=none', note: 'контроль: без анимации высоты'}
+    - {id: dur-800, type: css, note: 'антипример: раскрытие дольше окна 500 мс после клика'}
+    - {id: none, type: css, note: 'контроль: без анимации высоты'}
     support: {interpolate-size: 'только Chromium 129+ (Safari и Firefox нет, BCD 2026-09-24) — иначе мгновенное открытие', '::details-content': Baseline
         2025-09-16, <details name>: 'Chrome 120, Safari 17.2, Firefox 130'}
   fallback:
@@ -3314,11 +3342,12 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/button-expand-label/
+    demo: ../11-motion-code/examples/demos/micro.html#button-expand-label
+    kit: [button-label]
     code_ref: 01-effects-catalog.md §12.3
     variants:
-    - {id: grid, type: css, demo: 'lab/button-expand-label/?v=grid', note: 'grid-template-columns 0fr → 1fr: плавно во всех движках, но коробка кнопки меняется'}
-    - {id: interp, type: css, demo: 'lab/button-expand-label/?v=interp', note: 'width → max-content (interpolate-size, только Chromium 129+; WebKit — прыжок)'}
+    - {id: grid, type: css, note: 'grid-template-columns 0fr → 1fr: плавно во всех движках, но коробка кнопки меняется'}
+    - {id: interp, type: css, note: 'width → max-content (interpolate-size, только Chromium 129+; WebKit — прыжок)'}
   fallback:
     no_js:
       behavior: работает (CSS)
@@ -3390,15 +3419,16 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/card-flip-3d/
+    demo: ../11-motion-code/examples/demos/micro.html#card-flip-3d
+    kit: [flip]
     code_ref: 01-effects-catalog.md §12.4
   fallback:
     no_js:
       behavior: оборот по наведению и фокусу (CSS); на тач без JS — только фокус
       measured: {content_ok: true, idle_motion_pct_s: 0.0}
     reduce:
-      strategy: crossfade
-      note: 'без поворота: оборот проявляется поверх лица за 180 мс (Una Kravets)'
+      strategy: custom
+      note: 'без поворота: оборот стоит под лицом, обе стороны видны сразу (примитив flip набора движения)'
       measured: {idle_motion_pct_s: 0.0, infinite_running: 0, draw_calls_per_frame: 0.0, videos_playing: 0, content_ok: true, bytes_br: 2956}
   mobile: {behavior: simplified, touch_alt: кнопка «Подробнее» (aria-expanded) переворачивает и переводит фокус на ссылку оборота}
   a11y:
@@ -3459,13 +3489,14 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: lab/header-shrink-on-scroll/
+    demo: ../11-motion-code/examples/demos/micro.html#header-shrink-on-scroll
+    kit: [header]
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
     code_ref: 01-effects-catalog.md §12.5
     variants:
-    - {id: class, type: js, demo: 'lab/header-shrink-on-scroll/?v=class', note: класс по порогу 40 px (rAF) + переходы 240 мс — Firefox без SDA}
-    - {id: height, type: css, demo: 'lab/header-shrink-on-scroll/?v=height', note: 'антипример: анимация height шапки в потоке'}
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
+    - {id: class, type: js, note: 'класс по порогу 40 px (rAF) + переходы 240 мс — браузер без SDA (Safari < 26, Firefox < 159)'}
+    - {id: height, type: css, note: 'антипример: анимация height шапки в потоке'}
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox 159+ (BCD, release notes Firefox 159); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
   fallback:
     no_js:
@@ -3623,7 +3654,8 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: null
+    demo: ../11-motion-code/examples/demos/micro.html#light-sweep
+    kit: [shine]
   cost: {gpu: compositor (transform/opacity), note: лабораторной страницы и замера effect_bench нет}
   fallback:
     no_js: работает (CSS)
@@ -3659,7 +3691,8 @@ effects:
   implementation:
     type: css
     libs: []
-    demo: null
+    demo: ../11-motion-code/examples/demos/micro.html#expanding-columns
+    kit: [columns]
   cost: {gpu: compositor (transform) + paint (clip-path), note: лабораторной страницы и замера effect_bench нет}
   fallback:
     no_js: работает (CSS)

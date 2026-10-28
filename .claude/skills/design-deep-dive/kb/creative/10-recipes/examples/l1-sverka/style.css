@@ -1,4 +1,4 @@
-/* style.css · L1 «Сверка» · Chromium 153 / WebKit 26.6 (Firefox — конечное состояние сцены)
+/* style.css · L1 «Сверка» · Chromium 153 / WebKit 26.6 (без SDA — конечное состояние сцены)
    Концепция «книга учёта на холодной бумаге»: антиква Literata (opsz) для заголовков и сумм, Commissioner для текста, один зелёный
    «сошлось» и один красный «нет счёта» внутри интерфейса. Фирменный приём L1 — одна sticky-сцена 150svh на CSS scroll-driven, 0 КБ JS. */
 :root {
@@ -33,9 +33,9 @@ a { color: inherit; }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: var(--size-cta-hero-h); padding: 0 1.5em;
   background: var(--c-accent); color: #fff; font: 600 var(--type-cta-hero)/1.2 var(--font-text); text-decoration: none; border-radius: 10px;
-  transition: background-color var(--mm-dur-hover) var(--mm-ease-out-strong), transform var(--mm-dur-feedback) var(--mm-ease-out-strong); }
+  transition: background-color var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong), transform var(--motion-marketing-duration-feedback) var(--motion-marketing-easing-out-strong); }
 .btn:hover { background: #096646; }
-.btn:active { transform: scale(var(--mm-scale-press)); }
+.btn:active { transform: scale(var(--motion-marketing-scale-press)); }
 .btn--small { min-height: 44px; font-size: 1rem; padding: 0 1.1em; }
 
 .top { background: var(--c-paper); border-bottom: 1px solid var(--c-line); }
@@ -52,10 +52,10 @@ a { color: inherit; }
 .hero__actions { display: grid; justify-items: center; gap: 12px; }
 .hero__note { margin: 0; color: var(--c-muted); font-size: .95rem; }
 @media (prefers-reduced-motion: no-preference) {
-  .hero__lead, .hero__actions { animation: rise var(--mm-dur-reveal) var(--mm-ease-out-expo) both; }
+  .hero__lead, .hero__actions { animation: rise var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo) both; }
   .hero__actions { animation-delay: 60ms; }
 }
-@keyframes rise { from { opacity: .01; transform: translateY(var(--mm-shift-reveal)); } }
+@keyframes rise { from { opacity: .01; transform: translateY(var(--motion-marketing-distance-shift-reveal)); } }
 
 /* сцена «сверка»: секция 250svh, внутри — sticky 100svh; прогресс = view-timeline секции (contain 0–100 % = 150svh прокрутки) */
 .demo { height: 250svh; }
@@ -87,8 +87,8 @@ a { color: inherit; }
 .ledger__links path { fill: none; stroke: var(--c-accent); stroke-width: 2; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
 
 /* treatment: product-demo · peak · L1 · effect:pin-scrub-story (sticky + view-timeline) · motion-spec: sverka-home · ledger-match
- * reduce: final-state · mobile: simplified · js: 0 KB · нет поддержки SDA (Firefox 2026-09) → конечное состояние */
-@supports ((animation-timeline: view()) and (animation-range: 0% 100%)) {
+ * reduce: final-state · mobile: simplified · js: 0 KB · нет поддержки SDA (Safari < 26, Firefox < 159) → конечное состояние */
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   @media (prefers-reduced-motion: no-preference) {
     .demo { view-timeline: --demo block; }
     .ledger__col--docs .row:not(.row--empty) { animation: slot linear both, matched linear both; animation-timeline: --demo, --demo;
@@ -146,11 +146,11 @@ a { color: inherit; }
 .faq details { border-bottom: 1px solid var(--c-line); }
 .faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; font: 600 1.2rem/1.3 var(--font-display); position: relative; }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after { content: "+"; position: absolute; right: 8px; top: 14px; font: 400 1.6rem/1 var(--font-text); transition: rotate var(--mm-dur-state) var(--mm-ease-out-strong); }
+.faq summary::after { content: "+"; position: absolute; right: 8px; top: 14px; font: 400 1.6rem/1 var(--font-text); transition: rotate var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong); }
 .faq details[open] summary::after { rotate: 45deg; }
 .faq details p { margin: 0 0 18px; color: var(--c-ink-2); }
-.faq details[open] p { animation: answer-in var(--mm-dur-state) var(--mm-ease-out-strong) both; }
-@keyframes answer-in { from { opacity: .01; transform: translateY(calc(var(--mm-shift-reveal) / 4)); } }
+.faq details[open] p { animation: answer-in var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong) both; }
+@keyframes answer-in { from { opacity: .01; transform: translateY(calc(var(--motion-marketing-distance-shift-reveal) / 4)); } }
 
 .final { text-align: center; }
 .final__in { display: grid; justify-items: center; gap: 8px; }

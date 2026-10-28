@@ -2,7 +2,7 @@
 # Производный файл: собирает `scripts/project/ready.py build otves-remont-nn promo` из файлов стратегии; руками не правится.
 # Форма — docs/projects/_template/design/_template/ready.yaml.
 
-skill_version: 0.4.0
+skill_version: 0.5.0
 example: true   # пометка иллюстрации фикстуры: манифест собран на чистой основе package-landing
 surface: promo
 type: web
@@ -13,7 +13,7 @@ status: not-ready
 sources:
   - {path: design/brand.yaml, status: none, sha256: c5f1c1f718ff90d66caf785c5d75fdb671ba3baa4345a2f0da3117463053e633}
   - {path: design/promo/art-direction.json, status: proposed, sha256: 974ba01d631e84bb61e305705524a9466d7cc8435414f338751b9d497f9cefd8}
-  - {path: design/promo/motion/home.motion-spec.yaml, status: proposed, sha256: 2d791b0eda243fef16492868e673e5faaca4977d7774a0bb7bd623855adcf876}
+  - {path: design/promo/motion/home.motion-spec.yaml, status: proposed, sha256: 64dd80496b22a8429e5920552a6365c614ded790d5fe425da8d4a4b90a5dc475}
   - {path: design/system.yaml, status: approved, sha256: c414ca2e032febbd863cba39ec74aa6cbc4e6601e702fa8fca70037fca899091}
   - {path: facts.yaml, status: draft, sha256: 7e0731035a9cb3767d41b8fb911a044ec46e6996dab191e785a3d403c11e0e75}
   - {path: site/promo/copy/spasibo.yaml, status: draft, sha256: 2581080140d75c4969637d8e93f5b0219bc1a3726a56d9b8c26e800aeec891e8}

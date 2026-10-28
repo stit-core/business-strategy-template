@@ -68,7 +68,7 @@ VK Реклама, Telegram, Яндекс Директ; действие — з�
 ## 6. Код (фрагменты)
 
 ```css
-/* Chrome 153 · Safari 26 · Firefox — статично · 2026-09-25 · [не проверено: пример не собран; ось ширины — J/02 (Science Gothic 60 %)] */
+/* Chrome 153 · Safari 26 · Firefox 159 · без SDA — статично · 2026-09-25 · [не проверено: пример не собран; ось ширины — J/02 (Science Gothic 60 %)] */
 .hero__word { font-family: "Science Gothic", "Science Gothic fallback", sans-serif; font-weight: 760; font-stretch: 100%; }
 @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   @media (prefers-reduced-motion: no-preference) {

@@ -8,7 +8,7 @@ YAML — `recipes/02-saas-l1.recipe.yaml`
 
 1. **Фирменный приём L1 — одна sticky-сцена ≤ 150vh, где интерфейс продукта выполняет главную работу** (сверяет, записывает, собирает). `[проверено]` → §5
 2. **Сцена — на CSS scroll-driven**: `view-timeline` секции, `animation-range: contain`, доли на элемент через `calc(8% + var(--i) * 15%)`; 0 КБ JS. `[проверено]` → §6
-3. **Всё начальное состояние — внутри `@supports ((animation-timeline: view()) and (animation-range: 0% 100%))` и `no-preference`**: без поддержки (Firefox) — конечный кадр. `[проверено]` → §6
+3. **Всё начальное состояние — внутри `@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))` и `no-preference`**: без поддержки (Safari до 26, Firefox до 159) — конечный кадр. `[проверено]` → §6
 4. **Интерфейс — HTML-фрагмент, не скриншот в рамке браузера** (`cliche:dashboard-in-browser-frame`): текст ищется, масштабируется, анимируется. `[практика]` → §7
 5. **Первый экран продолжает сцену**: верх интерфейса виден над сгибом (sticky-коробка прижата к верху, `padding-top: 7svh`). `[проверено]` → §4
 6. **Hero по центру законен при ≤ 4 элементах** (надзаголовок, H1, лид, кнопка с примечанием). `[практика: D, поправка PLAN]` → §4
@@ -74,13 +74,13 @@ YAML — `recipes/02-saas-l1.recipe.yaml`
 с WebGL (G 01 §2). Закрепление ScrollTrigger `pin` без `pinType: 'transform'` даёт CLS 1,6–2,0 (E/02) — sticky даёт 0.
 
 ```css
-/* Chrome 153 · WebKit 26.6 (Playwright) · Firefox — конечный кадр · 2026-09-25 · [проверено]
+/* Chrome 153 · WebKit 26.6 (Playwright) · без SDA (Safari до 26, Firefox до 159) — конечный кадр · 2026-09-25 · [проверено]
    Safari на устройстве — [не проверено]; var() в animation-range в WebKit 26.6 работает (строки и линии совпали с Chromium) */
 .demo { height: 250svh; }                                    /* 150svh прокрутки сцены (L1: ≤ 150vh) */
 .demo__sticky { position: sticky; top: 0; height: 100svh; }
 /* счётчик: <b class="demo__n"><span>0</span>…<span>5</span></b> — цифры стопкой, без JS и без @property */
 .demo__n { display: inline-grid; } .demo__n > span { grid-area: 1 / 1; } .demo__n > span:not(:last-child) { opacity: 0; }
-@supports ((animation-timeline: view()) and (animation-range: 0% 100%)) {
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   @media (prefers-reduced-motion: no-preference) {
     .demo { view-timeline: --demo block; }
     .docs .row { animation: slot linear both, matched linear both; animation-timeline: --demo, --demo;
@@ -146,7 +146,7 @@ reduce × 3) ложные: цель `[data-moment=ledger-match]` внутри st
 1. Скриншот дашборда в рамке браузера с тенью в hero — почерк генераторов (Kilo, K3 — H 02 §4).
 2. Появление карточек тарифов и FAQ — «продукт в движении» превращается в «всё в движении».
 3. ScrollTrigger `pin` для одной декоративной сцены — 42 КБ JS и CLS 1,6–2,0 вместо sticky с 0.
-4. Начальное состояние сцены вне `@supports` — в Firefox книга навсегда «перемешана».
+4. Начальное состояние сцены вне `@supports` — в браузере без SDA книга навсегда «перемешана».
 5. Счётчик пользователей «0 → 12 000» в hero — число доверия анимируют ради движения.
 6. Антиква + крем + терракота — «редакционный люкс» генератора; антиква на холодной бумаге — поворот.
 7. Шрифт с opsz без учёта бюджета: 172 КБ на одну гарнитуру.

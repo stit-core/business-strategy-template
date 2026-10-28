@@ -138,46 +138,72 @@ html, body { overflow-x: clip; }  /* полный вылет без горизо
 
 /* ── motion.marketing · Chromium 153 / WebKit 26 ─────────────────────────────────────────────
    Движение подачи: сцены, появления, петли, прокрутка. Отклик контролов — токены ui 08-motion.
+   Имя переменной — путь токена DTCG через дефис, как у сборки ДС (scripts/project/ds_build.py):
+   motion.marketing.duration.reveal → --motion-marketing-duration-reveal.
    Правила — 05-motion/01 §4, §7; LCP-заголовок без анимации или только transform [проверено].
    Reduce: пространственное → 0 / 1, стаггер → 0, сцены → мгновенно; переключатель сайта [data-motion] побеждает ОС в обе стороны. */
 :root {
-  --mm-dur-feedback: 120ms;  --mm-dur-hover: 200ms;   --mm-dur-reveal: 560ms;  --mm-dur-split-line: 800ms;
-  --mm-dur-hero-scene: 900ms; --mm-dur-state: 320ms;  --mm-dur-page: 400ms;    --mm-dur-counter: 1200ms;
-  --mm-dur-cta-pulse: 500ms; --mm-dur-crossfade-reduce: 180ms; --mm-breathe-period: 12s;
-  --mm-stagger-text: 60ms;   --mm-stagger-group: 60ms;
-  --mm-ease-out-expo: cubic-bezier(.16, 1, .3, 1);   /* входы, появления, сцены */
-  --mm-ease-out-strong: cubic-bezier(.23, 1, .32, 1); /* отклик */
-  --mm-ease-in-out: cubic-bezier(.65, 0, .35, 1);    /* перемещение, переходы страниц */
-  --mm-ease-in: cubic-bezier(.7, 0, .84, 0);          /* уход, ≈ 75 % длительности входа */
-  --mm-ease-breathe: cubic-bezier(.37, 0, .63, 1);    /* «дыхание», период ≥ 10 с */
-  --mm-shift-reveal: 16px;   --mm-shift-hero: 24px;   --mm-lift-hover: 2px;    --mm-magnet-max: 8px;
-  --mm-scale-press: .97;     --mm-scale-reveal-in: .96; --mm-scale-cta-pulse: 1.04;
-  --mm-marquee-speed: 40;    /* px/с; период дорожки = ширина / скорость — пишет скрипт в --mm-marquee-period */
-  --mm-scroll-step: 120vh;   --mm-parallax-bg: 24vh;  /* смещение фона на 100vh прокрутки (≤ 40 % разницы скоростей) */
+  --motion-marketing-duration-feedback: 120ms;
+  --motion-marketing-duration-hover: 200ms;
+  --motion-marketing-duration-reveal: 560ms;
+  --motion-marketing-duration-split-line: 800ms;
+  --motion-marketing-duration-hero-scene: 900ms;
+  --motion-marketing-duration-state: 320ms;
+  --motion-marketing-duration-page: 400ms;
+  --motion-marketing-duration-counter: 1200ms;
+  --motion-marketing-duration-cta-pulse: 500ms;
+  --motion-marketing-duration-crossfade-reduce: 180ms;
+  --motion-marketing-duration-breathe-period: 12s;
+  --motion-marketing-stagger-text: 60ms;
+  --motion-marketing-stagger-group: 60ms;
+  --motion-marketing-easing-out-expo: cubic-bezier(.16, 1, .3, 1);     /* входы, появления, сцены */
+  --motion-marketing-easing-out-strong: cubic-bezier(.23, 1, .32, 1);  /* отклик */
+  --motion-marketing-easing-in-out: cubic-bezier(.65, 0, .35, 1);      /* перемещение, переходы страниц */
+  --motion-marketing-easing-in: cubic-bezier(.7, 0, .84, 0);           /* уход, ≈ 75 % длительности входа */
+  --motion-marketing-easing-breathe: cubic-bezier(.37, 0, .63, 1);     /* «дыхание», период ≥ 10 с */
+  --motion-marketing-distance-shift-reveal: 16px;
+  --motion-marketing-distance-shift-hero: 24px;
+  --motion-marketing-distance-lift-hover: 2px;
+  --motion-marketing-distance-magnet-max: 8px;
+  --motion-marketing-scale-press: .97;
+  --motion-marketing-scale-reveal-in: .96;
+  --motion-marketing-scale-cta-pulse-peak: 1.04;
+  --motion-marketing-loop-marquee-speed: 40;  /* px/с; период дорожки = ширина / скорость — пишет скрипт в --mm-marquee-period */
+  --motion-marketing-scroll-step-vh: 120vh;
+  --mm-parallax-bg: 24vh;                     /* смещение фона на 100vh прокрутки (≤ 40 % разницы скоростей) */
 }
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --mm-shift-reveal: 0px; --mm-shift-hero: 0px; --mm-lift-hover: 0px; --mm-magnet-max: 0px;
-    --mm-scale-press: 1; --mm-scale-reveal-in: 1; --mm-scale-cta-pulse: 1;
-    --mm-stagger-text: 0ms; --mm-stagger-group: 0ms; --mm-parallax-bg: 0vh;
-    --mm-dur-reveal: 0ms; --mm-dur-split-line: 0ms; --mm-dur-hero-scene: 0ms; --mm-dur-page: 0ms;
-    --mm-dur-state: var(--mm-dur-crossfade-reduce); --mm-dur-counter: 0ms; --mm-dur-cta-pulse: 0ms;
+    --motion-marketing-distance-shift-reveal: 0px; --motion-marketing-distance-shift-hero: 0px;
+    --motion-marketing-distance-lift-hover: 0px; --motion-marketing-distance-magnet-max: 0px;
+    --motion-marketing-scale-press: 1; --motion-marketing-scale-reveal-in: 1; --motion-marketing-scale-cta-pulse-peak: 1;
+    --motion-marketing-stagger-text: 0ms; --motion-marketing-stagger-group: 0ms; --mm-parallax-bg: 0vh;
+    --motion-marketing-duration-reveal: 0ms; --motion-marketing-duration-split-line: 0ms;
+    --motion-marketing-duration-hero-scene: 0ms; --motion-marketing-duration-page: 0ms;
+    --motion-marketing-duration-state: var(--motion-marketing-duration-crossfade-reduce);
+    --motion-marketing-duration-counter: 0ms; --motion-marketing-duration-cta-pulse: 0ms;
   }
   html { scroll-behavior: auto; }
 }
 :root[data-motion="reduced"] {       /* переключатель «меньше движения» (L2, CRV-AL-12) — те же значения */
-  --mm-shift-reveal: 0px; --mm-shift-hero: 0px; --mm-lift-hover: 0px; --mm-magnet-max: 0px;
-  --mm-scale-press: 1; --mm-scale-reveal-in: 1; --mm-scale-cta-pulse: 1;
-  --mm-stagger-text: 0ms; --mm-stagger-group: 0ms; --mm-parallax-bg: 0vh;
-  --mm-dur-reveal: 0ms; --mm-dur-split-line: 0ms; --mm-dur-hero-scene: 0ms; --mm-dur-page: 0ms;
-  --mm-dur-state: var(--mm-dur-crossfade-reduce); --mm-dur-counter: 0ms; --mm-dur-cta-pulse: 0ms;
+  --motion-marketing-distance-shift-reveal: 0px; --motion-marketing-distance-shift-hero: 0px;
+  --motion-marketing-distance-lift-hover: 0px; --motion-marketing-distance-magnet-max: 0px;
+  --motion-marketing-scale-press: 1; --motion-marketing-scale-reveal-in: 1; --motion-marketing-scale-cta-pulse-peak: 1;
+  --motion-marketing-stagger-text: 0ms; --motion-marketing-stagger-group: 0ms; --mm-parallax-bg: 0vh;
+  --motion-marketing-duration-reveal: 0ms; --motion-marketing-duration-split-line: 0ms;
+  --motion-marketing-duration-hero-scene: 0ms; --motion-marketing-duration-page: 0ms;
+  --motion-marketing-duration-state: var(--motion-marketing-duration-crossfade-reduce);
+  --motion-marketing-duration-counter: 0ms; --motion-marketing-duration-cta-pulse: 0ms;
 }
 :root[data-motion="full"] {          /* явный выбор «полное движение» побеждает системный reduce (специфичность выше) */
-  --mm-shift-reveal: 16px; --mm-shift-hero: 24px; --mm-lift-hover: 2px; --mm-magnet-max: 8px;
-  --mm-scale-press: .97; --mm-scale-reveal-in: .96; --mm-scale-cta-pulse: 1.04;
-  --mm-stagger-text: 60ms; --mm-stagger-group: 60ms; --mm-parallax-bg: 24vh;
-  --mm-dur-reveal: 560ms; --mm-dur-split-line: 800ms; --mm-dur-hero-scene: 900ms; --mm-dur-page: 400ms;
-  --mm-dur-state: 320ms; --mm-dur-counter: 1200ms; --mm-dur-cta-pulse: 500ms;
+  --motion-marketing-distance-shift-reveal: 16px; --motion-marketing-distance-shift-hero: 24px;
+  --motion-marketing-distance-lift-hover: 2px; --motion-marketing-distance-magnet-max: 8px;
+  --motion-marketing-scale-press: .97; --motion-marketing-scale-reveal-in: .96; --motion-marketing-scale-cta-pulse-peak: 1.04;
+  --motion-marketing-stagger-text: 60ms; --motion-marketing-stagger-group: 60ms; --mm-parallax-bg: 24vh;
+  --motion-marketing-duration-reveal: 560ms; --motion-marketing-duration-split-line: 800ms;
+  --motion-marketing-duration-hero-scene: 900ms; --motion-marketing-duration-page: 400ms;
+  --motion-marketing-duration-state: 320ms;
+  --motion-marketing-duration-counter: 1200ms; --motion-marketing-duration-cta-pulse: 500ms;
 }
 /* петли (бегущая строка, живой фон, видео, Lottie) стоят в reduce и по кнопке паузы — одна кнопка на все (WCAG 2.2.2) */
 :root[data-motion="reduced"] [data-loop], :root[data-motion="paused"] [data-loop] { animation-play-state: paused; }

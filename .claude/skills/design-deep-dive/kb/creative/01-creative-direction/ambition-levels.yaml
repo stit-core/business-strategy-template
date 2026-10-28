@@ -115,7 +115,7 @@ levels:
       continuous_motions_under_text_max: 0
       properties_allowed: [transform, translate, scale, rotate, opacity, color, background-color]
       hero_entrance_ms: [300, 600]
-      scroll_driven_sections_max: 0
+      scroll_driven_sections_max: 0   # секций-сцен, которые ведёт прогресс прокрутки; хром (полоса прогресса, шапка) и стопка sticky — не сцены
       label: "[гипотеза]"
     budgets:
       effects:
@@ -153,9 +153,9 @@ levels:
     maps_to:
       claude_design:               # проекция уровня во вход холста (decisions.motion.*, decisions.three_d; правило — x-canvas-map)
         motion_level: subtle
-        library: [css]
+        library: [css, motion-kit]
         three_d_mode: [none]
-        note: "тезис и до трёх моментов; свойства — motion_hints.properties_allowed; сокращённое движение — конечное состояние"
+        note: "тезис и до трёх моментов — короткая спецификация акцента первого экрана и системы появления; код — набор движения (creative 11-motion-code); свойства — motion_hints.properties_allowed; сокращённое движение — конечное состояние"
       visual_dna: {character.boldness: restrained, one_bold_move: "обязателен, одна строка: где живёт смелость (типографика, цвет или кадр)", note: "ai-media 01/03:423 «1 смелый приём; ≤ 2 хроматических цвета» — норма именно L0"}
       taste: {MOTION_INTENSITY: [2, 4], DESIGN_VARIANCE: [3, 6], label: "[мнение вендора]"}
       impeccable_register: "Persuade (страницы продаж) или Read (статьи); Operate — сервисы, вне уровней"
@@ -222,10 +222,10 @@ levels:
     maps_to:
       claude_design:
         motion_level: expressive
-        library: [css]
-        library_when: {"gsap@3": "закреплённая сцена, split или scroll-driven шире CSS"}
+        library: [css, motion-kit]
+        library_when: {"gsap@3.15.0": "в коде сайта — сюжет, которого набор не делает (сложный таймлайн, Flip); на холсте — набор: закрепление и разбиение текста GSAP строят разметку скриптом"}
         three_d_mode: [none, prerender, model-viewer, hero-glb]
-        note: "до трёх моментов при прокрутке, отдельный проход после статичного макета; motion_cap брифа subtle — subtle"
+        note: "до трёх моментов при прокрутке, отдельный проход после статичного макета; код — набор движения (creative 11-motion-code); motion_cap брифа subtle — subtle"
       visual_dna: {character.boldness: balanced, one_bold_move: "фирменный приём страницы одной строкой (совпадает с art-direction.signature_move)"}
       taste: {MOTION_INTENSITY: [5, 7], DESIGN_VARIANCE: [6, 8], label: "[мнение вендора]"}
       impeccable_register: "Persuade"
@@ -297,10 +297,10 @@ levels:
       claude_design:
         motion_level: cinematic
         motion_level_without_media: expressive   # нет готовых роликов 16:9 и 9:16 с постерами (ai-media) и рендера 3d
-        library: ["gsap@3"]
-        library_when: {"lenis@1": "плавная прокрутка"}
+        library: [css, motion-kit, "gsap@3.15.0"]
+        library_when: {"lenis@1.3.27": "плавная прокрутка — в коде сайта, на холсте её нет"}
         three_d_mode: [hero-glb, scroll, model-viewer, prerender]
-        note: "сайт-история, кино-скролл, 3D-мир"
+        note: "сайт-история, кино-скролл, 3D-мир; DOM-сцены — набор движения (creative 11-motion-code), живое 3D — свой движок (3d 16-js-scenes); GSAP — сложный таймлайн в коде сайта"
       visual_dna: {character.boldness: bold, one_bold_move: "главный приём страницы; остальные пики перечисляются в art-direction.peaks"}
       taste: {MOTION_INTENSITY: [8, 10], DESIGN_VARIANCE: [8, 10], label: "[мнение вендора]"}
       impeccable_register: "Persuade (кампания) или Experience (портфолио)"
@@ -343,6 +343,7 @@ property_exceptions:
   clip-path: [effect:mask-reveal, effect:button-expand-label, effect:expanding-columns]   # приёмы каталога уровня L0, собранные на clip-path
   filter: [effect:sticky-stack]            # приём каталога уровня L0: карточка стопки, уходящая под следующую, темнеет через filter: brightness()
   "--*": [effect:mesh-gradient-css]        # приём каталога уровня L0: mesh-градиент движется зарегистрированными пользовательскими свойствами (@property)
+  startOffset: [effect:text-path]          # атрибут SVG <textPath>: подпись по кривой идёт по прокрутке (примитив text-path набора движения)
 
 # Проекция уровня во вход холста — форма ключа одна у всех источников входа (references/claude-design.md § 6. Вход
 # холста). Уровень страницы выбирает бриф (site-brief.ambition: level, by_page, by_section_role, motion_cap); этот файл

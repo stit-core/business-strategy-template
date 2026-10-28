@@ -2,7 +2,7 @@
 
 Волна 2 · агент E · 2026-09-24 · источников прочитано целиком или нужными разделами 26 · опыты `99-raw/experiments/E/01-lcp-reveal`,
 `E/02-scroll-scene` · Chromium 153.0.8010.12, WebKit 2359 (Playwright 1.63.0) · gsap 3.15.0 (ScrollTrigger), lenis 1.3.26 ·
-поддержка по Chrome for Developers и MDN на 2026-09-24. Принципы, WCAG и бюджет внимания — `01-motion-principles-and-access.md`;
+поддержка по Chrome for Developers и MDN на 2026-09-24, CSS scroll-driven в Firefox 159 — MDN на 2026-10-28. Принципы, WCAG и бюджет внимания — `01-motion-principles-and-access.md`;
 цена кадра и микродвижение — `03-micro-motion-and-performance.md`; реализации эффектов — F (`../06-effects-catalog/`), стек — G.
 
 ## Выжимка для агента
@@ -18,9 +18,10 @@
 5. **Появление — один раз**: после срабатывания объект остаётся в конечном положении, при прокрутке вверх не переигрывается. →
    §2.3 `[исследование: NN/g]`
 6. **Сдвиг появления 8–24 px, 400–700 мс, порог — 15–25 % элемента в зоне**, каскад 40–80 мс только у групп-списков. → §2.3 `[консенсус]`
-7. **CSS scroll-driven — для DOM-эффектов, ScrollTrigger — для pin, сложных таймлайнов, canvas и видео**; CSS scroll-driven
-   на 2026-09 не Baseline (Firefox — только Nightly, BCD 8.1.3 `preview`), в продакшене у 2 из 49 эффектных страниц против 23 со
-   ScrollTrigger. → §3 `[документация]` `[данные: C]`
+7. **CSS scroll-driven — для DOM-эффектов, GSAP ScrollTrigger — только для того, чего CSS не делает**: закреплённая сцена со
+   сложным сюжетом, синхрон с canvas, WebGL и видео. CSS scroll-driven есть во всех движках — Chrome 115, Safari 26, Firefox 159
+   (2026-10-27); конечное состояние без поддержки остаётся для старых версий. В продакшене (2026-09) — у 2 из 49 эффектных
+   страниц против 23 со ScrollTrigger. → §3 `[документация]` `[данные: C]`
 8. **Без поддержки `animation-timeline` элемент показывает конечное состояние**, а не начальное (`@supports` + статика по
    умолчанию). → §3.3 `[данные: у 3d F2/08]`
 9. **Сцена = экран**: pin-сцена со скрабом режется на шаги по 100–150vh, каждый шаг заканчивается читаемой «станцией»; L1 —
@@ -131,7 +132,8 @@ compiled video file» (через `ux 06/03` §3.7) [S10]. Схему `motion-sp
 | без появления (none) | — | `calm`, формы, цены, юридическое | — |
 
 Hallmark перечисляет оси: fade-up stagger, horizontal sweep, type-unmask, number-tick, typewriter (только «терминальный» мир),
-none — и советует брать 1–2 примитива на страницу [S8]. Правило базы: **2–3 примитива, разные у заголовков, медиа и групп;
+none — и советует брать 1–2 примитива на страницу [S8]. Раскрытие маской сложной формы (арка, капля, волна) — `clip-path: shape()`:
+функция есть во всех движках и входит в Interop 2026 [S27] `[документация]`; без поддержки — `inset()` того же раскрытия `[практика]`. Правило базы: **2–3 примитива, разные у заголовков, медиа и групп;
 `calm` без появления** `[мнение вендора]` → H ставит статус клише, K считает подписи анимаций.
 
 ### 2.3. Числа и поведение
@@ -141,7 +143,7 @@ none — и советует брать 1–2 примитива на стран
 - Один раз: ScrollTrigger `once: true` (убивает триггер после первого прохода) или отписка наблюдателя [S11]; NN/g: после
   срабатывания «leave those objects in their final positions, instead of reanimating each object» [S12] `[исследование]`.
 - Сдвиг 8–24 px (ui: 4–8 px в сервисах; генераторы — 20–40 px), длительность 400–700 мс, `out-expo`; каскад 40–80 мс, ≤ 6–8
-  элементов, сумма ≤ 600 мс (`01` §7.4).
+  элементов, сумма ≤ 600 мс (`01` §7.4); шаг каскада без JS — `sibling-index()` (`01` §7.4).
 - Быстрая прокрутка: элемент, который пролетели, показывается сразу (ScrollTrigger `fastScrollEnd: true` — при уходе быстрее
   2 500 px/с анимация доводится до конца) [S11].
 - Контент видим без JS и в reduce (`01` §4.3); проверка — прогон с выключенным JS и «поиск по странице» находит весь текст.
@@ -153,10 +155,10 @@ none — и советует брать 1–2 примитива на стран
 <script>document.documentElement.classList.add('js')</script> <!-- в <head>, до стилей появления -->
 <style>
 @media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal]:not(.is-in) { opacity: .01; transform: translateY(var(--mm-shift-reveal, 16px)); }
+  html.js [data-reveal]:not(.is-in) { opacity: .01; transform: translateY(var(--motion-marketing-distance-shift-reveal, 16px)); }
   html.js [data-reveal="unmask"]:not(.is-in) { opacity: 1; transform: none; clip-path: inset(0 0 100% 0); }
-  html.js [data-reveal] { transition: opacity var(--mm-dur-reveal) var(--mm-ease-out-expo),
-    transform var(--mm-dur-reveal) var(--mm-ease-out-expo), clip-path var(--mm-dur-reveal) var(--mm-ease-out-expo); }
+  html.js [data-reveal] { transition: opacity var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo),
+    transform var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo), clip-path var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo); }
 }
 </style>
 <script type="module">
@@ -173,42 +175,46 @@ document.querySelectorAll('[data-reveal]').forEach((el, i) => io.observe(el));
 
 ## 3. CSS scroll-driven и ScrollTrigger
 
-### 3.1. Поддержка и практика на 2026-09-24
+### 3.1. Поддержка (2026-10-28) и практика (2026-09-24)
 
 | Механизм | Chrome / Edge | Safari | Firefox | Практика (C, 49 эффектных страниц) |
 |---|---|---|---|---|
-| CSS `animation-timeline: scroll()` / `view()`, `ScrollTimeline`, `ViewTimeline` | 115+ | 26+ | только Nightly (BCD `preview`) | 2 страницы (Stripe, Warm & Fuzzy) |
+| CSS `animation-timeline: scroll()` / `view()`, `ScrollTimeline`, `ViewTimeline` | 115+ | 26+ | 159+ (2026-10-27), Android 159+ | 2 страницы (Stripe, Warm & Fuzzy) |
 | GSAP ScrollTrigger (3.15.0) | все | все | все | 23 страницы; закрепление у 5 |
 | Motion (`scroll()` на WAAPI) | все | все | все | продуктовые главные (Stripe, Linear, Vercel), 0 со ScrollTimeline |
+| CSS scroll-triggered (`timeline-trigger`, `animation-trigger`): анимация по времени после порога, не скраб | 146 | нет | нет | — |
+| `@container scroll-state()` (`stuck`, `snapped`, `scrollable`; `scrolled` — Chrome 144) | 133 | нет | нет | — |
 
-Источники: Chrome for Developers (виджет поддержки на 2026-09-24) [S14], MDN `animation-timeline` (изм. 2026-09-16: «Limited
-availability», не Baseline) [S15], C [S5] `[документация]` `[данные: C]`.
+Источники: MDN «Firefox 159 release notes» [S25], MDN `animation-timeline` [S15], Chrome for Developers [S14], заметки к выпускам
+Chrome 133, 144, 146 и blink-dev [S26], C [S5] `[документация]` `[данные: C]`. Scroll-driven animations — направление Interop 2026
+[S27]: движки выравнивают поведение, частичные реализации ловит полная проверка `@supports` (§3.3).
 
 ### 3.2. Что чем делать
 
 | Задача | Механизм | JS, КБ br | Почему |
 |---|---|---|---|
-| полоса прогресса, мягкий параллакс слоя, наклон и проявление карточки, прилипающая стопка (`position: sticky` + `view()`) | CSS scroll-driven под `@supports (animation-timeline: view())` | 0 | идёт вне главного потока: тяжёлый JS её не тормозит (Chrome) [S14]; Firefox получает статику |
-| закреплённая сцена со сложным таймлайном, горизонталь, синхрон с canvas, WebGL, видео-скраб | GSAP + ScrollTrigger | 41,9 (25,7 + 16,2) | точный прогресс, `pin`, `scrub`, `snap`, `matchMedia`, все браузеры [S11] `[проверено]` |
+| полоса прогресса, мягкий параллакс слоя, наклон и проявление карточки, прилипающая стопка (`position: sticky` + `view()`) | CSS scroll-driven под `@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))` | 0 | идёт вне главного потока: тяжёлый JS её не тормозит (Chrome) [S14]; браузер без поддержки получает статику |
+| закреплённая сцена со сложным таймлайном, горизонталь, синхрон с canvas, WebGL, видео-скраб | GSAP + ScrollTrigger | 41,9 (25,7 + 16,2) | то, чего CSS не делает: таймлайн из многих шагов с колбэками, `snap`, синхрон с canvas и WebGL, `matchMedia` [S11] `[проверено]` |
 | плавная прокрутка с синхроном DOM и WebGL | + Lenis | + 4,9 | только L2 (§7) |
-| прогресс для WebGL без обработчика `scroll` | `ScrollTimeline` в JS + запас на `scroll` | 0 | Chrome, Safari 26; Firefox — запас (3d 09/03 §3.2) [S19] |
+| прогресс для WebGL без обработчика `scroll` | `ScrollTimeline` в JS + запас на `scroll` | 0 | Chrome 115, Safari 26, Firefox 159; старые версии — запас (3d 09/03 §3.2) [S19] |
 
-- Позиция `PLAN.md` «scroll-driven — основной инструмент подачи» уточнена: **основной инструмент — движение, привязанное к
-  прокрутке; реализация — CSS scroll-driven для DOM-эффектов с `@supports` и ScrollTrigger для закрепления и сцен** (практика 2026-09:
-  2 из 49 против 23 из 49) `[данные: C]`.
+- **Основной инструмент подачи — движение, привязанное к прокрутке; реализация — CSS scroll-driven для DOM-эффектов под
+  `@supports` и ScrollTrigger для того, чего CSS не делает** (закрепление со сложным сюжетом, синхрон с canvas); практика
+  отстаёт от платформы — 2 из 49 против 23 из 49 (2026-09) `[данные: C]`.
 - Не выбирать: Theatre.js (заморожен с 2024), `framer-motion-3d` (снят) — 3d 09/03 §1 [S19]; стек — G.
 
 ### 3.3. Запас без поддержки
 
 - Без поддержки `animation-timeline` свойство игнорируется: элемент должен стоять в **конечном** состоянии. Антипример 3d F2/08:
-  `.bar { transform: scaleX(0) }` по умолчанию — в Firefox полоса невидима навсегда; `.card` без анимации — видна (безопасно) [S19].
+  `.bar { transform: scaleX(0) }` по умолчанию — в браузере без поддержки (Safari до 26, Firefox до 159) полоса невидима навсегда;
+  `.card` без анимации — видна (безопасно) [S19].
 - Правило: начальное состояние анимации — только внутри `@supports` и `@media (prefers-reduced-motion: no-preference)`, статика — снаружи.
 
 ```css
-/* Chrome 115+ · Safari 26+ · Firefox — статика · 2026-09-24 · [проверено] */
+/* Chrome 115+ · Safari 26+ · Firefox 159+ · без поддержки — статика · 2026-09-24 · [проверено] (Chromium 153, WebKit 2359) */
 .story { height: 400vh; view-timeline: --story block; }
 .story .pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-@supports (animation-timeline: view()) {
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   @media (prefers-reduced-motion: no-preference) {
     .story .track { animation: slide linear both; animation-timeline: --story; animation-range: contain 0% contain 100%; }
   }
@@ -341,7 +347,8 @@ E/02 (§3.5).
 - **Да** — L2, когда нужна синхронизация DOM и WebGL на каждом кадре (нативная прокрутка не синхронна с кадром; 3d 09/03 §1) [S19].
 - **Нет** — L0–L1, страницы с формами и длинным чтением, лидогенерация, телефоны (у Lenis `syncTouch: false` по умолчанию — тач
   нативный) [S18] `[документация: исходник]`.
-- Практика: Lenis активен у 17 из 49 эффектных страниц (студии 6 из 9, культура 5 из 6), у продуктовых главных — 0 из 9; хвост
+- Практика: плавная прокрутка на Lenis активна у 17 из 49 эффектных страниц (Lenis — 16, Locomotive на Lenis — 1; студии 6 из 9,
+  культура 5 из 6), у продуктовых главных — 0 из 9; хвост
   0,8–1,4 с на шаг колеса против ≤ 0,06–0,27 с нативно; на телефоне не отключается ни у одной из 5 [S5] `[данные: C]`.
 - Самый залайканный комментарий подборки трендов ui: «never ever ever hijack my scrollbar» (5 800) [S22] `[мнение]`.
 
@@ -380,7 +387,7 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 | Вид | Поддержка | Как включить | Практика C |
 |---|---|---|---|
 | однодокументные View Transitions (`document.startViewTransition`) | Baseline 2025, Newly available с октября 2025 (MDN) | SPA-роутер, смена состояния блока | `startViewTransition` в коде роутеров 16 из 49, в дизайне — 1 |
-| кросс-документные (MPA) | Chrome 126+, Safari 18.2+, Firefox нет | `@view-transition { navigation: auto; }` на обеих страницах, только same-origin | 0 из 49 |
+| кросс-документные (MPA) | Chrome 126+, Safari 18.2+, Firefox нет (межстраничные переходы — в Interop 2026 [S27]) | `@view-transition { navigation: auto; }` на обеих страницах, только same-origin | 0 из 49 |
 | Barba, Swup | все (перехват ссылок + fetch) | библиотека, 300–500 мс | Barba 4, Swup 1 из 49 |
 
 Источники: MDN [S17], Chrome for Developers [S16], C [S5] `[документация]` `[данные: C]`.
@@ -454,7 +461,8 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 2. **Переигрывание появления при прокрутке вверх** (`toggleActions: "play reverse play reverse"`, `once: false`).
 3. **Содержимое в `opacity: 0` до срабатывания скрипта**: отказ JS, поиск по странице и скриншотеры видят пустую страницу.
 4. **H1 из `opacity: 0` или split-маской** — LCP уезжает на мелкий элемент (§10).
-5. **CSS scroll-driven без `@supports`** и с начальным состоянием по умолчанию — в Firefox элемент невидим навсегда (§3.3).
+5. **CSS scroll-driven без `@supports`** и с начальным состоянием по умолчанию — в браузере без поддержки (Safari до 26, Firefox до 159)
+   элемент невидим навсегда (§3.3).
 6. **Pin-сцена на 800–1 000vh** без станций и без прогресса; текст в сцене меняется во время чтения.
 7. **Lenis на лендинге услуг и на телефоне**, `duration: 2`, сломанные якоря и Ctrl+F; `new Lenis({ smooth: true })` и
    `@studio-freight/lenis` у Claude и K3 по памяти [S19].
@@ -471,7 +479,8 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 - CRV-CH-03 Хореография записана таблицей §1.4 (класс, триггер, свойства, мс, кривая, reduce, телефон)?
 - CRV-CH-04 Появление — 2–3 примитива по ролям, один раз, сдвиг 8–24 px, 400–700 мс, каскад только у групп?
 - CRV-CH-05 Без JS и при быстрой прокрутке весь текст виден (`html.js`, `fastScrollEnd`)?
-- CRV-CH-06 CSS scroll-driven — под `@supports`, в Firefox конечное состояние; pin и сложные сцены — ScrollTrigger?
+- CRV-CH-06 CSS scroll-driven — под полной проверкой `@supports`, без поддержки — конечное состояние; ScrollTrigger — только для того,
+  чего CSS не делает (закрепление со сложным сюжетом, синхрон с canvas)?
 - CRV-CH-07 Pin-сцены со скрабом: шаги 100–150vh со станциями, L1 ≤ 150vh, L2 ≤ 400vh и ≤ 5 шагов; шаги с доигрышем: шаг
   0,5–0,6 экрана, 5–7 точек покоя, поле ≤ 450vh, рельс, «Пропустить», пауза; формы и тарифы не закреплены?
 - CRV-CH-08 Скраб сглажен ≤ 1 с, пружина прогресса — без перелёта; `snap` — только L2, ≤ 0,4 с, не на телефоне?
@@ -488,8 +497,9 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 
 1. **Потолки pin-сцен L2 (≤ 400vh, ≤ 5 шагов) и «первый пик в 2–3 экранах»** — из практики C и NN/g, без измерения на людях `[не проверено]`.
 2. **`snap` к станциям** — перехват или помощь? NN/g не разбирает `snap` отдельно; позиция базы — только L2 и коротко `[мнение]`.
-3. **CSS scroll-driven в Firefox** — сроки стабильной поддержки неизвестны; пока Firefox получает статику, «одна реализация для всех»
-   возможна только на ScrollTrigger.
+3. **Браузеры без CSS scroll-driven** (Safari до 26, Firefox до 159) — их доля у аудитории проекта не мерилась; пока она заметна,
+   смысловое содержимое держит конечное состояние без анимации. Поведение в Firefox 159 стендом не проверено: опыты шли в
+   Chromium и WebKit.
 4. **LCP при `clip-path` и `opacity: .01`** — метрика раньше показа; Chromium может поменять правило (как с энтропией картинок,
    ai-media 10/01 §4.2) — перепроверять раз в полгода.
 5. **Split-заголовок и LCP** — проверен один вариант разметки (inline-block слова с пробелами между спанами); SplitText 3.13+ с
@@ -519,7 +529,7 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 - [S12] NN/g (K. Whitenton) «Parallax Scrolling Effects», 2019-01-20 — кэш `www.nngroup.com_articles_parallax-usability_39933c22.md` `[исследование]`.
 - [S13] NN/g «Scrolljacking 101», 2023-08-06 — кэш `www.nngroup.com_articles_scrolljacking-101_1de2f203.md` `[исследование]`.
 - [S14] Chrome for Developers «Scroll-driven animation performance case study» — кэш `developer.chrome.com_blog_scroll-animation-performance-case-study_3050d9bc.md`;
-  поддержка на 2026-09-24: Chrome/Edge 115, Safari 26, Firefox — только Nightly (BCD `preview`) `[документация]`.
+  поддержка: Chrome/Edge 115, Safari 26, Firefox 159 — [S25] `[документация]`.
 - [S15] MDN `animation-timeline` (изм. 2026-09-16) — кэш C `developer.mozilla.org_en-US_docs_Web_CSS_animation-timeline_12614b63.md` `[документация]`.
 - [S16] Chrome for Developers «Cross-document view transitions» — кэш `developer.chrome.com_docs_web-platform_view-transitions_cross-document_6edb5010.md`
   (Chrome 126, Safari 18.2, Firefox нет; тайм-аут 4 с; `pageswap`/`pagereveal`; `blocking="render"`) `[документация]`.
@@ -535,3 +545,9 @@ gsap.ticker.add((t) => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);   // �
 - [S22] ui-research `11-styles-trends/03-*.md` стр. 459–461 (§7.2, комментарий «never ever ever hijack my scrollbar», 5 800 лайков) `[мнение]`.
 - [S23] Опыты E: `99-raw/experiments/E/01-lcp-reveal/`, `E/02-scroll-scene/` (2026-09-24) `[проверено]`.
 - [S24] `PLAN.md` creative, решение заказчика 13 (прелоадер только в L2-кампаниях по явному решению).
+- [S25] MDN, «Firefox 159 release notes» (выпуск 2026-10-27): «Scroll-driven animations are now enabled by default» — и Firefox
+  для Android 159; сверено 2026-10-28 `[документация]`.
+- [S26] Chrome: blink-dev Intent to Ship и заметки к выпуску Chrome 146 — `timeline-trigger` и `animation-trigger` по умолчанию;
+  Chrome 133 — `@container scroll-state()`, Chrome 144 — `scrolled`; у Gecko и WebKit сигнала нет; сверено 2026-10-28 `[документация]`.
+- [S27] web.dev, «Interop 2026» (2026-02-12): scroll-driven animations, view transitions (с межстраничными, `blocking="render"`,
+  `<link rel="expect">`, `:active-view-transition-type()`), scroll snap, `shape()`, anchor positioning `[документация]`.

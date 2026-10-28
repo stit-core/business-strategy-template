@@ -367,7 +367,7 @@
             },
             "primitives": {
               "type": "array", "uniqueItems": true, "maxItems": 3,
-              "items": {"enum": ["fade-up", "type-unmask", "sweep", "number-tick", "line-draw", "none"]},
+              "items": {"enum": ["fade-up", "type-unmask", "sweep", "number-tick", "line-draw", "scale-in", "none"]},
               "description": "Система появления — 2–3 примитива, закреплённые за ролями (creative 05/02 §2.2)."
             },
             "library": {

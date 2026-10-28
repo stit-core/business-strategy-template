@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Переходы: состояние — набор движения</title>
+<meta name="description" content="Смена состояния блока в View Transition и переход между страницами набора движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+<style>@view-transition { navigation: auto; types: mk-page; }</style>
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html">Текст</a>
+      <a href="scroll.html">Прокрутка</a>
+      <a href="pin.html">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html">Петли</a>
+      <a href="transition-a.html" aria-current="page">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec" data-section="intro" style="padding-bottom: clamp(48px, 7vw, 96px)">
+  <div class="wrap head" style="margin-bottom: 0">
+    <p class="label">Семейство transition · страница А</p>
+    <h1 class="display" data-mk="entrance" data-mk-lcp style="--i: 0">Переход — прогрессивное улучшение</h1>
+    <p class="lead" data-mk="entrance" style="--i: 1">Без поддержки — обычная смена состояния и обычная навигация. В reduce — затухание без смещения.</p>
+  </div>
+</section>
+
+<section class="sec" id="view-transition" data-section="state" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>01</b> — Смена состояния · <code>view-transition</code></p><p class="muted" style="margin: 0; max-width: 40rem">Кнопка меняет атрибут цели внутри document.startViewTransition; группы — 320 мс in-out, тип перехода mk-state.</p></div>
+    <div class="seg" role="group" aria-label="Вид галереи" style="margin-bottom: 28px">
+      <button type="button" data-mk="state" data-mk-target="#g" data-mk-attr="data-view" data-mk-value="grid" aria-pressed="true">Плитка</button>
+      <button type="button" data-mk="state" data-mk-target="#g" data-mk-attr="data-view" data-mk-value="list" aria-pressed="false">Список</button>
+    </div>
+    <div class="gallery" id="g" data-view="grid">
+      <div class="tile" style="view-transition-name: t1"><div class="plate plate--sea"><div class="fill"></div></div><span class="h3">Море</span></div>
+      <div class="tile" style="view-transition-name: t2"><div class="plate plate--dune"><div class="fill"></div></div><span class="h3">Пустыня</span></div>
+      <div class="tile" style="view-transition-name: t3"><div class="plate plate--ember"><div class="fill"></div></div><span class="h3">Жар</span></div>
+      <div class="tile" style="view-transition-name: t4"><div class="plate plate--night"><div class="fill"></div></div><span class="h3">Ночь</span></div>
+    </div>
+  </div>
+</section>
+<section class="sec dark" id="page-transition" data-section="page">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>02</b> — Переход между страницами · <code>page-transition</code></p><p class="muted" style="margin: 0; max-width: 40rem">@view-transition { navigation: auto } на обеих страницах, общий view-transition-name у кадра; 0 КБ JS; Chrome 126+, Safari 18.2+, Firefox — обычная навигация.</p></div>
+    <a href="transition-b.html#page-transition" style="display: grid; gap: 14px; max-width: 520px; text-decoration: none">
+      <div class="plate plate--dune" data-mk="page-transition" style="view-transition-name: kit-cover; aspect-ratio: 16 / 10"><div class="fill"></div></div>
+      <span class="h3">Открыть страницу Б →</span>
+    </a>
+  </div>
+</section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

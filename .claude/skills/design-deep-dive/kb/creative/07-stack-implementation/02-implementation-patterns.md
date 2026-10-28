@@ -28,7 +28,10 @@ esbuild 0.25.12, vite 8.3.1. Выбор библиотек — `01-stack-choice.
 9. **Пауза**: непрерывное движение останавливается вне экрана (IO) и при `document.hidden`; петля дольше 5 с — видимая кнопка
    паузы (WCAG 2.2.2) → §4. [проверено: G/03 — пауза шейдера по IO; стандарт]
 10. **Модуль эффекта** — объект `{ id, budget, supports(), init(el), reduce(el), mobile?(el), pause?(el), resume?(el), destroy(el) }`;
-    `destroy` снимает всё: ScrollTrigger, split, canvas, pin-spacer, слушатели → §6. [проверено]
+    `destroy` снимает всё: ScrollTrigger, split, canvas, pin-spacer, слушатели → §6. DOM-эффекты (33 эффекта каталога) свой
+    модуль и загрузчик не пишут — их исполняет набор движения `motion-kit` (`../11-motion-code/`, модуль острова,
+    `MotionKit.mount`); модуль и загрузчик — для того, чего набор не делает: GSAP-сюжет, шейдер, WebGL, Lottie, Rive.
+    [проверено]
 11. **`pagehide` без `persisted` → `destroy`**, при bfcache (`persisted: true`) — не разрушать → §6.2. [практика]
 12. **Lenis + ScrollTrigger — один цикл**: `lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0)`; `scrollerProxy` для Lenis не нужен → §7.1. [проверено]
@@ -75,17 +78,17 @@ esbuild 0.25.12, vite 8.3.1. Выбор библиотек — `01-stack-choice.
       .reveal { animation: reveal linear both; animation-timeline: view(); animation-range: entry 10% cover 30%; }
     }
     @supports not ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
-      .js .reveal:not(.in) { opacity: 0; transform: translateY(24px); }      /* Firefox: IO-ветка ставит .in */
+      .js .reveal:not(.in) { opacity: 0; transform: translateY(24px); }      /* без SDA: IO-ветка ставит .in */
       .js .reveal { transition: opacity .6s ease, transform .6s cubic-bezier(.2,.7,.2,1); }
     }
   }
   @keyframes reveal { from { opacity: 0; transform: translateY(24px); } }
 </style>
 ```
-- IO-ветка для браузеров без SDA — `G/03 src/loader.js`-подобный наблюдатель, ставящий `.in`; если скрипт упал, `.reveal` в
-  Firefox останется скрытым → в IO-ветке ставить таймер-предохранитель: через 3 с после `load` всем `.reveal` — `.in`
-  [практика; не проверено].
-- Декоративное (фоновые слои, параллакс) — без IO-ветки: в Firefox просто статично [документация: S3].
+- IO-ветка для браузеров без SDA (Safari до 26, Firefox до 159) — наблюдатель по образцу загрузчика опыта G/03, ставящий `.in`;
+  если скрипт упал, `.reveal` в таком браузере останется скрытым → в IO-ветке ставить таймер-предохранитель: через 3 с после
+  `load` всем `.reveal` — `.in` [практика; не проверено].
+- Декоративное (фоновые слои, параллакс) — без IO-ветки: в браузере без SDA просто статично [документация: S3].
 
 ### 1.3. Первый экран
 
@@ -179,6 +182,14 @@ document.readyState === 'complete' ? start() : addEventListener('load', start, {
   reduce — ≈ 2 КБ br [проверено].
 
 ## 6. Модуль эффекта
+
+DOM-эффекты — появления, разбиение текста, счётчик, эффекты прокрутки и DOM-сцены, петли, указатель, микродвижение, переходы и
+переключатель движения (33 эффекта, `../11-motion-code/primitives.yaml`, поле `effects`) — исполняет набор движения
+`motion-kit` (`stack.yaml#motion-kit`): один скрипт без зависимостей и сети, `MotionKit.mount(root, opts)` с режимом,
+паузой, `destroy` и реакцией на смену настройки; в коде сайта — модуль острова (`../11-motion-code/04-where-it-runs.md` §2), на
+холсте — файл поддержки. Контракт модуля и загрузчик ниже — для того, чего набор не делает: GSAP-сюжет (сложный таймлайн,
+Flip), шейдер, WebGL и 3D, Lottie, Rive; на странице с набором загрузчик ведёт только такие эффекты, а режим берёт тот же, что
+набор (`data-motion`, §2.1).
 
 ### 6.1. Контракт
 
@@ -319,6 +330,7 @@ DotLottie.setWasmUrl(new URL('/wasm/dotlottie-player.wasm', location.origin).hre
 RuntimeLoader.setWasmUrl(new URL('/wasm/rive.wasm', location.origin).href);
 ```
 - Wasm отдавать с `Content-Type: application/wasm` и brotli (Rive советует) [документация: S6].
+- Worker dotLottie (`DotLottieWorker`) под CSP — `setWorkerUrl()` на свой домен (dotlottie-web 0.81) [документация: README пакета].
 - Версии фиксировать (`"gsap": "3.15.0"`, без `^`, или lock-файл); `npm view <пакет> version dist-tags` перед сборкой.
 - Лицензии: esbuild — не ставить `legalComments: 'none'`; Terser — не `comments: false`; GSAP-уведомление `/*! … @license … */`
   остаётся в бандле [документация: S2].
@@ -375,7 +387,8 @@ Asset::getInstance()->addString('<script type="module" src="' . SITE_TEMPLATE_PA
 
 ## 11. Типовые ошибки исполнителей (K3, Claude, генераторы)
 
-1. Контент с `opacity: 0` в CSS и анимация «из невидимого» без JS-ветки — в Firefox (нет SDA) и при ошибке скрипта текста нет.
+1. Контент с `opacity: 0` в CSS и анимация «из невидимого» без JS-ветки — в браузере без SDA (Safari до 26, Firefox до 159) и
+   при ошибке скрипта текста нет.
 2. LCP-заголовок в SplitText с `from({ opacity: 0 })` — LCP сдвигается на время анимации.
 3. `@supports (animation-timeline: scroll())` без `animation-range`; `animation` шорткат после `animation-timeline`.
 4. `duration: 0` вместо reduce-ветки — GSAP, шейдер и видео всё равно грузятся и работают.
@@ -391,7 +404,7 @@ Asset::getInstance()->addString('<script type="module" src="' . SITE_TEMPLATE_PA
 
 ## Чек-лист
 
-- [ ] Без JS и в Firefox весь смысл страницы видим; скрытое до анимации — только под `.js` и с предохранителем?
+- [ ] Без JS и без SDA (старые версии) весь смысл страницы видим; скрытое до анимации — только под `.js` и с предохранителем?
 - [ ] LCP-элемент не анимируется из `opacity: 0`, эффекты hero стартуют после `load`/в простое?
 - [ ] SDA под полной проверкой `@supports` и медиазапросом reduce; `animation-timeline` после шортката?
 - [ ] Режим (`full | mobile | reduce`) выбирается до загрузки тяжёлых зависимостей; в reduce GSAP/шейдер/видео не грузятся?
@@ -412,8 +425,8 @@ Asset::getInstance()->addString('<script type="module" src="' . SITE_TEMPLATE_PA
 3. **bfcache**: в headless «Назад» перезагружал страницу (`persisted: false`); поведение эффектов при восстановлении из bfcache
    на реальном браузере не проверено.
 4. **Визуальная разница** «Lenis остановлен / не остановлен на время VT» не оценивалась (запись — K).
-5. **IO-предохранитель** для `.reveal` в Firefox — практика, не прогон (Firefox в Playwright не установлен; решение заказчика 13
-   разрешает поставить).
+5. **IO-предохранитель** для `.reveal` в браузерах без SDA — практика, не прогон: Chromium 153 и WebKit 26 стенда SDA
+   поддерживают, Firefox в Playwright не установлен (решение заказчика 13 разрешает поставить).
 6. **Платформенные рецепты** (Тильда, Webflow, Framer, Битрикс) не проверены на живых аккаунтах — вход в сервисы запрещён; только
    документация.
 

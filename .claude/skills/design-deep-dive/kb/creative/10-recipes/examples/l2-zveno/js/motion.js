@@ -2,7 +2,7 @@
    Переключатель «меньше движения» (L2 — CRV-AL-12) и единая пауза всех петель (WCAG 2.2.2), по creative 05/01 §4.4:
    <html data-motion>: нет атрибута — как в системе; "reduced" — меньше; "full" — полное вопреки ОС (выбор побеждает ОС в обе стороны).
    Выбор — localStorage("motion"), ставится строкой в <head> до первой отрисовки; меняется без перезагрузки.
-   CSS слушает атрибут (токены --mm-* и [data-loop]); JS-движение подписывается: Motion.on(function (reduced, pref) {…}). */
+   CSS слушает атрибут (токены --motion-marketing-* и [data-loop]); JS-движение подписывается: Motion.on(function (reduced, pref) {…}). */
 (function () {
   var root = document.documentElement, KEY = 'motion', mq = matchMedia('(prefers-reduced-motion: reduce)'), subs = [], box, now;
   function pref() { var m = root.dataset.motion; return m === 'reduced' || m === 'full' ? m : 'system'; }

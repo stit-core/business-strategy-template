@@ -33,8 +33,8 @@ Blender 5.2.2 (glTF-IO 5.2.40), gltfpack 1.2, Chromium 153 headless (Iris Xe).
    (`export_extras=True`), сжатие только `gltfpack -cc -kn -ke` (421 → 33 КБ, имена и extras целы); после квантования меш — ребёнок
    узла: при рейкасте поднимайся по `parent` до имени → §7. [проверено]
 10. **CSS scroll-driven animations хватает для DOM-эффектов** (полоса прогресса, появление/наклон карточки, параллакс слоёв):
-    `animation-timeline: scroll()` / `view()`, 0 JS; Chrome 115+, Safari 26+, Firefox — только preview → запас: элемент в конечном
-    состоянии → §3. [проверено: F2/08; документация MDN BCD]
+    `animation-timeline: scroll()` / `view()`, 0 JS; Chrome 115+, Safari 26+, Firefox 159+ → запас (старые версии, без JS):
+    элемент в конечном состоянии → §3. [проверено: F2/08; документация MDN BCD, release notes Firefox 159]
 11. **`ScrollTimeline` из JS отдаёт прогресс в процентах** (`currentTime = {value: 50, unit: 'percent'}`) — можно кормить uniform без
     обработчика `scroll` (опрос в цикле кадра), но только в Chrome/Safari 26 → §3.2. [проверено]
 12. **Лицензия GSAP (Webflow, «Standard No Charge»)**: разрешено на любых сайтах, включая коммерческие; запрещено — инструменты
@@ -62,7 +62,7 @@ Blender 5.2.2 (glTF-IO 5.2.40), gltfpack 1.2, Chromium 153 headless (Iris Xe).
 | 3D-сцена за HTML-контентом: путь камеры, клип, uniform | ScrollTrigger (прогресс) + цикл кадра с `damp` | gsap + ST 40 КБ br | точный прогресс, `pin`, `scrub`, `matchMedia` [проверено F2/03] |
 | Плавное колесо, синхрон DOM ↔ WebGL | + Lenis | 4,9 КБ br | нативный скролл не кадр-синхронен (Codrops 2025-06-05, A) [практика] |
 | Полноэкранная история целиком в canvas (R3F) | drei `ScrollControls` + `useScroll` | в составе drei | свой контейнер прокрутки; HTML — внутри `<Scroll html>` [документация] |
-| Прогресс без GSAP в Chrome/Safari 26 | `ScrollTimeline` в JS | 0 | нет Firefox → запас на `scroll`-событии [проверено F2/08] |
+| Прогресс без GSAP | `ScrollTimeline` в JS (Chrome 115+, Safari 26+, Firefox 159+) | 0 | без поддержки → запас на `scroll`-событии [проверено F2/08] |
 Не выбирать: Theatre.js (заморожен с 2024, studio — AGPL), `framer-motion-3d` (снят) — A `03` §10.
 
 ## 2. GSAP ScrollTrigger + Lenis + three r186
@@ -134,8 +134,8 @@ code? Absolutely! AI-generated code is not a "Prohibited Use".» Webflow впр�
 @keyframes tilt { from { transform: perspective(800px) rotateX(35deg) translateY(80px); opacity: 0; } to { transform: none; opacity: 1; } }
 ```
 Результат: на 50 % прокрутки полоса `scaleX(0.5)`, карточка видна полностью; при reduce анимация не применяется, элементы в
-конечном состоянии [проверено]. Поддержка: `animation-timeline` и `ScrollTimeline` — Chrome/Edge 115+, Safari/iOS 26+, Firefox —
-только preview (MDN BCD, 23.09.2026) [документация]. Без поддержки свойство игнорируется: `.card` без анимации видна сразу —
+конечном состоянии [проверено]. Поддержка: `animation-timeline` и `ScrollTimeline` — Chrome/Edge 115+, Safari/iOS 26+, Firefox
+159+ (MDN BCD; release notes Firefox 159, 2026-10-27) [документация]. Без поддержки свойство игнорируется: `.card` без анимации видна сразу —
 безопасный запас; `.bar` остаётся `scaleX(0)` — невидимой.
 Ограничения: только DOM и CSS-свойства (canvas не получит прогресс); «появление при прокрутке» — автозапуск по WCAG 2.2.2 и
 2.3.3 (`../../ui-research/08-motion/03` §2.2): на лендинге допустимо, на каждом блоке — клише [документация ui-research].
@@ -364,7 +364,7 @@ export function makePointerFollower(lambda = 3) {
 - [ ] Клип: `play()` без паузы, `setTime(clamp(p) · (duration − 1e-4))`, `mixer.update` не вызывается?
 - [ ] Имена узлов `латиница_через_подчёркивание`, `export_extras=True`, gltfpack `-kn -ke`, рейкаст с подъёмом по `parent`?
 - [ ] Для каждого приёма есть вариант reduce из §8; CSS scroll-driven — внутри `@media (prefers-reduced-motion: no-preference)`?
-- [ ] Firefox (нет `animation-timeline`) видит конечное состояние элементов, а не пустоту?
+- [ ] Браузер без `animation-timeline` (Safari < 26, Firefox < 159) и страница без JS видят конечное состояние элементов, а не пустоту?
 - [ ] Лицензия GSAP проверена под продукт (сайт — можно; визуальный конструктор анимаций — юрист)?
 - [ ] Замер: `web_view.py --page` (60 fps, вызовы при прокрутке), `fx_probe.py --modes desktop,mobile,reduce` (0 вызовов в покое)?
 
@@ -375,7 +375,6 @@ export function makePointerFollower(lambda = 3) {
 - `pin` ScrollTrigger с canvas за DOM, горизонтальная прокрутка секций и `ScrollTrigger.matchMedia`/`gsap.matchMedia` для reduce — не
   проверялись.
 - Первый мобильный прогон камеры (26 fps при CPU×4) против повторных 59 fps — шум общей машины; на реальных телефонах не мерили.
-- Firefox без `animation-timeline` (только preview) — сроки стабильной поддержки неизвестны.
 - Лицензия GSAP для продукта «генеративный дизайн» — вопрос юристу заказчика, позиция базы — [спорно].
 - Физика (Rapier) и гироскоп на телефоне — только документация и замеры A.
 

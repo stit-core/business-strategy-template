@@ -30,7 +30,7 @@ files:
   contract.md: sha256:0dbacd12e0d58c123db1d6fb714556763b9374dd870947d9b0bbc6a9ee582fb7
   copy.md: sha256:456134aab65cafd47882c90ebe6414b6e9284975c2257a982e503b0a4e5f637c
   demo-data.json: sha256:8ad5dbea9e6ed789b5dac16dea5b10a576c3f9e175371612108095d6c7042315
-manifest: sha256:848da939c753fa0295ad6be35de8a7d96a6d4e2ac0c6152c6fac1b6c707e69df
+manifest: sha256:080f733b8e6166eb8b03ca3588c765548e0743e86b5bd925e5dbe47c2e994a5b
 ---
 # Вход холста — `office` (web · app), этап `mockup`
 
@@ -74,7 +74,7 @@ manifest: sha256:848da939c753fa0295ad6be35de8a7d96a6d4e2ac0c6152c6fac1b6c707e69d
 | acceptance-criteria | `kb/common/acceptance-criteria.yaml` | база | `sha256:a889792f43d90332f785af1511f323b6f32b99918173cf342717aac4162346fd` |
 | acceptance-widths | `kb/common/acceptance-widths.yaml` | база | `sha256:d4526b119a7da5391670c82cbd16e7458455c5fd7b84cf72c11bb0add78a2d7c` |
 | components | `kb/common/components.yaml` | база | `sha256:f343a9a53a00a0c05bea833c9b90d4ab4e582a08a6d80ecbfc3e4a710cac6e66` |
-| tells | `kb/common/tells.yaml` | база | `sha256:84d220a7c7e51bb012feb7089201a3e72ee3d8099259e0d6901c3230bf9a8163` |
+| tells | `kb/common/tells.yaml` | база | `sha256:492abdd45c3de10f3a717a2ad8046fa3ff43b8e7ea6c287abc068cbabb7056a9` |
 | 04-dark-patterns-and-ethics | `kb/ux/06-feedback-states-motion/04-dark-patterns-and-ethics.md` | база | `sha256:5f7a47bffe9d873b2c5d80f721af6a87d199ea306b193e8f37a0938cd82747f4` |
 | screen-states | `kb/ux/06-feedback-states-motion/screen-states.yaml` | база | `sha256:9410eac88fa3489e8fda4ff3c9626819d360bede542567c1e24107c0d11ec0da` |
 | 06-banned-words-and-patterns | `kb/ux/07-ux-writing/06-banned-words-and-patterns.md` | база | `sha256:ee35b9a3e32a1fddae3887b4b99480b1141727a3452dbba7f7adce02b02481f1` |

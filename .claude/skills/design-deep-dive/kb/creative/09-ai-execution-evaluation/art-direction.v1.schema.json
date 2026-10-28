@@ -1220,6 +1220,7 @@
        "sweep",
        "number-tick",
        "line-draw",
+       "scale-in",
        "none"
       ]
      }
@@ -1227,6 +1228,52 @@
     "spec_ref": {
      "type": "string",
      "description": "Путь к motion-spec страницы (09-ai-execution-evaluation/motion-spec.schema.json)."
+    },
+    "tuning": {
+     "type": "object",
+     "additionalProperties": false,
+     "description": "Числа системы движения, которые заказчик принял на живом эскизе страницы «Подача», собранном набором движения (11-motion-code): этап motion берёт их базой спецификации (page.base, кривая, стаггер, сдвиг), а не середину диапазонов токенов. Числа с референса — по замеру движения (03-live-sites-measured/03-reference-motion-probe.md).",
+     "properties": {
+      "base_duration_ms": {
+       "type": "number",
+       "minimum": 100,
+       "maximum": 2000,
+       "description": "Базовая длительность появления."
+      },
+      "easing": {
+       "type": "string",
+       "description": "Кривая появления: токен motion.marketing.easing.* или cubic-bezier(…)."
+      },
+      "stagger_ms": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 200,
+       "description": "Шаг между соседними элементами группы."
+      },
+      "shift_px": {
+       "type": "number",
+       "minimum": 0,
+       "maximum": 64,
+       "description": "Сдвиг появления."
+      },
+      "kit_primitives": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
+       },
+       "description": "Примитивы набора движения (11-motion-code/primitives.yaml), показанные на эскизе и принятые."
+      },
+      "refs": {
+       "type": "array",
+       "uniqueItems": true,
+       "items": {
+        "type": "string"
+       },
+       "description": "Референсы, чьё движение снято замером и взято в систему (id записей референсов слоя дизайна)."
+      }
+     }
     }
    }
   },
@@ -2136,7 +2183,7 @@
      "type": "object",
      "additionalProperties": false,
      "minProperties": 1,
-     "description": "Значения референса текстом «объект — свойство — число»: measured — замер живого сайта (shot.py и measure_ui.py), estimated — оценка по картинке с пометкой (creative 02/03 §3.3).",
+     "description": "Значения референса текстом «объект — свойство — число»: measured — замер живого сайта (shot.py и measure_ui.py; движение — motion_probe.py probe), estimated — оценка по картинке с пометкой (creative 02/03 §3.3); method и passport — способ замера и паспорт движения.",
      "properties": {
       "measured": {
        "type": "array",
@@ -2153,6 +2200,25 @@
         "type": "string",
         "minLength": 3
        }
+      },
+      "method": {
+       "type": "array",
+       "uniqueItems": true,
+       "minItems": 1,
+       "items": {
+        "enum": [
+         "shot",
+         "measure_ui",
+         "probe",
+         "code"
+        ]
+       },
+       "description": "Чем сняты measured: shot.py и measure_ui.py (облик), probe — замер движения motion_probe.py (03-live-sites-measured/03-reference-motion-probe.md), code — значения из кода страницы без кадров."
+      },
+      "passport": {
+       "type": "string",
+       "minLength": 3,
+       "description": "Паспорт движения референса (motion-passport.schema.json): id или путь выхода motion_probe.py — числа взяты из него; кадры паспорта в git не идут."
       }
      }
     },

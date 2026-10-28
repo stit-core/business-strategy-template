@@ -53,3 +53,6 @@ sibling	site	`<org>/site`
 sibling	mobile	`<org>/mobile`
 value	N/A	«не применимо» в ячейке таблицы
 value	draft/stable	пара статусов артефакта
+value	motion/react	точка входа пакета Motion для React: `import { motion } from "motion/react"`
+value	motion/mini	лёгкая точка входа пакета Motion (`animate` на WAAPI)
+value	motion/three	точка входа пакета Motion для three.js

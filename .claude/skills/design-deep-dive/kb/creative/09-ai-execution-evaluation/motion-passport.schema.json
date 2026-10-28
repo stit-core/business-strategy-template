@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:app-design:creative:motion-passport:1",
+  "title": "motion-passport v1 — паспорт движения референса или прототипа, снятый замером motion_probe.py",
+  "description": "Владелец — creative. Числа движения страницы, снятые замером в браузере: моменты (что двигается, когда, как долго, с какой задержкой и кривой, шаг между соседями, повторы, диапазон прокрутки), закрепления, станции, плавная прокрутка, библиотеки, чего замер не видит. Паспорт живёт в выходе утилиты ($DDD_HOME/out/creative/motion-probe/<id>/), в git не идёт; в запись референса слоя дизайна переносятся строки take (values.measured, способ probe), в motion-spec — ссылка source.ref и source.moment на id момента. Пороги сравнения «близко / заметно / далеко» — x-compare. Документ: ../03-live-sites-measured/03-reference-motion-probe.md; утилита: ../../../scripts/creative/motion_probe.py.",
+  "x-version": "1.0",
+  "x-status": "draft",
+  "x-owner": "creative · 03-live-sites-measured",
+  "x-compare": {
+    "status": "[мнение] пороги базы до калибровки; калибровка — по проектам (сравнение референса с прототипом на живых эскизах)",
+    "duration_pct": {"close": 15, "far": 35, "description": "Разница длительности момента (и периода петли), % от базы A."},
+    "delay_ms": {"close": 60, "far": 200, "description": "Разница задержки от триггера, мс."},
+    "curve_rmse": {"close": 0.035, "far": 0.1, "description": "Расстояние кривых — среднеквадратичная разница прогресса в 41 точке, доли; соседние степени power3.out и power4.out — 0,044, ease и power2.out — 0,103."},
+    "stagger_ms": {"close": 20, "far": 50, "description": "Разница шага между соседями, мс."},
+    "length_vh": {"close": 15, "far": 40, "description": "Разница длины скраба или закрепления, vh."},
+    "count": {"close": 0, "far": 2, "description": "Разница числа моментов."}
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["passport_version", "id", "tool", "target", "measured_at", "status", "viewport", "browser", "probe", "libraries", "moments", "pins", "stations", "take", "limits", "files"],
+  "properties": {
+    "passport_version": {"const": "1.0"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9.-]*-[0-9a-f]{8}$", "description": "Хост и короткий хеш адреса («gsap.com-1a2b3c4d»); у локальной страницы — local-<имя файла>-<хеш пути>; замер с телефона (--mobile) — с «-mobile» перед хешем («gsap.com-mobile-…»), паспорт компьютера он не перезаписывает. На него ссылается запись референса."},
+    "tool": {"type": "string", "description": "Версия утилиты замера."},
+    "skill_version": {"type": ["string", "null"], "description": "Версия скилла (файл VERSION)."},
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "host", "local"],
+      "properties": {
+        "url": {"type": "string", "description": "Адрес замера или путь локальной страницы."},
+        "final_url": {"type": ["string", "null"], "description": "Адрес после переадресаций."},
+        "host": {"type": "string"},
+        "local": {"type": "boolean", "description": "Локальная страница (прототип, тестовая страница), раздана встроенным сервером."},
+        "title": {"type": "string"}
+      }
+    },
+    "measured_at": {"type": "string", "description": "Время замера, ISO 8601 с поясом."},
+    "status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "words"],
+      "properties": {
+        "code": {"enum": ["ok", "static", "partial", "blocked", "login", "robots", "error"], "description": "ok — снято; static — движения не найдено; partial — прокрутка остановлена пределом времени; blocked — закрыто защитой (антибот, капча, 401/403/429); login — закрыто входом; robots — robots.txt не разрешает; error — сбой. blocked, login, robots — не снимаем, сайт смотрит человек (код выхода 3)."},
+        "words": {"type": "string", "description": "Статус словами для человека."},
+        "note": {"type": ["string", "null"], "description": "Чем закрыто или что сломалось."},
+        "http": {"type": ["integer", "null"]}
+      }
+    },
+    "viewport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height"],
+      "properties": {
+        "width": {"type": "integer", "minimum": 1},
+        "height": {"type": "integer", "minimum": 1, "description": "Высота окна — единица vh всех длин паспорта."},
+        "dpr": {"type": "number"},
+        "mobile": {"type": "boolean", "description": "Эмуляция телефона (дескриптор budgets.yaml site, без замедления CPU)."},
+        "device": {"type": ["string", "null"]}
+      }
+    },
+    "browser": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": ["string", "null"]},
+        "headless": {"type": "boolean"},
+        "user_agent": {"type": ["string", "null"], "description": "UA как есть (HeadlessChrome): автоматизация не маскируется."},
+        "webdriver": {"type": ["boolean", "null"], "description": "navigator.webdriver как есть (true)."}
+      }
+    },
+    "probe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["clock", "scroll_step_vh", "settle_ms", "steps"],
+      "description": "Как снято и где замер упёрся в пределы.",
+      "properties": {
+        "clock": {"type": "boolean", "description": "Поддельные часы page.clock: анимации скриптом кадрами по 16 мс; CSS-анимации, переходы и WAAPI идут в реальном времени."},
+        "scroll_step_vh": {"type": "number", "description": "Шаг колеса, vh."},
+        "settle_ms": {"type": "number", "description": "Пауза после успокоения прокрутки, мс."},
+        "max_s": {"type": "number", "description": "Предел замера, с."},
+        "steps": {"type": "integer", "minimum": 0},
+        "seconds": {"type": ["number", "null"]},
+        "locks": {"type": "boolean", "description": "Замер шёл под замком браузера."},
+        "scroll_mode": {"enum": ["native", "virtual"], "description": "virtual — scrollY не меняется, колесо ведёт сцену."},
+        "doc_height_px": {"type": "number"},
+        "scroll_max_px": {"type": "number"},
+        "scroll_reached_px": {"type": "number"},
+        "coverage": {"type": "number", "minimum": 0, "description": "Доля прокручиваемой высоты, пройденная замером."},
+        "truncated": {"type": "boolean"},
+        "load_phase_ms": {"type": ["number", "null"], "description": "Сколько ждали покоя первого экрана."},
+        "observed_elements": {"type": "integer", "description": "Элементов с инлайн-стилями под наблюдением."},
+        "sets": {"type": "integer", "description": "Мгновенных установок стиля (скачок без движения) — в моменты не входят."},
+        "cdp_animations": {"type": "integer", "description": "Анимаций в событиях CDP Animation."}
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Навигация, мс от начала загрузки: к ним относится начало сцены первого экрана.",
+      "properties": {"dcl_ms": {"type": "number"}, "load_ms": {"type": "number"}, "fcp_ms": {"type": "number"}}
+    },
+    "libraries": {"type": "array", "items": {"$ref": "#/$defs/library"}},
+    "smooth_scroll": {"$ref": "#/$defs/smooth_scroll"},
+    "css": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "CSS прокрутки и переходов в таблицах стилей (CSSOM и тела чужих таблиц).",
+      "properties": {
+        "scroll_driven": {"type": "object", "additionalProperties": false, "properties": {
+          "declared": {"type": "integer", "description": "Объявлений animation-timeline, view-timeline, scroll-timeline."},
+          "running": {"type": "integer", "description": "Анимаций на шкалах прокрутки в событиях CDP."}}},
+        "view_transitions": {"type": "object", "additionalProperties": false, "properties": {
+          "at_rule": {"type": "boolean", "description": "Есть @view-transition (переходы между документами)."},
+          "names": {"type": "integer", "description": "Объявлений view-transition-name."}}},
+        "scroll_snap": {"type": ["object", "null"], "additionalProperties": false, "properties": {
+          "type": {"type": "string"}, "points": {"type": "integer"}}},
+        "counts": {"type": "object", "additionalProperties": {"type": "integer"}}
+      }
+    },
+    "gsap": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "GSAP с глобалом: твины и ScrollTrigger прочитаны из рантайма (объявленные числа).",
+      "properties": {"global": {"type": "boolean"}, "tweens": {"type": "integer"}, "scrolltriggers": {"type": "integer"}}
+    },
+    "moments": {"type": "array", "items": {"$ref": "#/$defs/moment"}},
+    "pins": {"type": "array", "items": {"$ref": "#/$defs/pin"}},
+    "stations": {"type": "array", "items": {"$ref": "#/$defs/station"}},
+    "fixed_layers": {
+      "type": "array",
+      "description": "Слои, которые стоят на всех шагах (шапка, фон, холст во весь экран): не закрепления.",
+      "items": {"type": "object", "additionalProperties": false, "required": ["target"], "properties": {
+        "target": {"$ref": "#/$defs/target"}, "height_vh": {"type": "number"}}}
+    },
+    "unseen": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Что на странице есть, но замер внутрь не видит: движение там нужно смотреть глазами или записью.",
+      "properties": {
+        "webgl_contexts": {"type": "integer"}, "canvas": {"type": "integer", "description": "Крупных холстов (≥ 4 % окна)."},
+        "video": {"type": "integer"}, "video_playing": {"type": "integer"}, "svg_smil": {"type": "integer"},
+        "iframes": {"type": "integer"}, "lottie": {"type": "boolean"}
+      }
+    },
+    "take": {"type": "array", "items": {"type": "string", "minLength": 3}, "description": "«Что взять» — объект, свойство и число с id момента в скобках: строки для values.measured записи референса (creative 02/03 §3.2)."},
+    "limits": {"type": "array", "items": {"type": "string"}, "description": "Пределы этого замера: что не видно и почему."},
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "json": {"type": "string"}, "md": {"type": "string"},
+        "frames": {"type": "array", "items": {"type": "string", "pattern": "^frames_[0-9]{2}\\.jpg$"}, "description": "Контактные листы кадров станций и закреплений (только в выходе)."}
+      }
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selector"],
+      "description": "Элемент, который двигается (у группы — первый по времени).",
+      "properties": {
+        "selector": {"type": "string", "description": "Короткий: тег, id, до трёх классов."},
+        "path": {"type": "string", "description": "Уникальный путь CSS (id или nth-of-type)."},
+        "tag": {"type": "string"},
+        "text": {"type": "string", "description": "Начало текста элемента — только для узнавания; в «что взять» не переносится."},
+        "rect": {"type": ["array", "null"], "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "[x, y, ширина, высота] на странице, px, при первом наблюдении."},
+        "count": {"type": "integer", "minimum": 1, "description": "Элементов в группе (стаггер, цели твина)."},
+        "members": {"type": "array", "items": {"type": ["string", "null"]}},
+        "data": {"type": "object", "additionalProperties": false, "description": "Атрибуты контракта разметки motion-spec (x-dom-contract): у прототипа по ним сверяются моменты.",
+          "properties": {"moment": {"type": "string"}, "slot": {"type": "string"}, "fx": {"type": "string"}, "group": {"type": "string"}, "section": {"type": "string"}}},
+        "logical": {"type": "string", "description": "Логическая цель motion-spec из атрибутов: «секция.слот», «секция.fx-имя»."}
+      }
+    },
+    "easing": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Кривая: подбор по траектории, CSS-строка из CDP или объявленная в библиотеке, ближайшая именованная и ближайший токен motion.marketing.",
+      "properties": {
+        "css": {"type": "string", "description": "Для CSS: cubic-bezier(…) подбора или строка анимации (ключевое слово, linear(…), steps(…))."},
+        "named": {"type": "string", "description": "Ближайшая именованная: linear, ease, ease-in, ease-out, ease-in-out, power1–4, expo, sine, circ, back — .in, .out, .inOut (формулы GSAP 3)."},
+        "named_error": {"type": "number", "minimum": 0, "description": "Ошибка именованной кривой, доли прогресса (RMSE)."},
+        "bezier": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4, "description": "Лучший cubic-bezier(x1, y1, x2, y2) методом наименьших квадратов."},
+        "bezier_error": {"type": "number", "minimum": 0, "description": "Ошибка bezier, доли прогресса (RMSE)."},
+        "declared": {"type": "string", "description": "Кривая из кода библиотеки (vars.ease GSAP)."},
+        "mixed": {"type": "boolean", "description": "Кривые у ключевых кадров разные — указана первая."},
+        "token": {"type": "object", "additionalProperties": false, "properties": {"token": {"type": "string"}, "distance": {"type": "number"}}, "description": "Ближайший токен motion.marketing.easing и расстояние."}
+      }
+    },
+    "track": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["property"],
+      "description": "Свойство от → до. Числа сдвига — px, поворота — градусы; у GSAP — значения vars (to-твин: от «текущее», from-твин: до «текущее»).",
+      "properties": {
+        "property": {"type": "string", "description": "opacity, translateX, translateY, scale, scaleX, scaleY, rotate, clip-path, blur, --переменная или свойство CSS и GSAP как в коде."},
+        "from": {"description": "Начальное значение (число, строка или значение vars)."},
+        "to": {"description": "Конечное значение."},
+        "unit": {"type": "string"},
+        "css_from": {"type": "string"},
+        "css_to": {"type": "string"},
+        "keyframes": {"type": "integer", "description": "Ключевых кадров больше двух — их число."},
+        "min": {"type": "number", "description": "Наименьшее значение на диапазоне, если свойство идёт туда и обратно (от и до близки)."},
+        "max": {"type": "number"},
+        "duration_ms": {"type": "number", "description": "Своя длительность свойства (переход прозрачности короче сдвига)."},
+        "delay_ms": {"type": "number", "description": "Сдвиг начала свойства от начала момента."},
+        "easing": {"$ref": "#/$defs/easing"}
+      }
+    },
+    "moment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "class", "kind", "evidence", "trigger", "target", "tracks"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^m[0-9]{2,3}-[a-z0-9]+(-[a-z0-9]+)*$", "description": "id момента — на него ссылается source.moment в motion-spec."},
+        "class": {"enum": ["one-shot", "scroll-linked", "loop"], "description": "Классы motion-spec: разовое, по прокрутке, петля."},
+        "kind": {"enum": ["css-animation", "css-transition", "waapi", "gsap", "inline-style"], "description": "Механизм: CSS-анимация, переход, WAAPI (в том числе Motion), твин GSAP, инлайн-стили скриптом (GSAP без глобала, свой rAF)."},
+        "evidence": {"enum": ["declared", "measured", "declared+measured"], "description": "declared — числа из кода (CDP, GSAP); measured — подбор по траектории; declared+measured — оба и сверены."},
+        "trigger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": {"enum": ["load", "in-view", "scroll-scrub", "pin-scrub", "idle-loop", "state", "unknown"], "description": "load — сцена загрузки; in-view — после шага прокрутки; scroll-scrub, pin-scrub — прогресс ведёт прокрутка (в закреплении); idle-loop — петля; state — по таймеру позже 3 с от шага."},
+            "step": {"type": "integer", "description": "Шаг колеса, после которого момент начался."},
+            "scroll_y": {"type": "number", "description": "Прокрутка в начале момента, px."},
+            "pin": {"type": "string", "description": "id закрепления, в котором идёт скраб."},
+            "start": {"type": ["string", "null"], "description": "start ScrollTrigger как в коде («top 80%»)."},
+            "end": {"type": ["string", "null"]}
+          }
+        },
+        "target": {"$ref": "#/$defs/target"},
+        "tracks": {"type": "array", "items": {"$ref": "#/$defs/track"}},
+        "t_ms": {"type": "number", "description": "Начало видимого движения, мс от начала загрузки."},
+        "duration_ms": {"type": "number", "minimum": 0, "description": "Длительность одного элемента (у петли — одной итерации)."},
+        "duration_token": {"type": "object", "additionalProperties": false, "properties": {"token": {"type": "string"}, "ms": {"type": "number"}, "delta_pct": {"type": ["number", "null"]}}, "description": "Ближайший токен motion.marketing.duration и разница."},
+        "delay_ms": {"type": "number", "minimum": 0, "description": "Задержка от триггера: у load — от начала сцены первого экрана (первого момента загрузки), у in-view — от шага колеса."},
+        "declared": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Числа из кода: CSS (CDP), WAAPI, GSAP.",
+          "properties": {
+            "delay_ms": {"type": "number"}, "duration_ms": {"type": "number"}, "easing": {"type": "string"},
+            "stagger": {"type": "object", "additionalProperties": false, "properties": {"each_ms": {"type": "number"}, "count": {"type": "integer"}, "from": {}}}
+          }
+        },
+        "easing": {"$ref": "#/$defs/easing"},
+        "stagger": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["count"],
+          "anyOf": [{"required": ["each_ms"]}, {"required": ["each_vh"]}, {"required": ["rows"]}],
+          "properties": {
+            "each_ms": {"type": "number", "minimum": 0, "description": "Шаг стартов соседей, мс."},
+            "each_vh": {"type": "number", "minimum": 0, "description": "Скрабы соседей: шаг начала диапазонов, vh (ряд за рядом)."},
+            "rows": {"type": "integer", "minimum": 1, "description": "Скрабы соседей: сколько разных начал диапазона (рядов)."},
+            "count": {"type": "integer", "minimum": 2},
+            "order": {"type": "string", "description": "dom — сверху вниз и слева направо; reverse; random; у GSAP — значение from."},
+            "total_ms": {"type": "number"},
+            "token": {"type": "object", "additionalProperties": false, "properties": {"token": {"type": "string"}, "ms": {"type": "number"}, "delta_pct": {"type": ["number", "null"]}}}
+          }
+        },
+        "repeat": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "iterations": {"anyOf": [{"type": "number", "minimum": 0}, {"const": "infinite"}]},
+            "direction": {"type": "string"},
+            "yoyo": {"type": "boolean"},
+            "period_ms": {"type": "number", "description": "Период петли (у alternate — туда и обратно)."},
+            "speed_px_s": {"type": ["number", "null"], "description": "Скорость петли в единицах главного свойства в секунду: у бегущей строки — px/с (как loop.speed_px_s motion-spec), у вращения — °/с."},
+            "kind": {"enum": ["cycle", "oscillation", "drift"], "description": "cycle — равномерно со сбросом (бегущая строка, вращение по кругу); oscillation — с разворотами; drift — ровно в одну сторону без сброса. Скорость — в единицах свойства в секунду (px/с, °/с)."},
+            "amplitude": {"type": "number"}
+          }
+        },
+        "scroll": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Диапазон прокрутки момента и характер скраба.",
+          "properties": {
+            "start_px": {"type": "number", "description": "Прокрутка начала, px."},
+            "end_px": {"type": "number"},
+            "length_px": {"type": "number"},
+            "length_vh": {"type": "number", "description": "Длина скраба, vh окна замера."},
+            "start_vh": {"type": "number", "description": "Начало от верха документа, vh."},
+            "start_open": {"type": "boolean", "description": "Менялось уже с первого снимка — начало раньше замера."},
+            "end_open": {"type": "boolean", "description": "Менялось до последнего шага — конец дальше замера."},
+            "linearity_r2": {"type": ["number", "null"], "description": "Линейность значения против прокрутки (R²): ≈ 1 — скраб без кривой."},
+            "smoothing_ms": {"type": ["number", "null"], "description": "Догон сглаживания: от успокоения прокрутки до успокоения значения (2 % шага), мс; у scrub: N GSAP — порядка N с."},
+            "points": {"type": "integer", "description": "Точек шагов в диапазоне — по ним считаны линейность и кривая."},
+            "scrub": {"description": "scrub ScrollTrigger как в коде (true или секунды догона)."},
+            "container": {"type": "boolean", "description": "ScrollTrigger внутри containerAnimation (горизонтальная дорожка): start/end — в её шкале, не в px прокрутки."},
+            "timeline": {"type": "string", "description": "Шкала CSS: ViewTimeline или ScrollTimeline."},
+            "range": {"type": "array", "items": {"type": "string"}, "description": "animation-range CSS: начало и конец («entry 0%», «cover 50%»)."}
+          }
+        },
+        "observed": {"type": "object", "description": "Траектория целей твина GSAP: длительность, кривая и шаг по замеру — сверка с объявленным."},
+        "samples": {"type": "integer", "description": "Отсчётов траектории."}
+      }
+    },
+    "pin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "target", "start_px", "end_px", "length_px", "length_vh", "mechanism", "evidence"],
+      "description": "Закрепление: верх элемента в окне стоит, пока документ едет.",
+      "properties": {
+        "id": {"type": "string", "pattern": "^p[0-9]{2,3}-[a-z0-9]+(-[a-z0-9]+)*$"},
+        "target": {"$ref": "#/$defs/target"},
+        "start_px": {"type": "number", "description": "Прокрутка, на которой элемент встал, px."},
+        "end_px": {"type": "number", "description": "Прокрутка, на которой отпущен."},
+        "length_px": {"type": "number"},
+        "length_vh": {"type": "number", "description": "Путь прокрутки закрепления, vh (как scene.length_vh motion-spec)."},
+        "top_px": {"type": "number", "description": "Верх элемента в окне во время стоянки."},
+        "height_vh": {"type": "number"},
+        "start_open": {"type": "boolean"},
+        "end_open": {"type": "boolean", "description": "Стоит до последнего шага — конец дальше замера."},
+        "mechanism": {"enum": ["sticky", "fixed", "transform"], "description": "position: sticky, fixed (ScrollTrigger на body) или transform."},
+        "evidence": {"enum": ["geometry", "scrolltrigger", "geometry+scrolltrigger"]},
+        "inner": {"type": "integer", "description": "Вложенных элементов той же стоянки."},
+        "geometry": {"type": "object", "additionalProperties": false, "properties": {"start_px": {"type": "number"}, "end_px": {"type": "number"}}},
+        "scrolltrigger": {"type": "object", "description": "pinSpacing, pinType из кода."},
+        "moments": {"type": "array", "items": {"type": "string"}, "description": "Моменты по прокрутке, что начинаются в закреплении."},
+        "stations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "station": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind"],
+      "description": "Станция — кадр, на котором можно остановиться: точка snap или плато прогресса скраба.",
+      "properties": {
+        "id": {"type": "string", "pattern": "^s[0-9]{2,3}$"},
+        "kind": {"enum": ["snap", "css-snap", "plateau"]},
+        "scroll_px": {"type": ["number", "null"]},
+        "progress": {"type": "number", "description": "Доля закрепления или скраба 0–1."},
+        "moment": {"type": ["string", "null"]},
+        "pin": {"type": "string"},
+        "align": {"type": "string", "description": "scroll-snap-align точки CSS."}
+      }
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "evidence"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": ["string", "null"]},
+        "evidence": {"type": "array", "items": {"enum": ["global", "gsapVersions", "instance", "class", "lenisVersion", "dom", "file"]}, "description": "global — глобал рантайма; instance — найден экземпляр; class — класс на <html>; file — строки кода библиотеки в загруженном файле."},
+        "files": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "smooth_scroll": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": {"enum": ["native", "lenis", "scrollsmoother", "locomotive", "smooth-unknown"], "description": "smooth-unknown — хвост шага ≥ 300 мс без узнанной библиотеки."},
+        "options": {"type": "object", "description": "Опции экземпляра (Lenis: lerp, duration, smoothWheel, wheelMultiplier …; ScrollSmoother: smooth, effects, speed)."},
+        "global": {"type": "string", "description": "Где найден экземпляр Lenis среди глобалов."},
+        "css_scroll_behavior": {"const": "smooth"},
+        "tail_ms": {"type": "object", "additionalProperties": false, "properties": {"median": {"type": "number"}, "max": {"type": "number"}, "steps": {"type": "integer"}}, "description": "Хвост прокрутки после шага колеса, мс."},
+        "lerp_est": {"type": "number", "description": "Оценка lerp по затуханию хвоста (Lenis: остаток ∝ e^(−60·lerp·t))."}
+      }
+    }
+  }
+}

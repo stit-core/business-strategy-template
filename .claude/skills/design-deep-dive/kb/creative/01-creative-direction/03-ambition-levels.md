@@ -151,8 +151,9 @@ Transitions, Barba, Swup)».
   LCP 60 мс, TBT 19 мс (`../3d/09-web-runtime/04-shaders-effects-catalog-impl.md` §2.1) `[данные: у 3d: F2/04]`.
 - **Умолчания соседей для картинок** (IMG-M05, IMG-M06, полоса 270–320°, `forbidden_markers` по умолчанию) действуют на L0 и
   снимаются на любом уровне только решением `art-direction` по критериям H (`02-art-direction-document.md` §5) `[практика]`.
-- **Поддержка**: scroll-driven и кросс-документные View Transitions — только с `@supports` и фолбэком (Firefox: preview и не
-  Baseline по данным оркестратора на 2026-09-24; сверит G) `[не проверено]`.
+- **Поддержка**: scroll-driven и кросс-документные View Transitions — только с `@supports` и фолбэком: scroll-driven — Chrome
+  115+, Safari 26+, Firefox 159+; между документами — Chrome 126+, Safari 18.2+, в Firefox нет (`../07-stack-implementation/01-stack-choice.md`
+  §3) `[документация]`.
 - **Исключения свойств** (`ambition-levels.yaml`, `property_exceptions`): свойство вне `properties_allowed` уровня — только у
   названных приёмов, на любом уровне; свойства приёмов каталога на их минимальном уровне сверяет `spec_check.py levels --check`.
 
@@ -356,7 +357,7 @@ Transitions, Barba, Swup)».
 | | Сервисы | L0 | L1 | L2 |
 |---|---|---|---|---|
 | kimi `decisions.motion.level` (07/01 §6.2) | `none` | `subtle`: тезис + ≤ 3 момента, transform и opacity, reduce → конечное состояние | `expressive`: 3 момента при прокрутке, отдельный проход T7; при `motion_cap: subtle` — `subtle` | `cinematic` — только с готовыми роликами 16:9 и 9:16 и постерами ai-media или рендером 3d; иначе `expressive` |
-| kimi `decisions.motion.library` (07/02 §8.1) | css | css | css; `gsap@3` (3.15.0) при закреплённой сцене, split или scroll-driven шире CSS | `gsap@3` + `lenis@1` (1.3.26) при плавной прокрутке |
+| `decisions.motion.library` входа холста | css | css, набор движения (`../11-motion-code/`) | css, набор движения; `gsap@3.15.0` — в коде сайта для сюжета, которого набор не делает (сложный таймлайн, Flip) | css, набор движения, `gsap@3.15.0`; `lenis@1.3.27` — плавная прокрутка в коде сайта |
 | kimi `decisions.three_d.mode` | none | none | none, prerender, model-viewer, hero-glb | hero-glb, scroll, model-viewer, prerender |
 | kimi `build.perf` | умолчания kimi | = L0: hero 150 КБ, первый экран 1 500 КБ тел., LCP 2,5 с | по профилю P | по профилю P |
 | паспорт `character.boldness` | — | `restrained` | `balanced` | `bold` |

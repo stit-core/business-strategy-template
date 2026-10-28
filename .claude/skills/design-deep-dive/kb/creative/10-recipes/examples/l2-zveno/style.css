@@ -34,9 +34,9 @@ a { color: inherit; }
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: var(--size-cta-hero-h); padding: 0 1.5em;
   background: var(--c-accent); color: var(--c-on-accent); font: 650 var(--type-cta-hero)/1.2 var(--font-text); text-decoration: none;
   border: 0; border-radius: 4px; cursor: pointer;
-  transition: background-color var(--mm-dur-hover) var(--mm-ease-out-strong), transform var(--mm-dur-feedback) var(--mm-ease-out-strong); }
+  transition: background-color var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong), transform var(--motion-marketing-duration-feedback) var(--motion-marketing-easing-out-strong); }
 .btn:hover { background: #ff7440; }
-.btn:active { transform: scale(var(--mm-scale-press)); }
+.btn:active { transform: scale(var(--motion-marketing-scale-press)); }
 .btn--small { min-height: 44px; font-size: .98rem; padding: 0 1.1em; }
 .btn--wide { width: 100%; }
 
@@ -58,7 +58,7 @@ a { color: inherit; }
 
 /* холст сцены: один на страницу, под контентом; до готовности и без WebGL — не виден */
 .stage { position: fixed; inset: 0; width: 100vw; height: 100svh; z-index: 0; opacity: 0; pointer-events: none;
-  transition: opacity 600ms var(--mm-ease-out-expo); }
+  transition: opacity 600ms var(--motion-marketing-easing-out-expo); }
 html.gl-on .stage { opacity: 1; }
 html.gl-on .stage.is-hidden { visibility: hidden; }
 
@@ -67,7 +67,7 @@ html.gl-on .stage.is-hidden { visibility: hidden; }
 .hero { position: relative; z-index: 1; min-height: 100svh; padding-top: 64px; display: grid; align-items: center; overflow: clip; }
 .hero__poster { position: absolute; inset: 0; z-index: -1; }
 .hero__poster img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
-html.gl-on .hero__poster { opacity: 0; transition: opacity 600ms var(--mm-ease-out-expo) 150ms; }
+html.gl-on .hero__poster { opacity: 0; transition: opacity 600ms var(--motion-marketing-easing-out-expo) 150ms; }
 .hero__in { max-width: var(--size-container); width: 100%; margin: 0 auto; padding: clamp(24px, 5vw, 64px) var(--space-page-x) clamp(64px, 8vw, 120px); }
 .hero__title { font: 800 clamp(2.75rem, 1.4rem + 4.9vw, 5.75rem)/0.95 var(--font-display); font-stretch: 72%; letter-spacing: -0.01em;
   margin: 0 0 var(--space-stack-display); max-width: 11ch; text-wrap: balance; }
@@ -80,11 +80,11 @@ html.gl-on .hero__poster { opacity: 0; transition: opacity 600ms var(--mm-ease-o
 /* первый экран: одно появление лида, кнопок и фактов (H1 и постер — без анимации: LCP) */
 @media (prefers-reduced-motion: no-preference) {
   :root:not([data-motion="reduced"]) .hero__lead, :root:not([data-motion="reduced"]) .hero__actions, :root:not([data-motion="reduced"]) .hero__facts {
-    animation: rise var(--mm-dur-reveal) var(--mm-ease-out-expo) both; }
+    animation: rise var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo) both; }
   :root:not([data-motion="reduced"]) .hero__actions { animation-delay: 60ms; }
   :root:not([data-motion="reduced"]) .hero__facts { animation-delay: 120ms; }
 }
-@keyframes rise { from { opacity: .01; transform: translateY(var(--mm-shift-reveal)); } }
+@keyframes rise { from { opacity: .01; transform: translateY(var(--motion-marketing-distance-shift-reveal)); } }
 
 /* сцены прокрутки: высота = длина сцены; шаги едут поверх холста в своих панелях (текст в сцене не меняется при чтении) */
 .scene { position: relative; z-index: 1; padding: var(--space-section-l) var(--space-page-x); }
@@ -148,9 +148,9 @@ html.gl-pending .steps--right .step, html.gl-on .steps--right .step { left: auto
 @media (prefers-reduced-motion: no-preference) {
   :root.js:not([data-motion="reduced"]) .app:not(.is-in) .app__pts li { opacity: .01; transform: translateX(-10px); }
   :root.js:not([data-motion="reduced"]) .app:not(.is-in) .app__path { stroke-dashoffset: 1; }
-  :root.js:not([data-motion="reduced"]) .app__pts li { transition: opacity var(--mm-dur-reveal) var(--mm-ease-out-expo), transform var(--mm-dur-reveal) var(--mm-ease-out-expo);
+  :root.js:not([data-motion="reduced"]) .app__pts li { transition: opacity var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo), transform var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo);
     transition-delay: calc(var(--i) * 60ms); }
-  :root.js:not([data-motion="reduced"]) .app__path { stroke-dasharray: 1; transition: stroke-dashoffset 900ms var(--mm-ease-in-out) 200ms; }
+  :root.js:not([data-motion="reduced"]) .app__path { stroke-dasharray: 1; transition: stroke-dashoffset 900ms var(--motion-marketing-easing-in-out) 200ms; }
 }
 
 .tasks__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--c-ink); }

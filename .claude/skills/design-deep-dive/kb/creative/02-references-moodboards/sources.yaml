@@ -1247,3 +1247,874 @@ sources:
   rate: 10 с
   notes: ''
   checked_at: '2026-09-24'
+# Источники приёмов движения: копипаст-киты анимированных компонентов (motion-kits), галереи кода движения (effects-code),
+# генераторы анимации по описанию (motion-generators), своды правил движения (motion-rules). Разбор и позиции —
+# 04-motion-libraries-and-rules.md. Проверено WebFetch и WebSearch 2026-10-28; строки robots.txt — по пересказу WebFetch.
+- id: aceternity-ui
+  name: Aceternity UI
+  group: motion-kits
+  url: https://ui.aceternity.com/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 2
+  useful_for:
+  - идеи фонов, текстовых эффектов, карточек, прокрутки (React + Tailwind + Motion)
+  - образцы «дефолтного вида» ИИ-сайтов для реестра клише
+  search:
+    url_templates:
+    - https://ui.aceternity.com/components/<name>
+    - https://ui.aceternity.com/blocks · /templates · /categories
+    paging: —
+  api:
+    exists: true
+    access: 'реестр shadcn https://ui.aceternity.com/registry/<name>.json (@aceternity/<name>); JSON /api/components; Pro — по
+      токену ACETERNITY_PRO_TOKEN'
+    limits: —
+  login:
+    needed: нет для бесплатных компонентов
+    paid: 'All-Access, разово: 1-Year $169, Lifetime $199, Team $1 590 (/pricing, 2026-10-28)'
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /api/ (кроме /api/components), /dashboard/, /login/ и служебные; ИИ-краулеры (GPTBot,
+    ClaudeBot, Claude-User …) разрешены явно'
+  terms:
+    url: https://ui.aceternity.com/terms
+    revision: даты нет
+    clauses:
+    - запрещено перепубликовать, продавать, сублицензировать и копировать материалы сайта
+    - 'бесплатные компоненты — своя лицензия, не MIT (llms-full.txt): любое число личных и коммерческих проектов, без перепродажи
+      и без выпуска как конкурирующей библиотеки или шаблона; атрибуция не нужна'
+    - лицензия https://ui.aceternity.com/licence — на купленное (конечные продукты для себя и клиентов, без перепродажи компонентов)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Открытого репозитория нет; компонент — референс, не решение (04 §3).
+  checked_at: '2026-10-28'
+- id: magic-ui
+  name: Magic UI
+  group: motion-kits
+  url: https://magicui.design/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 2
+  useful_for:
+  - идеи текстовых эффектов, фонов, рамок и кнопок
+  - образцы «дефолтного вида» (Marquee, Bento Grid, Orbiting Circles, Globe)
+  search:
+    url_templates:
+    - https://magicui.design/docs/components/<name>
+    - https://magicui.design/llms.txt (список компонентов)
+    paging: —
+  api:
+    exists: true
+    access: реестр shadcn (@magicui/<name>); MCP — @magicuidesign/cli (`install <клиент>`); llms.txt
+    limits: —
+  login:
+    needed: нет
+    paid: 'Magic UI Pro — $199 разово (pro.magicui.design); лицензия Pro — штраф 10 000 USD за несанкционированное распространение'
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /api/, /_next/, /public/; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: —
+    revision: условий на сайте не найдено (главная, /docs, /docs/installation, /docs/mcp)
+    clauses:
+    - код — MIT (LICENSE.md репозитория magicuidesign/magicui)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Подбор компонента агентом через MCP — выбор облика уходит модели (07-stack 01 §6.4).
+  checked_at: '2026-10-28'
+- id: react-bits
+  name: React Bits
+  group: motion-kits
+  url: https://reactbits.dev/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 2
+  useful_for:
+  - идеи текстовых анимаций, фонов на шейдерах, курсоров
+  - образцы «дефолтного вида» (Aurora, Iridescence, Liquid Chrome, Hyperspeed, Splash Cursor)
+  search:
+    url_templates:
+    - https://reactbits.dev/<категория>/<name> (/text-animations/split-text)
+    - https://reactbits.dev/c/text-animations · /c/animations · /c/components · /c/backgrounds
+    - https://reactbits.dev/llms.txt
+    paging: —
+  api:
+    exists: true
+    access: 'реестр https://reactbits.dev/r/<Component>-<JS|TS>-<CSS|TW>; jsrepo; MCP (/get-started/mcp); каталог Pro —
+      /pro-manifest.json'
+    limits: —
+  login:
+    needed: нет
+    paid: 'React Bits Pro — $129, $249, $349 разово (pro.reactbits.dev, по лицензионному ключу)'
+  antibot: не замечено
+  robots: 'для «*» Allow: /, ссылка на llms.txt; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - 'код — MIT + Commons Clause (репозиторий DavidHDev/react-bits): сайт, в том числе коммерческий, — можно; продавать и распространять
+      сами компоненты — нельзя'
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Компоненты зависят от motion, gsap, three, ogl, postprocessing — по компоненту (07-stack 01 §6.4).
+  checked_at: '2026-10-28'
+- id: motion-primitives
+  name: Motion Primitives
+  group: motion-kits
+  url: https://motion-primitives.com/
+  alive: 'жив: главная прочитана WebFetch 2026-10-28 до чтения robots.txt; дальше — только robots.txt'
+  value: 1
+  useful_for:
+  - примитивы интерфейса на Motion (текстовые эффекты, раскрытия, диалоги)
+  search:
+    url_templates:
+    - https://motion-primitives.com/docs/<name>
+    paging: —
+  api:
+    exists: false
+    access: не проверено (реестр и MCP в README не названы)
+    limits: —
+  login:
+    needed: нет
+    paid: Motion Primitives Pro (pro.motion-primitives.com, цена не проверена)
+  antibot: не замечено
+  robots: 'Content-Signal search=yes, ai-train=no, use=reference; Disallow: / для ≈ 47 агентов, в том числе ClaudeBot, Claude-User,
+    anthropic-ai, GPTBot, ChatGPT-User, Google-Extended'
+  terms:
+    url: —
+    revision: не искали — сайт закрыт для Claude-User в robots.txt
+    clauses:
+    - код — MIT (репозиторий ibelick/motion-primitives, помечен beta)
+  client:
+    mode: manual
+    adapter: нет — агент сайт не читает (robots.txt), только ссылки и записи человека
+  rate: —
+  notes: ''
+  checked_at: '2026-10-28'
+- id: animata
+  name: Animata
+  group: motion-kits
+  url: https://animata.design/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - анимированные фоны, текст, кнопки, карточки (≈ 140 компонентов в 18 категориях)
+  search:
+    url_templates:
+    - https://animata.design/docs/<категория>/<name> (/docs/background/animated-beam)
+    paging: —
+  api:
+    exists: false
+    access: CLI, реестра и MCP нет — файл копируется в проект
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не замечено (управляемый robots.txt Cloudflare)
+  robots: 'Content-Signal search=yes, ai-train=no, use=reference; Disallow: / для ClaudeBot, anthropic-ai, GPTBot, Google-Extended,
+    CCBot и др. (≈ 32); Claude-User и ChatGPT-User не закрыты'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - код — MIT (заявлено на главной; репозиторий codse/animata)
+  client:
+    mode: public
+    adapter: не нужен — отдельные страницы по просьбе человека; обход каталога не делать (ai-train=no, краулеры закрыты)
+  rate: 10 с; 40 страниц в сутки
+  notes: ''
+  checked_at: '2026-10-28'
+- id: cult-ui
+  name: Cult UI
+  group: motion-kits
+  url: https://www.cult-ui.com/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - компоненты поверх shadcn/ui (≈ 154), в том числе анимированные
+  search:
+    url_templates:
+    - https://www.cult-ui.com/docs/components/<name>
+    paging: —
+  api:
+    exists: true
+    access: реестр https://www.cult-ui.com/r/<name>.json; MCP через shadcn (/docs/mcp-server)
+    limits: —
+  login:
+    needed: нет
+    paid: Cult Pro закрыт с 2026-09-30, его 58 компонентов — в бесплатном реестре; платное — блоки AI SDK Agents на aisdkagents.com
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /code/, /llm/; ИИ-краулерам открыто всё, кроме /code/'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - код — MIT (заявлено на главной)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: ''
+  checked_at: '2026-10-28'
+- id: eldora-ui
+  name: Eldora UI
+  group: motion-kits
+  url: https://www.eldoraui.site/
+  alive: 'жив: WebFetch 2026-10-28 (частые тайм-ауты, один отказ «403 Request not allowed», повтор прошёл)'
+  value: 1
+  useful_for:
+  - анимированные бейджи, текст, фоны (≈ 40 компонентов)
+  search:
+    url_templates:
+    - https://www.eldoraui.site/docs/components/<name>
+    paging: —
+  api:
+    exists: true
+    access: реестр shadcn (@eldoraui/<name>)
+    limits: —
+  login:
+    needed: нет
+    paid: не видно
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /api/, /_next/, /public/; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - код — MIT (репозиторий karthikmudunuri/eldoraui)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: ''
+  checked_at: '2026-10-28'
+- id: kokonut-ui
+  name: Kokonut UI
+  group: motion-kits
+  url: https://kokonutui.com/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть; в changelog — обновления октября 2026'
+  value: 1
+  useful_for:
+  - компоненты React + Tailwind + Motion (≈ 90), фоны, ИИ-интерфейсы
+  search:
+    url_templates:
+    - https://kokonutui.com/docs/<категория>/<name> (страница в Markdown — с суффиксом .md)
+    - https://kokonutui.com/llms.txt
+    paging: —
+  api:
+    exists: true
+    access: реестр https://kokonutui.com/r/<name>.json, индекс /r/registry.json; MCP через shadcn; /docs/agents
+    limits: —
+  login:
+    needed: нет
+    paid: Kokonut UI Pro — $159 разово (kokonutui.pro)
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыт /api/; Content-Signal ai-train=yes, search=yes, ai-input=yes; ИИ-краулеры разрешены явно'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - код — MIT (заявлено на главной)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: ''
+  checked_at: '2026-10-28'
+- id: animate-ui
+  name: Animate UI
+  group: motion-kits
+  url: https://animate-ui.com/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - анимированные примитивы для shadcn/ui, Radix и Base UI; версия для Vue
+  search:
+    url_templates:
+    - https://animate-ui.com/docs/primitives/<библиотека>/<name> (/docs/primitives/radix-ui/dialog)
+    - https://animate-ui.com/llms.txt
+    paging: —
+  api:
+    exists: true
+    access: реестр https://animate-ui.com/r/<name>.json; CLI @animate-ui/cli; MCP (/docs/mcp); скилл imskyleen/animate-ui
+    limits: —
+  login:
+    needed: нет
+    paid: не видно
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /examples/, /tests/, /api/; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - 'код — MIT + Commons Clause (репозиторий imskyleen/animate-ui): в продукте можно, продавать и распространять компоненты — нельзя'
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Ближе к интерфейсу кабинета, чем к подаче страницы.
+  checked_at: '2026-10-28'
+- id: skiper-ui
+  name: Skiper UI
+  group: motion-kits
+  url: https://skiper-ui.com/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - «необычные» компоненты для shadcn/ui
+  search:
+    url_templates:
+    - https://skiper-ui.com/components
+    - https://skiper-ui.com/docs/quick-start
+    paging: —
+  api:
+    exists: true
+    access: реестр https://skiper-ui.com/r/<name>.json (@skiper-ui/<name>); Pro — Bearer с SKIPER_LICENSE_KEY
+    limits: —
+  login:
+    needed: нет для бесплатного уровня
+    paid: Premium $129 и Exclusive $549 разово (лицензионный ключ)
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /api/, /_next/, /admin/, /private/, /*.json$ (JSON реестра — не для краулеров)'
+  terms:
+    url: https://skiper-ui.com/docs/terms-of-service
+    revision: Last updated September 07, 2025
+    clauses:
+    - запрещено перепубликовать материалы сайта, продавать и сублицензировать их
+    - бесплатные компоненты — в личных и коммерческих проектах с обязательной атрибуцией; Pro — без атрибуции (/docs/quick-start)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом; JSON реестра не собирать
+  rate: 10 с; 40 страниц в сутки
+  notes: ''
+  checked_at: '2026-10-28'
+- id: hover-dev
+  name: Hover.dev
+  group: motion-kits
+  url: https://www.hover.dev/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - анимированные компоненты и шаблоны React + Tailwind (кнопки, карусели, навигация, hero)
+  search:
+    url_templates:
+    - https://www.hover.dev/components/<категория>
+    - https://www.hover.dev/templates
+    paging: —
+  api:
+    exists: false
+    access: —
+    limits: —
+  login:
+    needed: для платной части
+    paid: Hover Pro — $49 разово
+  antibot: не замечено
+  robots: 'Allow: / для всех'
+  terms:
+    url: https://www.hover.dev/terms.html
+    revision: Last Updated September 16, 2023
+    clauses:
+    - запрещены систематическое извлечение данных, пауки, роботы, скрейперы, офлайн-читалки; копирование кода сервиса
+    - лицензия https://www.hover.dev/license — компоненты в личных и коммерческих проектах без атрибуции; продавать и распространять
+      их как самостоятельный продукт нельзя
+  client:
+    mode: manual
+    adapter: нет — условия запрещают автоматический доступ; только ссылки человека
+  rate: —
+  notes: ''
+  checked_at: '2026-10-28'
+- id: inspira-ui
+  name: Inspira UI
+  group: motion-kits
+  url: https://inspira-ui.com/
+  alive: 'главная — JS-оболочка (промо-строки); документация /docs жива, WebFetch 2026-10-28'
+  value: 1
+  useful_for:
+  - анимированные компоненты для Vue и Nuxt (порты приёмов React-китов)
+  search:
+    url_templates:
+    - https://inspira-ui.com/docs/en/components/<категория>/<name>
+    - https://inspira-ui.com/docs/llms.txt
+    paging: —
+  api:
+    exists: true
+    access: llms.txt и llms-full.txt; Markdown страниц /raw/en/components/<категория>/<name>.md
+    limits: —
+  login:
+    needed: нет
+    paid: Inspira UI Pro (pro.inspira-ui.com, цена не проверена)
+  antibot: не замечено
+  robots: пустой ответ /robots.txt (2026-10-28)
+  terms:
+    url: —
+    revision: условий на сайте не найдено
+    clauses:
+    - код — MIT (репозиторий unovue/inspira-ui)
+  client:
+    mode: public
+    adapter: не нужен — страницы документации агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Зависимости — motion-v и @inspira-ui/plugins.
+  checked_at: '2026-10-28'
+- id: animista
+  name: Animista
+  group: effects-code
+  url: https://animista.net/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть; сайт помечен «Beta», мобильной версии нет'
+  value: 1
+  useful_for:
+  - генератор CSS-ключевых кадров (вход, выход, акценты) с подстройкой параметров
+  search:
+    url_templates:
+    - https://animista.net/play
+    paging: —
+  api:
+    exists: false
+    access: экспорт файла animista.css и копирование кода
+    limits: —
+  login:
+    needed: нет
+    paid: нет (только пожертвования)
+  antibot: не замечено
+  robots: '«User-agent: *» без правил — разрешено всё'
+  terms:
+    url: https://animista.net/license
+    revision: страница лицензии без даты; политики приватности и cookies — Effective date 26 December 2019
+    clauses:
+    - сгенерированные анимации бесплатны для личного и коммерческого использования, лицензия FreeBSD (по тексту — BSD с двумя пунктами)
+    - отдельных условий использования сайта нет
+  client:
+    mode: public
+    adapter: не нужен
+  rate: 10 с
+  notes: Источник идеи ключевых кадров; числа движения — токены motion.marketing (04 §2).
+  checked_at: '2026-10-28'
+- id: uiverse
+  name: Uiverse
+  group: effects-code
+  url: https://uiverse.io/
+  alive: 'страницы — 403 для WebFetch (2026-10-28); robots.txt читается'
+  value: 1
+  useful_for:
+  - HTML + CSS и Tailwind элементы сообщества (кнопки, карточки, лоадеры, переключатели)
+  search:
+    url_templates:
+    - https://uiverse.io/<username>/<slug>
+    - https://uiverse.io/buttons · /cards · /loaders (по выдаче поиска)
+    paging: '?page=N (по выдаче поиска)'
+  api:
+    exists: false
+    access: зеркало кода — репозиторий uiverse-io/galaxy (последняя синхронизация 2024-09-02)
+    limits: —
+  login:
+    needed: не проверено
+    paid: не проверено
+  antibot: 403 для WebFetch
+  robots: '«*» — Disallow: /admin'
+  terms:
+    url: https://uiverse.io/terms
+    revision: не прочитано (403)
+    clauses:
+    - 'элементы репозитория galaxy — MIT (README и LICENSE, 2023); атрибуция — просьба, не требование'
+  client:
+    mode: manual
+    adapter: нет (403) — только ссылки человека
+  rate: —
+  notes: Качество и стиль элементов — разные; много неона, свечения и стекла (04 §2.4).
+  checked_at: '2026-10-28'
+- id: motion-dev-examples
+  name: Motion — примеры (motion.dev/examples)
+  group: effects-code
+  url: https://motion.dev/examples
+  alive: 'жив: WebFetch 2026-10-28, ≈ 516 примеров (React, JS, Vue, Svelte, Three.js)'
+  value: 2
+  useful_for:
+  - движение интерфейса и подачи с кодом (жесты, раскладка, прокрутка, переходы)
+  search:
+    url_templates:
+    - https://motion.dev/examples/<платформа>-<name> (/examples/react-mega-menu)
+    - https://motion.dev/docs/<slug> (страница в Markdown — с суффиксом .md)
+    - https://motion.dev/llms.txt
+    paging: —
+  api:
+    exists: true
+    access: 'llms.txt, llms-full.txt; Motion AI Kit (npx motion-ai): поиск по документации бесплатно, остальное — Motion+'
+    limits: —
+  login:
+    needed: нет для примеров без пометки Motion+
+    paid: Motion+ (исходники премиум-примеров, разовая оплата за разработчика)
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /login, /dashboard, /code, /_studio и все адреса /examples с параметрами (?platform=, ?category= …)'
+  terms:
+    url: https://motion.dev/terms
+    revision: даты в тексте нет (dateModified 2026-02-20 в метаданных)
+    clauses:
+    - библиотека motion — MIT; Motion+ — бессрочная лицензия для личных и коммерческих проектов, без перераспространения исходников
+  client:
+    mode: public
+    adapter: не нужен — страницы без параметров агент читает обычным запросом
+  rate: 10 с; 40 страниц в сутки
+  notes: Пример на React — референс движения, на холст и в сайт без React идёт идея (04 §2).
+  checked_at: '2026-10-28'
+- id: jitter
+  name: Jitter
+  group: motion-generators
+  url: https://jitter.video/
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть'
+  value: 1
+  useful_for:
+  - черновик анимации макета и эффектов по описанию («допущением»)
+  search:
+    url_templates:
+    - https://jitter.video/templates
+    paging: —
+  api:
+    exists: true
+    access: Jitter MCP (бета с 2026-10-20, удалённый сервер); публичного API нет
+    limits: AI-кредиты по тарифу
+  login:
+    needed: да
+    paid: Pro, Max, Ultra, Enterprise; Free — ограниченные AI-кредиты, экспорт 720p с водяным знаком
+  antibot: не замечено
+  robots: 'для «*» Allow: /, закрыты /terms, /privacy, /api, /login, /file(s), /export(s), /ai-playground, /mcp-waitlist и др.'
+  terms:
+    url: https://jitter.video/terms/
+    revision: не прочитано (путь закрыт robots.txt для «*»); справка «Jitter's terms and policies» обновлена August 31, 2026
+    clauses:
+    - по справке «Templates, ownership and licensing» (2026-08-24) права на контент остаются у пользователя; шаблоны Jitter — в том
+      числе в коммерции без атрибуции [не проверено по самим условиям]
+  client:
+    mode: manual
+    adapter: нет — вход заказчика, работа в его аккаунте
+  rate: —
+  notes: Экспорт — MP4, GIF, Lottie, WebM, MOV; ИИ-эффекты на шейдерах в Lottie не выводятся.
+  checked_at: '2026-10-28'
+- id: lottie-creator
+  name: Lottie Creator (LottieFiles)
+  group: motion-generators
+  url: https://lottiefiles.com/lottie-creator
+  alive: 'жив: WebFetch 2026-10-28, текст страницы есть; редактор — https://creator.lottiefiles.com'
+  value: 1
+  useful_for:
+  - черновик векторной анимации по описанию (Motion Copilot), состояния (Prompt to State Machines), темы
+  search:
+    url_templates:
+    - https://help.lottiefiles.com/lottie-creator
+    - https://docs.lottiefiles.com/en/creator/13_ai-tools
+    paging: —
+  api:
+    exists: true
+    access: Lottie Creator MCP (локальный мост через открытую вкладку редактора), WebMCP; публичного API генерации нет
+    limits: AI-кредиты по тарифу
+  login:
+    needed: да
+    paid: Individual, Team, Team+, Enterprise; Free — 5 экспортов в Creator
+  antibot: не замечено (паспорт площадки LottieFiles — запись lottiefiles)
+  robots: 'для «*» Allow: /, закрыты /api/*, /purchased/animations; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: https://lottiefiles.com/page/terms-and-conditions
+    revision: Last Modified 22nd August 2025
+    clauses:
+    - Free и Individual — только некоммерческое использование; коммерческое — Team или Enterprise
+    - роботы, пауки и data mining запрещены; пунктов об ИИ-результате нет
+  client:
+    mode: manual
+    adapter: нет — вход заказчика, работа в его аккаунте
+  rate: —
+  notes: Экспорт — dotLottie, Lottie JSON, MP4, WebM, MOV, GIF; плеер на сайте — по стеку (lottie-web или dotLottie).
+  checked_at: '2026-10-28'
+- id: m3-motion
+  name: Material 3 — Motion
+  group: motion-rules
+  url: https://m3.material.io/styles/motion/overview
+  alive: 'JS-оболочка для WebFetch (2026-10-28): пришёл только заголовок страницы'
+  value: 2
+  useful_for:
+  - motion physics — пружины standard и expressive, токены движения
+  search:
+    url_templates:
+    - https://m3.material.io/styles/motion/overview
+    paging: —
+  api:
+    exists: true
+    access: 'текст — JS; значения — исходники токенов: androidx Compose Material3 (MotionScheme.kt, *MotionTokens.kt), material-web
+      tokens на GitHub'
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: JS-оболочка без текста
+  robots: 'для «*» закрыты /archive, /search.html, адреса с ?q= и utm; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: https://policies.google.com/terms
+    revision: Effective July 30, 2026 (что m3 ссылается именно на них — не проверено)
+    clauses:
+    - автоматический доступ — только по машиночитаемым инструкциям страниц (robots.txt)
+    - контент M3 — Apache 2.0 или CC BY 4.0 (по выдаче поиска, /get-started) [не проверено]
+  client:
+    mode: public
+    adapter: не нужен — исходники токенов читаются обычным запросом
+  rate: 10 с
+  notes: Значения пружин и таблица «пружина → cubic-bezier» — ui 08/01 §4.3–4.5.
+  checked_at: '2026-10-28'
+- id: apple-hig-motion
+  name: Apple Human Interface Guidelines — Motion
+  group: motion-rules
+  url: https://developer.apple.com/design/human-interface-guidelines/motion
+  alive: 'HTML — JS-оболочка; текст — JSON https://developer.apple.com/tutorials/data/design/human-interface-guidelines/motion.json
+    (WebFetch 2026-10-28; последняя запись журнала изменений — September 9, 2025)'
+  value: 2
+  useful_for:
+  - принципы движения, сокращённое движение, частота колебаний
+  search:
+    url_templates:
+    - https://developer.apple.com/tutorials/data/design/human-interface-guidelines/<slug>.json
+    paging: —
+  api:
+    exists: true
+    access: JSON документации (schemaVersion 0.3.0)
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: JS-оболочка без текста у HTML
+  robots: '/design/ и /tutorials/data/ открыты; закрыты служебные пути; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: https://www.apple.com/legal/internet-services/terms/site.html
+    revision: Updated November 20, 2009
+    clauses:
+    - запрещены page-scrape, robot, spider и другие автоматические средства; копировать без письменного согласия нельзя
+  client:
+    mode: manual
+    adapter: нет — условия Apple запрещают автоматические средства; страница — по ссылке человека [спорно]
+  rate: —
+  notes: Числовых токенов нет; формулировки — ui 08/01 §8.4, creative 05/01 §6.3.
+  checked_at: '2026-10-28'
+- id: carbon-motion
+  name: IBM Carbon — Motion
+  group: motion-rules
+  url: https://carbondesignsystem.com/elements/motion/overview/
+  alive: 'жив: WebFetch 2026-10-28; вкладки Overview, Choreography, Code; «Last updated: Aug 12, 2026»'
+  value: 2
+  useful_for:
+  - productive и expressive, кривые и шкала длительностей, хореография
+  search:
+    url_templates:
+    - https://carbondesignsystem.com/elements/motion/overview/
+    paging: —
+  api:
+    exists: true
+    access: пакет @carbon/motion (токены и кривые)
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не замечено
+  robots: '«*»: Content-Signal ai-train=no, search=yes, ai-input=yes; закрыт /admin/*'
+  terms:
+    url: https://www.ibm.com/legal/terms
+    revision: November 20, 2020
+    clauses:
+    - краулер — только как разрешает robots.txt сайта; использование некоммерческое, зеркалить нельзя
+    - код — Apache-2.0 (carbon-design-system/carbon)
+  client:
+    mode: public
+    adapter: не нужен
+  rate: 10 с
+  notes: ''
+  checked_at: '2026-10-28'
+- id: fluent2-motion
+  name: Microsoft Fluent 2 — Motion
+  group: motion-rules
+  url: https://fluent2.microsoft.design/motion
+  alive: 'жив: WebFetch 2026-10-28; разделы principles, duration and easing, transitions, choreography, accessible motion'
+  value: 2
+  useful_for:
+  - длительности, кривые, переходы и доступное движение
+  search:
+    url_templates:
+    - https://fluent2.microsoft.design/motion
+    paging: —
+  api:
+    exists: true
+    access: токены — исходники fluentui (packages/tokens/src/global/durations.ts, curves.ts)
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не замечено
+  robots: 'Allow: / для всех'
+  terms:
+    url: https://www.microsoft.com/en-us/legal/terms-of-use
+    revision: Last Updated February 7, 2022
+    clauses:
+    - документы — для личного некоммерческого использования; код Fluent UI — MIT
+  client:
+    mode: public
+    adapter: не нужен
+  rate: 10 с
+  notes: ''
+  checked_at: '2026-10-28'
+- id: atlassian-motion
+  name: Atlassian Design System — Motion
+  group: motion-rules
+  url: https://atlassian.design/foundations/motion
+  alive: 'жив: WebFetch 2026-10-28; подстраница /foundations/motion/applying-motion'
+  value: 2
+  useful_for:
+  - коридоры длительностей по классам, вход и выход, фокус и движение
+  search:
+    url_templates:
+    - https://atlassian.design/foundations/motion/<страница>
+    paging: —
+  api:
+    exists: false
+    access: токены движения выпущены для малого числа компонентов
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не замечено
+  robots: /robots.txt — 404 (правил нет)
+  terms:
+    url: https://atlassian.design/license
+    revision: Last updated March 13, 2025
+    clauses:
+    - проприетарная лицензия — только на дополнения к продуктам Atlassian; модифицировать и распространять нельзя
+  client:
+    mode: public
+    adapter: не нужен
+  rate: 10 с
+  notes: ''
+  checked_at: '2026-10-28'
+- id: polaris-motion
+  name: Shopify Polaris — Motion
+  group: motion-rules
+  url: https://polaris-react.shopify.com/design/motion
+  alive: 'не прочитан: «Socket is closed» (3 попытки, 2026-10-28); polaris.shopify.com/design/motion — 301 на shopify.dev/docs/api/polaris'
+  value: 1
+  useful_for:
+  - токены движения Polaris (архив)
+  search:
+    url_templates:
+    - https://github.com/Shopify/polaris (архив)
+    paging: —
+  api:
+    exists: false
+    access: исходник polaris-tokens (motion.ts) в архиве репозитория
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не проверено (соединение рвётся)
+  robots: не прочитан
+  terms:
+    url: —
+    revision: не найдены
+    clauses:
+    - репозиторий в архиве с September 11, 2026; лицензия на основе MIT с ограничением — только для приложений, работающих с Shopify
+  client:
+    mode: manual
+    adapter: нет
+  rate: —
+  notes: Polaris React заменён Polaris Web Components (2025-10-01); раздела о движении там не найдено. Значения — ui 08/01 §1–2 (снимок токенов).
+  checked_at: '2026-10-28'
+- id: emil-kowalski
+  name: Emil Kowalski — заметки и курс animations.dev
+  group: motion-rules
+  url: https://emilkowal.ski/
+  alive: 'жив: WebFetch 2026-10-28, статьи открыты без входа; animations.dev — платный курс (запись закрыта, следующее открытие — 10 ноября)'
+  value: 2
+  useful_for:
+  - 'практика движения интерфейса: длительности, кривые, частота, прерываемость, transform-origin'
+  search:
+    url_templates:
+    - https://emilkowal.ski/ui/<slug> (/ui/7-practical-animation-tips, /ui/you-dont-need-animations)
+    - https://animations.dev/
+    paging: —
+  api:
+    exists: false
+    access: —
+    limits: —
+  login:
+    needed: нет для статей; курс — вход и оплата
+    paid: animations.dev (цена на странице не показана)
+  antibot: не замечено
+  robots: /robots.txt — 404 у обоих сайтов
+  terms:
+    url: —
+    revision: условий не найдено; дат у статей нет
+    clauses: []
+  client:
+    mode: public
+    adapter: не нужен — статьи агент читает обычным запросом; курс — только у заказчика
+  rate: 10 с
+  notes: Его скиллы для агентов (emilkowalski/skills) уже взяты базой — creative 05/01 [S21].
+  checked_at: '2026-10-28'
+- id: vercel-web-interface-guidelines
+  name: Vercel — Web Interface Guidelines
+  group: motion-rules
+  url: https://vercel.com/design/guidelines
+  alive: 'жив: WebFetch 2026-10-28; раздел Animation на одной странице'
+  value: 2
+  useful_for:
+  - правила анимации веб-интерфейса (reduce, CSS прежде JS, компоновщик, прерываемость)
+  search:
+    url_templates:
+    - https://vercel.com/design/guidelines
+    - https://raw.githubusercontent.com/vercel-labs/web-interface-guidelines/main/AGENTS.md
+    paging: —
+  api:
+    exists: true
+    access: AGENTS.md в репозитории vercel-labs/web-interface-guidelines; скилл web-design-guidelines (vercel-labs/agent-skills)
+    limits: —
+  login:
+    needed: нет
+    paid: нет
+  antibot: не замечено
+  robots: '/design/ открыт; закрыты /api/ (кроме OG), /oauth, /signup?* и др.; отдельных правил для ИИ-краулеров нет'
+  terms:
+    url: https://vercel.com/legal/terms
+    revision: Last Updated October 19, 2026
+    clauses:
+    - тексты правил — MIT (репозиторий vercel-labs/web-interface-guidelines)
+  client:
+    mode: public
+    adapter: не нужен
+  rate: 10 с
+  notes: ''
+  checked_at: '2026-10-28'
+- id: uxinmotion
+  name: UX in Motion (Issara Willenskomer)
+  group: motion-rules
+  url: https://uxinmotion.com/
+  alive: 'жив: WebFetch 2026-10-28; сайт курсов и сертификации'
+  value: 1
+  useful_for:
+  - словарь приёмов движения интерфейса (12 принципов)
+  search:
+    url_templates:
+    - https://uxinmotion.com/blog
+    paging: —
+  api:
+    exists: false
+    access: —
+    limits: —
+  login:
+    needed: для курсов
+    paid: курсы и сертификация
+  antibot: не замечено
+  robots: только комментарии — индексировать можно всё
+  terms:
+    url: https://www.uxinmotion.com/terms-of-use
+    revision: даты нет
+    clauses:
+    - запрещён доступ автоматическими средствами, боты и скрейперы; контент — только для личного использования, без копирования
+  client:
+    mode: manual
+    adapter: нет — только ссылки человека
+  rate: —
+  notes: 'Свод 12 принципов — манифест на Medium (первоисточник не проверен: 403), перепечатка UX Magazine 2022-07-21 (04 §4.2).'
+  checked_at: '2026-10-28'

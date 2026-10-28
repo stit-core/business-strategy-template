@@ -232,7 +232,8 @@ FSD-карта, слой страницы сайта и лендинга, диа
 `build` — собранная страница, замеры сводятся к одному вердикту:
 `page_anatomy.py URL OUT --inp` (и `--mobile`),
 `page_accept.py PAGE --out DIR --budget-profile P` (и `--mobile --throttle`),
-`motion_check.py PAGE --level L --page-type T --out DIR`; у страниц с 3D —
+`motion_check.py PAGE --level L --page-type T --spec <спецификация движения> --out DIR` (моменты, станции и
+приёмка спецификации — по DOM-контракту страницы); у страниц с 3D —
 `site_probe.py URL OUT --quick` и тот же прогон с `--no-3d`, затем `gate_check.py`
 по каждому прогону с `--baseline` прогона без 3D; вердикт —
 `page_gates.py --brief <бриф> --plan <план> --ready <манифест> --anatomy … --accept … --motion … --gate3d … --json`

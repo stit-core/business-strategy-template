@@ -10,7 +10,11 @@ page.treatment.art_direction_ref, спецификация — план по ref
 арт-дирекцию по refs.art_direction. Шкала длительностей спецификации — токены motion.marketing базы и токены движения
 проекта: ветка motion файла refs.tokens (путь от файла спецификации). Ссылка на токен проекта и длительность, равная
 токену времени проекта, — не находка (MS-06, MS-07); у токена, который есть и в проекте, и в базе, в суммы и проекции
-идёт значение проекта. Пределы первого экрана — токены базы.
+идёт значение проекта. Пределы первого экрана — токены базы. Переменные токенов движения в дорожках — имена сборки ДС:
+`--` + путь токена через дефисы (`var(--motion-marketing-distance-shift-hero)`); имени нет среди токенов базы и проекта —
+MS-06. Момент собирается примитивом набора движения (`primitive` — id из kb/creative/11-motion-code/primitives.yaml:
+уровень, класс, эффекты и опции примитива — MS-25), эффектом каталога (`effect`) или своим кодом с пометкой `custom`;
+момент без всех трёх — MS-26 (warning: исполнитель соберёт его по памяти).
 
 Команды:
   blocks [--yaml F]                              block-treatments.yaml ↔ blocks.yaml site, effects.yaml, cliche-registry.yaml
@@ -79,6 +83,7 @@ P = {
     'bt': os.path.join(ROOT, '09-ai-execution-evaluation', 'block-treatments.yaml'),
     'gates': os.path.join(ROOT, '09-ai-execution-evaluation', 'effect-gates.yaml'),
     'ad_schema': os.path.join(ROOT, '09-ai-execution-evaluation', 'art-direction.v1.schema.json'),
+    'primitives': os.path.join(ROOT, '11-motion-code', 'primitives.yaml'),
 }
 LV = {'L0': 0, 'L1': 1, 'L2': 2}
 CHROME_ROLES = {'header', 'footer', 'utility', 'legal'}
@@ -103,6 +108,38 @@ CANVAS_TOP = {'source', 'stages', 'files', 'drop', 'base'}
 def load(p):
     with open(p, encoding='utf-8') as f:
         return json.load(f) if p.endswith('.json') else yaml.safe_load(f)
+
+
+def css_name(path):
+    """Имя CSS-переменной токена — как у сборки ДС (ds_build.py): `--` + путь токена через дефисы."""
+    return '--' + path.replace('.', '-')
+
+
+def css_vars_of(tk):
+    """Имена CSS-переменных в значениях дорожки: from, to и ключевые кадры."""
+    vals = [tk.get('from'), tk.get('to')] + [k.get('value') for k in tk.get('keyframes') or []]
+    return [n for v in vals if isinstance(v, str) for n in re.findall(r'var\((--[a-z0-9-]+)', v)]
+
+
+def short_hint(ctx, name):
+    """Имя токена движения для короткой переменной `--mm-<группа>-<имя>`; токена нет — None."""
+    mm = re.match(r'--mm-([a-z]+)-(.+)$', name)
+    if not mm:
+        return None
+    grp, rest = mm.groups()
+    groups = {'dur': 'duration', 'ease': 'easing', 'shift': 'distance', 'lift': 'distance', 'magnet': 'distance'}
+    if grp in ('shift', 'lift', 'magnet'):
+        rest = f'{grp}-{rest}'
+    path = f'motion.marketing.{groups.get(grp, grp)}.{rest}'
+    return css_name(path) if path in ctx.motion_tokens else None
+
+
+def primitive_options(pr):
+    """Имена опций примитива набора: словарь {имя: умолчание} или список строк и записей {name | attr | var}."""
+    opts = pr.get('options') or {}
+    names = list(opts) if isinstance(opts, dict) else [o if isinstance(o, str) else (o.get('name') or o.get('attr') or o.get('var'))
+                                                      for o in opts if isinstance(o, (str, dict))]
+    return {re.sub(r'^(data-mk-|--mk-)', '', n) for n in names if n}
 
 
 class Report:
@@ -144,7 +181,13 @@ class Ctx:
                 self._flat(v, k)
         self.all_tokens = set(self.tokens)
         self.tokens = self.motion_tokens
+        self.motion_css = {css_name(k): k for k in self.motion_tokens}      # имя CSS-переменной токена → путь токена
         self.bt = load(P['bt'])
+        self.primitives = {}
+        if os.path.exists(P['primitives']):
+            doc = load(P['primitives'])
+            items = doc.get('primitives') if isinstance(doc, dict) else doc
+            self.primitives = {x['id']: x for x in items or [] if isinstance(x, dict) and x.get('id')}
 
     def _flat(self, node, path):
         if isinstance(node, dict):
@@ -229,15 +272,9 @@ class Ctx:
         return out
 
     def css_var(self, name):
-        m = {'dur': 'duration', 'ease': 'easing', 'stagger': 'stagger', 'shift': 'distance', 'lift': 'distance', 'magnet': 'distance',
-             'scale': 'scale', 'breathe': 'duration'}
-        mm = re.match(r'--mm-([a-z]+)-(.+)$', name)
-        if not mm:
-            return None
-        grp, rest = mm.groups()
-        if grp in ('shift', 'lift', 'magnet'):
-            rest = f'{grp}-{rest}'
-        return self.token_ms(f'motion.marketing.{m.get(grp, grp)}.{rest}')
+        """Число токена движения по имени CSS-переменной (`--` + путь токена через дефисы); чужое имя — None."""
+        path = self.motion_css.get(name)
+        return self.token_ms(path) if path else None
 
     def block_eff(self, bid):
         """Эффекты блока по уровням (накопительно) и поля блока с наследованием семейства."""
@@ -599,11 +636,11 @@ def dur_ms(ctx, d, base, ptok=None):
 
 
 def px_of(ctx, s):
-    """Максимальное смещение в px из строки transform; var(--mm-*) — по токенам."""
+    """Максимальное смещение в px из строки transform; var(--motion-marketing-…) — по токенам."""
     if isinstance(s, (int, float)):
         return None
     vals = [float(x) for x in re.findall(r'(-?\d+(?:\.\d+)?)px', s or '')]
-    for name in re.findall(r'var\((--mm-[a-z0-9-]+)\)', s or ''):
+    for name in re.findall(r'var\((--[a-z0-9-]+)', s or ''):
         v = ctx.css_var(name)
         if v is not None:
             vals.append(v)
@@ -784,11 +821,52 @@ def cmd_spec(ctx, R, spec_path, plan_path=None, overlay_path=None):
                     sp = (m.get('loop') or {}).get('speed_px_s')
                     if sp is not None and lim.get('speed_px_s_max') and not lim.get('speed_px_s_min', 0) <= sp <= lim['speed_px_s_max']:
                         R.add('error', 'MS-12', wm, f'скорость {sp} px/с вне {lim.get("speed_px_s_min")}–{lim["speed_px_s_max"]}')
+            prim = m.get('primitive')
+            if prim:
+                pr = ctx.primitives.get(prim)
+                if pr is None:
+                    R.add('error', 'MS-25', wm, f'примитива {prim} нет в наборе движения (11-motion-code/primitives.yaml)')
+                else:
+                    if LV.get(pr.get('level_min') or 'L0', 0) > LV[slvl]:
+                        R.add('error', 'MS-25', wm, f'примитив {prim} — с уровня {pr["level_min"]}, секция {slvl}')
+                    pcls = pr.get('class')
+                    pcls = pcls if isinstance(pcls, list) else [pcls] if pcls else []
+                    if pcls and m['class'] not in pcls:
+                        R.add('warning', 'MS-25', wm, f'class {m["class"]} ≠ классу примитива {prim} {pcls}')
+                    peff = {e if str(e).startswith('effect:') else f'effect:{e}' for e in pr.get('effects') or []}
+                    if m.get('effect') and peff and m['effect'] not in peff:
+                        R.add('warning', 'MS-25', wm, f'{m["effect"]} не исполняется примитивом {prim} ({", ".join(sorted(peff))})')
+                    opts = primitive_options(pr)
+                    extra = sorted(set(m.get('params') or {}) - opts) if opts else []
+                    if extra:
+                        R.add('warning', 'MS-25', wm, f'параметры {extra} — не опции примитива {prim}: {sorted(opts)}')
+            elif not m.get('effect') and not m.get('custom'):
+                R.add('warning', 'MS-26', wm, 'момент без опоры: нет примитива набора (primitive), эффекта каталога (effect) и '
+                                              'пометки custom — исполнитель соберёт его по памяти')
+            elif m.get('effect') and not m.get('custom'):
+                eid = m['effect'].split(':', 1)[1]
+                by = sorted(k for k, x in ctx.primitives.items() if eid in {str(e).split(':', 1)[-1] for e in x.get('effects') or []})
+                if by:
+                    R.add('info', 'MS-26', wm, f'{m["effect"]} исполняет примитив набора {", ".join(by)}: укажите primitive')
             for fld in ('duration', 'easing'):
                 d = m.get(fld) or {}
                 if 'token' in d and d['token'] not in ctx.tokens and d['token'] not in ptok:
                     R.add('error', 'MS-06', wm, f'токена {d["token"]} нет в marketing-tokens.json'
                                                 + (' и в токенах движения проекта (refs.tokens)' if ptok else ''))
+            pnames = {css_name(k) for k in ptok}
+            for tk in m['tracks']:
+                for fld in ('duration', 'easing'):
+                    d = tk.get(fld) or {}
+                    if 'token' in d and d['token'] not in ctx.tokens and d['token'] not in ptok:
+                        R.add('error', 'MS-06', wm, f'{tk["property"]}: токена {d["token"]} нет в marketing-tokens.json'
+                                                    + (' и в токенах движения проекта (refs.tokens)' if ptok else ''))
+                for name in css_vars_of(tk):
+                    if (name.startswith('--mm-') or name.startswith('--motion-')) and name not in ctx.motion_css and name not in pnames:
+                        hint = short_hint(ctx, name)
+                        R.add('error', 'MS-06', wm, f'{tk["property"]}: переменной {name} нет среди токенов движения'
+                                                    + (f'; имя токена — {hint}' if hint else ' (имя — `--` + путь токена через дефисы)'))
+            if (m.get('stagger') or {}).get('each_share') and m['class'] != 'scroll-linked':
+                R.add('warning', 'MS-11', wm, 'stagger.each_share — стаггер по прокрутке, только у scroll-linked')
             d_ms = dur_ms(ctx, m.get('duration'), base, ptok)
             if 'ms' in (m.get('duration') or {}) and d_ms not in scale:
                 R.add('warning', 'MS-07', wm, f'{d_ms:g} мс вне шкалы motion.marketing{own} (CRV-MO-14): возьмите токен или долю базы')
@@ -905,11 +983,60 @@ def fmt_trigger(m, sec):
     return ty + (f' ({", ".join(extra)})' if extra else '')
 
 
+def fmt_track(ctx, tk, base, ptok=None):
+    """Дорожка момента: свойство от → до или ключевые кадры; своя длительность, кривая и задержка свойства; пояснение."""
+    s = (f'{tk["property"]} {tk["from"]} -> {tk["to"]}' if 'from' in tk else
+         f'{tk["property"]} ' + ' / '.join(f'{k["at"]:g}:{k["value"]}' for k in tk['keyframes']))
+    own = ([fmt_dur(ctx, tk['duration'], base, ptok)] if tk.get('duration') else []) + \
+          ([fmt_ease(ctx, tk['easing'], ptok)] if tk.get('easing') else []) + \
+          ([f'+{tk["delay_ms"]:g} ms'] if tk.get('delay_ms') else [])
+    return s + (f' ({", ".join(own)})' if own else '') + (f' [{tk["unit_note"]}]' if tk.get('unit_note') else '')
+
+
+def moment_tail(ctx, m, base, ptok=None):
+    """Части строки момента после времени, кривой и стаггера: пружина, повтор, прерывание, выход, привязка, станции,
+    чем собирается (примитив набора, эффект, свой код), откуда числа и заметка."""
+    parts = []
+    sp = m.get('spring') or {}
+    if m.get('model') == 'spring' or sp:
+        parts.append('spring' + (' ' + ', '.join(f'{k} {v:g}' for k, v in sp.items()) if sp else ''))
+    if m.get('repeat') not in (None, 'once') and m['class'] != 'loop':
+        parts.append(f'repeat {m["repeat"]}')
+    if (m.get('scrub') or {}).get('snap') not in (None, 'none'):
+        parts.append(f'snap to {m["scrub"]["snap"]}')
+    if (m.get('stagger') or {}).get('each_share'):
+        parts.append(f'scroll stagger {m["stagger"]["each_share"]:g} of the range per item')
+    if m.get('interrupt'):
+        parts.append(f'interrupt: {m["interrupt"]}')
+    ex = m.get('exit') or {}
+    if ex:
+        parts.append('exit: ' + ', '.join([ex.get('behavior', 'reverse')]
+                                         + ([fmt_dur(ctx, ex['duration'], base, ptok)] if ex.get('duration') else [])
+                                         + ([fmt_ease(ctx, ex['easing'], ptok)] if ex.get('easing') else [])))
+    if m.get('attach'):
+        parts.append(f'moves with the {m["attach"]["point"]} point of {m["attach"]["to"]}')
+    prm = (' ' + json.dumps(m['params'], ensure_ascii=False)) if m.get('params') else ''
+    if m.get('primitive'):
+        parts.append(f'motion kit: data-mk="{m["primitive"]}"{prm}' + (f' ({m["effect"]})' if m.get('effect') else ''))
+    elif m.get('effect'):
+        parts.append(f'effect: {m["effect"]}{prm}')
+    if m.get('custom'):
+        parts.append(f'own code: {m["custom"]}')
+    src = m.get('source') or {}
+    if src:
+        parts.append(f'numbers from reference {src["ref"]}' + (f'#{src["moment"]}' if src.get('moment') else '')
+                     + (f' ({", ".join(src["take"])})' if src.get('take') else ''))
+    if m.get('note'):
+        parts.append(f'note: {m["note"]}')
+    return parts
+
+
 def moment_line(ctx, m, sec, base, ptok=None):
-    """Строка момента для брифа холста; ptok — токены движения проекта (project_motion): их значения идут первыми."""
+    """Строка момента для брифа холста; ptok — токены движения проекта (project_motion): их значения идут первыми.
+    Части через «; »: триггер → элемент → дорожки, время, кривая, затем стаггер, сокращённое движение, телефон, пауза,
+    LCP и хвост moment_tail — описание доходит до исполнителя целиком."""
     el = ', '.join([m['target']] + list(m.get('stagger_targets') or [])) + f' [data-moment={m["id"]}]' + (f' `{m["selector_hint"]}`' if m.get('selector_hint') else '')
-    props = ', '.join(f'{tk["property"]} {tk["from"]} -> {tk["to"]}' if 'from' in tk else
-                      f'{tk["property"]} ' + ' / '.join(f'{k["at"]:g}:{k["value"]}' for k in tk['keyframes']) for tk in m['tracks'])
+    props = ', '.join(fmt_track(ctx, tk, base, ptok) for tk in m['tracks'])
     if m['class'] in ('scroll-linked',):
         timing = 'progress = scroll' + (f', smoothing {m["scrub"]["smoothing_s"]:g} s' if m.get('scrub', {}).get('smoothing_s') else '')
     elif m['class'] == 'loop':
@@ -929,7 +1056,7 @@ def moment_line(ctx, m, sec, base, ptok=None):
         parts.append(f'pause: {m["pause"]["control"]}')
     if m.get('lcp') == 'is-lcp':
         parts.append('LCP element: transform, clip-path or opacity from 0.01 only')
-    return '; '.join(parts)
+    return '; '.join(parts + moment_tail(ctx, m, base, ptok))
 
 
 def cmd_moments(ctx, spec, section=None, ptok=None):
@@ -968,6 +1095,9 @@ def cmd_motion_md(ctx, spec, out=None, ptok=None):
     L.append('Markup contract: data-section="<section id>" on each section, data-slot="<slot id>", data-group="<group-N>", data-fx="<name>" on '
              'decorative elements (targets <section>.fx-<name>), data-moment="<moment id>" on the element a moment moves, data-effect="<effect id>" '
              'for effect modules. Checks find elements by these attributes.')
+    L.append('Code: the motion kit (lib/motion-kit.js as a support file, kit CSS in <helmet><style>, MotionKit.mount(root) on mount, '
+             'destroy() on unmount; no libraries, no network, no markup built by script). A moment with "motion kit" uses that '
+             'primitive markup (data-mk and its options); own code only where a moment says "own code".')
     allowed = pg.get('properties_allowed')
     if allowed:
         L.append(f'Animate only: {", ".join(allowed)}. Never width, height, top, left, margin, padding; never `transition: all`.')
@@ -983,15 +1113,26 @@ def cmd_motion_md(ctx, spec, out=None, ptok=None):
                 pos = f'at {stt["at"]:g}' if 'at' in stt else f'when `{stt["anchor"]}` is at {stt.get("anchor_line", "viewport-center")}'
                 L.append(f'- station {stt["id"]} {pos}: {stt["describe"]}')
         if sec['moments']:
-            L += ['', '| # | moment | class | trigger → element → property | time / range | easing | reduced motion | phone |', '|---|---|---|---|---|---|---|---|']
+            L += ['', '| # | moment | class | trigger → element → property | time / range | easing | built with | reduced motion | phone |',
+                  '|---|---|---|---|---|---|---|---|---|']
+            tails = []
             for i, m in enumerate(sec['moments'], 1):
-                props = '; '.join(f'{tk["property"]} {tk.get("from", "")} → {tk.get("to", "")}' for tk in m['tracks'])
+                props = '; '.join(fmt_track(ctx, tk, base, ptok).replace(' -> ', ' → ') for tk in m['tracks'])
                 timing = moment_line(ctx, m, sec, base, ptok).split('; ')[1]
+                built = (f'kit `{m["primitive"]}`' if m.get('primitive') else m.get('effect') or '') + (' + own code' if m.get('custom') else '')
                 L.append(f'| {i} | {m["id"]} | {m["class"]} | {fmt_trigger(m, sec)} → `{m["target"]}` → {props} | {timing} | {fmt_ease(ctx, m.get("easing"), ptok)} | '
-                         f'{m["reduce"]["strategy"]} | {(m.get("mobile") or {}).get("strategy", "same")} |')
+                         f'{built or "—"} | {m["reduce"]["strategy"]} | {(m.get("mobile") or {}).get("strategy", "same")} |')
+                tail = [x for x in moment_tail(ctx, m, base, ptok) if not x.startswith(('motion kit:', 'effect:'))]
+                if tail:
+                    tails.append(f'- {m["id"]}: ' + '; '.join(tail))
+            if tails:
+                L += [''] + tails
         L.append('')
         L.append(f'Reduced motion for the section: {sec["reduce"]["strategy"]} — {sec["reduce"]["describe"]}')
         L.append(f'Phone: {sec["mobile"]["strategy"]} — {sec["mobile"]["describe"]}')
+        fb = sec.get('fallback') or {}
+        if fb:
+            L.append('Fallback: ' + '; '.join(f'{k.replace("_", " ")} — {v}' for k, v in fb.items() if v))
         for fr in (sec.get('storyboard') or {}).get('frames') or []:
             at = ', '.join(f'{k} {v}' for k, v in fr['at'].items())
             L.append(f'- frame {fr["id"]} ({fr["viewport"]}, {at}): {fr["describe"]}' + (f' Check: {fr["check"]}' if fr.get('check') else ''))
@@ -1024,7 +1165,7 @@ def cmd_values(ctx, spec, out, ptok=None):
             mv = {'class': m['class'], 'duration_ms': dur_ms(ctx, m.get('duration'), base, ptok), 'easing': ez,
                   'stagger_ms': dur_ms(ctx, (m.get('stagger') or {}).get('each'), base, ptok), 'trigger': m['trigger'],
                   'tracks': m['tracks'], 'reduce': m['reduce']['strategy']}
-            for k in ('loop', 'scrub', 'spring', 'params'):
+            for k in ('loop', 'scrub', 'spring', 'params', 'primitive', 'effect', 'custom', 'source', 'exit', 'interrupt', 'attach'):
                 if m.get(k):
                     mv[k] = m[k]
             if m.get('tunable'):
@@ -1645,6 +1786,70 @@ def selftest(ctx):
                and own_run({'ms': 515})[0] == ['MS-07'])
         expect('шкала проекта: refs.tokens на marketing-tokens.json базы — шкала только базы',
                project_motion(sp, load(sp)) == {} and project_scale(ptok) == {240.0, 730.0})
+    # набор движения, опора момента, имена переменных токенов, полная строка момента
+    with tempfile.TemporaryDirectory() as tmp:
+        p_kit = os.path.join(tmp, 'home.motion-spec.yaml')
+        saved = ctx.primitives
+        ctx.primitives = {'rise': {'id': 'rise', 'class': 'one-shot', 'level_min': 'L0', 'effects': ['hero-entrance-once', 'scroll-reveal-system'],
+                                   'options': {'shift': '--motion-marketing-distance-shift-reveal', 'each': 60}},
+                          'magnet': {'id': 'magnet', 'class': 'pointer', 'level_min': 'L2', 'options': ['max']}}
+
+        def kit_run(mutate):
+            """Находки момента hero-copy-rise копии примера после mutate(момент): (коды error, коды warning, коды info)."""
+            d = load(sp)
+            mm = next(m_ for s_ in d['sections'] if s_['id'] == 'hero' for m_ in s_['moments'] if m_['id'] == 'hero-copy-rise')
+            mutate(mm)
+            with open(p_kit, 'w', encoding='utf-8') as f:
+                yaml.safe_dump(d, f, allow_unicode=True, sort_keys=False)
+            R_ = Report()
+            cmd_spec(ctx, R_, p_kit, plan, ov)
+            mine = [i for i in R_.items if i[2] == 'hero.hero-copy-rise']
+            return tuple({i[1] for i in mine if i[0] == sev} for sev in ('error', 'warning', 'info'))
+        try:
+            def no_anchor(m):
+                m.pop('effect', None)
+                m.pop('primitive', None)
+                m.pop('custom', None)
+            expect('опора момента: без примитива, эффекта и custom — MS-26 warning; с custom — нет',
+                   'MS-26' in kit_run(no_anchor)[1]
+                   and 'MS-26' not in kit_run(lambda m: (no_anchor(m), m.update(custom='свой код: линия рисуется по длине пути SVG')))[1])
+            expect('набор движения: примитив есть — без MS-25; чужой — MS-25 error; уровень выше секции — MS-25 error',
+                   'MS-25' not in kit_run(lambda m: m.update(primitive='rise'))[0] | kit_run(lambda m: m.update(primitive='rise'))[1]
+                   and 'MS-25' in kit_run(lambda m: m.update(primitive='nope'))[0]
+                   and 'MS-25' in kit_run(lambda m: m.update(primitive='magnet'))[0])
+            expect('набор движения: эффект, которого примитив не исполняет, — MS-25 warning',
+                   'MS-25' in kit_run(lambda m: m.update(primitive='rise', effect='effect:marquee-logos'))[1])
+            expect('набор движения: опция вне примитива — MS-25 warning; эффект, который исполняет примитив, без primitive — MS-26 info',
+                   'MS-25' in kit_run(lambda m: m.update(primitive='rise', params={'spin': 1}))[1]
+                   and 'MS-25' not in kit_run(lambda m: m.update(primitive='rise', params={'shift': 16}))[1]
+                   and 'MS-26' in kit_run(lambda m: (m.pop('primitive', None), m.update(effect='effect:scroll-reveal-system')))[2])
+
+            def legacy_var(m):
+                m['tracks'][0] = {'property': 'transform', 'from': 'translateY(var(--mm-shift-hero))', 'to': 'none'}
+
+            def track_token(m):
+                m['tracks'][0] = dict(m['tracks'][0], easing={'token': 'motion.marketing.easing.nope'})
+            expect('имена переменных: короткое --mm-* и чужое --motion-* — MS-06 error; имя сборки ДС — без MS-06',
+                   'MS-06' in kit_run(legacy_var)[0]
+                   and 'MS-06' in kit_run(lambda m: m['tracks'].__setitem__(0, {'property': 'transform', 'from': 'translateY(var(--motion-marketing-distance-nope))', 'to': 'none'}))[0]
+                   and 'MS-06' not in kit_run(lambda m: m['tracks'].__setitem__(0, {'property': 'transform', 'from': 'translateY(var(--motion-marketing-distance-shift-hero))', 'to': 'none'}))[0])
+            expect('своя кривая дорожки: чужой токен — MS-06', 'MS-06' in kit_run(track_token)[0])
+            mx = {'id': 'm', 'class': 'one-shot', 'target': 'hero.title', 'trigger': {'type': 'in-view'}, 'reduce': {'strategy': 'final-state'},
+                  'tracks': [{'property': 'opacity', 'from': 0.01, 'to': 1, 'duration': {'ms': 300}, 'delay_ms': 80},
+                             {'property': 'transform', 'from': 'translateY(16px)', 'to': 'none'}],
+                  'duration': {'ms': 560}, 'easing': {'token': 'motion.marketing.easing.out-expo'},
+                  'interrupt': 'jump-to-end', 'exit': {'behavior': 'fade', 'duration': {'ms': 200}},
+                  'attach': {'to': 'hero.line', 'point': 'end'}, 'model': 'spring', 'spring': {'stiffness': 170, 'damping': 26},
+                  'primitive': 'rise', 'params': {'shift': 16}, 'source': {'ref': 'ref-a', 'moment': 'm3', 'take': ['duration']},
+                  'note': 'подзаголовок идёт за строкой'}
+            ln = moment_line(ctx, mx, {'id': 'hero'}, None)
+            expect('строка момента несёт всё описание: дорожка со своим временем, выход, прерывание, привязка, пружина, набор, источник, заметка',
+                   all(x in ln for x in ('opacity 0.01 -> 1 (300 ms, +80 ms)', 'interrupt: jump-to-end', 'exit: fade, 200 ms',
+                                         'moves with the end point of hero.line', 'spring stiffness 170, damping 26',
+                                         'motion kit: data-mk="rise" {"shift": 16}', 'numbers from reference ref-a#m3 (duration)',
+                                         'note: подзаголовок идёт за строкой')))
+        finally:
+            ctx.primitives = saved
     # файлы проекта: план с подачей и спецификация движения находят друг друга по ссылкам
     try:
         kbpaths.use('tests')

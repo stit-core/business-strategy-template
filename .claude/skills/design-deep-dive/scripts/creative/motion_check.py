@@ -859,6 +859,8 @@ def run_mode(pw, mode, url, a, net_ctx, tmpdir, spec_ms):
     t_prime = min(0.5, 0.28 * a.dwell)
     t_snap = max(t_prime + 0.35, min(1.2, 0.67 * a.dwell))
 
+    mq_tries = [0]                 # бегущая строка меряется на шагах с петлёй, пока не попадёт в окно (до 6 попыток)
+
     def dwell(step):
         y = page.evaluate("Math.round(scrollY)")
         t0 = rel()
@@ -869,14 +871,16 @@ def run_mode(pw, mode, url, a, net_ctx, tmpdir, spec_ms):
         s["step"] = step
         s["idle_window_s"] = round(t_snap - t_prime, 2)
         snaps.append(s)
-        if (s.get("loops") or 0) > 0 and not res.get("marquee_measured"):
-            res["marquee_measured"] = step
+        if (s.get("loops") or 0) > 0 and not res.get("marquee_measured") and mq_tries[0] < 6:
+            mq_tries[0] += 1
             try:
                 mq = page.evaluate(MARQUEE_JS)
                 allm = {}
                 for x in (res.get("marquee") or []) + (mq or []):
                     allm[x["sel"]] = max(allm.get(x["sel"], 0), x["v"])
                 res["marquee"] = [{"sel": k, "v": round(v, 1)} for k, v in sorted(allm.items(), key=lambda kv: -kv[1])[:5]]
+                if mq:
+                    res["marquee_measured"] = step
             except Exception:
                 pass
         else:

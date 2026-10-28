@@ -2,7 +2,7 @@
 
 Волна 2, агент M, 22 сентября 2026. Источников прочитано целиком: 59 (исходники токенов 15 дизайн-систем, документация, спецификации W3C и MDN, материалы практиков), плюс 9 видеодайджестов агента V и собственный пересчёт измерений 24 живых продуктов из `../99-raw/cache/measurements/`.
 
-Смежные файлы: каталог «что анимировать» в `02-what-to-animate-in-apps.md`, доступность движения и готовые токены в `03-reduced-motion-and-motion-tokens.md`. UX-сторона (когда движение нужно по сценарию, задержки обратной связи, микровзаимодействия как логика) — в `../../ux/06-feedback-states-motion/`, здесь только визуальные величины. Тени и подъём при hover — `../04-shape-elevation/02-shadows-layers-depth.md`; фокус-кольцо — там же §10.
+Смежные файлы: каталог «что анимировать» в `02-what-to-animate-in-apps.md`, доступность движения и готовые токены в `03-reduced-motion-and-motion-tokens.md`, пружина токеном ДС, переходы по шаблонам интерфейса и их перевод на веб, Compose и SwiftUI — `04-spring-tokens-transitions-platforms.md`. UX-сторона (когда движение нужно по сценарию, задержки обратной связи, микровзаимодействия как логика) — в `../../ux/06-feedback-states-motion/`, здесь только визуальные величины. Тени и подъём при hover — `../04-shape-elevation/02-shadows-layers-depth.md`; фокус-кольцо — там же §10.
 
 ## Выжимка для агента
 
@@ -18,12 +18,12 @@
 10. **Кривая входа: `cubic-bezier(0, 0, 0.2, 1)` (Tailwind/M2 ease-out) или `cubic-bezier(0, 0, 0, 1)` (M3 standard-decelerate).** Кривая выхода: `cubic-bezier(0.4, 0, 1, 1)`. Общая: `cubic-bezier(0.4, 0, 0.2, 1)`. → §2.2 [консенсус]
 11. **Встроенные `ease-in`/`ease-out` слабоваты.** Kowalski: «I almost never use them… `ease` is an exception as it works well for basic hover effects like changing background color». Практика это подтверждает наоборот: `ease` занимает 34.7 % живых объявлений. → §2.4, §6.2 [спорно]
 12. **Material 3 объявил всю систему длительностей и кривых устаревшей** («no longer maintained») и перешёл на пружины motion physics. Легаси-кривые оставлены только для не мигрировавших команд. → §4.1 [система]
-13. **Пружина описывается либо (stiffness, damping, mass), либо (duration, bounce).** Перевод: `bounce = 1 − ζ` для недодемпфированных, `duration ≈ 2π/ω_n`, `ω_n = √(k/m)`. → §4.2 [консенсус]
+13. **Пружина описывается либо (stiffness, damping, mass), либо (duration, bounce).** Перевод: `ω_n = √(k/m)`, `duration = response = 2π/ω_n`, `bounce = 1 − ζ` при ζ ≤ 1 и `1/ζ − 1` у передемпфированной. В ДС пружина — `dampingRatio` и `stiffness` при массе 1, перевод на Compose, SwiftUI и веб — `04-spring-tokens-transitions-platforms.md` §2. → §4.2 [консенсус] [проверено: расчёт]
 14. **Геометрия пружинит, цвет и прозрачность — никогда.** В M3 Expressive все шесть effects-пружин имеют ζ = 1.0 (критическое демпфирование, перелёт 0) и совпадают у standard и expressive схем. Comeau: «I wouldn't use them [springs] for color or opacity changes». → §4.3 [консенсус]
 15. **Готовая таблица M3 «пружина → cubic-bezier + длительность» для веба лежит в §4.5.** Все spatial-кривые имеют y₁ > 1, то есть перелёт зашит в кривую. → §4.5 [система]
 16. **Carbon прямо запрещает перелёт в рабочем интерфейсе**: «Do not use easing curves that suggest bounce, stretch, or sudden stops». M3 Expressive его требует. Это настоящий конфликт систем, выбирай по типу продукта. → §4.6 [спорно]
 17. **Длительность растёт от расстояния как корень четвёртой степени, а не линейно.** По формуле MUI: 36 px → 192 ms, 100 px → 239, 300 px → 311, 600 px → 376. Удвоение дистанции добавляет ≈ 19 % времени. → §5.1 [система]
-18. **Пружину в чистом CSS даёт `linear()`** (Baseline с декабря 2023). Нужно 40–75 точек; три такие пружины добавляют к бандлу ≈ 1.3 КБ. Хранить в переменной с фоллбэком через `@supports`. → §4.7 [консенсус]
+18. **Пружину в чистом CSS даёт `linear()`** (Baseline Newly available с декабря 2023, Widely available с июня 2026). Равномерных точек нужно 40–75, точек с процентами там, где кривая гнётся, — вдвое меньше. В ДС пружина — токен с параметрами: строку из 21–28 точек и время успокоения собирает сборка (`04-spring-tokens-transitions-platforms.md` §1). → §4.7 [консенсус]
 19. **`linear()`-пружина врёт на прерываниях:** CSS применяет reversing shortening factor и пружина на 1600 ms перезапускается за 400 ms. Настоящие прерываемые пружины — только JS. → §4.7 [мнение: Comeau]
 20. **CSS `transition` прерываем, `@keyframes` — нет.** Для состояний бери `transition`, для циклов `@keyframes`. → §3.3 [консенсус]
 21. **Атлас длительностей и кривых 15 систем — в §1.1 и §2.2.** Не усредняй, выбирай строку и следуй ей целиком.
@@ -43,7 +43,7 @@
 | Система | Шкала, ms | Дефолт | Имена | Источник |
 |---|---|---|---|---|
 | **Material 3 (legacy)** | 50, 100, 150, 200 / 250, 300, 350, 400 / 450, 500, 550, 600 / 700, 800, 900, 1000 | нет | `short1–4`, `medium1–4`, `long1–4`, `extra-long1–4` | [S1] `_md-sys-motion.scss` v0.192 |
-| **Shopify Polaris** | 0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 + 5000 | нет | `--p-motion-duration-<N>` | [S2] `motion.ts` |
+| **Shopify Polaris** | 0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 + 5000 | нет | `--p-motion-duration-<N>` | [S2] motion.ts (архив репозитория с сентября 2026) |
 | **Microsoft Fluent 2** | 50, 100, 150, 200, 250, 300, 400, 500 | `durationNormal` 200 | `durationUltraFast … durationUltraSlow` | [S3] `durations.ts` |
 | **IBM Carbon** | 70, 110, 150, 240, 400, 700 | `duration-moderate-01` 150 | `durationFast01/02`, `Moderate01/02`, `Slow01/02` | [S4] `@carbon/motion` |
 | **Tailwind v3.4** | 0, 75, 100, 150, 200, 300, 500, 700, 1000 | 150 | `duration-<N>` | [S5] `config.full.js` |
@@ -138,7 +138,7 @@
 | **Carbon expressive** | `0.4, 0.14, 0.3, 1` | `0, 0, 0.3, 1` | `0.4, 0.14, 1, 1` | — | — |
 | **Fluent 2** | easyEase `0.33, 0, 0.67, 1`; easyEaseMax `0.8, 0, 0.2, 1` | decelerateMax `0.1, 0.9, 0.2, 1`; Mid `0, 0, 0, 1`; Min `0.33, 0, 0.1, 1` | accelerateMax `0.9, 0.1, 1, 0.2`; Mid `1, 0, 1, 1`; Min `0.8, 0, 0.78, 1` | `0, 0, 1, 1` | три силы у каждого семейства |
 | **Primer** | ease `0.25, 0.1, 0.25, 1`; easeInOut `0.6, 0, 0.2, 1` | `0.3, 0.8, 0.6, 1` | `0.7, 0.1, 0.75, 0.9` | `0, 0, 1, 1` | — |
-| **Polaris** | ease `0.25, 0.1, 0.25, 1`; easeInOut `0.42, 0, 0.58, 1` | `0.19, 0.91, 0.38, 1` | `0.42, 0, 1, 1` | `0, 0, 1, 1` | «ease-in и ease-out — use sparingly» |
+| **Polaris** | ease `0.25, 0.1, 0.25, 1`; easeInOut `0.42, 0, 0.58, 1` | `0.19, 0.91, 0.38, 1` | `0.42, 0, 1, 1` | `0, 0, 1, 1` | ease — действия пользователя, ease-in-out — системные изменения; «ease-in и ease-out — use sparingly»; `linear` — спиннеры [S63] |
 | **Atlassian (новая)** | inout-bold `0.4, 0, 0, 1` | out-bold `0, 0.4, 0, 1`; out-practical `0.4, 1, 0.6, 1` | in-practical `0.6, 0, 0.8, 0.6` | — | `easing.spring` = `linear()` из 65 точек |
 | **Atlassian (@atlaskit)** | easeInOut `0.15, 1, 0.3, 1` | easeOut `0.2, 0, 0, 1` | easeIn `0.8, 0, 0, 0.8` | `0, 0, 1, 1` | семейство `easeIn40/60/80Out` |
 | **Spectrum** | `0.45, 0, 0.40, 1` | `0, 0, 0.40, 1` («most common in Spectrum») | `0.50, 0, 1, 1` | — | всего три кривые |
@@ -243,10 +243,10 @@ Comeau предлагает ровно обратную асимметрию д�
 Перевод между ними (проверено расчётом при m = 1):
 - собственная частота `ω_n = √(k / m)`;
 - коэффициент демпфирования `ζ = c / (2√(k·m))`;
-- `bounce = 1 − ζ` для недодемпфированных (ζ < 1); при ζ ≥ 1 bounce = 0;
-- `duration ≈ 2π / ω_n` (период колебания);
+- `bounce = 1 − ζ` при ζ ≤ 1 и `bounce = 1/ζ − 1` у передемпфированной пружины (ζ > 1): у Apple bounce лежит от −1 до 1, ноль — критическое демпфирование;
+- `duration = response = 2π / ω_n` — период колебания без трения: SwiftUI переводит длительность в жёсткость как `stiffness = (2π ÷ duration)²` (источники и проверка — `04-spring-tokens-transitions-platforms.md` §2.1);
 - относительный перелёт `= exp(−πζ / √(1 − ζ²))`;
-- время затухания до 1 % от амплитуды `t₉₉ = −ln(0.01) / (ζ · ω_n)`.
+- огибающая колебаний падает до 1 % амплитуды за `t₉₉ = −ln(0.01) / (ζ · ω_n)` — оценка, а не время успокоения кривой: у ζ < 1 она расходится с ним до 20 % в обе стороны. Время успокоения (последний выход кривой из полосы 1 % пути) считает сборка ДС — `04-spring-tokens-transitions-platforms.md` §1.2.
 
 Определение duration у Apple, которое часто перевирают: «The **perceptual duration**, which defines the pace of the spring. This is approximately equal to the settling duration, but for very bouncy springs, will be the duration of the period of oscillation» [S27]. Это не «время до остановки».
 
@@ -273,21 +273,23 @@ Comeau описывает те же три параметра словами: м
 
 **Ключевое наблюдение: effects-пружины у standard и expressive идентичны и всегда критически задемпфированы (ζ = 1.0).** Цвет и прозрачность не пружинят никогда, даже в «выразительной» схеме. Пружинит только геометрия. То же говорит Comeau: «Springs are most impactful when it comes to **motion**; I wouldn't use them for color or opacity changes» [S33].
 
-Мой пересчёт в веб-величины (m = 1, порог видимости 1 %):
+Пересчёт в веб-величины (m = 1, полоса 1 % пути): t₉₉ — оценка по огибающей (§4.2), время CSS — время успокоения кривой, которое выводит сборка ДС (`04-spring-tokens-transitions-platforms.md` §1.2) `[проверено: расчёт ds_build]`:
 
-| Спека | ω_n, рад/с | t₉₉, ms | Перелёт, % |
-|---|---|---|---|
-| standard default spatial | 26.5 | 193 | 0.15 |
-| standard fast spatial | 37.4 | 137 | 0.15 |
-| standard slow spatial | 17.3 | 295 | 0.15 |
-| default effects (обе схемы) | 40.0 | 166 | 0 |
-| fast effects (обе схемы) | 61.6 | 108 | 0 |
-| slow effects (обе схемы) | 28.3 | 235 | 0 |
-| expressive default spatial | 19.5 | 295 | 1.5 |
-| expressive fast spatial | 28.3 | 271 | **9.5** |
-| expressive slow spatial | 14.1 | 407 | 1.5 |
+| Спека | ω_n, рад/с | t₉₉ огибающей, ms | время CSS, ms | Перелёт, % |
+|---|---|---|---|---|
+| standard default spatial | 26.5 | 193 | 200 | 0.15 |
+| standard fast spatial | 37.4 | 137 | 140 | 0.15 |
+| standard slow spatial | 17.3 | 295 | 300 | 0.15 |
+| default effects (обе схемы) | 40.0 | 166 | 170 | 0 |
+| fast effects (обе схемы) | 61.6 | 108 | 110 | 0 |
+| slow effects (обе схемы) | 28.3 | 235 | 240 | 0 |
+| expressive default spatial | 19.5 | 295 | 330 | 1.5 |
+| expressive fast spatial | 28.3 | 271 | 230 | **9.5** |
+| expressive slow spatial | 14.1 | 407 | 450 | 1.5 |
 
-Вывод: по времени пружины M3 укладываются в 110–410 ms, то есть в ту же вилку, что и кривые. **Разница не в скорости, а в характере**: expressive fast spatial даёт ≈ 9.5 % перелёта.
+Перелёт 0.15 % у standard spatial лежит внутри полосы 1 %: кривая CSS успокаивается раньше пика и перелёта не показывает.
+
+Вывод: по времени пружины M3 укладываются в 110–450 ms, то есть в ту же вилку, что и кривые. **Разница не в скорости, а в характере**: expressive fast spatial даёт ≈ 9.5 % перелёта.
 
 ### 4.4 Пружины Apple
 
@@ -297,13 +299,15 @@ Comeau описывает те же три параметра словами: м
 - `snappy(duration: 0.5, extraBounce: 0.0)` — «base bounce of **0.15**»
 - `bouncy(duration: 0.5, extraBounce: 0.0)` — «base bounce of **0.3**»
 
-Мой пересчёт (m = 1):
+Пересчёт (m = 1; время CSS — успокоение кривой до 1 % пути, как его выводит сборка ДС) `[проверено: расчёт ds_build]`:
 
-| Пресет | duration | bounce | ζ | k | t₉₉, ms | Перелёт, % |
-|---|---|---|---|---|---|---|
-| smooth | 0.5 s | 0 | 1.00 | 158 | 528 | 0 |
-| snappy | 0.5 s | 0.15 | 0.85 | 158 | 431 | 0.6 |
-| bouncy | 0.5 s | 0.3 | 0.70 | 158 | 524 | 4.6 |
+| Пресет | duration | bounce | ζ | k | t₉₉ огибающей, ms | время CSS, ms | Перелёт, % |
+|---|---|---|---|---|---|---|---|
+| smooth | 0.5 s | 0 | 1.00 | 158 | — | 530 | 0 |
+| snappy | 0.5 s | 0.15 | 0.85 | 158 | 431 | 360 | 0.6 |
+| bouncy | 0.5 s | 0.3 | 0.70 | 158 | 524 | 530 | 4.6 |
+
+У критически демпфированной пружины огибающей нет; её время успокоения 528 ms и есть «perceptual duration» 0.5 s в определении Apple: «approximately equal to the settling duration». Сама SwiftUI считает `settlingDuration` строже — до 0,1 % (`epsilon` 0.001, `04-spring-tokens-transitions-platforms.md` §4.3): у `smooth` это 735 ms.
 
 Все три системные пружины Apple — **около полусекунды по воспринимаемому темпу**, заметно медленнее веб-практики (≤ 300 ms по Kowalski). Причина — тач-экран: движение крупнее, его надо отследить взглядом. Переносить значения Apple в веб-сервис на десктопе нельзя, переносить структуру (три именованных пресета: без перелёта / слабый / заметный) — можно и нужно.
 
@@ -339,7 +343,7 @@ Comeau описывает те же три параметра словами: м
 | **Запрещён** | IBM Carbon | «Avoid easing curves that are unnatural, distracting, or purely decorative… **Do not use easing curves that suggest bounce, stretch, or sudden stops**» [S22] |
 | **Требуется** | Material 3 Expressive | все spatial-кривые с перелётом до 67 %; expressive fast spatial даёт 9.5 % физического перелёта [S24], [S11] |
 | **Допустим точечно** | Ant Design | `easeOutBack` и `easeInBack` есть в токенах, но в компонентах почти не применяются [S8] |
-| **Вынесен в отдельный токен** | Atlassian | `easing.spring` = `linear()` из 65 точек; в токенах компонентов не используется, только `practical` и `bold` [S14], [S25] |
+| **Вынесен в отдельный токен** | Atlassian | `easing.spring` = `linear()` из 65 точек [S14]; в документации переходы компонентов — на `practical` и `bold` [S25], а в пакете `@atlaskit/tokens` 20.8.2 пружина стоит в токене компонента `avatar.hovered` (помечен `experimental`, перелёт 2,4 %) [S60] |
 | **Осторожно** | Polaris | готовый keyframe `bounce` есть (scale 1 → 0.85 → 1.05 → 1), но применяется к индикаторам, а не к переходам [S2] |
 
 Это не «одни правы, другие нет», а разные продукты. Разрешение для базы:
@@ -347,9 +351,17 @@ Comeau описывает те же три параметра словами: м
 - **Клиентский сервис, мобильное приложение, онбординг** — перелёт 3–10 % допустим на одном-двух ключевых элементах (переключатель, подтверждение, добавление в корзину).
 - **Никогда**: перелёт на элементах, которые пользователь видит десятки раз за сессию (строки таблицы, вкладки, пункты меню).
 
+Сведения, а не нормы:
+- Пружина Atlassian на наведении аватара (`avatar.hovered`, 20.8.2, `experimental`) — единственный найденный случай перелёта в
+  токене компонента; с разрешением выше он расходится (наведение — частое действие), правило из одного токена не выводится [S60].
+- Детекторы примет считают перелётом разное: Hallmark 2.0.0 флагует кривую с y > 1.05 на состояниях интерфейса — под порог
+  попадает и официальная кривая M3 standard spatial `(0.27, 1.06, 0.18, 1.00)` (§4.5) [S61]; правило `bounce-easing` Impeccable
+  4.8.0 — имена bounce, elastic, wobble и кривые с y вне [−0.1; 1.1]: standard spatial оно пропускает, expressive spatial (y₁
+  1.21–1.67) ловит [S65]. Находка детектора — сигнал проверить тип продукта, норма — разрешение выше `[мнение вендора]`.
+
 ### 4.7 Пружина в чистом CSS: `linear()`
 
-**Статус: Baseline Widely available, во всех браузерах с декабря 2023** [S19]. На 2026 год пружину можно записать в CSS без JS.
+**Статус: Baseline Newly available с декабря 2023, Widely available с июня 2026** [S19] (Chrome 113, Firefox 112, Safari 17.2; сверено с `../../creative/07-stack-implementation/01-stack-choice.md` §3.1). Пружину можно записать в CSS без JS.
 
 Синтаксис: `linear(0, 0.25, 1)`, `linear(0, 0.25 75%, 1)`, `linear(0, 0.5 25% 75%, 1)`. Минимум два значения; 0 — начало, 1 — конец; значения вне [0, 1] разрешены — это и даёт перелёт. Механика — кусочно-линейная интерполяция между точками; без процентов точки распределяются равномерно [S19].
 
@@ -362,9 +374,11 @@ Comeau описывает те же три параметра словами: м
 
 **Главное ограничение — прерывания.** «CSS transitions have special logic for handling interrupts… the **reversing shortening factor** that proportionally reduces the duration of interrupted transitions. So, a spring intended to take **1600 ms might re-run at only 400 ms**. This looks fine with Bézier curves, but we're trying to emulate physics here» [S48]. То есть `linear()`-пружина при быстром переключении туда-сюда ведёт себя не как пружина.
 
-Второе ограничение: **длительность приходится задавать руками**. Генератор Арчибальда выводит её из параметров пружины («based on how much time is necessary until the spring settles down»); Easing Wizard берёт длительность как отдельный параметр и внутренне зажимает остальные, чтобы кривая оставалась возможной [S48]. Пружину с нулевым трением смоделировать нельзя.
+Второе ограничение: **длительность — часть кривой**. Точки `linear()` разложены по времени успокоения: та же строка с другой длительностью — другая пружина. Генератор Арчибальда выводит длительность из параметров пружины («based on how much time is necessary until the spring settles down»); Easing Wizard берёт её отдельным параметром и внутренне зажимает остальные, чтобы кривая оставалась возможной [S48]. Пружину с нулевым трением смоделировать нельзя.
 
-Рекомендованный способ хранения (Comeau, адаптировано):
+**В ДС пружина — токен с параметрами**, а не строка: токен `transition` с расширением `org.design-deep-dive.spring` (`dampingRatio`, `stiffness`), из которого сборка выводит и строку `linear()`, и время успокоения, а параметры повторяет комментарием в CSS (`04-spring-tokens-transitions-platforms.md` §1). `@supports`-запас сборка не выводит: функция в Baseline Widely available; запас для инструментов без расширения — `$value` токена.
+
+Способ хранения строки вне ДС — прототип, лабораторная страница (Comeau, адаптировано):
 
 ```css
 :root {
@@ -430,7 +444,7 @@ duration = min( round( (4 + 15 · constant^0.25 + constant / 5) · 10 ), 3000 ) 
 
 ### 5.2 От размера элемента
 
-Carbon в разделе хореографии даёт полезную формулировку: раскрытие строки таблицы и открытие дропдауна имеют один смысл, значит одинаковые личность и кривая, «however, they should use slightly **different durations due to their difference in size**» [S52]. То есть при одинаковой семантике длительность разводится по габариту, а не по компоненту.
+Carbon в разделе хореографии даёт полезную формулировку: раскрытие строки таблицы и открытие дропдауна имеют один смысл, значит одинаковые личность и кривая, «however, they should use slightly **different durations due to their difference in size**» [S52]. То есть при одинаковой семантике длительность разводится по габариту, а не по компоненту. То же у Fluent 2 (крупному — дольше, мелкому — короче) [S62] и у пружин Material 3: скорость fast — переключатель и кнопка, default — нижняя панель и дровер, slow — полноэкранное (`02-what-to-animate-in-apps.md` §1) [S59].
 
 ### 5.3 Одна ручка на весь продукт
 
@@ -519,7 +533,7 @@ Ant Design — единственная из изученных систем, г
 | `cubicBezier` | массив из 4 чисел `[P1x, P1y, P2x, P2y]`, x в [0, 1], **y любые** (перелёт легален) | `[0, 0, 0.2, 1]` |
 | `transition` (составной) | `{duration, delay, timingFunction}` | см. §7.4 |
 
-Чего в спецификации нет: **типа для `linear()`-пружины и для keyframes**. Material в своём генераторе на этом уже споткнулся: тип `motion_path` в веб-экспорте выдаёт `null` [S1]. Пружину `linear()` приходится класть строкой в расширение `$extensions` или хранить как отдельный CSS-файл. Atlassian кладёт её в собственный формат, не DTCG.
+Чего в спецификации нет: **типа для пружины и для keyframes**. Material в своём генераторе на этом уже споткнулся: тип `motion_path` в веб-экспорте выдаёт `null` [S1]. Atlassian кладёт пружину `linear()` строкой в собственный формат, не DTCG. ДС скилла пишет пружину параметрами в расширении `org.design-deep-dive.spring` токена `transition`, строку собирает сборка (`04-spring-tokens-transitions-platforms.md` §1.1).
 
 ### 7.3 Сколько токенов нужно
 
@@ -529,7 +543,7 @@ Ant Design — единственная из изученных систем, г
 |---|---|---|---|
 | Длительности | 4 (100 / 150 / 250 / 400) | **6** (0 / 100 / 150 / 200 / 300 / 400) | 12+ (Polaris, Primer), 16 (Material) |
 | Кривые | 3 (standard / entrance / exit) | **4** (+ linear) | 9 (Fluent), 8 (Ant) |
-| Пружины | 0 | **2** (spatial default + spatial fast) | 6 (Material 3) |
+| Пружины | 0 | **2** (spatial default + spatial fast; по поверхности — `04-spring-tokens-transitions-platforms.md` §1.5) | 6 (Material 3) |
 | Семантические связки | 0 | **8–12** (`motion.popup.enter`, `motion.modal.exit`…) | 72 (Atlassian) |
 
 Готовый набор с JSON и CSS — в `03-reduced-motion-and-motion-tokens.md` §4–§6.
@@ -625,8 +639,8 @@ Natural, Fast, Purpose, Performant, Interruptible, Accessible, «Feel right» [S
 10. Длительность перемещений масштабируется от расстояния (хотя бы двумя ступенями: близко 150–200, далеко 250–350)?
 11. Анимации, зависящие от состояния, сделаны через `transition`, а не `@keyframes`?
 12. Ни одно действие, запускаемое с клавиатуры, не анимировано?
-13. `linear()`-пружины вынесены в переменные и имеют `cubic-bezier`-фоллбэк под `@supports`?
-14. Параметры пружины (stiffness, damping, mass) записаны в комментарии рядом со строкой `linear()`?
+13. Пружина ДС — токен `transition` с расширением `org.design-deep-dive.spring`, а строка `linear()` и её время — из сборки, а не вписаны руками?
+14. Параметры пружины (`dampingRatio`, `stiffness`) записаны в токене, а CSS повторяет их комментарием над переменной?
 15. Цвет и прозрачность анимируются без пружины и без перелёта?
 16. Есть ли движение, которое средний пользователь замечает? (Carbon: если да, убрать или ослабить.)
 17. Токены движения объявлены как `duration` и `cubicBezier` по DTCG, а не строками `"150ms"`?
@@ -641,20 +655,20 @@ Natural, Fast, Purpose, Performant, Interruptible, Accessible, «Feel right» [S
 3. **`ease` в практике против `ease-out` в декларациях** (§6.2). Не найдено ни одного исследования, которое бы сравнивало восприятие. Вопрос к агенту волны 3 (оценка): сделать A/B на двух вариантах одного интерфейса.
 4. **Расхождение исходника и документации у Material 3**: в `_md-sys-motion.scss` `easing-emphasized` = `cubic-bezier(0.2, 0, 0, 1)` (то же, что standard), в документации честно написано **N/A**, потому что на Android это составной путь из двух кривых Безье (`M 0,0 C 0.05,0 0.133333,0.06 0.166666,0.4 C 0.208333,0.82 0.25,1 1,1`). В CSS-экспорте подменено. Для веба **emphasized использовать нельзя**, только decelerate/accelerate-варианты [S1], [S24].
 5. **Аномалия 33.3 ms у Primer** (§6.1): в опубликованных токенах такого значения нет. Источник не найден; возможно, это анимация спиннера или деталь `@primer/css`. Требует отдельной проверки.
-6. **Правила применения движения у Polaris и Fluent 2 не прочитаны.** `polaris.shopify.com/design/motion` отдаёт таймаут и SSL-ошибку из этой среды; `fluent2.microsoft.design/motion/overview` — 404 плюс «Microsoft employee? Sign in». Значения токенов взяты из исходников пакетов, текстовые правила — нет.
-7. **Статус View Transitions API на 2026** уточнён только частично: MDN не показывает баннер Baseline «widely available», кросс-документные переходы остаются ограниченными. Матрицу поддержки по браузерам из этой среды подтвердить не удалось. `[спорно]`, см. `02-what-to-animate-in-apps.md` §5.3.
-8. **Стоимость `filter` и `backdrop-filter` в анимации** (открытый вопрос агента C): количественных замеров FPS найти не удалось ни у MDN, ни у web.dev (`web.dev/articles/prefers-reduced-motion` недоступен из этой среды). Качественные основания — в `02-what-to-animate-in-apps.md` §4.3.
-9. **GOV.UK и движение**: у GOV.UK Design System раздела о движении нет вообще. Проверено перечислением подразделов `styles/` (13 штук): colour, font-override-classes, headings, images, layout, links, lists, page-template, paragraphs, section-break, spacing, typeface, type-scale. Движения среди них нет, и объяснения этому в документации тоже нет. Отсутствие раздела само по себе позиция: сервис, который человек посещает раз в год, не нуждается в языке движения.
-10. **Apple WWDC 2018 «Designing Fluid Interfaces» и WWDC 2023 «Animate with springs»** не расшифрованы: докачка транскриптов упирается в лимит YouTube (см. `../91-videos/README.md`). Оба доклада остаются вторичными ссылками через Rauno Freiberg [S16].
+6. **Стоимость `filter` и `backdrop-filter` в анимации** (открытый вопрос агента C): количественных замеров FPS найти не удалось ни у MDN, ни у web.dev (`web.dev/articles/prefers-reduced-motion` недоступен из этой среды). Качественные основания — в `02-what-to-animate-in-apps.md` §4.3.
+7. **GOV.UK и движение**: у GOV.UK Design System раздела о движении нет вообще. Проверено перечислением подразделов styles/ (13 штук): colour, font-override-classes, headings, images, layout, links, lists, page-template, paragraphs, section-break, spacing, typeface, type-scale. Движения среди них нет, и объяснения этому в документации тоже нет. Отсутствие раздела само по себе позиция: сервис, который человек посещает раз в год, не нуждается в языке движения.
+8. **Apple WWDC 2018 «Designing Fluid Interfaces»** не расшифрован: докачка транскрипта упирается в лимит YouTube; доклад остаётся вторичной ссылкой через Rauno Freiberg [S16]. Из WWDC 2023 «Animate with springs» взяты формулы перевода длительности и отскока в жёсткость и демпфирование и правило «пружина — анимация SwiftUI по умолчанию» (`04-spring-tokens-transitions-platforms.md` §2.1, §4.3); целиком доклад не расшифрован.
 
 ---
 
 ## Источники
 
+Снимок: 28.10.2026 — день сверки источников S59–S65 и статусов Baseline.
+
 Нумерация сквозная с сырыми заметками `../99-raw/notes/wave2/M-notes.md`.
 
 1. `[S1]` Google. Material Web, `tokens/versions/v0_192/_md-sys-motion.scss`, 2026. https://raw.githubusercontent.com/material-components/material-web/main/tokens/versions/v0_192/_md-sys-motion.scss — автогенерированный исходник токенов M3 для веба; первичный, значения точные.
-2. `[S2]` Shopify. Polaris tokens, `polaris-tokens/src/themes/base/motion.ts`, 2026. https://raw.githubusercontent.com/Shopify/polaris/main/polaris-tokens/src/themes/base/motion.ts — исходник с авторскими описаниями кривых и готовыми keyframes.
+2. `[S2]` Shopify. Polaris tokens, файл polaris-tokens/src/themes/base/motion.ts, 2026. https://raw.githubusercontent.com/Shopify/polaris/main/polaris-tokens/src/themes/base/motion.ts — исходник с авторскими описаниями кривых и готовыми keyframes; репозиторий в архиве с сентября 2026, Polaris React заменён Web Components, токенов движения там не найдено [S63].
 3. `[S3]` Microsoft. Fluent UI v9, `packages/tokens/src/global/durations.ts` и `curves.ts`, 2026. https://raw.githubusercontent.com/microsoft/fluentui/master/packages/tokens/src/global/ — первичный исходник.
 4. `[S4]` IBM. `@carbon/motion`, `lib/index.js` (Copyright IBM Corp. 2018, 2026). https://cdn.jsdelivr.net/npm/@carbon/motion/lib/index.js — исходник с JSDoc, где у каждой длительности написано назначение.
 5. `[S5]` Tailwind Labs. Tailwind CSS v3.4 `stubs/config.full.js` и v4 `packages/tailwindcss/theme.css`, 2026 — исходники обеих версий; показывают отказ от шкалы длительностей в v4.
@@ -671,7 +685,7 @@ Natural, Fast, Purpose, Performant, Interruptible, Accessible, «Feel right» [S
 16. `[S16]` Rauno Freiberg. «Invisible Details of Interaction Design», rauno.me/craft/interaction-design, 2023 — прерываемость, частота и новизна, разбор macOS.
 17. `[S17]` Val Head. «Designing Safer Web Animation For Motion Sensitivity», A List Apart, 2015 — база для `prefers-reduced-motion`, три фактора риска, цифры по вестибулярным нарушениям.
 18. `[S18]` MDN. `prefers-reduced-motion` — Baseline с января 2020, где пользователь включает настройку в семи ОС.
-19. `[S19]` MDN. `linear()` easing function — Baseline с декабря 2023, синтаксис, ссылка на генератор Арчибальда.
+19. `[S19]` MDN. `linear()` easing function — Baseline Newly available с декабря 2023, Widely available с июня 2026; синтаксис, ссылка на генератор Арчибальда.
 20. `[S20]` MDN. `@starting-style` — Baseline 2024; три условия для анимации поповеров и `<dialog>`.
 21. `[S21]` W3C. WCAG 2.2, Understanding SC 2.3.3 Animation from Interactions (через web.archive) — уровень AAA, техники C39 и SCR40.
 22. `[S22]` IBM. Carbon Design System, Motion: overview — две личности, роли кривых, нелинейная шкала, чек-лист из четырёх критериев.
@@ -686,3 +700,9 @@ Natural, Fast, Purpose, Performant, Interruptible, Accessible, «Feel right» [S
 52. `[S52]` IBM. Carbon Design System, Motion: choreography — стаггер 20 ms и потолок 500 ms, порядок появления контента из пяти категорий.
 54. `[S54]` Josh W. Comeau. «An Interactive Guide to CSS Transitions» — 16.6 ms на кадр, `will-change` и субпиксельный рендер, action-driven motion (125/450 ms), `transition-delay` 300 ms.
 56. `[S56]` Собственный пересчёт измерений агента P: `../99-raw/cache/measurements/*_1440x900.json`, 24 продукта, 1576 объявлений `transition-duration`. Метод и ограничения — `../99-raw/notes/wave2/P-notes.md`.
+59. `[S59]` Google. Material 3: material-components-android, файл docs/theming/Motion.md, androidx Compose Material3 `MotionScheme.kt` (VERSION v0_14_0) — скорость пружины по размеру компонента; через `../../creative/02-references-moodboards/04-motion-libraries-and-rules.md` §4.1 [S37].
+60. `[S60]` Atlassian Design System. https://atlassian.design/foundations/motion и /foundations/motion/applying-motion; `@atlaskit/tokens` 20.8.2, файл artifacts/themes/atlassian-motion.js — пружина с перелётом 2,4 % в `avatar.hovered` (`experimental`); через тот же обзор §4.1 [S41].
+61. `[S61]` Hallmark 2.0.0. https://github.com/Nutlope/hallmark: skills/hallmark/references/craft.md §5, gates.md, scripts/sloplint.mjs — запрет перелёта на состояниях интерфейса, порог y > 1.05; через тот же обзор §4.2 [S45] — `[мнение вендора]`.
+62. `[S62]` Microsoft. Fluent 2 Motion, https://fluent2.microsoft.design/motion (страница правил читается) — длительности по размеру, `linear` только у вращения, смена страницы затуханием; через тот же обзор §4.1 [S40].
+63. `[S63]` Shopify. Polaris, `polaris.shopify.com/content/design/motion/*.mdx` в архиве репозитория Shopify/polaris (архив с сентября 2026; polaris-react.shopify.com — соединение рвётся) — роли кривых: ease — действия пользователя, ease-in-out — системные; через тот же обзор §4.1 [S42].
+65. `[S65]` Impeccable 4.8.0. https://github.com/pbakaus/impeccable: skill/reference/animate.md, crates/core/src/checks/rules.rs — правило детектора `bounce-easing`; через тот же обзор §4.2 [S46] — `[мнение вендора]`.

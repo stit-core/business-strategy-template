@@ -69,7 +69,7 @@ fields:
   review_by: "дата пересмотра"
 clusters:
   # состав кластера = записи с этим id в поле cluster (источник истины — записи; registry_check.py сверяет обе стороны)
-  - {id: ai-saas-2024, name_ru: "ИИ-SaaS 2023–2024", members: [purple-neon-band, purple-gradient-hero, gradient-text, neon-glow, pill-announcement-chip, accent-word-headline, overused-display-font, aurora-blobs, mesh-gradient-bg, glassmorphism-panels, dashboard-in-browser-frame, bento-uniform-tiles, logo-orbit-hero, emoji-sparkle-ai, pulsing-cta], source: "ui 11/04 §5; Hallmark anti-patterns Critical; ui 11/01 §18"}
+  - {id: ai-saas-2024, name_ru: "ИИ-SaaS 2023–2024", members: [purple-neon-band, purple-gradient-hero, gradient-text, neon-glow, pill-announcement-chip, accent-word-headline, overused-display-font, aurora-blobs, mesh-gradient-bg, glassmorphism-panels, dashboard-in-browser-frame, bento-uniform-tiles, logo-orbit-hero, emoji-sparkle-ai, pulsing-cta, meteor-shower, god-rays-light, flickering-grid, border-beam-shine, spotlight-card, typing-headline], source: "ui 11/04 §5; Hallmark anti-patterns Critical; ui 11/01 §18; приметы копипаст-китов на первом экране — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2"}
   - {id: editorial-luxe-2025, name_ru: "«редакционный люкс» 2025–2026 (почерк генераторов макетов)", members: [dark-acid-accent, warm-paper, cream-serif-terracotta, broadsheet-hairlines, caps-eyebrow, mono-captions, meta-dots-labels, accent-word-headline, overused-display-font, webgl-centerpiece, dark-pause-section], source: "frontend-design v2–v3 кластеры 1, 2, 3, 5"}
   - {id: web3-3d-2022, name_ru: "Web3 и ИИ-3D 2021–2025", members: [purple-neon-band, aurora-blobs, iridescent-holo, chrome-liquid-metal, glass-object-pastel, particle-swarm, floating-orbs, synthwave-grid, floating-bob-loop], source: "3d 01/01 §22; ai-media 01/03 IMG-M05, M06; ai-media 11/03 §3.2 п.1"}
   - {id: studio-awwwards-kit, name_ru: "набор «наградной студии» 2019–2026", members: [section-fade-up, split-text-reveal, custom-cursor-follower, magnetic-button, marquee-strip, liquid-hover-distortion, preloader, smooth-scroll-default, circular-rotating-text, giant-display-type, variable-axis-gimmick, parallax-everything, cursor-watching-eyes], source: "creative 03/01 (частоты); 3d 01/01 §22"}
@@ -87,9 +87,7 @@ watchlist:
   # Растущие приёмы: пока не приметы, но уже продаются готовыми или быстро растут. При пересмотре 2027-03 — кандидаты в saturated.
   checked_at: "2026-09-24"
   items:
-    - {id_candidate: dither-halftone-shader, name_ru: "дизеринг и печатный растр (halftone) шейдером", evidence: "Paper Shaders 0.0.81: dithering, image-dithering, halftone-cmyk, halftone-dots; npm ×233 в 2026 [данные]", note: "сегодня — поворот для mesh; готовый компонент → риск стать следующим умолчанием (ui 11/04 §5: «всё, что рекомендуют как способ отличиться»)"}
     - {id_candidate: fluted-glass, name_ru: "рифлёное стекло поверх фото", evidence: "Paper Shaders fluted-glass (0.0.81) [данные]", note: "поворот для glassmorphism-panels, уже в ките"}
-    - {id_candidate: god-rays-light, name_ru: "лучи света (god rays) и пульсирующая рамка", evidence: "Paper Shaders god-rays, pulsing-border [данные]", note: "кандидат в кластер ai-saas (свечение)"}
     - {id_candidate: css-scroll-driven-scenes, name_ru: "сцены на CSS scroll-driven", evidence: "Codrops: 1 урок 2024 → 8 уроков 2026; в продакшене 2 из 49 эффектных сайтов [данные]", note: "fresh; главный приём сцены допустим"}
     - {id_candidate: view-transition-morph, name_ru: "морфинг элементов между страницами (View Transitions)", evidence: "Codrops 2023-10-03; 1 из 49 [данные]", note: "fresh; кросс-документные — не Baseline"}
     - {id_candidate: scroll-film-scrub, name_ru: "скраб-фильм прокрутки из генерированного видео", evidence: "higgsfield-websites: animated website по умолчанию; scroll-world [мнение вендора]", note: "умолчание скилла → риск стать приметой ИИ-сайтов 2027"}
@@ -183,7 +181,7 @@ entries:
     detect: {method: [DOM, DET], auto: "да: impeccable, проверка макета"}
     threshold: "≥ 1 заголовок с градиентной заливкой без решения"
     first_seen: "2016–2018 (приём CSS `background-clip: text`, промо Apple, Stripe) [практика]"
-    saturated_since: "2022 [консенсус: Hallmark «signals AI generated faster than almost anything else»]"
+    saturated_since: "2022 [консенсус: Hallmark «signals AI generated faster than almost anything else»]; на 2026-10-28 блестящий и градиентный текст — компонентом у 7 из 13 разобранных китов: Animated Shiny Text, Animated Gradient Text (Magic UI), Shiny Text, Gradient Text (React Bits), Text Shimmer (Motion Primitives), Colourful Text (Aceternity UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: dated
     severity: S
     risk: high
@@ -194,8 +192,8 @@ entries:
     cluster: [ai-saas-2024]
     k3_allow: gradient
     neighbors: ["ui 11/04 m3", "Hallmark: The gradient headline (Critical)", "impeccable gradient-text"]
-    evidence: ["[консенсус]", "[данные]"]
-    checked_at: "2026-09-24"
+    evidence: ["[консенсус]", "[данные]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: neon-glow
@@ -508,7 +506,7 @@ entries:
     detect: {method: [DOM, MET, IMG, DET], auto: "частично"}
     threshold: "≥ 2 размытых пятна за текстом hero без предмета"
     first_seen: "2019–2021 — blobmaker.app 2019-01-02, haikei.app 2021-03-12, meshgradient.com 2020-11-01 (первые снимки Wayback) [данные]"
-    saturated_since: "2022 [мнение вендора: Hallmark — «2022–2023 generated-design default… on every Dribbble shot since 2022»]; Aceternity Aurora Background — 2024-03-18, React Bits Aurora — 2025-02-11 [данные]"
+    saturated_since: "2022 [мнение вендора: Hallmark — «2022–2023 generated-design default… on every Dribbble shot since 2022»]; Aceternity Aurora Background — 2024-03-18, React Bits Aurora — 2025-02-11 [данные]; на 2026-10-28 фон-аврора — компонентом у 4 из 13 разобранных китов: Aurora Background (Aceternity UI), Aurora и Soft Aurora (React Bits), Aurora (Inspira UI), aurora-curtain (SmoothUI); текст Aurora Text — ещё у 2: Magic UI, Eldora UI (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: saturated
     severity: S
     risk: high
@@ -519,8 +517,8 @@ entries:
     cluster: [ai-saas-2024, web3-3d-2022]
     k3_allow: null
     neighbors: ["3d 01/01 §22 «фиолетовая аврора в тёмном герое»", "ai-media 11/03 §3.2 п.1", "Hallmark aurora-blob, gate 29", "site AIL-47 (декоративный слой над призывом — pointer-events: none)"]
-    evidence: ["[консенсус]", "[мнение вендора]"]
-    checked_at: "2026-09-24"
+    evidence: ["[консенсус]", "[мнение вендора]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: mesh-gradient-bg
@@ -541,7 +539,7 @@ entries:
     risk: mid
     levels: {L0: "статичный двухстоповый градиент бренда", L1: "один шейдерный фон на странице («самый дешёвый вау»), бренд-палитра, пауза и reduce", L2: "как среда сцены с поворотом"}
     justify_if: "палитра — из бренда (Stripe-лента — фирменный знак); градиент — свет или материал продукта; бандинг закрыт зерном; FPS и вес в бюджете; reduce — статичный кадр"
-    twists: ["градиент в форме знака бренда (лента, волна, логотип), а не на весь экран", "градиент отвечает на прокрутку как свет времени суток (сюжет)", "печатный растр из материала бренда (дизеринг и halftone уже есть готовыми шейдерами Paper — см. watchlist)"]
+    twists: ["градиент в форме знака бренда (лента, волна, логотип), а не на весь экран", "градиент отвечает на прокрутку как свет времени суток (сюжет)", "печатный растр из материала бренда — только из бренда: растр сам насыщен готовыми шейдерами и китами (dither-halftone-shader)"]
     replace_with: "сплошной фон; фото или кадр продукта; градиент в одной зоне (кнопка, край) — ui 01/06 §2.1"
     cluster: [ai-saas-2024]
     k3_allow: null
@@ -805,7 +803,7 @@ entries:
     detect: {method: [IMG, JDG], auto: "нет"}
     threshold: "преломляющее стекло на интерфейсе или поверх контента, продукт не из стекла"
     first_seen: "2025 — волна вслед за стеклянным интерфейсом Apple (Liquid Glass; glassmorphism-panels) [консенсус]"
-    saturated_since: "2025–2026 [мнение]"
+    saturated_since: "2025–2026 [мнение]; на 2026-10-28 жидкое стекло — компонентом у 3 из 13 разобранных китов: Liquid Glass (Aceternity UI), Fluid Glass и Glass Surface (React Bits), liquid-glass-card (Kokonut UI); стекло в целом — у 5 (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: saturated
     severity: S
     risk: mid
@@ -816,7 +814,7 @@ entries:
     cluster: []
     k3_allow: null
     neighbors: ["../../3d/16-js-scenes/05-techniques.md §8 (клише), §3.11 (каустики стекла)", "glassmorphism-panels (плоское размытие подложки)", "glass-object-pastel (стеклянный примитив в hero)"]
-    evidence: ["[мнение]", "[консенсус]"]
+    evidence: ["[мнение]", "[консенсус]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
     checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
@@ -1022,7 +1020,7 @@ entries:
     detect: {method: [DOM, REC, DET], auto: "да: effects_probe.py, impeccable, проверка макета"}
     threshold: "лента без паузы дольше 5 с рядом с текстом — B (WCAG 2.2.2); лента-декор слов без смысла — D"
     first_seen: "2020-03-31 — урок Codrops «CSS-only marquee» [данные]"
-    saturated_since: "2021–2022 (студии, fashion); компонент Marquee в копипаст-ките Magic UI; у 6 из 49 эффектных сайтов [данные]"
+    saturated_since: "2021–2022 (студии, fashion); у 6 из 49 эффектных сайтов [данные]; на 2026-10-28 — компонентом у 7 из 13 разобранных китов: Marquee (Magic UI, Eldora UI, Animata, Inspira UI), Infinite Moving Cards (Aceternity UI), Logo Loop (React Bits), Infinite Slider (Motion Primitives) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: saturated
     severity: S
     risk: mid
@@ -1033,8 +1031,8 @@ entries:
     cluster: [studio-awwwards-kit]
     k3_allow: marquee
     neighbors: ["проверка макета LOOK-MARQUEE (creative — владелец визуальной приметы: AIL crosswalk)", "impeccable marquee", "site AIL-19 (логотипы — с разрешением)", "ai-media 10/04 page_accept (движение на 6-й секунде без паузы — FAIL)", "[V:ufHQG7fDLQc 15:19] (basement: крупные слова под углом — «not that readable»)"]
-    evidence: ["[данные: 03-live-sites-measured]", "[стандарт: WCAG 2.2.2]", "[мнение: V:ufHQG7fDLQc 15:19]"]
-    checked_at: "2026-09-24"
+    evidence: ["[данные: 03-live-sites-measured]", "[стандарт: WCAG 2.2.2]", "[мнение: V:ufHQG7fDLQc 15:19]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: liquid-hover-distortion
@@ -1212,7 +1210,7 @@ entries:
     detect: {method: [DOM, IMG, DET], auto: "да: проверка макета; AIL — нет"}
     threshold: "любая нарисованная рамка вокруг выдуманного интерфейса (AIL-17)"
     first_seen: "2018 [практика]"
-    saturated_since: "2023 — анатомия работ Fable 5 на одинаковых промтах (Kilo) [данные]"
+    saturated_since: "2023 — анатомия работ Fable 5 на одинаковых промтах (Kilo) [данные]; на 2026-10-28 мокап устройства — компонентом у 5 из 13 разобранных китов: Safari, iPhone, Android (Magic UI), Macbook Scroll, Container Scroll Animation (Aceternity UI), macbook-pro (Eldora UI), iPhone 17 Pro Max (Cult UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: saturated
     severity: S
     risk: high
@@ -1223,8 +1221,8 @@ entries:
     cluster: [ai-saas-2024]
     k3_allow: chrome
     neighbors: ["site AIL-17", "Hallmark gate 47 (Re-drawn chrome)", "creative 04/03 (подача продукта; рамка — Hallmark E3 против gate 47 [спорно])", "ui 07/02:702 (на сайте: скриншот — ключевой визуал SaaS)"]
-    evidence: ["[практика]", "[данные]"]
-    checked_at: "2026-09-24"
+    evidence: ["[практика]", "[данные]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: hero-media-veil
@@ -1374,7 +1372,7 @@ entries:
     detect: {method: [IMG, DOM], auto: "нет"}
     threshold: "орбита в первом экране без реальных интеграций"
     first_seen: "2023 [практика]"
-    saturated_since: "2024 — компонент Orbiting Circles копипаст-кита Magic UI; выдача Dribbble «saas landing page» [данные]"
+    saturated_since: "2024 — компонент Orbiting Circles копипаст-кита Magic UI; выдача Dribbble «saas landing page» [данные]; на 2026-10-28 орбита — компонентом у 3 из 13 разобранных китов: Orbiting Circles (Magic UI), orbit-rotation (Eldora UI), Orbit Images (React Bits); лучи-связи между логотипами Animated Beam — у Magic UI и Animata (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
     status: saturated
     severity: D
     risk: high
@@ -1385,8 +1383,8 @@ entries:
     cluster: [ai-saas-2024]
     k3_allow: center-hero
     neighbors: ["site AIL-06 (центр hero), AIL-19 (логотипы — с разрешением)", "02-references-moodboards (Dribbble: центрированный hero с орбитой логотипов)"]
-    evidence: ["[данные: 02-references-moodboards]", "[практика]"]
-    checked_at: "2026-09-24"
+    evidence: ["[данные: 02-references-moodboards]", "[практика]", "[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: dark-pause-section
@@ -1657,4 +1655,248 @@ entries:
     neighbors: ["ie-page-transitions 0.0.2 (npm)"]
     evidence: ["[практика]"]
     checked_at: "2026-09-24"
+    review_by: "2027-03-24"
+
+  # ---------------------------------------------------------------- приметы копипаст-китов движения (02-references-moodboards/04-motion-libraries-and-rules.md §3.2)
+  - id: meteor-shower
+    aliases: ["метеоры", "падающие звёзды", "Meteors", "Shooting Stars", "Falling Stars"]
+    name_ru: "метеоры и падающие звёзды фоном hero"
+    family: background
+    sign: "за текстом первого экрана по диагонали бесконечно летят светящиеся штрихи с хвостом — «метеоры» или «падающие звёзды» — без связи с предметом"
+    signals:
+      eye: "«космос» за заголовком: диагональные штрихи с хвостом летят петлёй"
+      metric: "узкие элементы с градиентным хвостом и бесконечной анимацией сдвига по диагонали за текстом hero (DOM); движение — только в записи (REC)"
+      detector: "внешние детекторы — нет; петля без паузы — marketing_audit.py MKT-M5, петли под читаемым текстом — motion_check.py"
+    detect: {method: [DOM, REC, IMG], auto: "частично: петля без паузы — marketing_audit.py MKT-M5; что это метеоры — глазом по записи"}
+    threshold: "метеоры за текстом первого экрана без предмета концепции; петля дольше 5 с без паузы рядом с текстом — B (WCAG 2.2.2)"
+    first_seen: "год не установлен; готовые компоненты Meteors и Shooting Stars — в копипаст-китах [данные]"
+    saturated_since: "не позже 2026 — компонент у 4 из 13 разобранных китов на 2026-10-28: Meteors (Aceternity UI, Magic UI, Inspira UI), Shooting Stars (Aceternity UI, Animata), Falling Stars (Inspira UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет", L1: "нет", L2: "только предмет концепции (ночное небо тура, обсерватория) в одной сцене; пауза, reduce — кадр"}
+    justify_if: "небо — предмет концепции (астрономия, ночной тур, сюжет «под звёздами»); одна сцена; петля с паузой и в бюджете внимания; reduce — статичный кадр; слой не над призывом (AIL-47)"
+    twists: ["настоящее небо места (снимок или карта звёзд по координатам) вместо абстрактных штрихов", "одна траектория как событие по действию посетителя, без петли"]
+    replace_with: "статичный фон из бренда; фото или кадр продукта"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["particle-swarm, floating-orbs (декор без роли)", "site AIL-47 (декоративный слой над призывом — pointer-events: none)", "../05-motion/01-motion-principles-and-access.md §3 (2.2.2), §5 (бюджет внимания)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[не проверено: признаки насыщения 2–5 (01-cliche-policy.md §2.3) — к пересмотру]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: god-rays-light
+    aliases: ["лучи света", "god rays", "Light Rays", "Background Beams", "Lamp Effect", "Light Pillar", "photon-beam", "Grid Beam"]
+    name_ru: "лучи света фоном без источника"
+    family: background
+    sign: "за текстом hero расходятся или падают полосы света — лучи, лампа, столб света, прожектор, — а источника в кадре нет"
+    signals:
+      eye: "«божественный свет» за заголовком без лампы, окна и солнца"
+      metric: "полупрозрачные полосы (conic- или linear-gradient), шейдер лучей или анимированные пучки за H1 без объекта-источника в кадре (DOM, IMG)"
+      detector: "внешние детекторы — нет; лучи 3D-сцены кодом — чек-лист ../../3d/14-code-3d/05-atmosphere-post.md (источник, плотность, колонка текста)"
+    detect: {method: [IMG, DOM, JDG], auto: "нет"}
+    threshold: "лучи или столб света за текстом первого экрана без источника в кадре"
+    first_seen: "год не установлен; готовые компоненты — в копипаст-китах, шейдер god-rays — в @paper-design/shaders 0.0.81 [данные]"
+    saturated_since: "не позже 2026 — компонент у 5 из 13 разобранных китов на 2026-10-28: Background Beams, Lamp Effect, Spotlight (Aceternity UI), Light Rays (Magic UI, React Bits), Beams, Light Pillar (React Bits), photon-beam (Eldora UI), Grid Beam (Cult UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]; шейдер god-rays — @paper-design/shaders 0.0.81, загрузки пакета ×233 в 2026 [данные: npm, прокси]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет", L1: "статичный свет из сцены с видимым источником (окно, лампа, прожектор)", L2: "объёмный свет сцены с источником по ../../3d/14-code-3d/05-atmosphere-post.md"}
+    justify_if: "источник в кадре (окно, лампа, прожектор, солнце сцены) и лучи объясняют его; свет статичен или медлен с паузой; колонка текста и края кадра читаются как без лучей (3d 14/05, чек-лист лучей)"
+    twists: ["свет из реального окна или лампы в кадре продукта", "луч ведёт к предмету или призыву по сюжету и стоит статично"]
+    replace_with: "свет из сцены с видимым источником; сплошная поверхность бренда"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["neon-glow (свечение без источника)", "aurora-blobs (световой туман без предмета)", "../../3d/16-js-scenes/05-techniques.md §3.2 (клише «лучи сквозь окно» без предмета)", "../../3d/14-code-3d/05-atmosphere-post.md (лучи сцены кодом: источник тусклый и крупный, плотность ≤ 0,5)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[данные: npm, прокси]", "[практика: 3d 16/05 §3.2]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: flickering-grid
+    aliases: ["мерцающая сетка", "Flickering Grid", "Animated Grid Pattern", "Interactive Grid Pattern", "Background Boxes", "Background Ripple Effect", "Dot Grid", "Ripple Grid"]
+    name_ru: "мерцающая или волнующаяся сетка фоном"
+    family: background
+    sign: "фон из клеток или точек, которые сами случайно мерцают, загораются под курсором или расходятся волной"
+    signals:
+      eye: "«живая» сетка за контентом: клетки вспыхивают сами"
+      metric: "сетка клеток или точек (canvas или DOM) со случайной сменой прозрачности или волной по клеткам петлёй (DOM, REC); частота вспышек (REC)"
+      detector: "внешние детекторы — нет; вспышки WCAG 2.3.1 и петли — motion_check.py"
+    detect: {method: [REC, DOM, IMG], auto: "частично: вспышки и петли — motion_check.py; что это сетка — глазом"}
+    threshold: "мерцание или волна по сетке фоном без данных; > 3 вспышек в секунду — B (WCAG 2.3.1); петля дольше 5 с без паузы рядом с текстом — B (2.2.2)"
+    first_seen: "год не установлен; готовые компоненты — в копипаст-китах [данные]"
+    saturated_since: "не позже 2026 — компонент у 3 из 13 разобранных китов на 2026-10-28: Flickering Grid, Animated Grid Pattern, Interactive Grid Pattern, Ripple (Magic UI), Background Boxes, Background Ripple Effect (Aceternity UI), Dot Grid, Ripple Grid (React Bits) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "статичный паттерн из бренда, без мерцания", L1: "то же", L2: "клетки — данные бизнеса (события, заказы) без случайного мерцания; пауза, reduce — статично"}
+    justify_if: "сетка — фирменный паттерн (чертёж, клетка бренда) и стоит; движение клетки показывает данные бизнеса, а не случайный шум; вспышек ≤ 3 в секунду; reduce — статично"
+    twists: ["клетки сетки — реальные события продукта (заказы, бронирования) по данным", "статичный чертёжный паттерн из бренда"]
+    replace_with: "статичный паттерн из бренда; фон без сетки"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["synthwave-grid (ретро-сетка до горизонта — другая примета)", "../05-motion/01-motion-principles-and-access.md §3.4 (вспышки 2.3.1 на странице)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[стандарт: WCAG 2.3.1, 2.2.2]", "[не проверено: признаки насыщения 2–5 (01-cliche-policy.md §2.3) — к пересмотру]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: dither-halftone-shader
+    aliases: ["дизеринг", "печатный растр", "halftone", "dithering", "Dither Shader", "Pixel Blast", "Hero Dithering", "halftone-background"]
+    name_ru: "дизеринг и печатный растр (halftone) шейдером"
+    family: background
+    sign: "фон или фото переведены шейдером в Bayer-дизеринг, точечный печатный растр или пикселизацию, часто живые"
+    signals:
+      eye: "«ретро-печать» или «1-бит» на фоне и фото без связи с брендом"
+      metric: "шейдер или фильтр дизеринга, растра или пикселизации на фоне или фото (DOM: canvas WebGL; IMG — растр виден на кадре)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [IMG, DOM, JDG], auto: "нет"}
+    threshold: "дизеринг или растр на фоне первого экрана без бренда и без предмета"
+    first_seen: "не позже 2025-07-30 — урок Codrops по Bayer-дизерингу фона WebGL (3d 01/01 §18.3) [данные]"
+    saturated_since: "2025–2026 — «дизеринг везде» (3d 01/01 §18.3) [практика]; @paper-design/shaders 0.0.81: dithering, image-dithering, halftone-cmyk, halftone-dots, загрузки пакета ×233 в 2026 [данные: npm, прокси]; компонент у 5 из 13 разобранных китов на 2026-10-28: Dither Shader (Aceternity UI, Inspira UI), Dither, Pixel Blast (React Bits), Hero Dithering (Cult UI), halftone-background (Kokonut UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет (растр в фотографии по бренду допустим)", L1: "один шейдерный фон или фото в растре по бренду", L2: "как язык сцены с поворотом"}
+    justify_if: "растр — материал бренда (печать, газета, комикс, ретро-игра), палитра бренда; поворот, а не умолчание; FPS и вес в бюджете; reduce — статичный кадр"
+    twists: ["растр из печатной истории бренда (газета, этикетка) на реальном фото продукта", "растр проявляется по прокрутке один раз, как оттиск"]
+    replace_with: "сплошной фон или фото без растра"
+    cluster: []
+    k3_allow: null
+    neighbors: ["mesh-gradient-bg (шейдерный фон того же пакета)", "grain-overlay (растр печати как язык бренда — его поворот)", "../../3d/01-web-3d-landscape/01-effects-catalog.md §18.3 (пикселизация, ASCII, дизеринг)", "../06-effects-catalog/effects.yaml#shader-bg"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[данные: npm, прокси]", "[практика: 3d 01/01 §18.3]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: border-beam-shine
+    aliases: ["луч по рамке", "бегущая рамка", "вечный блеск кнопки", "Border Beam", "Shine Border", "Shimmer Button", "Rainbow Button", "Moving Border", "Hover Border Gradient", "Star Border", "Electric Border", "Border Trail", "pulsing-border"]
+    name_ru: "луч по рамке и вечный блеск кнопки"
+    family: motion
+    sign: "по рамке карточки или кнопки бесконечно бежит световой луч, по кнопке призыва петлёй проходит блик или переливается радужная рамка"
+    signals:
+      eye: "рамка «светится и бежит» всё время; кнопка мерцает, хотя к ней не подходили"
+      metric: "бесконечная анимация по рамке (offset-path, вращение conic-gradient, маска) или блик-петля на кнопке призыва (DOM); петля без паузы (REC)"
+      detector: "внешние детекторы — нет; бесконечная анимация без паузы — marketing_audit.py MKT-M5"
+    detect: {method: [DOM, REC], auto: "частично: петля без паузы — marketing_audit.py MKT-M5"}
+    threshold: "луч или блик петлёй на рамке или кнопке без действия посетителя; дольше 5 с без паузы рядом с текстом — B (WCAG 2.2.2)"
+    first_seen: "год не установлен; готовые компоненты — в копипаст-китах, шейдер pulsing-border — в @paper-design/shaders 0.0.81 [данные]"
+    saturated_since: "не позже 2026 — луч по рамке у 6 из 13 разобранных китов на 2026-10-28: Border Beam, Shine Border, Shimmer Button, Rainbow Button (Magic UI), Moving Border, Hover Border Gradient (Aceternity UI), Star Border, Electric Border (React Bits), Border Trail (Motion Primitives) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]; pulsing-border — @paper-design/shaders 0.0.81, загрузки пакета ×233 в 2026 [данные: npm, прокси]"
+    status: saturated
+    severity: S
+    risk: mid
+    levels: {L0: "блик один раз по наведению или фокусу (примитив shine набора движения)", L1: "то же", L2: "то же; петли на рамке и кнопке нет"}
+    justify_if: "блик — отклик на действие посетителя (наведение, фокус), один раз и без петли (effect:light-sweep, примитив shine набора движения)"
+    twists: ["блик один раз по наведению или фокусу", "свет рамки отмечает состояние (выбрано, идёт отправка) и гаснет"]
+    replace_with: "вес кнопки — размер, заливка, место (ui 11/03 §2.3); блик один раз по действию (effect:light-sweep)"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["pulsing-cta (пульсация призыва; Pulsating Button — того же кита)", "neon-glow (свечение)", "../05-motion/01-motion-principles-and-access.md §6.4 (пульсация CTA и сигналы внимания)", "../06-effects-catalog/effects.yaml#light-sweep (блик по действию)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[данные: npm, прокси]", "[стандарт: WCAG 2.2.2]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: spotlight-card
+    aliases: ["карточка-прожектор", "свечение рамки за курсором", "Card Spotlight", "Glowing Effect", "Magic Card", "Neon Gradient Card", "Spotlight Card", "Border Glow", "Glow Effect"]
+    name_ru: "карточка-прожектор: свет и свечение рамки за указателем"
+    family: interaction
+    sign: "по карточкам сетки за курсором ползёт радиальное пятно света или светится край рамки, ближайший к указателю"
+    signals:
+      eye: "сетка карточек «подсвечивается» за мышью"
+      metric: "pointermove пишет координаты (CSS-переменные) в карточки; радиальный градиент или свечение рамки следует за указателем (SCR, DOM)"
+      detector: "внешние детекторы — нет; Hallmark 2.0.0 против следящих градиентов на SaaS-лендинге [мнение вендора]"
+    detect: {method: [SCR, DOM], auto: "нет"}
+    threshold: "прожектор на сетке карточек без концепции; свет движется сам, без указателя; включён на тач-устройстве"
+    first_seen: "год не установлен; готовые компоненты — в копипаст-китах [данные]"
+    saturated_since: "не позже 2026 — компонент у 4+ из 13 разобранных китов на 2026-10-28: Card Spotlight, Glowing Effect (Aceternity UI), Magic Card, Neon Gradient Card (Magic UI), Spotlight Card, Border Glow (React Bits), Spotlight, Glow Effect (Motion Primitives) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет", L1: "одна группа карточек, только (hover: hover) and (pointer: fine), без автодвижения", L2: "то же; свет — предмет сцены"}
+    justify_if: "свет за указателем — предмет концепции (фонарь, луч прожектора, лупа); одна группа; только (hover: hover) and (pointer: fine), без автодвижения; reduce — свет за курсором без хвоста (примитив spotlight набора движения)"
+    twists: ["свет раскрывает содержание карточки (деталь продукта под «фонарём»), а не только рамку"]
+    replace_with: "один сигнал наведения у карточки (ux 04/04 §3.1)"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["neon-glow (Neon Gradient Card — свечение)", "hover-lift-all (сигнал на каждой карточке)", "../06-effects-catalog/effects.yaml#cursor-accent (вариант border)", "../05-motion/03-micro-motion-and-performance.md §1.5 (прожектор и эффекты от указателя)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[мнение вендора: Hallmark 2.0.0]", "[не проверено: признаки насыщения 2–5 (01-cliche-policy.md §2.3) — к пересмотру]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: typing-headline
+    aliases: ["печать в заголовке", "печатающийся текст", "смена слова в заголовке", "Typewriter Effect", "Typing Animation", "Flip Words", "Container Text Flip", "Word Rotate", "Morphing Text", "Text Type", "Rotating Text", "Text Loop", "typed.js", "TypeIt"]
+    name_ru: "печать и смена слова в заголовке"
+    family: motion
+    sign: "H1 или H2 печатается посимвольно с мигающим курсором либо одно слово заголовка сменяется по таймеру («Build your [app | site | idea]»)"
+    signals:
+      eye: "заголовок не дочитать: он печатается, стирается или меняет слово"
+      metric: "текст H1–H2 меняется во времени: мутации текстового узла, курсор-span, смена слова по таймеру (DOM); цикл в записи (REC)"
+      detector: "внешние детекторы — нет; Hallmark: typewriter — только «терминальный» мир"
+    detect: {method: [DOM, REC], auto: "нет"}
+    threshold: "смена слова в H1 по таймеру — всегда; печать заголовка вне «терминального» мира концепции; петля дольше 5 с без паузы — B (WCAG 2.2.2)"
+    first_seen: "не позже 2015 — typed.js (первая публикация в npm 2015-12-22) [данные: npm]"
+    saturated_since: "не позже 2026 — печать у 8+ из 13 разобранных китов на 2026-10-28: Typewriter Effect, Flip Words, Container Text Flip (Aceternity UI), Typing Animation, Word Rotate, Morphing Text (Magic UI), Text Type, Rotating Text (React Bits), Text Loop (Motion Primitives); библиотеки typed.js и TypeIt, Typewriter в Motion+ (02-references-moodboards/04-motion-libraries-and-rules.md §2.1, §3.2) [данные]"
+    status: saturated
+    severity: S
+    risk: mid
+    levels: {L0: "нет", L1: "печать — только «терминальный» мир концепции, один проход; смены слова в H1 нет", L2: "то же"}
+    justify_if: "печать — голос «терминального» мира концепции (командная строка продукта, пишущая машинка бренда): фраза целиком в HTML и aria-label, куски — aria-hidden, без петли дольше 5 с, reduce — фраза сразу; смена слова в H1 по таймеру не оправдывается"
+    twists: ["фраза печатается один раз в «терминальном» мире продукта и остаётся", "значение меняется по выбору посетителя (сценарий, роль), а не по таймеру"]
+    replace_with: "заголовок стоит целиком; движение — у медиа"
+    cluster: [ai-saas-2024]
+    k3_allow: null
+    neighbors: ["accent-word-headline (выделенное слово; его поворот «слово меняется по прокрутке» — по действию посетителя, а не по таймеру)", "split-text-reveal (разбиение заголовка)", "../05-motion/03-micro-motion-and-performance.md §1.6 (движение текста: печать — только «терминальный» мир)", "../07-stack-implementation/stack.yaml#typed-js, #typeit (не брать)"]
+    evidence: ["[данные: копипаст-киты и библиотеки — 02-references-moodboards/04-motion-libraries-and-rules.md §2.1, §3.2, 2026-10-28]", "[данные: npm]", "[мнение вендора: Hallmark]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: dock-magnify
+    aliases: ["док", "док с увеличением", "Floating Dock", "Dock", "MacOS Dock"]
+    name_ru: "док с увеличением иконок по образцу macOS"
+    family: interaction
+    sign: "ряд иконок навигации внизу или сбоку экрана; иконка под курсором и её соседи растут по расстоянию до указателя"
+    signals:
+      eye: "навигация сайта — «док macOS»"
+      metric: "ряд иконок, масштаб которых зависит от расстояния до указателя (SCR, DOM)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [SCR, DOM, IMG], auto: "нет"}
+    threshold: "док с увеличением на странице сайта"
+    first_seen: "год не установлен; готовые компоненты — в копипаст-китах [данные]"
+    saturated_since: "не позже 2026 — компонент у 8 из 13 разобранных китов на 2026-10-28: Floating Dock (Aceternity UI), Dock (Magic UI, React Bits, Motion Primitives), MacOS Dock (Cult UI) (02-references-moodboards/04-motion-libraries-and-rules.md §3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет", L1: "нет", L2: "только осознанная отсылка к интерфейсу ОС по концепции"}
+    justify_if: "концепция — интерфейс ОС (продукт — приложение для рабочего стола, пародия на рабочий стол); навигация продублирована обычными ссылками и доступна с клавиатуры"
+    twists: ["док — часть настоящего интерфейса продукта на снимке экрана, а не навигация сайта"]
+    replace_with: "обычная навигация ссылками; сигнал наведения — цвет или подчёркивание"
+    cluster: []
+    k3_allow: null
+    neighbors: ["retro-os-transitions (хром ОС как отсылка)", "dashboard-in-browser-frame (нарисованный хром)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.2, 2026-10-28]", "[не проверено: признаки насыщения 2–5 (01-cliche-policy.md §2.3) — к пересмотру]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: confetti-burst
+    aliases: ["конфетти", "вспышка по нажатию", "Confetti", "Cool Mode", "Click Spark", "Fireworks", "particle-button"]
+    name_ru: "конфетти и вспышка частиц по нажатию"
+    family: motion
+    sign: "по нажатию кнопки, при загрузке или на каждом клике разлетаются конфетти, искры или фейерверк"
+    signals:
+      eye: "праздник без повода: конфетти на обычном клике или при загрузке"
+      metric: "по нажатию или при загрузке создаётся canvas или десятки частиц с разлётом и гравитацией (SCR, DOM)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [SCR, REC, DOM], auto: "нет"}
+    threshold: "частицы без награды за действие (при загрузке, на каждом клике, на обычной кнопке); > 3 вспышек в секунду — B (WCAG 2.3.1)"
+    first_seen: "не позже 2018 — canvas-confetti (первая публикация в npm 2018-02-08) [данные: npm]"
+    saturated_since: "не позже 2026 — компонент у 4 из 13 разобранных китов на 2026-10-28: Confetti, Cool Mode (Magic UI), Click Spark (React Bits), Fireworks (Animate UI), particle-button (Kokonut UI); canvas-confetti — зависимость Magic UI (02-references-moodboards/04-motion-libraries-and-rules.md §3.1–3.2) [данные]"
+    status: saturated
+    severity: D
+    risk: low
+    levels: {L0: "нет", L1: "одна награда за действие по концепции (заказ оформлен); reduce — без частиц", L2: "то же"}
+    justify_if: "награда за действие посетителя (заказ оформлен, цель достигнута) по концепции; один раз; reduce — без частиц; вспышек ≤ 3 в секунду"
+    twists: ["частицы из предмета бренда (лепестки, конфеты продукта), один раз по действию"]
+    replace_with: "подтверждение действия текстом и состоянием кнопки"
+    cluster: []
+    k3_allow: null
+    neighbors: ["particle-swarm (частицы-декор)", "../07-stack-implementation/stack.yaml#mojs (вспышка — не библиотекой: момент custom)"]
+    evidence: ["[данные: копипаст-киты — 02-references-moodboards/04-motion-libraries-and-rules.md §3.1–3.2, 2026-10-28]", "[данные: npm]", "[не проверено: признаки насыщения 2–5 (01-cliche-policy.md §2.3) — к пересмотру]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"

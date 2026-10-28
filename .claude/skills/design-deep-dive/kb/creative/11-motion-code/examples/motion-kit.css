@@ -1,0 +1,515 @@
+/* motion-kit.css — облик движения набора: начальные и конечные состояния, переходы, шкалы прокрутки, петли, отклик.
+   Числа — переменные с каноническими именами токенов motion.marketing (--motion-marketing-<путь через дефисы>) и
+   запасными значениями из ../../04-visual-language/marketing-tokens.json: дизайн-система проекта, собранная ds_build.py,
+   подменяет их без правки набора. Скрытое начальное состояние, петли, шкалы прокрутки и сцены — только под
+   [data-mk-on="full"] корня, который ставит motion-kit.js: без JS, при «уменьшить движение», выборе «Меньше» и в обзоре
+   холста видны конечные состояния. Шкалы прокрутки — под @supports с animation-range; без поддержки — конечное
+   состояние. Чисто CSS-примитивы (вход первого экрана, окно, аккордеон, подпись кнопки, переворот, блик, колонки,
+   переходы) берут длительности из переменных, у которых в reduce своё значение: затухание вместо смещения. */
+
+/* ── 1. Регистрация ─────────────────────────────────────────────────────────────────────────────────────────── */
+@property --mk-p { syntax: "<number>"; inherits: true; initial-value: 0; }        /* прогресс DOM-сцены 0…1 */
+@property --mk-num { syntax: "<integer>"; inherits: true; initial-value: 0; }     /* счётчик: текущее значение */
+@property --mk-k { syntax: "<integer>"; inherits: false; initial-value: 0; }      /* место в группе стаггера */
+@property --mk-cnt { syntax: "<integer>"; inherits: false; initial-value: 1; }    /* размер группы стаггера */
+@property --mk-shrink { syntax: "<number>"; inherits: true; initial-value: 0; }   /* сжатие шапки 0…1 */
+@property --mk-ip { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: целая часть */
+@property --mk-hi { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: тысячи */
+@property --mk-lo { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: единицы до тысячи */
+@property --mk-pan { syntax: "<percentage>"; inherits: false; initial-value: 50%; } /* текст-окно: положение кадра */
+
+/* ── 2. Токены движения → переменные набора; reduce — значения ветки reduce токенов ────────────────────────── */
+:root {
+  --mk-dur-feedback: var(--motion-marketing-duration-feedback, 120ms);
+  --mk-dur-hover: var(--motion-marketing-duration-hover, 200ms);
+  --mk-dur-reveal: var(--motion-marketing-duration-reveal, 560ms);
+  --mk-dur-line: var(--motion-marketing-duration-split-line, 800ms);
+  --mk-dur-split-max: var(--motion-marketing-duration-split-total-max, 1000ms);
+  --mk-dur-hero: var(--motion-marketing-duration-hero-scene, 900ms);
+  --mk-dur-state: var(--motion-marketing-duration-state, 320ms);
+  --mk-dur-page: var(--motion-marketing-duration-page, 400ms);
+  --mk-dur-counter: var(--motion-marketing-duration-counter, 1200ms);
+  --mk-dur-crossfade: var(--motion-marketing-duration-crossfade-reduce, 180ms);
+  --mk-dur-breathe: var(--motion-marketing-duration-breathe-period, 12000ms);
+  --mk-dur-ui: var(--motion-marketing-duration-hover, 200ms);                   /* отклик раскрытий: аккордеон, подпись */
+  --mk-stagger-text: var(--motion-marketing-stagger-text, 60ms);
+  --mk-stagger-group: var(--motion-marketing-stagger-group, 60ms);
+  --mk-stagger-max: var(--motion-marketing-stagger-group-total-max, 600ms);
+  --mk-ease-out-expo: var(--motion-marketing-easing-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  --mk-ease-out-strong: var(--motion-marketing-easing-out-strong, cubic-bezier(0.23, 1, 0.32, 1));
+  --mk-ease-in-out: var(--motion-marketing-easing-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+  --mk-ease-in: var(--motion-marketing-easing-in, cubic-bezier(0.7, 0, 0.84, 0));
+  --mk-ease-linear: var(--motion-marketing-easing-linear, cubic-bezier(0, 0, 1, 1));
+  --mk-ease-breathe: var(--motion-marketing-easing-breathe, cubic-bezier(0.37, 0, 0.63, 1));
+  --mk-shift: var(--motion-marketing-distance-shift-reveal, 16px);
+  --mk-shift-hero: var(--motion-marketing-distance-shift-hero, 24px);
+  --mk-lift: var(--motion-marketing-distance-lift-hover, 2px);
+  --mk-magnet: var(--motion-marketing-distance-magnet-max, 8px);
+  --mk-scale-press: var(--motion-marketing-scale-press, 0.97);
+  --mk-scale-in: var(--motion-marketing-scale-reveal-in, 0.96);
+  --mk-parallax-max: var(--motion-marketing-scroll-parallax-ratio-max, 0.4);
+  --mk-marquee-speed: var(--motion-marketing-loop-marquee-speed, 40);
+  --mk-float: var(--motion-marketing-loop-float-amplitude-pct, 3);
+  --mk-m: 1;                                                                     /* 1 — пространственное движение разрешено */
+  --mk-header: 72px; --mk-step-h: 480px; --mk-depth-k: 1; --mk-stack-step: 24px;
+}
+@media (max-width: 40rem), (pointer: coarse) {
+  :root { --mk-header: 64px; --mk-step-h: 420px; --mk-depth-k: 0.5; --mk-stack-step: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) {
+    --mk-dur-reveal: 0ms; --mk-dur-line: 0ms; --mk-dur-hero: 0ms; --mk-dur-state: var(--mk-dur-crossfade); --mk-dur-page: 0ms;
+    --mk-dur-counter: 0ms; --mk-dur-ui: 0ms; --mk-stagger-text: 0ms; --mk-stagger-group: 0ms;
+    --mk-shift: 0px; --mk-shift-hero: 0px; --mk-lift: 0px; --mk-magnet: 0px; --mk-scale-press: 1; --mk-scale-in: 1;
+    --mk-parallax-max: 0; --mk-float: 0; --mk-m: 0;
+  }
+  [data-motion="full"] {                                                         /* выбор «Полное» сильнее системы */
+    --mk-dur-reveal: var(--motion-marketing-duration-reveal, 560ms); --mk-dur-line: var(--motion-marketing-duration-split-line, 800ms);
+    --mk-dur-hero: var(--motion-marketing-duration-hero-scene, 900ms); --mk-dur-state: var(--motion-marketing-duration-state, 320ms);
+    --mk-dur-page: var(--motion-marketing-duration-page, 400ms); --mk-dur-counter: var(--motion-marketing-duration-counter, 1200ms);
+    --mk-dur-ui: var(--motion-marketing-duration-hover, 200ms); --mk-stagger-text: var(--motion-marketing-stagger-text, 60ms);
+    --mk-stagger-group: var(--motion-marketing-stagger-group, 60ms); --mk-shift: var(--motion-marketing-distance-shift-reveal, 16px);
+    --mk-shift-hero: var(--motion-marketing-distance-shift-hero, 24px); --mk-lift: var(--motion-marketing-distance-lift-hover, 2px);
+    --mk-magnet: var(--motion-marketing-distance-magnet-max, 8px); --mk-scale-press: var(--motion-marketing-scale-press, 0.97);
+    --mk-scale-in: var(--motion-marketing-scale-reveal-in, 0.96); --mk-parallax-max: var(--motion-marketing-scroll-parallax-ratio-max, 0.4);
+    --mk-float: var(--motion-marketing-loop-float-amplitude-pct, 3); --mk-m: 1;
+  }
+}
+[data-motion="reduced"] {                                                        /* выбор «Меньше»: те же значения, что у reduce */
+  --mk-dur-reveal: 0ms; --mk-dur-line: 0ms; --mk-dur-hero: 0ms; --mk-dur-state: var(--mk-dur-crossfade); --mk-dur-page: 0ms;
+  --mk-dur-counter: 0ms; --mk-dur-ui: 0ms; --mk-stagger-text: 0ms; --mk-stagger-group: 0ms;
+  --mk-shift: 0px; --mk-shift-hero: 0px; --mk-lift: 0px; --mk-magnet: 0px; --mk-scale-press: 1; --mk-scale-in: 1;
+  --mk-parallax-max: 0; --mk-float: 0; --mk-m: 0;
+}
+
+/* ── 3. Место в группе: sibling-index() — без разметки, запасной путь — --i и --n в разметке ───────────────── */
+:is([data-mk-stagger], [data-mk~="split"], [data-mk~="highlight"], [data-mk~="stack"], [data-mk~="draw"]) > * {
+  --mk-k: var(--i, 0); --mk-cnt: var(--n, 1);
+}
+@supports (z-index: sibling-index()) {
+  :is([data-mk-stagger], [data-mk~="split"], [data-mk~="highlight"], [data-mk~="stack"], [data-mk~="draw"]) > * {
+    --mk-k: var(--i, calc(sibling-index() - 1)); --mk-cnt: var(--n, sibling-count());
+  }
+}
+/* группа-список: шаг 40–80 мс, первые 8 — с шагом, остальные сразу; сумма ≤ stagger.group-total-max */
+[data-mk-stagger] > * {
+  --mk-delay: calc(min(var(--mk-k), 7) * min(var(--mk-stagger-group), var(--mk-stagger-max) / max(var(--mk-cnt) - 1, 1)));
+}
+
+/* ── 4. Вход первого экрана (hero-entrance-once): CSS на загрузке, без JS; LCP-элемент — только сдвиг ─────── */
+[data-mk~="entrance"] {
+  --mk-delay: calc(var(--i, 0) * var(--mk-stagger-group));
+  animation:
+    mk-in-o var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-reveal)) * 0.6)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)) both,
+    mk-in-t var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)) both;
+}
+[data-mk~="entrance"][data-mk-lcp] {                                             /* LCP не из прозрачности (creative 05/02 §10) */
+  animation: mk-in-t var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay) + var(--mk-wait, 0ms)) both;
+}
+@keyframes mk-in-o { from { opacity: 0.01; } }
+@keyframes mk-in-t { from { transform: translate3d(0, var(--mk-shift), 0); } }
+
+/* ── 5. Появление по прокрутке: один раз, скрытое — только под full ─────────────────────────────────────────── */
+/* подъём (fade-up): прозрачность короче сдвига — 0,6 длительности, своя кривая */
+[data-mk-on="full"] [data-mk~="rise"] {
+  transition:
+    opacity var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-reveal)) * 0.6)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)),
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="rise"]:not([data-mk-in]) { opacity: 0.01; transform: translate3d(0, var(--mk-shift), 0); }
+
+/* маска (type-unmask): блок и куски разбиения поднимаются из своей коробки — сдвиг и clip-path одной кривой дают
+   неподвижную маску; запас 0,3 em сверху и снизу — выносные элементы букв к концу открыты */
+[data-mk-on="full"] :is([data-mk~="unmask"], [data-mk~="split"] > *) {
+  clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+  transition:
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dd, var(--mk-dur-line)))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)),
+    clip-path var(--mk-c-dur, var(--mk-dur, var(--mk-dd, var(--mk-dur-line)))) var(--mk-c-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-c-delay, 0ms));
+}
+[data-mk-on="full"] :is([data-mk~="unmask"]:not([data-mk-in]), [data-mk~="split"]:not([data-mk-in]) > *) {
+  transform: translate3d(0, 100%, 0); clip-path: inset(-0.3em -0.2em calc(100% + 0.3em) -0.2em);
+}
+
+/* разбиение текста: куски — разметкой (строки, слова, буквы); вся сцена ≤ split-total-max вместе со стаггером */
+[data-mk~="split"] > * { display: inline-block; }
+[data-mk~="split"][data-mk-split="lines"] > * { display: block; }
+[data-mk~="split"] > * {
+  --mk-dd: var(--mk-dur-reveal);
+  --mk-delay: calc(min(var(--mk-k), 11) * max(0ms, min(var(--mk-stagger-text), (var(--mk-dur-split-max) - var(--mk-dur, var(--mk-dd))) / max(var(--mk-cnt) - 1, 1))));
+}
+[data-mk~="split"][data-mk-split="lines"] > * { --mk-dd: var(--mk-dur-line); }
+
+/* шторка (sweep): кадр открывается от края, внутри — обратный масштаб */
+[data-mk-on="full"] [data-mk~="sweep"] {
+  clip-path: inset(0 0 0 0 round var(--mk-r, 0px));
+  transition: clip-path var(--mk-c-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-c-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-c-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="sweep"]:not([data-mk-in]) { clip-path: inset(0 100% 0 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="right"]:not([data-mk-in]) { clip-path: inset(0 0 0 100% round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="top"]:not([data-mk-in]) { clip-path: inset(0 0 100% 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="bottom"]:not([data-mk-in]) { clip-path: inset(100% 0 0 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"] [data-mk-inner] {
+  transition: transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="sweep"]:not([data-mk-in]) [data-mk-inner] { transform: scale(var(--mk-zoom, 1.06)); }
+
+/* проявление с масштабом (scale-in): фигура «наводится на резкость»; размытие — по атрибуту, ≤ 8 px (L1) */
+[data-mk-on="full"] [data-mk~="scale-in"] {
+  transition:
+    opacity var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-line)) * 0.5)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)),
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)),
+    filter var(--mk-f-dur, calc(var(--mk-dur, var(--mk-dur-line)) * 0.7)) var(--mk-f-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-f-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="scale-in"]:not([data-mk-in]) { opacity: 0.01; transform: scale(var(--mk-scale-in)); }
+[data-mk-on="full"] [data-mk~="scale-in"][data-mk-blur]:not([data-mk-in]) { filter: blur(min(var(--mk-blur, 6px), 8px)); }
+
+/* линия рисуется один раз (line-draw): у пути pathLength="1", пути — по очереди */
+[data-mk-on="full"] [data-mk~="draw"] [pathLength] {
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--mk-dur, var(--mk-dur-line)) var(--mk-ease, var(--mk-ease-in-out)) calc(var(--mk-wait, 0ms) + min(var(--mk-k), 7) * var(--mk-stagger-group));
+}
+[data-mk-on="full"] [data-mk~="draw"]:not([data-mk-in]) [pathLength] { stroke-dashoffset: 1; }
+
+/* пролетели или видно при запуске — сразу в конечном состоянии */
+[data-mk-on="full"] [data-mk-in="instant"],
+[data-mk-on="full"] [data-mk~="split"][data-mk-in="instant"] > *,
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-in="instant"] [data-mk-inner],
+[data-mk-on="full"] [data-mk~="draw"][data-mk-in="instant"] [pathLength] { transition: none; }
+
+/* ── 6. Счётчик (number-tick): итог — текст в HTML; при счёте цифры рисует CSS-счётчик поверх прозрачного текста ── */
+@counter-style mk-void { system: cyclic; symbols: ""; }
+@counter-style mk-lead { system: extends decimal; range: 1 infinite; fallback: mk-void; }
+@counter-style mk-dig { system: fixed 0; symbols: "" "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"; }
+@counter-style mk-gap { system: fixed 0; symbols: "" "\202F"; }
+[data-mk~="count"] { display: inline-block; width: fit-content; font-variant-numeric: tabular-nums; }
+@supports (z-index: mod(5, 3)) and (z-index: round(down, 5.5, 1)) and (z-index: pow(2, 2)) {
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt] {
+    position: relative; --mk-num: 0;
+    transition: --mk-num var(--mk-dur, var(--mk-dur-counter)) var(--mk-ease, var(--mk-ease-out-expo)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms));
+  }
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt][data-mk-in] { --mk-num: var(--mk-to); }
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt]:not([data-mk-done]) { -webkit-text-fill-color: transparent; }
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt]:not([data-mk-done])::after {
+    --mk-ip: round(down, var(--mk-num) / pow(10, var(--mk-dec, 0)), 1);
+    --mk-hi: round(down, var(--mk-ip) / 1000, 1);
+    --mk-lo: mod(var(--mk-ip), 1000);
+    position: absolute; top: 0; right: 0; white-space: nowrap; -webkit-text-fill-color: currentColor;
+    counter-reset:
+      mk-h var(--mk-hi)
+      mk-g calc(min(1, var(--mk-hi)) * var(--mk-group, 0))
+      mk-2 calc(min(1, var(--mk-hi) + round(down, var(--mk-lo) / 100, 1)) * (round(down, var(--mk-lo) / 100, 1) + 1))
+      mk-1 calc(min(1, var(--mk-hi) + round(down, var(--mk-lo) / 10, 1)) * (mod(round(down, var(--mk-lo) / 10, 1), 10) + 1))
+      mk-0 calc(mod(var(--mk-lo), 10) + 1)
+      mk-fa round(down, mod(var(--mk-num), 100) / 10, 1)
+      mk-fb mod(var(--mk-num), 10);
+    content: counter(mk-h, mk-lead) counter(mk-g, mk-gap) counter(mk-2, mk-dig) counter(mk-1, mk-dig) counter(mk-0, mk-dig) / "";
+  }
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt="d1"]:not([data-mk-done])::after {
+    content: counter(mk-h, mk-lead) counter(mk-g, mk-gap) counter(mk-2, mk-dig) counter(mk-1, mk-dig) counter(mk-0, mk-dig) var(--mk-point, ",") counter(mk-fb) / "";
+  }
+  [data-mk-on="full"] [data-mk~="count"][data-mk-fmt="d2"]:not([data-mk-done])::after {
+    content: counter(mk-h, mk-lead) counter(mk-g, mk-gap) counter(mk-2, mk-dig) counter(mk-1, mk-dig) counter(mk-0, mk-dig) var(--mk-point, ",") counter(mk-fa) counter(mk-fb) / "";
+  }
+}
+
+/* ── 7. Прокрутка на CSS: прогресс, параллакс, линия, подсветка, маска, кадр, текст-окно, стопка, горизонталь, шапка ── */
+/* полоса прогресса — индикатор: работает и в reduce, и без JS; без поддержки шкал — полосы нет, а не пустая полоса */
+[data-mk~="progress"] { transform-origin: 0 50%; }
+@supports not ((animation-timeline: scroll()) and (animation-range: 0% 100%)) { [data-mk~="progress"] { display: none; } }
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+  [data-mk~="progress"] { animation: mk-grow linear both; animation-timeline: scroll(nearest block); }
+}
+@keyframes mk-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* именованные шкалы — у коробки, которая задаёт диапазон; вставка 0px: scroll-padding страницы прогресс не сдвигает */
+[data-mk~="scroll-draw"] { view-timeline-name: --mk-draw; }
+[data-mk~="highlight"] { view-timeline-name: --mk-hl; }
+[data-mk~="scroll-mask"] { view-timeline-name: --mk-sm; }
+[data-mk~="frame-expand"] { view-timeline-name: --mk-fx; }
+[data-mk~="horizontal"] { view-timeline-name: --mk-hs; }
+:is([data-mk~="scroll-draw"], [data-mk~="highlight"], [data-mk~="scroll-mask"], [data-mk~="frame-expand"], [data-mk~="horizontal"]) {
+  view-timeline-axis: block; view-timeline-inset: 0px;
+}
+[data-mk~="parallax"] {
+  --mk-d: calc(clamp(-1 * var(--mk-parallax-max), var(--mk-depth, 0.2), var(--mk-parallax-max)) * var(--mk-depth-k));
+}
+/* текст-окно в картинку: облик есть всегда; без background-clip: text — сплошной цвет */
+[data-mk~="text-mask"] {
+  background-image: var(--mk-media, linear-gradient(currentColor, currentColor)); background-size: var(--mk-media-size, 100% 160%);
+  background-position: 50% var(--mk-pan); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) { [data-mk~="text-mask"] { color: inherit; background: none; } }
+
+/* стопка: липкость — всегда (это поведение прокрутки), уход вглубь — по шкале следующей карточки */
+[data-mk~="stack"] { display: grid; timeline-scope: --mk-s1, --mk-s2, --mk-s3, --mk-s4, --mk-s5, --mk-s6, --mk-s7, --mk-s8; }
+[data-mk~="stack"] > * {
+  position: sticky; top: calc(var(--mk-header) + var(--mk-k) * var(--mk-stack-step)); transform-origin: 50% 0;
+  view-timeline-axis: block; view-timeline-inset: 0px;
+}
+[data-mk~="stack"] > :nth-child(1) { view-timeline-name: --mk-s1; } [data-mk~="stack"] > :nth-child(2) { view-timeline-name: --mk-s2; }
+[data-mk~="stack"] > :nth-child(3) { view-timeline-name: --mk-s3; } [data-mk~="stack"] > :nth-child(4) { view-timeline-name: --mk-s4; }
+[data-mk~="stack"] > :nth-child(5) { view-timeline-name: --mk-s5; } [data-mk~="stack"] > :nth-child(6) { view-timeline-name: --mk-s6; }
+[data-mk~="stack"] > :nth-child(7) { view-timeline-name: --mk-s7; } [data-mk~="stack"] > :nth-child(8) { view-timeline-name: --mk-s8; }
+
+/* горизонталь: по умолчанию (телефон, reduce, без JS и поддержки) — родная лента со snap */
+[data-mk~="horizontal"] > [data-mk-stage] { overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+[data-mk~="horizontal"] [data-mk-track] { display: flex; width: max-content; }
+[data-mk~="horizontal"] [data-mk-track] > * { flex: none; scroll-snap-align: start; }
+
+/* шапка: --mk-shrink 0…1 по первым 160 px; части шапки по меткам — только transform и opacity */
+[data-mk~="header"] [data-mk-plate] { transform-origin: 50% 0; transform: scaleY(calc(1 - var(--mk-shrink) * var(--mk-plate-k, 0.375))); }
+[data-mk~="header"] [data-mk-logo] { transform-origin: 0 50%; transform: scale(calc(1 - var(--mk-shrink) * 0.22)); }
+[data-mk~="header"] [data-mk-shadow] { opacity: var(--mk-shrink); }
+[data-mk~="header"] [data-mk-fade] { opacity: calc(1 - var(--mk-shrink)); }
+[data-mk~="header"] [data-mk-row] { transform: translate3d(0, calc(var(--mk-shrink) * var(--mk-row-shift, -8px)), 0); }
+[data-mk-on="reduced"] [data-mk~="header"], [data-mk~="header"][data-mk-shrunk] { --mk-shrink: 1; }
+[data-mk-on="full"] [data-mk~="header"] { transition: --mk-shrink var(--mk-dur-state) var(--mk-ease-out-strong); }   /* без шкал прокрутки — по порогу 40 px */
+
+@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
+  [data-mk-on="full"] [data-mk~="parallax"] {
+    animation: mk-par linear both; animation-timeline: view(block 0px); animation-range: cover 0% cover 100%;
+  }
+  [data-mk-on="full"] [data-mk~="scroll-draw"] [pathLength] {
+    stroke-dasharray: 1;
+    animation: mk-dash linear both; animation-timeline: --mk-draw; animation-range: var(--mk-from, cover 20%) var(--mk-to, cover 60%);
+  }
+  [data-mk-on="full"] [data-mk~="highlight"] > * {
+    color: var(--mk-dim, currentColor);
+    animation: mk-lit linear both; animation-timeline: --mk-hl;
+    animation-range: cover calc(22% + var(--mk-k) / var(--mk-cnt) * 38%) cover calc(24% + var(--mk-k) / var(--mk-cnt) * 38%);
+  }
+  [data-mk-on="full"] [data-mk~="scroll-mask"] {
+    animation: mk-unclip linear both; animation-timeline: --mk-sm; animation-range: entry 0% cover 45%;
+  }
+  [data-mk-on="full"] [data-mk~="scroll-mask"] [data-mk-inner] {
+    animation: mk-unzoom linear both; animation-timeline: --mk-sm; animation-range: entry 0% cover 45%;
+  }
+  [data-mk-on="full"] [data-mk~="text-mask"] {
+    animation: mk-pan linear both; animation-timeline: view(block 0px); animation-range: cover 0% cover 100%;
+  }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(-n + 7) { animation: mk-sink linear both; animation-range: entry 0% entry 100%; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(1) { animation-timeline: --mk-s2; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(2) { animation-timeline: --mk-s3; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(3) { animation-timeline: --mk-s4; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(4) { animation-timeline: --mk-s5; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(5) { animation-timeline: --mk-s6; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(6) { animation-timeline: --mk-s7; }
+  [data-mk-on="full"] [data-mk~="stack"] > :nth-child(7) { animation-timeline: --mk-s8; }
+  [data-mk-on="full"] [data-mk~="stack"] > :last-child { animation: none; }
+  [data-mk-on="full"] [data-mk~="header"] { animation: mk-shrink linear both; animation-timeline: scroll(nearest block); animation-range: 0px 160px; }
+  @media (min-width: 48rem) {
+    [data-mk-on="full"] [data-mk~="frame-expand"] { height: calc(var(--mk-vh, 100svh) + var(--mk-len, 150vh)); }
+    [data-mk-on="full"] [data-mk~="frame-expand"] > [data-mk-stage] { position: sticky; top: 0; height: var(--mk-vh, 100svh); }
+    [data-mk-on="full"] [data-mk~="frame-expand"] [data-mk-frame] {
+      animation: mk-expand linear both; animation-timeline: --mk-fx; animation-range: contain 0% contain 70%;
+    }
+    [data-mk-on="full"] [data-mk~="frame-expand"] [data-mk-caption] {
+      animation: mk-cap linear both; animation-timeline: --mk-fx; animation-range: contain 72% contain 92%;
+    }
+    [data-mk-on="full"] [data-mk~="horizontal"] { height: calc(var(--mk-panels, 4) * var(--mk-vh, 100svh)); }
+    [data-mk-on="full"] [data-mk~="horizontal"] > [data-mk-stage] {
+      position: sticky; top: 0; height: var(--mk-vh, 100svh); overflow: hidden; scroll-snap-type: none; container-type: inline-size;
+    }
+    [data-mk-on="full"] [data-mk~="horizontal"] [data-mk-track] {
+      animation: mk-hscroll linear both; animation-timeline: --mk-hs; animation-range: contain 0% contain 100%;
+    }
+    [data-mk-on="full"] [data-mk~="horizontal"] [data-mk-bar] {
+      transform-origin: 0 50%; animation: mk-grow linear both; animation-timeline: --mk-hs; animation-range: contain 0% contain 100%;
+    }
+  }
+}
+@keyframes mk-par {
+  from { transform: translate3d(0, calc(var(--mk-d) * -1 * (var(--mk-vh, 100vh) * 0.5 + 50%)), 0); }
+  to { transform: translate3d(0, calc(var(--mk-d) * (var(--mk-vh, 100vh) * 0.5 + 50%)), 0); }
+}
+@keyframes mk-dash { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes mk-lit { to { color: var(--mk-ink, currentColor); } }
+@keyframes mk-unclip { from { clip-path: inset(100% 0 0 0 round var(--mk-r, 0px)); } to { clip-path: inset(0 0 0 0 round var(--mk-r, 0px)); } }
+@keyframes mk-unzoom { from { transform: scale(var(--mk-zoom, 1.06)); } to { transform: none; } }
+@keyframes mk-pan { from { --mk-pan: 0%; } to { --mk-pan: 100%; } }
+@keyframes mk-sink { to { transform: scale(var(--mk-sink, 0.94)); } }
+@keyframes mk-shrink { to { --mk-shrink: 1; } }
+@keyframes mk-expand { from { clip-path: inset(22% 30% round 28px); } to { clip-path: inset(0 0 0 0 round 0px); } }
+@keyframes mk-cap { from { opacity: 0; transform: translate3d(0, var(--mk-shift), 0); } }
+@keyframes mk-hscroll { to { transform: translate3d(calc(-100% + 100cqw), 0, 0); } }
+
+/* ── 8. DOM-сцена прокрутки: прогресс --mk-p и такт data-beat ставит motion-kit.js; без full — конечный кадр ─── */
+[data-mk~="scene"] { --mk-p: 1; position: relative; }
+[data-mk~="scene"] [data-mk-veil] { opacity: var(--mk-veil, 0); pointer-events: none; }
+[data-mk~="scene"] :is([data-mk-rail], [data-mk-skip])[hidden] { display: none; }        /* hidden сильнее display облика */
+[data-mk-on="full"] [data-mk~="scene"] [data-mk-story] { display: none; }
+[data-mk-on="full"] [data-mk~="scene"]:not([data-mk-mode="play"]) > [data-mk-stage] {
+  position: sticky; top: var(--mk-header); height: calc(var(--mk-vh, 100svh) - var(--mk-header));
+}
+[data-mk-on="full"] [data-mk~="scene"]:is([data-mk-mode="scrub"], [data-mk-mode="glide"], :not([data-mk-mode])) {
+  height: calc(var(--mk-vh, 100svh) - var(--mk-header) + var(--mk-len, 150vh));
+}
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] > [data-mk-steps] {
+  position: relative; z-index: 2; margin-top: calc(-1 * (var(--mk-vh, 100svh) - var(--mk-header))); pointer-events: none;
+}
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat] { min-height: var(--mk-step-h); pointer-events: auto; }
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat]:first-child { min-height: calc((var(--mk-vh, 100svh) - var(--mk-header)) * 0.78); }
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat]:last-child {
+  min-height: calc(var(--mk-step-h) + (var(--mk-vh, 100svh) - var(--mk-header)) * 0.9);
+}
+/* подписи и отрезки: уходящая гаснет вдвое быстрее, входящая — с задержкой; наложения двух строк почти нет */
+[data-mk-on="full"] [data-mk~="scene"] :is([data-mk-k], [data-mk-seg]) {
+  transition: opacity var(--mk-dur-state) var(--mk-ease-out-strong) calc(var(--mk-dur-state) * 0.4), visibility 0s linear 0s;
+}
+[data-mk-on="full"] [data-mk~="scene"] :is([data-mk-k], [data-mk-seg]):not([data-on]) {
+  opacity: 0; visibility: hidden;
+  transition: opacity calc(var(--mk-dur-state) * 0.5) var(--mk-ease-in), visibility 0s linear calc(var(--mk-dur-state) * 0.5);
+}
+
+/* ── 9. Петли: бегущая строка и дыхание — только при JS; вне экрана, по паузе, при наведении и фокусе стоят ── */
+[data-mk~="marquee"] { display: flex; overflow: hidden; }
+[data-mk~="marquee"] > [data-mk-track] { flex: none; display: flex; align-items: center; }
+[data-mk-on="full"] [data-mk~="marquee"] > [data-mk-track] { animation: mk-marquee var(--mk-period, 48s) linear infinite; will-change: transform; }
+[data-mk-on="full"] [data-mk~="marquee"]:is([data-mk-idle], :hover, :focus-within) > [data-mk-track],
+[data-motion="paused"] [data-mk~="marquee"] > [data-mk-track] { animation-play-state: paused; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) { flex-wrap: wrap; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) > [data-mk-track] { flex: 1 1 auto; flex-wrap: wrap; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) > [data-mk-track][aria-hidden="true"] { display: none; }
+@keyframes mk-marquee { to { transform: translate3d(-100%, 0, 0); } }
+
+/* дыхание (float), орбита (orbit), вращение (spin), свечение (glow): период ≥ 10 с у крупного, вращение 15–30 с */
+[data-mk-on="full"] [data-mk~="drift"] {
+  animation: mk-float calc(var(--mk-period, var(--mk-dur-breathe)) / 2) var(--mk-ease-breathe) var(--mk-wait, 0s) infinite alternate both;
+  will-change: transform;
+}
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="orbit"] { animation: mk-orbit var(--mk-period, 37s) linear var(--mk-wait, 0s) infinite both; }
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="spin"] { animation: mk-spin var(--mk-period, 24s) linear infinite both; }
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="glow"] {
+  animation: mk-glow calc(var(--mk-period, var(--mk-dur-breathe)) / 2) var(--mk-ease-breathe) var(--mk-wait, 0s) infinite alternate both;
+  will-change: opacity, transform;
+}
+[data-mk-on="full"] [data-mk~="drift"][data-mk-idle], [data-motion="paused"] [data-mk~="drift"] { animation-play-state: paused; }
+@keyframes mk-float {
+  from { transform: translate3d(0, calc(var(--mk-amp, var(--mk-float)) * -1%), 0); }
+  to { transform: translate3d(0, calc(var(--mk-amp, var(--mk-float)) * 1%), 0); }
+}
+@keyframes mk-orbit {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(calc(var(--mk-ox, 6) * 1%), calc(var(--mk-oy, 4) * -1%), 0); }
+  50% { transform: translate3d(calc(var(--mk-ox, 6) * 0.4%), calc(var(--mk-oy, 4) * 1%), 0); }
+  75% { transform: translate3d(calc(var(--mk-ox, 6) * -1%), calc(var(--mk-oy, 4) * 0.3%), 0); }
+}
+@keyframes mk-spin { to { transform: rotate(1turn); } }
+@keyframes mk-glow { from { opacity: var(--mk-glow-min, 0.55); transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+
+/* ── 10. Указатель: переменные пишет motion-kit.js раз в кадр, только мышь и перо, только full ─────────────── */
+[data-mk~="magnet"] { translate: var(--mk-mx, 0px) var(--mk-my, 0px); }
+[data-mk~="magnet"] [data-mk-label] { display: inline-block; translate: var(--mk-mx, 0px) var(--mk-my, 0px); }
+[data-mk~="tilt"] { transform: perspective(900px) rotateX(var(--mk-rx, 0deg)) rotateY(var(--mk-ry, 0deg)); }
+[data-mk~="tilt"] [data-mk-glare] {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none; mix-blend-mode: soft-light; opacity: var(--mk-glare, 0);
+  background: radial-gradient(circle at var(--mk-gx, 50%) var(--mk-gy, 50%), rgb(255 255 255 / 0.55), transparent 58%);
+}
+[data-mk~="spotlight"] {
+  pointer-events: none;
+  background: radial-gradient(var(--mk-spot-r, 36rem) circle at var(--mk-x, 70%) var(--mk-y, 30%), var(--mk-spot, rgb(255 196 140 / 0.24)), transparent 70%);
+}
+
+/* ── 11. Микродвижение: окно, аккордеон, подпись кнопки, переворот, блик, колонки — чистый CSS ─────────────── */
+dialog[data-mk~="dialog"] {
+  opacity: 1; transform: none;
+  transition:
+    opacity calc(var(--mk-dur-state) * 0.78) var(--mk-ease-in), transform calc(var(--mk-dur-state) * 0.78) var(--mk-ease-in),
+    overlay calc(var(--mk-dur-state) * 0.78) allow-discrete, display calc(var(--mk-dur-state) * 0.78) allow-discrete;
+}
+dialog[data-mk~="dialog"]:not([open]) { opacity: 0; transform: translate3d(0, var(--mk-shift-hero), 0) scale(calc(1 - (1 - var(--mk-scale-in)) / 2)); }
+dialog[data-mk~="dialog"][open] { transition-duration: var(--mk-dur-state); transition-timing-function: var(--mk-ease-out-expo); }
+@starting-style {
+  dialog[data-mk~="dialog"][open] { opacity: 0; transform: translate3d(0, var(--mk-shift-hero), 0) scale(calc(1 - (1 - var(--mk-scale-in)) / 2)); }
+}
+dialog[data-mk~="dialog"]::backdrop {
+  opacity: 0;
+  transition: opacity calc(var(--mk-dur-state) * 0.78) var(--mk-ease-in), overlay calc(var(--mk-dur-state) * 0.78) allow-discrete,
+    display calc(var(--mk-dur-state) * 0.78) allow-discrete;
+}
+dialog[data-mk~="dialog"][open]::backdrop { opacity: 1; transition-duration: var(--mk-dur-state); }
+@starting-style { dialog[data-mk~="dialog"][open]::backdrop { opacity: 0; } }
+
+details[data-mk~="accordion"] { interpolate-size: allow-keywords; }
+details[data-mk~="accordion"]::details-content {
+  block-size: 0; overflow-y: clip;
+  transition: block-size var(--mk-dur-ui) var(--mk-ease-out-strong), content-visibility var(--mk-dur-ui) allow-discrete;
+}
+details[data-mk~="accordion"][open]::details-content { block-size: auto; }
+details[data-mk~="accordion"] [data-mk-marker] { transition: transform var(--mk-dur-ui) var(--mk-ease-out-strong); }
+details[data-mk~="accordion"][open] [data-mk-marker] { transform: rotate(45deg); }
+
+/* подпись кнопки: clip-path по полной коробке — раскладка стоит, скрытая часть не ловит наведение; тач — подпись видна */
+[data-mk~="button-label"] {
+  clip-path: inset(0 0 0 calc(100% - var(--mk-icon, 3rem)) round var(--mk-r, 999px));
+  transition: clip-path var(--mk-dur-ui) var(--mk-ease-out-strong);
+}
+[data-mk~="button-label"][data-mk-side="start"] { clip-path: inset(0 calc(100% - var(--mk-icon, 3rem)) 0 0 round var(--mk-r, 999px)); }
+[data-mk~="button-label"]:focus-visible { clip-path: inset(0 0 0 0 round var(--mk-r, 999px)); }
+@media (hover: hover) and (pointer: fine) { [data-mk~="button-label"]:hover { clip-path: inset(0 0 0 0 round var(--mk-r, 999px)); } }
+@media (hover: none), (pointer: coarse) { [data-mk~="button-label"], [data-mk~="button-label"][data-mk-side="start"] { clip-path: none; } }
+
+/* переворот: громкое — поворот 180° при разрешённом движении (оборот скрыт обратной стороной, текст в DOM виден);
+   в reduce — без поворота, оборот стоит под лицом: скрытого текста нет */
+[data-mk~="flip"] { display: grid; perspective: 1200px; }
+[data-mk~="flip"] > :is([data-mk-face], [data-mk-back]) {
+  grid-column: 1; grid-row: 1; -webkit-backface-visibility: hidden; backface-visibility: hidden;
+  transition: transform calc(var(--mk-m) * var(--mk-dur-reveal)) var(--mk-ease-in-out);
+}
+[data-mk~="flip"] > [data-mk-face] { transform: rotateY(0deg); }
+[data-mk~="flip"] > [data-mk-back] { grid-row: calc(2 - var(--mk-m)); transform: rotateY(calc(var(--mk-m) * 180deg)); pointer-events: none; }
+[data-mk~="flip"][data-mk-flipped] > [data-mk-face] { transform: rotateY(calc(var(--mk-m) * -180deg)); }
+[data-mk~="flip"][data-mk-flipped] > [data-mk-back] { transform: rotateY(0deg); pointer-events: auto; }
+@media (hover: hover) and (pointer: fine) {
+  [data-mk~="flip"]:is(:hover, :focus-within) > [data-mk-face] { transform: rotateY(calc(var(--mk-m) * -180deg)); }
+  [data-mk~="flip"]:is(:hover, :focus-within) > [data-mk-back] { transform: rotateY(0deg); pointer-events: auto; }
+}
+@media (prefers-reduced-motion: reduce) { :root:not([data-motion="full"]) [data-mk~="flip"] > [data-mk-back] { pointer-events: auto; } }
+[data-motion="reduced"] [data-mk~="flip"] > [data-mk-back] { pointer-events: auto; }
+
+/* блик: один проход на наведение или фокус, без петли; в reduce прохода нет */
+[data-mk~="shine"] { position: relative; overflow: hidden; isolation: isolate; }
+[data-mk~="shine"]::after {
+  content: ""; position: absolute; inset: -25% auto -25% 0; width: 42%; pointer-events: none; opacity: 0;
+  background: linear-gradient(100deg, transparent 0%, rgb(255 255 255 / 0.26) 46%, rgb(255 255 255 / 0.06) 56%, transparent 100%);
+  transform: translate3d(-130%, 0, 0) skewX(-14deg);
+}
+[data-mk~="shine"]:focus-visible::after { animation: mk-shine calc(var(--mk-m) * var(--mk-dur-line)) var(--mk-ease-in-out) both; }
+@media (hover: hover) and (pointer: fine) { [data-mk~="shine"]:hover::after { animation: mk-shine calc(var(--mk-m) * var(--mk-dur-line)) var(--mk-ease-in-out) both; } }
+@keyframes mk-shine {
+  0% { opacity: 0; transform: translate3d(-130%, 0, 0) skewX(-14deg); }
+  18%, 82% { opacity: 1; }
+  100% { opacity: 0; transform: translate3d(330%, 0, 0) skewX(-14deg); }
+}
+
+/* раздвижные колонки: окно колонки — clip-path, раскладка ряда стоит; без указателя раскрыта первая */
+[data-mk~="columns"] [data-mk-col-media] {
+  clip-path: inset(0 var(--mk-col-closed, 34%) 0 var(--mk-col-closed, 34%) round var(--mk-r, 0px));
+  transition: clip-path var(--mk-dur-state) var(--mk-ease-out-expo);
+}
+[data-mk~="columns"] [data-mk-col]:is(:hover, :focus-visible, :focus-within) [data-mk-col-media],
+[data-mk~="columns"]:not(:has([data-mk-col]:is(:hover, :focus-visible, :focus-within))) [data-mk-col]:first-child [data-mk-col-media] {
+  clip-path: inset(0 0 0 0 round var(--mk-r, 0px));
+}
+@media (hover: none), (pointer: coarse) { [data-mk~="columns"] [data-mk-col-media] { clip-path: none; } }
+
+/* ── 12. Переходы: смена состояния (mk-state) и страниц (mk-page); в reduce — затухание без смещения ───────── */
+::view-transition-group(*) { animation-duration: calc(var(--mk-m) * var(--mk-dur-page)); animation-timing-function: var(--mk-ease-in-out); }
+:root:active-view-transition-type(mk-state)::view-transition-group(*) { animation-duration: calc(var(--mk-m) * var(--mk-dur-state)); }
+:root:active-view-transition-type(mk-state)::view-transition-old(*),
+:root:active-view-transition-type(mk-state)::view-transition-new(*) { animation-duration: calc(var(--mk-dur-state) * 0.6); }
+:root:active-view-transition-type(mk-page)::view-transition-old(root) {
+  animation: mk-vt-out var(--mk-dur-feedback) var(--mk-ease-in) both, mk-vt-left calc(var(--mk-m) * var(--mk-dur-state)) var(--mk-ease-in-out) both;
+}
+:root:active-view-transition-type(mk-page)::view-transition-new(root) {
+  animation: mk-vt-in var(--mk-dur-hover) var(--mk-ease-out-strong) var(--mk-dur-feedback) both, mk-vt-right calc(var(--mk-m) * var(--mk-dur-state)) var(--mk-ease-in-out) both;
+}
+@keyframes mk-vt-out { to { opacity: 0; } }
+@keyframes mk-vt-in { from { opacity: 0; } }
+@keyframes mk-vt-left { to { transform: translate3d(calc(-1 * var(--mk-shift-hero)), 0, 0); } }
+@keyframes mk-vt-right { from { transform: translate3d(var(--mk-shift-hero), 0, 0); } }
+
+/* ── 13. Переключатель движения и пауза: видны, только когда набор работает; пауза — пока движение идёт ───── */
+[data-mk~="toggle"]:not([data-mk-on] *), [data-mk~="pause"]:not([data-mk-on="full"] *) { display: none; }
+[data-mk~="pause"] [data-mk-when="paused"], [data-mk~="pause"][aria-pressed="true"] [data-mk-when="run"] { display: none; }
+[data-mk~="pause"][aria-pressed="true"] [data-mk-when="paused"] { display: inline; }

@@ -2,7 +2,7 @@
 
 Волна 2, агент M, 22 сентября 2026. Источников прочитано целиком: 59, плюс измерения 24 живых продуктов.
 
-Смежные файлы: сами числа длительностей и кривых — `01-durations-easings-springs.md`; доступность и готовые токены — `03-reduced-motion-and-motion-tokens.md`. Визуальные спецификации самих компонентов (размеры, отступы, состояния) — `../06-components-visual/` (агент E). Тени при подъёме карточки и фокус-кольцо — `../04-shape-elevation/02-shadows-layers-depth.md`. Сценарная сторона (когда показывать индикатор загрузки, какие задержки допустимы, тексты) — `../../ux/06-feedback-states-motion/`.
+Смежные файлы: сами числа длительностей и кривых — `01-durations-easings-springs.md`; доступность и готовые токены — `03-reduced-motion-and-motion-tokens.md`; переходы по шаблонам интерфейса токенами и их перевод на веб, Compose и SwiftUI — `04-spring-tokens-transitions-platforms.md` §3. Визуальные спецификации самих компонентов (размеры, отступы, состояния) — `../06-components-visual/` (агент E). Тени при подъёме карточки и фокус-кольцо — `../04-shape-elevation/02-shadows-layers-depth.md`. Сценарная сторона (когда показывать индикатор загрузки, какие задержки допустимы, тексты) — `../../ux/06-feedback-states-motion/`.
 
 ## Выжимка для агента
 
@@ -10,7 +10,7 @@
 2. **Бюджет кадра — 16.6 ms при 60 fps.** Для сравнения, моргание занимает 100–300 ms. → §4.1 [консенсус]
 3. **Одно-два свойства на переход.** Atlassian: «Combine properties sparingly. Typically, aim for one or two properties per transition». Рекомендуемая пара — `opacity` + `translate`. → §1 [система]
 4. **Поповер и меню растут из триггера.** `transform-origin` ставится в точку привязки; в Radix для этого есть готовая переменная `--radix-popover-content-transform-origin`. → §2.3 [консенсус]
-5. **Масштаб появления 95 → 100 %, а не 80 → 100 %.** Токен Atlassian `motion.keyframe.scale.in.small`. Mantine `pop` идёт от 0.9. → §2.3 [система]
+5. **Масштаб появления 95 → 100 %, а не 80 → 100 % и никогда не от `scale(0)`.** Токен Atlassian `motion.keyframe.scale.in.small`. Mantine `pop` идёт от 0.9, Kowalski — от 0.9–0.97. → §2.3 [система]
 6. **Смещение появления берётся из шкалы отступов: 4 или 8 px.** Polaris задаёт его ссылкой на `--p-space-100`. Mantine `pop` = 10 px, `fade-*` = 30 px. → §2.3 [система]
 7. **Таблица: 70 ms на hover строки, без анимации самих данных.** Carbon DataTable держит 70 ms на 49 из 52 объявлений. Обновление чисел в ячейках не анимируется вовсе. → §3.4 [система + измерение]
 8. **Стаггер 20 ms, общая длительность серии ≤ 500 ms.** Carbon: при 20 ms шаге это максимум ≈ 25 элементов. → §6.1 [система]
@@ -23,7 +23,7 @@
 15. **`@starting-style` + `transition-behavior: allow-discrete` + `overlay` — три обязательных части** для анимации `<dialog>` и popover в top layer. → §5.1 [документация]
 16. **`will-change` только на элементы, которые действительно вот-вот поедут**, и снимать после. Постоянный `will-change` на десятках элементов съедает память GPU. → §4.4 [консенсус]
 17. **`backdrop-filter` анимировать нельзя.** Максимум — анимировать `opacity` слоя, у которого фильтр уже применён. → §4.3 [консенсус]
-18. **View Transitions в приложении за авторизацией — прогрессивное улучшение, не основа.** → §5.3 [спорно]
+18. **View Transitions в приложении за авторизацией — прогрессивное улучшение, не основа.** Переходы в документе — Baseline с октября 2025 (Chrome 111, Safari 18, Firefox 144). → §5.3 [документация] (статус) [мнение] (правило)
 19. **Scroll-driven animations в админке не нужны.** Единственное оправданное применение — индикатор прогресса чтения длинного документа. → §5.4 [мнение]
 20. **Hover карточки: тень и смещение 1–2 px, не `scale`.** → §3.5, `../04-shape-elevation/02-shadows-layers-depth.md` [консенсус]
 21. **Полоса под активной вкладкой переезжает через `clip-path` или `transform`, а не через две независимые анимации**, иначе подсветка и цвет текста рассинхронизируются. → §3.3 [мнение: Kowalski]
@@ -42,6 +42,8 @@
 - **Четыре свойства движения, и больше ничего** (Atlassian): `scale`, `fade` (opacity), `slide` (translate X/Y), `color` [S23].
 - **Вход и выход разные** (`01-durations-easings-springs.md` §3).
 - **Значения смещений берутся из шкалы отступов**, а не изобретаются: 4, 8, 12, 16 px (`../03-spacing-sizing/01-spacing-scale.md`).
+- **Темп — по размеру компонента.** Material 3 выбирает скорость пружины так: fast — переключатель и кнопка, default — нижняя
+  панель и дровер, slow — полноэкранный переход [S59]; у длительностей то же правило — `01-durations-easings-springs.md` §5.2.
 
 Два пресета: **А — плотная админка** (минимум движения), **Б — клиентский сервис** (движение как часть характера). Полные наборы токенов для обоих — в `03-reduced-motion-and-motion-tokens.md` §6.
 
@@ -79,7 +81,7 @@
 | Вход | 120–200 ms, ease-out |
 | Выход | 100–150 ms, ease-in, `scale(1 → 0.95)` |
 
-**Число 0.95 — не произвольное.** Atlassian фиксирует его токеном: `motion.keyframe.scale.in.small` = **95 → 100 %**, `motion.keyframe.scale.out.small` = 100 → 95 % [S25]. Mantine `pop` начинает с 0.9 [S13]. Всё, что меньше 0.9, читается как «выпрыгивание» и в рабочем интерфейсе неуместно.
+**Число 0.95 — не произвольное.** Atlassian фиксирует его токеном: `motion.keyframe.scale.in.small` = **95 → 100 %**, `motion.keyframe.scale.out.small` = 100 → 95 % [S25]. Mantine `pop` начинает с 0.9 [S13]. Всё, что меньше 0.9, читается как «выпрыгивание» и в рабочем интерфейсе неуместно. Kowalski формулирует то же запретом: появление **никогда не начинается с `scale(0)`** — только с 0.9–0.97 вместе с `opacity: 0` [S64] `[мнение]`.
 
 **Origin-aware — главная деталь, которую пропускают.** Kowalski: выпадающее меню должно расти **из кнопки**, а не из своего центра. Дефолтный `transform-origin: center` заменяется на точку привязки; у Radix есть готовая переменная `--radix-popover-content-transform-origin`, в shadcn/ui она уже подключена [S15].
 
@@ -182,6 +184,8 @@ Apple: «Consider using fades when you need to relocate an object… you can **f
 
 Atlassian: «Popup enter 150 ms, Popup exit 100 ms», кривая входа `ease-out practical` `cubic-bezier(0.4, 1, 0.6, 1)` — «Subtle, everyday entrance curve. Best for elements like Popup or hover background fades» [S23], [S25].
 
+**Следующая подсказка — без задержки.** Пока одна подсказка открыта и курсор переходит к соседнему элементу, следующая показывается сразу, без задержки показа (Kowalski) [S64] `[мнение]`; задержка остаётся только у первой подсказки.
+
 **Задержка на выходе против дрожания.** Comeau: `transition-delay: 300ms` на выходе меню (при входе 0). Если курсор вернулся в пределах 300 ms, перехода не будет вовсе; после 300 ms меню гаснет за 400 ms [S54]. Полезно для меню, раскрывающихся по наведению; для меню по клику не нужно.
 
 ### 3.7 Индикаторы загрузки
@@ -195,7 +199,7 @@ Atlassian: «Popup enter 150 ms, Popup exit 100 ms», кривая входа `e
 | Линейный прогресс (определённый) | 150–300 ms на шаг | `ease-out` или `linear` | |
 
 Правила:
-- **Спиннер только `linear`.** Polaris прямо: «Moves with constant speed. Use for continuous and mechanical animations, such as rotating spinners» [S2]; Primer: «Use for continuous animations like progress bars or loaders» [S7].
+- **Спиннер только `linear`.** Polaris прямо: «Moves with constant speed. Use for continuous and mechanical animations, such as rotating spinners» [S2]; Primer: «Use for continuous animations like progress bars or loaders» [S7]; Fluent 2: `linear` — только для вращения [S62].
 - **Быстрее вращающийся спиннер воспринимается как «работает изо всех сил»** при том же реальном времени загрузки. Наблюдение Kowalski на паре демонстраций [S14]. `[мнение]`
 - **Период цикла не должен быть около 5 секунд.** Apple: «avoid showing an oscillation that has a frequency of around **0.2 Hz** because people can be very sensitive to this frequency» [S12]. 0.2 Hz = период 5 с. Поэтому шиммер на 1.5–2 с безопасен, а «дыхание» на 4–6 с — нет.
 - **Шиммер скелетона — это анимация, запущенная страницей**, значит под WCAG 2.2.2. Подробнее в `03-reduced-motion-and-motion-tokens.md` §2.2: полноэкранный лоадер законен, бесконечный шиммер рядом с уже загруженным контентом — нет.
@@ -258,6 +262,9 @@ Kowalski про пружину на значении, привязанном к 
 | Сворачивание сайдбара | 200–250 ms, ease-in-out, `width` через `transform` или `grid-template-columns` | то же |
 | Инспектор (правая панель) | 200 ms, ease-out | 150 ms |
 
+Кривая выдвижной панели у Kowalski — кривая дровера iOS `cubic-bezier(0.32, 0.72, 0, 1)` [S64] `[мнение]`: резкий старт и долгое
+торможение, вход пресета Б; в пресете А — обычный ease-out.
+
 **Важное исключение Carbon:** если панель уходит за край, но остаётся «рядом» и готова вернуться, берётся **standard, а не exit**: «The panel leaves the view, but **slows down as it exits**, implying that it would come to rest just outside the view» [S22]. То есть дровер с кнопкой «вернуть» уходит с торможением, а модалка после «Отмена» — с ускорением.
 
 Сворачивание сайдбара трогает раскладку всего контента, поэтому дешевле всего анимировать `grid-template-columns` на контейнере (одно свойство, один слой), а не `width` панели плюс `margin-left` контента.
@@ -288,7 +295,7 @@ Atlassian даёт два интеракционных токена и конс�
 | Fade 150 ms на области контента | клиентский сервис, переход между разделами |
 | View Transitions, 200–300 ms | клиентский сервис, где есть общий элемент (карточка → страница объекта); только как прогрессивное улучшение, §5.3 |
 
-Atlassian `motion.duration.xlong` 400 ms помечен как «page-level transitions», `xxlong` 600 — «onboarding steps, full-screen overlays» [S25]. Это верхняя граница, а не рекомендация: в веб-сервисе переход страницы обычно ждёт данных, и анимация складывается с сетевой задержкой.
+Atlassian `motion.duration.xlong` 400 ms помечен как «page-level transitions», `xxlong` 600 — «onboarding steps, full-screen overlays» [S25]. Это верхняя граница, а не рекомендация: в веб-сервисе переход страницы обычно ждёт данных, и анимация складывается с сетевой задержкой. Fluent 2 меняет страницу быстрым затуханием, а не сдвигом [S62]; Polaris не анимирует всю страницу разом [S63].
 
 ---
 
@@ -388,11 +395,11 @@ dialog[open] { opacity: 1; transform: scale(1); }
 
 ### 5.2 `linear()`
 
-**Baseline Widely available с декабря 2023.** Подробно в `01-durations-easings-springs.md` §4.7.
+**Baseline Newly available с декабря 2023, Widely available с июня 2026.** Подробно в `01-durations-easings-springs.md` §4.7; пружину ДС в `linear()` собирает сборка из токена — `04-spring-tokens-transitions-platforms.md` §1.
 
 ### 5.3 View Transitions API
 
-Статус на сентябрь 2026: SPA-режим (`document.startViewTransition()`) поддержан широко; кросс-документные переходы (`@view-transition { navigation: auto }`) остаются ограниченными. Баннера Baseline «widely available» на странице MDN нет [S57]. `[спорно]` — точную матрицу поддержки подтвердить из этой среды не удалось.
+Статус: переходы в документе — `document.startViewTransition()`, `view-transition-name`, `view-transition-class` — **Baseline Newly available с октября 2025**: Chrome 111, Safari 18, Firefox 144; типы переходов в первой версии Firefox не вошли `[документация: web.dev, октябрь 2025; Chrome for Developers, «What's new in view transitions (2025 update)»]`. У кросс-документных переходов (`@view-transition { navigation: auto }`) Baseline на снимке MDN нет [S57]; это сторона страниц сайта (`../../creative/05-motion/01-motion-principles-and-access.md` §7.1). Смена маршрута в SPA и общий элемент по шаблонам интерфейса — `04-spring-tokens-transitions-platforms.md` §3.
 
 Правила применения в веб-сервисе:
 - **Прогрессивное улучшение, не основа.** Интерфейс должен работать одинаково без переходов.
@@ -420,7 +427,7 @@ dialog[open] { opacity: 1; transform: scale(1); }
 
 Carbon даёт единственное найденное точное число: «staggering the entrance of table content by **20 ms** significantly reduces the cognitive load. Depending on the number of staggered elements, the delay should be adjusted to ensure that **total time is still within 500 ms**» [S52].
 
-Расчёт: при шаге 20 ms и потолке 500 ms максимум ≈ 25 элементов. Дальше шаг уменьшается: 40 строк → 12 ms, 60 строк → 8 ms. На практике проще ограничить стаггер первыми 10–15 элементами, остальные показывать сразу.
+Расчёт: при шаге 20 ms и потолке 500 ms максимум ≈ 25 элементов. Дальше шаг уменьшается: 40 строк → 12 ms, 60 строк → 8 ms. На практике проще ограничить стаггер первыми 10–15 элементами, остальные показывать сразу. Fluent 2 очень крупные группы не стаггерит вовсе [S62].
 
 | Число элементов | Шаг | Суммарно |
 |---|---|---|
@@ -468,6 +475,7 @@ Carbon: «Elements in Carbon dance on the grid. Motion paths trace lines along t
 | Kowalski | «**Never animate keyboard initiated actions.** These actions are repeated sometimes hundreds of times a day» [S14] |
 | Rauno Freiberg | «if we for a moment consider the interaction frequency being **hundreds of times a day**, it does start to feel more like cognitive burden after seeing the same animation for the hundredth time» [S16] |
 | Carbon | «**Is your motion frequently noticed by average users?** If so, consider removing or minimizing it» [S22] |
+| Atlassian | что повторяют десятки раз в день — короче 150 ms [S60] |
 
 Разбор macOS у Rauno Freiberg как образец: контекстное меню **появляется без анимации**, но **исчезает с fade**; App Switcher не анимируется вообще, а при малой дельте между Command и Tab окно переключается без показа меню [S16].
 
@@ -509,7 +517,7 @@ Apple: «Make motion optional… avoid using it as the **only** way to communica
 
 1. **`transition: all`** — самая частая. Анимируются `height` и `width`, которых не планировали.
 2. **Поповер растёт из центра**, а не из триггера (§2.3).
-3. **Масштаб появления 0.8 или 0.5** вместо 0.95 — элемент «выпрыгивает».
+3. **Масштаб появления 0.8, 0.5 или `scale(0)`** вместо 0.9–0.97 — элемент «выпрыгивает».
 4. **Смещение появления 20–40 px** для поповера вместо 4–8.
 5. **Анимация `height` аккордеона через JS-измерение** там, где хватает `grid-template-rows` (§4.2).
 6. **Спиннер с `ease-in-out`** — видно рывки на каждом обороте, нужен `linear`.
@@ -539,7 +547,7 @@ Apple: «Make motion optional… avoid using it as the **only** way to communica
 2. Нет ли в коде `transition: all`?
 3. Число свойств в одном переходе — одно или два?
 4. Поповеры, меню и тултипы растут из триггера (`transform-origin` привязан)?
-5. Масштаб появления в диапазоне 0.9–0.95, смещение 4–8 px?
+5. Масштаб появления в диапазоне 0.9–0.97 (никогда не от `scale(0)`), смещение 4–8 px?
 6. Смещения взяты из шкалы отступов, а не произвольные?
 7. Раскрытие блоков сделано без анимации `height` (grid-rows, clip-path или измеренная высота)?
 8. Спиннер `linear` с циклом 0.75–1 s?
@@ -561,15 +569,15 @@ Apple: «Make motion optional… avoid using it as the **only** way to communica
 ## 10. Открытые вопросы
 
 1. **Количественная стоимость `backdrop-filter` в анимации** не найдена (§4.3). Открытый вопрос агента C закрыт только качественно. Кандидаты для следующей волны: Chrome DevTools Performance на синтетическом стенде, `web.dev/articles/animations-guide` (из этой среды недоступен), доклады Chrome Dev Summit о композитинге.
-2. **Матрица поддержки View Transitions на сентябрь 2026** (§5.3) — не подтверждена первичным источником. Кандидаты: caniuse.com, webstatus.dev, release notes Safari.
-3. **`interpolate-size: allow-keywords`** (§4.2) — статус поддержки не проверен по первичному источнику, описан как «ограниченный» по косвенным признакам. `[спорно]`
-4. **Правила применения движения у Polaris и Fluent 2** не прочитаны: сайты недоступны из этой среды (подробности в `01-durations-easings-springs.md` §11.6). Каталог по этим двум системам построен на значениях токенов, а не на их документации.
-5. **Число «не более трёх одновременных подсветок»** (§3.10) выведено из практики, источника нет. `[мнение]`
-6. **Нет исследований**, сравнивающих восприятие интерфейса со стаггером и без него, кроме утверждения Carbon о снижении когнитивной нагрузки без ссылки на данные. `[система]`
+2. **`interpolate-size: allow-keywords`** (§4.2) — статус поддержки не проверен по первичному источнику, описан как «ограниченный» по косвенным признакам. `[спорно]`
+3. **Число «не более трёх одновременных подсветок»** (§3.10) выведено из практики, источника нет. `[мнение]`
+4. **Нет исследований**, сравнивающих восприятие интерфейса со стаггером и без него, кроме утверждения Carbon о снижении когнитивной нагрузки без ссылки на данные. `[система]`
 
 ---
 
 ## Источники
+
+Снимок: 28.10.2026 — день сверки источников S59–S64 и статуса View Transitions.
 
 Нумерация сквозная с `../99-raw/notes/wave2/M-notes.md` и `01-durations-easings-springs.md`, где даны полные аннотации.
 
@@ -595,3 +603,8 @@ Apple: «Make motion optional… avoid using it as the **only** way to communica
 - `[S56]` Собственный пересчёт измерений агента P (24 продукта).
 - `[S57]` MDN, View Transition API (статус на июнь 2026).
 - `[S58]` Emil Kowalski, «The Magic of clip-path».
+- `[S59]` Google, Material 3: material-components-android, файл docs/theming/Motion.md, androidx Compose Material3 `MotionScheme.kt` (VERSION v0_14_0) — скорость пружины по размеру компонента; через `../../creative/02-references-moodboards/04-motion-libraries-and-rules.md` §4.1 [S37].
+- `[S60]` Atlassian Design System, https://atlassian.design/foundations/motion и /foundations/motion/applying-motion; `@atlaskit/tokens` 20.8.2, файл artifacts/themes/atlassian-motion.js — «что повторяют десятки раз в день — короче 150 ms»; через тот же обзор §4.1 [S41].
+- `[S62]` Microsoft Fluent 2, https://fluent2.microsoft.design/motion; `@fluentui/react-motion` 9.16.5, файл dist/index.d.ts — правила применения: крупному дольше, `linear` только у вращения, смена страницы затуханием, крупные группы без стаггера; через тот же обзор §4.1 [S40].
+- `[S63]` Shopify Polaris, `polaris.shopify.com/content/design/motion/*.mdx` и polaris-tokens/src/themes/base/motion.ts в архиве репозитория Shopify/polaris (архив с сентября 2026; Polaris React заменён Web Components, токенов движения там не найдено); через тот же обзор §4.1 [S42].
+- `[S64]` Emil Kowalski, https://emilkowal.ski/ui/7-practical-animation-tips и /ui/great-animations; emilkowalski/skills (emil-design-eng/SKILL.md, review-animations/STANDARDS.md) — не начинать с `scale(0)`, кривая дровера iOS, следующая подсказка без задержки; через тот же обзор §4.2 [S43].

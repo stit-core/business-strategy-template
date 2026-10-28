@@ -116,8 +116,12 @@ reduce.addEventListener('change', apply); apply();
   `ks` (трансформации с ключами `{"t","s","i","o"}`) и `shapes` (`gr` → `el`/`sh`, `tm`, `st`/`fl`, `tr`). Спиннер 809 байт
   заработал с первого раза; сложные сцены вручную не писать — проверка только рендером.
 - **LottieFiles Prompt to Vector / Motion Copilot** — «промт → вектор → Lottie» внутри Figma и Lottie Creator; удачный
-  промт от LLM фиксировать и менять только объект; «No gradients, no realistic shading» [V:wzA5q75-PKc 07:09–08:11];
-  ключа и API для системы нет — ручной инструмент дизайнера.
+  промт от LLM фиксировать и менять только объект; «No gradients, no realistic shading» [V:wzA5q75-PKc 07:09–08:11].
+  Агент работает в редакторе через Lottie Creator MCP — локальный мост `@lottiefiles/creator-mcp` к открытой вкладке
+  редактора (с 2026-04-15) — и WebMCP; публичного API генерации нет, поэтому это инструмент на аккаунте заказчика, а не
+  ключ системы. ИИ расходует AI-кредиты тарифа; коммерческая страница — с тарифа Team или Enterprise (Free и Individual —
+  только некоммерческое использование). Результат — черновик «допущением»: показ владельцу продукта, затем план ассетов
+  [S7] [документация].
 - **HeroUI Studio и Gemini Canvas** генерируют анимированный SVG; утверждение «работает только inline» — неверно для
   проигрывания (в `<img>` крутится), верно для reduce [V:UWseAJ5Vb58] + G/05.
 - **OmniLottie** (открытые веса 4B, 15 ГБ GPU; fal `image-to-lottie` $0,10) — только обзор: ключа fal нет, лицензия
@@ -172,3 +176,7 @@ reduce.addEventListener('change', apply); apply();
 - [S4] Дайджест роликов помощника G: `wzA5q75-PKc` (LottieFiles), `gi-y_O5v1FQ` (ИИ вместо Lottie), `dxjQe6WOok8` (Rive), `i5n8ysDXAr0` (лоадер через видео), `UWseAJ5Vb58` (HeroUI + Gemini) — `99-raw/notes/wave2/G-notes.md`.
 - [S5] `../02-providers-platforms/05-open-weights-landscape.md` §7.2 (OmniLottie) — агент P.
 - [S6] Отчёт агента A волны 1, §4 (пауза у 1 из 33 длинных петель) — `99-raw/reports/wave1-A-report.md`.
+- [S7] LottieFiles: https://docs.lottiefiles.com/en/creator/13_ai-tools (обновлено 2026-10-08), …/motion-copilot,
+  …/lottie-creator-mcp, …/lottie-creator-webmcp; https://lottiefiles.com/pricing; https://lottiefiles.com/page/terms-and-conditions
+  (Last Modified 22nd August 2025) — снято 2026-10-28, через `../../creative/02-references-moodboards/04-motion-libraries-and-rules.md`
+  §5 [S48].

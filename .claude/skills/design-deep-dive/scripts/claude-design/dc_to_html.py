@@ -29,9 +29,13 @@
   dc_to_html.py fingerprint <slug> <surface> [--artboards A.dc.html,B.dc.html] [--repo DIR] [--json]
       отпечаток артбордов (sha256 по именам и содержимому): он входит в отпечаток одобрения единицы в REVIEW.md
       (`ready show`), поэтому правка артборда снимает одобрение его единицы.
-  dc_to_html.py convert <файл.dc.html | папка project> … [--out DIR] [--tweak имя=значение …] [--json]
+  dc_to_html.py convert <файл.dc.html | папка project> … [--out DIR] [--tweak имя=значение …] [--motion] [--json]
       перевод вне проекта (пример базы, снимок живой версии из scratchpad); по умолчанию —
-      $DDD_HOME/out/claude-design/dc_to_html/.
+      $DDD_HOME/out/claude-design/dc_to_html/. `--motion` — копия с движением для проверок этапа motion: файлы
+      поддержки `lib/` артборда ложатся рядом с копией (набора движения нет в артборде — берётся из базы,
+      kb/creative/11-motion-code/examples/motion-kit.js), после load копия зовёт `MotionKit.mount` на корне документа —
+      то, что делает логика артборда; CSS набора приходит из `<helmet>`. Такая копия — цель `motion_check.py --spec` и
+      `motion_probe.py probe`; в папку копий проекта она не идёт.
   dc_to_html.py --selftest      самопроверка на примере базы claude-design и фикстуре canvas, без сети
 
 Коды выхода: 0 — готово, ошибок нет; 1 — есть находки error (check); 2 — ошибка вызова или окружения (нет проекта,
@@ -45,6 +49,7 @@ import html
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
@@ -742,6 +747,36 @@ def cmd_fingerprint(call):
     return 0
 
 
+MOTION_KIT = kbpaths.kb("creative") / "11-motion-code" / "examples" / "motion-kit.js"
+MOTION_RUN = ("<script>addEventListener('load', function () { var root = document.documentElement; "
+              "if (window.MotionKit) { window.__motionKit = MotionKit.mount(root); root.setAttribute('data-motion-copy', 'mounted'); } "
+              "else { root.setAttribute('data-motion-copy', 'no-kit'); } });</script>")
+
+
+def motion_copy(text, src_dir, out_dir):
+    """Копия с движением: lib/ артборда рядом, набор из базы, если артборд его не подключил, запуск MotionKit.mount после
+    load. Возвращает (текст, заметки)."""
+    notes = []
+    lib = Path(src_dir) / "lib"
+    if lib.is_dir():
+        shutil.copytree(lib, Path(out_dir) / "lib", dirs_exist_ok=True)
+    linked = "motion-kit.js" in text
+    if not linked:
+        text = text.replace("</head>", '<script src="./lib/motion-kit.js"></script>\n</head>', 1)
+        notes.append("артборд не подключил набор движения: в копию добавлен набор базы")
+    kit = Path(out_dir) / "lib" / "motion-kit.js"
+    if not kit.is_file():
+        if not MOTION_KIT.is_file():
+            raise ToolError(f"нет набора движения базы: {MOTION_KIT}")
+        kit.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(MOTION_KIT, kit)
+        if linked:
+            notes.append("файла набора нет рядом с артбордом (lib/): в копию положен набор базы")
+    if "data-mk=" in text and "[data-mk" not in text:
+        notes.append("разметка набора есть, а CSS набора в <helmet> — нет: движение копии без стилей набора")
+    return text.replace("</body>", MOTION_RUN + "\n</body>", 1), notes
+
+
 def cmd_convert(a):
     tweaks = parse_tweaks(a.tweak)
     out_dir = Path(a.out) if a.out else kbpaths.out("claude-design", "dc_to_html")
@@ -762,6 +797,9 @@ def cmd_convert(a):
             raise ToolError(f"нет файла или папки: {s}")
         out_dir.mkdir(parents=True, exist_ok=True)
         for ab, name, text, _board, nts in copies:
+            if getattr(a, "motion", False):
+                text, more = motion_copy(text, Path(ab.path).parent, out_dir)
+                nts = list(nts) + more
             (out_dir / name).write_text(text, encoding="utf-8")
             res["files"].append(str(out_dir / name))
             res["notes"] += [f"{ab.name}: {n}" for n in nts]
@@ -872,6 +910,20 @@ def selftest():
         fp1 = _run(["fingerprint"] + argv)[1].strip()
         check("fingerprint — sha256", fp1.startswith("sha256:") and len(fp1) == 71, True)
         check("нет поверхности — код 2", _run(["check", fx.slug, "nope", "--repo", str(fx.root)])[0], 2)
+    adapter = MOTION_KIT.parent / "artboard-adapter.dc.html"
+    if adapter.is_file():
+        with tempfile.TemporaryDirectory() as td:
+            ns = argparse.Namespace(source=[str(adapter)], out=td, tweak=None, motion=True, json=True)
+            import contextlib
+            import io
+            with contextlib.redirect_stdout(io.StringIO()):
+                cmd_convert(ns)
+            copy = (Path(td) / "artboard-adapter.html").read_text(encoding="utf-8")
+            check("--motion: копия зовёт MotionKit.mount после load и подключает набор",
+                  MOTION_RUN in copy and copy.count('src="./lib/motion-kit.js"') == 1, True)
+            check("--motion: набор лежит рядом с копией (lib/motion-kit.js базы)",
+                  (Path(td) / "lib" / "motion-kit.js").read_bytes() == MOTION_KIT.read_bytes(), True)
+            check("--motion: CSS набора пришёл из <helmet>", "[data-mk" in copy, True)
     print("selftest:", "OK" if ok else "FAIL")
     return 0 if ok else 1
 
@@ -904,6 +956,8 @@ def main(argv=None):
             ap.add_argument("source", nargs="+", help="файл .dc.html или папка исходников холста (с canvas.json)")
             ap.add_argument("--out", help="папка копий (по умолчанию $DDD_HOME/out/claude-design/dc_to_html/)")
             ap.add_argument("--tweak", action="append", help="значение твика: имя=значение (JSON или строка); повтором")
+            ap.add_argument("--motion", action="store_true",
+                            help="копия с движением: lib/ рядом, набор движения и запуск MotionKit.mount после load")
             ap.add_argument("--json", action="store_true")
             return cmd_convert(ap.parse_args(argv))
         ap = docpaths.parser("dc_to_html.py", __doc__, commands=("build", "check", "fingerprint"), surface="required",

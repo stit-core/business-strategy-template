@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Закрепление и сцены — набор движения</title>
+<meta name="description" content="Стопка, скраб, шаги с доигрышем, путь с инерцией, проигрыш и горизонталь набора движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html">Текст</a>
+      <a href="scroll.html">Прокрутка</a>
+      <a href="pin.html" aria-current="page">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html">Петли</a>
+      <a href="transition-a.html">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec" data-section="intro" style="padding-bottom: clamp(48px, 7vw, 96px)">
+  <div class="wrap head" style="margin-bottom: 0">
+    <p class="label">Семейство pin и DOM-сцены</p>
+    <h1 class="display" data-mk="entrance" data-mk-lcp style="--i: 0">Сцена ведёт, прокрутка не перехватывается</h1>
+    <p class="lead" data-mk="entrance" style="--i: 1">Закрепление — position: sticky, без pin-spacer. Прогресс сцены — CSS-переменная --mk-p, такт — data-beat; пружина та же, что у сцен 3D.</p>
+  </div>
+</section>
+
+<section class="sec" id="sticky-stack" data-section="stack" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>01</b> — Стопка · <code>sticky-stack</code></p><p class="muted" style="margin: 0; max-width: 40rem">Липкость — всегда; предыдущая карточка уходит вглубь по шкале следующей (timeline-scope), только transform.</p></div>
+    <div class="stack" data-mk="stack">
+      <article class="card"><span class="k">01</span><h3 class="h2">Первая</h3><p>Липнет под шапкой.</p></article>
+      <article class="card"><span class="k">02</span><h3 class="h2">Вторая</h3><p>Ложится сверху, первая — 0,94.</p></article>
+      <article class="card"><span class="k">03</span><h3 class="h2">Третья</h3><p>Шаг отступа — 24 px, на телефоне 14.</p></article>
+    </div>
+  </div>
+</section>
+<section class="sec dark"><div class="wrap"><p class="big muted">Спокойный блок между закреплёнными секциями.</p></div></section>
+
+<section class="sec dark dial" id="pin-scrub-story" data-section="scrub" data-mk="scene" data-mk-mode="scrub" data-mk-length="150" style="padding: 0">
+  <div data-mk-stage>
+    <svg viewBox="0 0 400 400" aria-hidden="true">
+      <circle cx="200" cy="200" r="160" fill="none" stroke="rgb(238 232 220 / .12)" stroke-width="2"/>
+      <circle cx="200" cy="200" r="160" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1" transform="rotate(-90 200 200)" style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+    </svg>
+    <div class="segs" style="position: absolute; left: var(--gut); bottom: 12vh; max-width: 28rem">
+      <p class="label"><b>02</b> — Скраб · <code>pin-scrub-story</code> · 150vh</p>
+      <h3 class="h2" data-mk-seg="0,0.5">Прогресс = прокрутка</h3>
+      <h3 class="h2" data-mk-seg="0.5,1">Пружина ω 6,5 догоняет за 0,73 с</h3>
+    </div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Шаги с доигрышем — второй класс прокрутки: сюжет идёт станциями.</p></div></section>
+
+<section class="sec dark scene-beats" id="scene-beats" data-section="beats" data-mk="scene" data-mk-mode="beats" data-mk-beats="0,0.333,0.667,1" data-mk-tempo="3" style="padding: 0">
+  <div data-mk-stage>
+    <div class="stage-art" aria-hidden="true" style="display: grid; place-items: center">
+      <svg viewBox="0 0 400 400" style="width: min(100%, 460px); overflow: visible">
+        <rect x="60" y="60" width="280" height="280" rx="8" fill="none" stroke="rgb(238 232 220 / .14)"/>
+        <rect x="60" y="60" width="280" height="280" rx="8" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1" style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+        <g style="transform-origin: 200px 200px; transform: rotate(calc(var(--mk-p) * 90deg)) scale(calc(.6 + var(--mk-p) * .4))"><rect x="150" y="150" width="100" height="100" fill="#e9875f"/></g>
+      </svg>
+    </div>
+    <nav class="rail" data-mk-rail aria-label="Такты сцены"><button type="button" data-mk-dot aria-label="Такт 1"></button><button type="button" data-mk-dot aria-label="Такт 2"></button><button type="button" data-mk-dot aria-label="Такт 3"></button><button type="button" data-mk-dot aria-label="Такт 4"></button></nav>
+    <button type="button" class="btn btn--ghost skip" data-mk-skip>Пропустить сцену</button>
+    <div class="veil" data-mk-veil aria-hidden="true"></div>
+  </div>
+  <div data-mk-steps>
+    <div data-mk-beat><div><p class="label"><b>03</b> — Шаги с доигрышем · beats</p><h2 class="h2">Четыре точки покоя</h2></div></div>
+    <div data-mk-beat><div><h3 class="h3">Такт 1: карточка на линии 60 %</h3></div></div>
+    <div data-mk-beat><div><h3 class="h3">Такт 2: пружина ω 3, без перелёта</h3></div></div>
+    <div data-mk-beat><div><h3 class="h3">Финал: окно гаснет в фон</h3></div></div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Путь с инерцией — только для карт и маршрутов: хвост дольше секунды.</p></div></section>
+
+<section class="sec dark dial" id="scene-glide" data-section="glide" data-mk="scene" data-mk-mode="glide" data-mk-length="200" style="padding: 0">
+  <div data-mk-stage>
+    <svg viewBox="0 0 800 400" aria-hidden="true" style="width: min(80vw, 900px)">
+      <path id="route" d="M40 340 C 200 340 220 120 380 140 S 560 360 760 60" fill="none" stroke="rgb(238 232 220 / .2)" stroke-width="2" stroke-dasharray="6 8"/>
+      <path d="M40 340 C 200 340 220 120 380 140 S 560 360 760 60" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1" style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+      <circle r="9" fill="#e9875f" style="offset-path: path('M40 340 C 200 340 220 120 380 140 S 560 360 760 60'); offset-distance: calc(var(--mk-p) * 100%)"/>
+    </svg>
+    <div class="segs" style="position: absolute; left: var(--gut); bottom: 12vh; max-width: 28rem">
+      <p class="label"><b>04</b> — Путь с инерцией · glide · ω 2</p>
+      <h3 class="h2" data-mk-seg="0,0.5">Маршрут идёт за прокруткой</h3>
+      <h3 class="h2" data-mk-seg="0.5,1">и догоняет её с хвостом 2,4 с</h3>
+    </div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Сама играет — короткая история-полоса: старт при видимости ≥ 40 %, один раз, 9 с, финал держится; пауза — в шапке.</p></div></section>
+
+<section class="sec dark" id="scene-play" data-section="play" data-mk="scene" data-mk-mode="play" data-mk-dur="9">
+  <div class="wrap" data-mk-stage style="display: grid; gap: 28px">
+    <p class="label"><b>05</b> — Сама играет · play · 9 с</p>
+    <svg viewBox="0 0 1200 120" aria-hidden="true" style="width: 100%; height: auto">
+      <path d="M0 60 H1200" stroke="rgb(238 232 220 / .14)" stroke-width="2"/>
+      <path d="M0 60 H1200" stroke="#e9875f" stroke-width="3" pathLength="1" style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+      <circle cy="60" r="10" fill="#e9875f" style="transform: translateX(calc(var(--mk-p) * 1200px))"/>
+    </svg>
+    <h3 class="h2" data-mk-seg="0.6,1">Финал держится</h3>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Горизонталь — приём L2: на телефоне и при reduce — родная лента.</p></div></section>
+
+<section class="hs dark" id="horizontal-scroll" data-section="horizontal" data-mk="horizontal" aria-label="Горизонтальная лента">
+  <div data-mk-stage tabindex="0" aria-label="Панели ленты">
+    <div data-mk-track>
+      <div class="panel plate--sea"><div class="fill"></div><p class="label"><b>06</b> — Горизонталь · <code>horizontal-scroll</code> · L2</p><h3 class="h2">Липкое окно</h3></div>
+      <div class="panel plate--ember"><div class="fill"></div><h3 class="h2">Сдвиг ленты по прогрессу</h3></div>
+      <div class="panel plate--night"><div class="fill"></div><h3 class="h2">100cqw — ширина окна</h3></div>
+    </div>
+    <div class="barbox" aria-hidden="true"><i data-mk-bar></i></div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Конец страницы: дальше — указатель.</p></div></section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L2' });</script>
+</body>
+</html>

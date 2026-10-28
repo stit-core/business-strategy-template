@@ -48,7 +48,7 @@ sections:
         trigger: {type: load}
         model: time
         tracks:
-          - {property: transform, from: "translateY(var(--mm-shift-reveal))", to: "none"}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
           - {property: opacity, from: 0.01, to: 1}
         duration: {token: motion.marketing.duration.reveal}
         easing: {token: motion.marketing.easing.out-expo}
@@ -103,7 +103,7 @@ sections:
         - {id: dm-s3, at: {station: s3}, viewport: desktop, describe: "Все пары на местах, красная строка, счётчик 5", check: "в покое 0 % движения"}
     reduce: {strategy: final-state, describe: "книга в конечном состоянии, секция обычной высоты не нужна — остаётся 250svh с неподвижной книгой"}
     mobile: {strategy: simplified, describe: "книга уже, строки ниже; сцена 130vh"}
-    fallback: {no_js: "эффект без JS — работает как есть", unsupported: "нет CSS scroll-driven (Firefox, 2026-09): конечное состояние — всё сошлось"}
+    fallback: {no_js: "эффект без JS — работает как есть", unsupported: "нет CSS scroll-driven (Safari до 26, Firefox до 159): конечное состояние — всё сошлось"}
     budget: {js_kb_br: 0, loops_in_view: 0, long_frames_pct_max: 2, idle_motion_pct_s_max: 0, cls_scroll_max: 0.1, load: eager}
     acceptance:
       - {id: dm-cls, check: "CLS при прокрутке ≤ 0,1 (sticky)", tool: motion_check, gate: EG-PERF-02, metric: scroll.cls, at: desktop, threshold: 0.1}

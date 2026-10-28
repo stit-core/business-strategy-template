@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>motion_probe: движение по времени</title>
+<!-- Тестовая страница motion_probe.py --selftest: числа движения известны заранее, сеть не нужна. -->
+<style>
+  html, body { margin: 0; background: #fff; color: #111; font: 16px/1.4 system-ui, sans-serif; }
+  .wrap { padding: 24px 40px; }
+  /* CSS-анимация: 700 мс, задержка 100 мс, cubic-bezier(0.16, 1, 0.3, 1) (токен out-expo) */
+  @keyframes rise { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: none; } }
+  h1 { margin: 0 0 24px; font-size: 48px; animation: rise 700ms cubic-bezier(0.16, 1, 0.3, 1) 100ms both; }
+  /* переход по классу через 300 мс после load: transform 400 мс ease-out, opacity 300 мс linear */
+  .moved { width: 200px; height: 40px; background: #36c; transition: transform 400ms ease-out, opacity 300ms linear; }
+  .moved.on { transform: translateX(120px); opacity: .5; }
+  .spin { width: 80px; height: 80px; margin: 24px 0; background: #c63; }
+  .cards { display: flex; gap: 16px; margin-top: 24px; }
+  .card { width: 160px; height: 120px; background: #2a6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 id="title">Тестовая страница времени</h1>
+  <div class="moved" id="moved"></div>
+  <div class="spin" id="spin"></div>
+  <div class="cards" id="cards"><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div><div class="card"></div></div>
+</div>
+<script>
+  // WAAPI: поворот 0 → 90°, 900 мс, задержка 200 мс, ease-in-out, 2 итерации туда и обратно
+  document.getElementById('spin').animate([{transform: 'rotate(0deg)'}, {transform: 'rotate(90deg)'}],
+    {duration: 900, delay: 200, easing: 'ease-in-out', iterations: 2, direction: 'alternate'});
+  addEventListener('load', () => setTimeout(() => document.getElementById('moved').classList.add('on'), 300));
+  // аниматор на requestAnimationFrame через инлайн-стили (так двигает GSAP без глобала): 5 карточек, easeOutCubic,
+  // 600 мс, стаггер 80 мс, сдвиг 40 px → 0 и opacity 0 → 1; стили пишутся только у карточек в движении
+  const cards = Array.from(document.querySelectorAll('.card'));
+  const ease = (p) => 1 - Math.pow(1 - p, 3);
+  cards.forEach((c) => { c.style.opacity = '0'; c.style.transform = 'translate3d(0px, 40px, 0px)'; });
+  addEventListener('load', () => {
+    const t0 = performance.now() + 250, D = 600, S = 80;
+    const frame = (now) => {
+      let left = false;
+      cards.forEach((c, i) => {
+        const p = (now - t0 - i * S) / D;
+        if (p <= 0) { left = true; return; }
+        if (c.dataset.done) return;
+        const v = ease(Math.min(1, p));
+        c.style.opacity = v.toFixed(6);
+        c.style.transform = 'translate3d(0px, ' + (40 * (1 - v)).toFixed(6) + 'px, 0px)';
+        if (p >= 1) c.dataset.done = '1'; else left = true;
+      });
+      if (left) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+</script>
+</body>
+</html>

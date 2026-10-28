@@ -33,7 +33,7 @@
   }
   /* параллакс слоёв: подложка отстаёт (≈ 40 %), объект уходит быстрее; только при no-preference и поддержке */
   @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: scroll()) {
+    @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
       .layer--back { animation: back linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
       .object, .shadow { animation: front linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
       @keyframes back { to { transform: translateY(24vh); } }

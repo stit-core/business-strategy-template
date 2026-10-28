@@ -48,7 +48,7 @@ sections:
         trigger: {type: load}
         model: time
         tracks:
-          - {property: transform, from: "translateY(var(--mm-shift-hero))", to: "none", unit_note: "--mm-shift-hero = 24px"}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-hero))", to: "none", unit_note: "--motion-marketing-distance-shift-hero = 24px"}
         duration: {share: 1}
         easing: {token: motion.marketing.easing.out-expo}
         repeat: once
@@ -66,7 +66,7 @@ sections:
         trigger: {type: load, delay_ms: 80}
         model: time
         tracks:
-          - {property: transform, from: "translateY(var(--mm-shift-reveal))", to: "none", unit_note: "--mm-shift-reveal = 16px"}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none", unit_note: "--motion-marketing-distance-shift-reveal = 16px"}
           - {property: opacity, from: 0.01, to: 1}
         duration: {share: 0.8}
         easing: {token: motion.marketing.easing.out-expo}
@@ -170,7 +170,7 @@ sections:
     mobile: {strategy: simplified, describe: "линия 2 px у левого края, без грузика; маркеры на линии; site blocks.yaml steps убирает соединительные линии < 40rem — здесь линия несёт тезис и остаётся"}
     fallback:
       no_js: "эффект без JS — работает как есть"
-      unsupported: "нет CSS scroll-driven (Firefox, 2026-09-24): конечное состояние reduce — линия целиком, маркеры залиты, грузик внизу"
+      unsupported: "нет CSS scroll-driven (Safari < 26, Firefox < 159): конечное состояние reduce — линия целиком, маркеры залиты, грузик внизу"
     budget: {js_kb_br: 0, loops_in_view: 0, long_frames_pct_max: 2, idle_motion_pct_s_max: 0, cls_scroll_max: 0.1, load: eager}
     acceptance:
       - {id: hiw-idle, check: "в покое между шагами прокрутки движения нет (скраб стоит вместе с прокруткой)", tool: scroll_record, at: desktop, threshold: 0}

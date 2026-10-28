@@ -54,13 +54,21 @@
 
 **Собственная частота** (natural frequency, ω_n) — `√(k/m)`, определяет темп. Пример: k = 380, m = 1 → ω_n = 19.5 рад/с.
 
-**Воспринимаемая длительность** (perceptual duration) — параметр пружины у Apple: «approximately equal to the settling duration, but for very bouncy springs, will be the duration of the period of oscillation». Пример: 0.5 s у всех трёх системных пружин SwiftUI.
+**Воспринимаемая длительность** (perceptual duration) — параметр пружины у Apple: «approximately equal to the settling duration, but for very bouncy springs, will be the duration of the period of oscillation»; численно равна `response`. Пример: 0.5 s у всех трёх системных пружин SwiftUI.
 
-**Bounce** — параметр Apple, равный `1 − ζ` для недодемпфированных пружин. Пример: `smooth` 0, `snappy` 0.15, `bouncy` 0.3.
+**Bounce** — параметр Apple от −1 до 1: `1 − ζ` при ζ ≤ 1, `1/ζ − 1` у передемпфированной пружины (меньше нуля), 0 — критическое демпфирование. Пример: `smooth` 0, `snappy` 0.15, `bouncy` 0.3.
+
+**Response** — параметр пружины SwiftUI: период колебания без трения `2π/ω_n`, с; он же `duration` в `Spring(duration:bounce:)`. Пример: ζ 0.7, k 380 → `response` 0.3223.
+
+**Время успокоения** (settle time) — момент, после которого кривая пружины навсегда остаётся в полосе 1 % пути вокруг цели; время CSS-перехода пружины ДС — оно, вверх до 10 ms. Не путать с оценкой по огибающей t₉₉ и с `settlingDuration` SwiftUI (полоса 0,1 %). Пример: ζ 0.7, k 380 → 337 ms, в CSS 340 ms.
+
+**Расширение пружины** (`org.design-deep-dive.spring`) — `dampingRatio` и `stiffness` при массе 1 в `$extensions` токена `transition`: из него сборка ДС выводит `linear()` и время успокоения. Пример: `{"dampingRatio": 0.7, "stiffness": 380}`.
+
+**Допуск приближения** — на сколько ломаная точек `linear()` может отойти от кривой пружины: 0,25 % пути вместе с округлением записи. Пример: 23 точки у пружины ζ 0.7, k 380.
 
 **Spatial и effects** (M3 Expressive) — две категории пружин: пространственные (меняют форму или положение) и эффекты (цвет, прозрачность). Effects всегда ζ = 1.0, то есть не пружинят. Пример: default spatial ζ 0.8 / k 380, default effects ζ 1.0 / k 1600.
 
-**`linear()`** — CSS-функция кусочно-линейной интерполяции, позволяющая записать пружину без JS. Baseline с декабря 2023. Пример: `linear(0, 0.036, 0.124, …, 1)` из 24–75 точек.
+**`linear()`** — CSS-функция кусочно-линейной интерполяции, позволяющая записать пружину без JS. Baseline Newly available с декабря 2023, Widely available с июня 2026. Пример: `linear(0, 0.007 1.85%, 0.028 3.8%, …, 1)` — 21–28 точек с процентами у пружины ДС (`04-spring-tokens-transitions-platforms.md` §1.2).
 
 **Reversing shortening factor** — правило спецификации CSS Transitions, пропорционально сокращающее длительность прерванного перехода. Причина, по которой `linear()`-пружина плохо ведёт себя на прерываниях: пружина на 1600 ms может перезапуститься за 400 ms.
 
@@ -111,6 +119,20 @@
 **View Transitions API** — браузерный механизм переходов между состояниями документа или между документами. `document.startViewTransition()` (SPA) и `@view-transition { navigation: auto }` (MPA).
 
 **Scroll-driven animations** — привязка прогресса анимации к прокрутке (`animation-timeline: scroll()` / `view()`). В веб-сервисах почти не применимо.
+
+## Шаблоны переходов и платформы
+
+**Push и pop** — смена экрана вперёд по иерархии и возврат назад. В кабинете — смена области содержимого, в мобильном приложении — системный переход навигации. Пример: `NavigationStack` в SwiftUI, `NavHost` в Compose.
+
+**Нижняя панель** (sheet, bottom sheet) — слой, выезжающий снизу поверх экрана; закрывается свайпом вниз. Пример: `.sheet` + `.presentationDetents` в SwiftUI, `ModalBottomSheet` в Compose.
+
+**Выдвижная панель** (drawer) — слой сбоку, который остаётся «рядом» и уходит с торможением. Пример: `ModalNavigationDrawer` в Compose.
+
+**Общий элемент** (shared element) — элемент, который переходит из одного состояния или экрана в другое, не исчезая. Пример: `view-transition-name` на вебе, `Modifier.sharedElement` в Compose, `matchedGeometryEffect` в SwiftUI.
+
+**Масштаб длительности аниматоров** (animator duration scale) — настройка Android, которой «Убрать анимацию» ставит 0; Compose следует ей через `MotionDurationScale`, и движение кончается в следующем кадре.
+
+**Уменьшение движения** (Reduce Motion) — настройка iOS: системные переходы идут растворением, приложение читает `accessibilityReduceMotion`.
 
 **`clip-path`** — обрезка элемента геометрической фигурой. Аппаратно ускоряется, не влияет на раскладку. Пример: `inset(0 0 100% 0) → inset(0)` для раскрытия изображения.
 

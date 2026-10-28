@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Движение кодом · артборд с набором</title>
+<script src="./support.js"></script>
+<script src="./lib/motion-kit.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#f3efe7}
+a{color:#14130f}a:hover{color:#b8431f}
+.a-root{font-family:"Noto Sans",system-ui,sans-serif;color:#14130f;background:#f3efe7}
+.a-wrap{width:min(100% - 96px,1200px);margin-inline:auto}
+.a-top{position:sticky;top:0;z-index:5;height:var(--mk-header);display:flex;align-items:center;gap:12px;padding:0 48px;background:rgb(243 239 231 / .92);border-bottom:1px solid rgb(20 19 15 / .14)}
+.a-top b{margin-right:auto;font-weight:500}
+.a-top button{min-height:36px;padding:0 12px;border-radius:999px;border:1px solid rgb(20 19 15 / .14);background:transparent;font:500 13px/1 inherit;cursor:pointer}
+.a-top button[aria-pressed="true"]{background:#14130f;color:#f3efe7}
+.a-hero{min-height:620px;display:grid;align-content:center;gap:24px}
+.a-h1{font:400 96px/1 "Noto Serif Display",Georgia,serif;letter-spacing:-.025em;margin:0}
+.a-h2{font:400 56px/1.05 "Noto Serif Display",Georgia,serif;letter-spacing:-.02em;margin:0}
+.a-lead{font-size:20px;line-height:1.55;color:#57524a;max-width:34em;margin:0}
+.a-sec{padding:120px 0}
+.a-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.a-card{border:1px solid rgb(20 19 15 / .14);padding:28px;border-radius:4px}
+.a-plate{aspect-ratio:21/9;margin-top:48px;border-radius:4px;overflow:hidden;--mk-r:4px}
+.a-plate>div{width:100%;height:100%;background:linear-gradient(180deg,#f3d9b6,#c97a4d 55%,#3a1a10)}
+.a-strip{border-block:1px solid rgb(20 19 15 / .14);padding-block:20px}
+.a-strip [data-mk-track]{gap:56px;padding-right:56px;font:400 48px/1 "Noto Serif Display",Georgia,serif;white-space:nowrap}
+.a-scene{background:#12110f;color:#eee8dc}
+.a-scene [data-mk-stage]{display:grid;place-items:center;overflow:hidden;min-height:560px}
+.a-scene [data-mk-steps]{width:min(100% - 96px,1200px);margin-inline:auto}
+.a-scene [data-mk-beat]{display:grid;align-content:center;max-width:26rem}
+.a-veil{position:absolute;inset:0;background:#12110f}
+.a-status{margin:0;padding:24px 48px 48px;font:500 12px/1.6 "Noto Sans Mono",monospace;color:#57524a;list-style:none}
+/* motion-kit.css: начало вырезки — разделы 1–5, 8, 9, 13 без правок; полный файл — тем же блоком */
+/* ── 1. Регистрация ─────────────────────────────────────────────────────────────────────────────────────────── */
+@property --mk-p { syntax: "<number>"; inherits: true; initial-value: 0; }        /* прогресс DOM-сцены 0…1 */
+@property --mk-num { syntax: "<integer>"; inherits: true; initial-value: 0; }     /* счётчик: текущее значение */
+@property --mk-k { syntax: "<integer>"; inherits: false; initial-value: 0; }      /* место в группе стаггера */
+@property --mk-cnt { syntax: "<integer>"; inherits: false; initial-value: 1; }    /* размер группы стаггера */
+@property --mk-shrink { syntax: "<number>"; inherits: true; initial-value: 0; }   /* сжатие шапки 0…1 */
+@property --mk-ip { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: целая часть */
+@property --mk-hi { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: тысячи */
+@property --mk-lo { syntax: "<integer>"; inherits: false; initial-value: 0; }     /* счётчик: единицы до тысячи */
+@property --mk-pan { syntax: "<percentage>"; inherits: false; initial-value: 50%; } /* текст-окно: положение кадра */
+/* ── 2. Токены движения → переменные набора; reduce — значения ветки reduce токенов ────────────────────────── */
+:root {
+  --mk-dur-feedback: var(--motion-marketing-duration-feedback, 120ms);
+  --mk-dur-hover: var(--motion-marketing-duration-hover, 200ms);
+  --mk-dur-reveal: var(--motion-marketing-duration-reveal, 560ms);
+  --mk-dur-line: var(--motion-marketing-duration-split-line, 800ms);
+  --mk-dur-split-max: var(--motion-marketing-duration-split-total-max, 1000ms);
+  --mk-dur-hero: var(--motion-marketing-duration-hero-scene, 900ms);
+  --mk-dur-state: var(--motion-marketing-duration-state, 320ms);
+  --mk-dur-page: var(--motion-marketing-duration-page, 400ms);
+  --mk-dur-counter: var(--motion-marketing-duration-counter, 1200ms);
+  --mk-dur-crossfade: var(--motion-marketing-duration-crossfade-reduce, 180ms);
+  --mk-dur-breathe: var(--motion-marketing-duration-breathe-period, 12000ms);
+  --mk-dur-ui: var(--motion-marketing-duration-hover, 200ms);                   /* отклик раскрытий: аккордеон, подпись */
+  --mk-stagger-text: var(--motion-marketing-stagger-text, 60ms);
+  --mk-stagger-group: var(--motion-marketing-stagger-group, 60ms);
+  --mk-stagger-max: var(--motion-marketing-stagger-group-total-max, 600ms);
+  --mk-ease-out-expo: var(--motion-marketing-easing-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
+  --mk-ease-out-strong: var(--motion-marketing-easing-out-strong, cubic-bezier(0.23, 1, 0.32, 1));
+  --mk-ease-in-out: var(--motion-marketing-easing-in-out, cubic-bezier(0.65, 0, 0.35, 1));
+  --mk-ease-in: var(--motion-marketing-easing-in, cubic-bezier(0.7, 0, 0.84, 0));
+  --mk-ease-linear: var(--motion-marketing-easing-linear, cubic-bezier(0, 0, 1, 1));
+  --mk-ease-breathe: var(--motion-marketing-easing-breathe, cubic-bezier(0.37, 0, 0.63, 1));
+  --mk-shift: var(--motion-marketing-distance-shift-reveal, 16px);
+  --mk-shift-hero: var(--motion-marketing-distance-shift-hero, 24px);
+  --mk-lift: var(--motion-marketing-distance-lift-hover, 2px);
+  --mk-magnet: var(--motion-marketing-distance-magnet-max, 8px);
+  --mk-scale-press: var(--motion-marketing-scale-press, 0.97);
+  --mk-scale-in: var(--motion-marketing-scale-reveal-in, 0.96);
+  --mk-parallax-max: var(--motion-marketing-scroll-parallax-ratio-max, 0.4);
+  --mk-marquee-speed: var(--motion-marketing-loop-marquee-speed, 40);
+  --mk-float: var(--motion-marketing-loop-float-amplitude-pct, 3);
+  --mk-m: 1;                                                                     /* 1 — пространственное движение разрешено */
+  --mk-header: 72px; --mk-step-h: 480px; --mk-depth-k: 1; --mk-stack-step: 24px;
+}
+@media (max-width: 40rem), (pointer: coarse) {
+  :root { --mk-header: 64px; --mk-step-h: 420px; --mk-depth-k: 0.5; --mk-stack-step: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion="full"]) {
+    --mk-dur-reveal: 0ms; --mk-dur-line: 0ms; --mk-dur-hero: 0ms; --mk-dur-state: var(--mk-dur-crossfade); --mk-dur-page: 0ms;
+    --mk-dur-counter: 0ms; --mk-dur-ui: 0ms; --mk-stagger-text: 0ms; --mk-stagger-group: 0ms;
+    --mk-shift: 0px; --mk-shift-hero: 0px; --mk-lift: 0px; --mk-magnet: 0px; --mk-scale-press: 1; --mk-scale-in: 1;
+    --mk-parallax-max: 0; --mk-float: 0; --mk-m: 0;
+  }
+  [data-motion="full"] {                                                         /* выбор «Полное» сильнее системы */
+    --mk-dur-reveal: var(--motion-marketing-duration-reveal, 560ms); --mk-dur-line: var(--motion-marketing-duration-split-line, 800ms);
+    --mk-dur-hero: var(--motion-marketing-duration-hero-scene, 900ms); --mk-dur-state: var(--motion-marketing-duration-state, 320ms);
+    --mk-dur-page: var(--motion-marketing-duration-page, 400ms); --mk-dur-counter: var(--motion-marketing-duration-counter, 1200ms);
+    --mk-dur-ui: var(--motion-marketing-duration-hover, 200ms); --mk-stagger-text: var(--motion-marketing-stagger-text, 60ms);
+    --mk-stagger-group: var(--motion-marketing-stagger-group, 60ms); --mk-shift: var(--motion-marketing-distance-shift-reveal, 16px);
+    --mk-shift-hero: var(--motion-marketing-distance-shift-hero, 24px); --mk-lift: var(--motion-marketing-distance-lift-hover, 2px);
+    --mk-magnet: var(--motion-marketing-distance-magnet-max, 8px); --mk-scale-press: var(--motion-marketing-scale-press, 0.97);
+    --mk-scale-in: var(--motion-marketing-scale-reveal-in, 0.96); --mk-parallax-max: var(--motion-marketing-scroll-parallax-ratio-max, 0.4);
+    --mk-float: var(--motion-marketing-loop-float-amplitude-pct, 3); --mk-m: 1;
+  }
+}
+[data-motion="reduced"] {                                                        /* выбор «Меньше»: те же значения, что у reduce */
+  --mk-dur-reveal: 0ms; --mk-dur-line: 0ms; --mk-dur-hero: 0ms; --mk-dur-state: var(--mk-dur-crossfade); --mk-dur-page: 0ms;
+  --mk-dur-counter: 0ms; --mk-dur-ui: 0ms; --mk-stagger-text: 0ms; --mk-stagger-group: 0ms;
+  --mk-shift: 0px; --mk-shift-hero: 0px; --mk-lift: 0px; --mk-magnet: 0px; --mk-scale-press: 1; --mk-scale-in: 1;
+  --mk-parallax-max: 0; --mk-float: 0; --mk-m: 0;
+}
+/* ── 3. Место в группе: sibling-index() — без разметки, запасной путь — --i и --n в разметке ───────────────── */
+:is([data-mk-stagger], [data-mk~="split"], [data-mk~="highlight"], [data-mk~="stack"], [data-mk~="draw"]) > * {
+  --mk-k: var(--i, 0); --mk-cnt: var(--n, 1);
+}
+@supports (z-index: sibling-index()) {
+  :is([data-mk-stagger], [data-mk~="split"], [data-mk~="highlight"], [data-mk~="stack"], [data-mk~="draw"]) > * {
+    --mk-k: var(--i, calc(sibling-index() - 1)); --mk-cnt: var(--n, sibling-count());
+  }
+}
+/* группа-список: шаг 40–80 мс, первые 8 — с шагом, остальные сразу; сумма ≤ stagger.group-total-max */
+[data-mk-stagger] > * {
+  --mk-delay: calc(min(var(--mk-k), 7) * min(var(--mk-stagger-group), var(--mk-stagger-max) / max(var(--mk-cnt) - 1, 1)));
+}
+/* ── 4. Вход первого экрана (hero-entrance-once): CSS на загрузке, без JS; LCP-элемент — только сдвиг ─────── */
+[data-mk~="entrance"] {
+  --mk-delay: calc(var(--i, 0) * var(--mk-stagger-group));
+  animation:
+    mk-in-o var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-reveal)) * 0.6)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)) both,
+    mk-in-t var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)) both;
+}
+[data-mk~="entrance"][data-mk-lcp] {                                             /* LCP не из прозрачности (creative 05/02 §10) */
+  animation: mk-in-t var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay) + var(--mk-wait, 0ms)) both;
+}
+@keyframes mk-in-o { from { opacity: 0.01; } }
+@keyframes mk-in-t { from { transform: translate3d(0, var(--mk-shift), 0); } }
+/* ── 5. Появление по прокрутке: один раз, скрытое — только под full ─────────────────────────────────────────── */
+/* подъём (fade-up): прозрачность короче сдвига — 0,6 длительности, своя кривая */
+[data-mk-on="full"] [data-mk~="rise"] {
+  transition:
+    opacity var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-reveal)) * 0.6)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)),
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-reveal))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="rise"]:not([data-mk-in]) { opacity: 0.01; transform: translate3d(0, var(--mk-shift), 0); }
+
+/* маска (type-unmask): блок и куски разбиения поднимаются из своей коробки — сдвиг и clip-path одной кривой дают
+   неподвижную маску; запас 0,3 em сверху и снизу — выносные элементы букв к концу открыты */
+[data-mk-on="full"] :is([data-mk~="unmask"], [data-mk~="split"] > *) {
+  clip-path: inset(-0.3em -0.2em -0.3em -0.2em);
+  transition:
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dd, var(--mk-dur-line)))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)),
+    clip-path var(--mk-c-dur, var(--mk-dur, var(--mk-dd, var(--mk-dur-line)))) var(--mk-c-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-c-delay, 0ms));
+}
+[data-mk-on="full"] :is([data-mk~="unmask"]:not([data-mk-in]), [data-mk~="split"]:not([data-mk-in]) > *) {
+  transform: translate3d(0, 100%, 0); clip-path: inset(-0.3em -0.2em calc(100% + 0.3em) -0.2em);
+}
+
+/* разбиение текста: куски — разметкой (строки, слова, буквы); вся сцена ≤ split-total-max вместе со стаггером */
+[data-mk~="split"] > * { display: inline-block; }
+[data-mk~="split"][data-mk-split="lines"] > * { display: block; }
+[data-mk~="split"] > * {
+  --mk-dd: var(--mk-dur-reveal);
+  --mk-delay: calc(min(var(--mk-k), 11) * max(0ms, min(var(--mk-stagger-text), (var(--mk-dur-split-max) - var(--mk-dur, var(--mk-dd))) / max(var(--mk-cnt) - 1, 1))));
+}
+[data-mk~="split"][data-mk-split="lines"] > * { --mk-dd: var(--mk-dur-line); }
+
+/* шторка (sweep): кадр открывается от края, внутри — обратный масштаб */
+[data-mk-on="full"] [data-mk~="sweep"] {
+  clip-path: inset(0 0 0 0 round var(--mk-r, 0px));
+  transition: clip-path var(--mk-c-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-c-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-c-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="sweep"]:not([data-mk-in]) { clip-path: inset(0 100% 0 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="right"]:not([data-mk-in]) { clip-path: inset(0 0 0 100% round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="top"]:not([data-mk-in]) { clip-path: inset(0 0 100% 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-from="bottom"]:not([data-mk-in]) { clip-path: inset(100% 0 0 0 round var(--mk-r, 0px)); }
+[data-mk-on="full"] [data-mk~="sweep"] [data-mk-inner] {
+  transition: transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="sweep"]:not([data-mk-in]) [data-mk-inner] { transform: scale(var(--mk-zoom, 1.06)); }
+
+/* проявление с масштабом (scale-in): фигура «наводится на резкость»; размытие — по атрибуту, ≤ 8 px (L1) */
+[data-mk-on="full"] [data-mk~="scale-in"] {
+  transition:
+    opacity var(--mk-o-dur, calc(var(--mk-dur, var(--mk-dur-line)) * 0.5)) var(--mk-o-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-o-delay, 0ms)),
+    transform var(--mk-t-dur, var(--mk-dur, var(--mk-dur-line))) var(--mk-t-ease, var(--mk-ease, var(--mk-ease-out-expo))) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-t-delay, 0ms)),
+    filter var(--mk-f-dur, calc(var(--mk-dur, var(--mk-dur-line)) * 0.7)) var(--mk-f-ease, var(--mk-ease-out-strong)) calc(var(--mk-delay, 0ms) + var(--mk-wait, 0ms) + var(--mk-f-delay, 0ms));
+}
+[data-mk-on="full"] [data-mk~="scale-in"]:not([data-mk-in]) { opacity: 0.01; transform: scale(var(--mk-scale-in)); }
+[data-mk-on="full"] [data-mk~="scale-in"][data-mk-blur]:not([data-mk-in]) { filter: blur(min(var(--mk-blur, 6px), 8px)); }
+
+/* линия рисуется один раз (line-draw): у пути pathLength="1", пути — по очереди */
+[data-mk-on="full"] [data-mk~="draw"] [pathLength] {
+  stroke-dasharray: 1; stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--mk-dur, var(--mk-dur-line)) var(--mk-ease, var(--mk-ease-in-out)) calc(var(--mk-wait, 0ms) + min(var(--mk-k), 7) * var(--mk-stagger-group));
+}
+[data-mk-on="full"] [data-mk~="draw"]:not([data-mk-in]) [pathLength] { stroke-dashoffset: 1; }
+
+/* пролетели или видно при запуске — сразу в конечном состоянии */
+[data-mk-on="full"] [data-mk-in="instant"],
+[data-mk-on="full"] [data-mk~="split"][data-mk-in="instant"] > *,
+[data-mk-on="full"] [data-mk~="sweep"][data-mk-in="instant"] [data-mk-inner],
+[data-mk-on="full"] [data-mk~="draw"][data-mk-in="instant"] [pathLength] { transition: none; }
+/* ── 8. DOM-сцена прокрутки: прогресс --mk-p и такт data-beat ставит motion-kit.js; без full — конечный кадр ─── */
+[data-mk~="scene"] { --mk-p: 1; position: relative; }
+[data-mk~="scene"] [data-mk-veil] { opacity: var(--mk-veil, 0); pointer-events: none; }
+[data-mk~="scene"] :is([data-mk-rail], [data-mk-skip])[hidden] { display: none; }        /* hidden сильнее display облика */
+[data-mk-on="full"] [data-mk~="scene"] [data-mk-story] { display: none; }
+[data-mk-on="full"] [data-mk~="scene"]:not([data-mk-mode="play"]) > [data-mk-stage] {
+  position: sticky; top: var(--mk-header); height: calc(var(--mk-vh, 100svh) - var(--mk-header));
+}
+[data-mk-on="full"] [data-mk~="scene"]:is([data-mk-mode="scrub"], [data-mk-mode="glide"], :not([data-mk-mode])) {
+  height: calc(var(--mk-vh, 100svh) - var(--mk-header) + var(--mk-len, 150vh));
+}
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] > [data-mk-steps] {
+  position: relative; z-index: 2; margin-top: calc(-1 * (var(--mk-vh, 100svh) - var(--mk-header))); pointer-events: none;
+}
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat] { min-height: var(--mk-step-h); pointer-events: auto; }
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat]:first-child { min-height: calc((var(--mk-vh, 100svh) - var(--mk-header)) * 0.78); }
+[data-mk-on="full"] [data-mk~="scene"][data-mk-mode="beats"] [data-mk-beat]:last-child {
+  min-height: calc(var(--mk-step-h) + (var(--mk-vh, 100svh) - var(--mk-header)) * 0.9);
+}
+/* подписи и отрезки: уходящая гаснет вдвое быстрее, входящая — с задержкой; наложения двух строк почти нет */
+[data-mk-on="full"] [data-mk~="scene"] :is([data-mk-k], [data-mk-seg]) {
+  transition: opacity var(--mk-dur-state) var(--mk-ease-out-strong) calc(var(--mk-dur-state) * 0.4), visibility 0s linear 0s;
+}
+[data-mk-on="full"] [data-mk~="scene"] :is([data-mk-k], [data-mk-seg]):not([data-on]) {
+  opacity: 0; visibility: hidden;
+  transition: opacity calc(var(--mk-dur-state) * 0.5) var(--mk-ease-in), visibility 0s linear calc(var(--mk-dur-state) * 0.5);
+}
+/* ── 9. Петли: бегущая строка и дыхание — только при JS; вне экрана, по паузе, при наведении и фокусе стоят ── */
+[data-mk~="marquee"] { display: flex; overflow: hidden; }
+[data-mk~="marquee"] > [data-mk-track] { flex: none; display: flex; align-items: center; }
+[data-mk-on="full"] [data-mk~="marquee"] > [data-mk-track] { animation: mk-marquee var(--mk-period, 48s) linear infinite; will-change: transform; }
+[data-mk-on="full"] [data-mk~="marquee"]:is([data-mk-idle], :hover, :focus-within) > [data-mk-track],
+[data-motion="paused"] [data-mk~="marquee"] > [data-mk-track] { animation-play-state: paused; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) { flex-wrap: wrap; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) > [data-mk-track] { flex: 1 1 auto; flex-wrap: wrap; }
+[data-mk~="marquee"]:not([data-mk-on="full"] *) > [data-mk-track][aria-hidden="true"] { display: none; }
+@keyframes mk-marquee { to { transform: translate3d(-100%, 0, 0); } }
+
+/* дыхание (float), орбита (orbit), вращение (spin), свечение (glow): период ≥ 10 с у крупного, вращение 15–30 с */
+[data-mk-on="full"] [data-mk~="drift"] {
+  animation: mk-float calc(var(--mk-period, var(--mk-dur-breathe)) / 2) var(--mk-ease-breathe) var(--mk-wait, 0s) infinite alternate both;
+  will-change: transform;
+}
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="orbit"] { animation: mk-orbit var(--mk-period, 37s) linear var(--mk-wait, 0s) infinite both; }
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="spin"] { animation: mk-spin var(--mk-period, 24s) linear infinite both; }
+[data-mk-on="full"] [data-mk~="drift"][data-mk-drift="glow"] {
+  animation: mk-glow calc(var(--mk-period, var(--mk-dur-breathe)) / 2) var(--mk-ease-breathe) var(--mk-wait, 0s) infinite alternate both;
+  will-change: opacity, transform;
+}
+[data-mk-on="full"] [data-mk~="drift"][data-mk-idle], [data-motion="paused"] [data-mk~="drift"] { animation-play-state: paused; }
+@keyframes mk-float {
+  from { transform: translate3d(0, calc(var(--mk-amp, var(--mk-float)) * -1%), 0); }
+  to { transform: translate3d(0, calc(var(--mk-amp, var(--mk-float)) * 1%), 0); }
+}
+@keyframes mk-orbit {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(calc(var(--mk-ox, 6) * 1%), calc(var(--mk-oy, 4) * -1%), 0); }
+  50% { transform: translate3d(calc(var(--mk-ox, 6) * 0.4%), calc(var(--mk-oy, 4) * 1%), 0); }
+  75% { transform: translate3d(calc(var(--mk-ox, 6) * -1%), calc(var(--mk-oy, 4) * 0.3%), 0); }
+}
+@keyframes mk-spin { to { transform: rotate(1turn); } }
+@keyframes mk-glow { from { opacity: var(--mk-glow-min, 0.55); transform: scale(0.98); } to { opacity: 1; transform: scale(1.02); } }
+/* ── 13. Переключатель движения и пауза: видны, только когда набор работает; пауза — пока движение идёт ───── */
+[data-mk~="toggle"]:not([data-mk-on] *), [data-mk~="pause"]:not([data-mk-on="full"] *) { display: none; }
+[data-mk~="pause"] [data-mk-when="paused"], [data-mk~="pause"][aria-pressed="true"] [data-mk-when="run"] { display: none; }
+[data-mk~="pause"][aria-pressed="true"] [data-mk-when="paused"] { display: inline; }
+/* motion-kit.css: конец вырезки */
+</style>
+</helmet>
+<div class="a-root" data-test="motion-kit" ref="{{ setRoot }}">
+  <header class="a-top">
+    <b>Движение кодом</b>
+    <button type="button" data-motion-set="" aria-pressed="false">Как в системе</button>
+    <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+    <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    <button type="button" data-mk="pause" aria-pressed="false"><span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span></button>
+  </header>
+  <section class="a-wrap a-hero" data-section="hero">
+    <h1 class="a-h1" data-slot="title" data-mk="entrance" data-mk-lcp>Движение на холсте</h1>
+    <p class="a-lead" data-slot="lead" data-mk="entrance" style="--i: 1">Тот же набор, что уйдёт в код сайта: файл поддержки, CSS в helmet и адаптер в логике артборда. В обзоре холста — конечные кадры, в Play — движение.</p>
+  </section>
+  <section class="a-wrap a-sec" data-section="reveal">
+    <h2 class="a-h2" data-slot="title" data-mk="unmask">Заголовок поднимается из маски</h2>
+    <div class="a-cards" data-mk-stagger>
+      <div class="a-card" data-mk="rise">Подъём, 16 px</div><div class="a-card" data-mk="rise">Каскад 60 мс</div><div class="a-card" data-mk="rise">Один раз</div>
+    </div>
+    <div class="a-plate" data-slot="media" data-mk="sweep"><div></div></div>
+  </section>
+  <div class="a-strip" data-mk="marquee" data-mk-speed="40" aria-hidden="true">
+    <div data-mk-track><span>подъём</span><span>маска</span><span>шторка</span><span>сцена</span></div>
+    <div data-mk-track aria-hidden="true"><span>подъём</span><span>маска</span><span>шторка</span><span>сцена</span></div>
+  </div>
+  <section class="a-scene" data-section="beats" data-mk="scene" data-mk-mode="beats" data-mk-beats="0,0.5,1" data-mk-tempo="3">
+    <div data-mk-stage>
+      <svg viewBox="0 0 400 400" width="360" height="360" aria-hidden="true">
+        <circle cx="200" cy="200" r="150" fill="none" stroke="rgb(238 232 220 / .14)" stroke-width="2"/>
+        <circle cx="200" cy="200" r="150" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1" transform="rotate(-90 200 200)" style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+      </svg>
+      <div class="a-veil" data-mk-veil aria-hidden="true"></div>
+    </div>
+    <div data-mk-steps>
+      <div data-mk-beat><h2 class="a-h2">Сцена тактами</h2></div>
+      <div data-mk-beat><p class="a-lead" style="color: #a39c90">Такт 1: карточка на линии 60 % окна</p></div>
+      <div data-mk-beat><p class="a-lead" style="color: #a39c90">Финал: окно гаснет в фон</p></div>
+    </div>
+  </section>
+  <ul class="a-status">
+    <li>Набор (lib/motion-kit.js): <span data-status="kit">{{ kit }}</span></li>
+    <li>Режим: <span data-status="mode">{{ mode }}</span> · прокрутка: <span data-status="scroller">{{ scroller }}</span></li>
+    <li>Появления: <span data-status="reveals">{{ reveals }}</span> · предупреждения: <span data-status="warn">{{ warn }}</span></li>
+  </ul>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  // Адаптер набора движения к логике артборда: корень — ref, носитель выбора движения — сам корень (data-motion не
+  // уходит на соседние артборды), признак Play — эвристика viewMode; строка состояния пишется, только когда меняется.
+  componentDidMount() {
+    this._alive = true;
+    this._st = { kit: 'ждём', mode: '—', scroller: '—', reveals: '—', warn: 'нет' };
+    const root = this._root;
+    if (typeof MotionKit === 'undefined' || !MotionKit.mount || !root) {
+      this.note({ kit: 'не исполнен: глобального имени MotionKit нет' });
+      this.push();
+      return;
+    }
+    this._kit = MotionKit.mount(root, {
+      host: root, remember: false, level: 'L1',
+      isLive: () => MotionKit.viewMode(root),
+      onState: (i) => {
+        this.note({ kit: 'исполнен — версия ' + i.version, mode: i.mode + (i.paused ? ', пауза' : ''), scroller: i.scroller,
+          reveals: i.reveals.shown + ' из ' + i.reveals.total, warn: i.warnings.length ? i.warnings[0] : 'нет' });
+        this.push();
+      }
+    });
+    this._timer = setInterval(() => { if (this._kit) { this._kit.refresh(); } }, 1500);   // режим холста меняется без resize
+  }
+  componentWillUnmount() {
+    this._alive = false;
+    if (this._timer) { clearInterval(this._timer); }
+    if (this._kit) { this._kit.destroy(); this._kit = null; }
+  }
+  note(patch) {
+    const next = Object.assign({}, this._st, patch);
+    this._dirty = JSON.stringify(next) !== JSON.stringify(this._st);
+    this._st = next;
+  }
+  push() { if (this._alive && this._dirty) { this._dirty = false; this.setState({ st: this._st }); } }
+  renderVals() {
+    if (!this._fns) { this._fns = { setRoot: (el) => { this._root = el; } }; }
+    const s = (this.state && this.state.st) || this._st || {};
+    return Object.assign({ kit: s.kit || 'ждём', mode: s.mode || '—', scroller: s.scroller || '—', reveals: s.reveals || '—', warn: s.warn || 'нет' }, this._fns);
+  }
+}
+</script>
+</body>
+</html>

@@ -48,7 +48,7 @@ sections:
         trigger: {type: load, delay_ms: 60}
         model: time
         tracks:
-          - {property: transform, from: "translateY(var(--mm-shift-reveal))", to: "none", unit_note: "--mm-shift-reveal = 16px"}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none", unit_note: "--motion-marketing-distance-shift-reveal = 16px"}
           - {property: opacity, from: 0.01, to: 1}
         duration: {ms: 560}
         easing: {token: motion.marketing.easing.out-expo}
@@ -110,7 +110,7 @@ sections:
         easing: {token: motion.marketing.easing.out-strong}
         repeat: once
         interrupt: jump-to-end
-        reduce: {strategy: crossfade, describe: "--mm-dur-state в reduce = 180 мс, сдвиг 0"}
+        reduce: {strategy: crossfade, describe: "--motion-marketing-duration-state в reduce = 180 мс, сдвиг 0"}
         mobile: {strategy: same}
     reduce: {strategy: crossfade, describe: "ответ проявляется за 180 мс без сдвига"}
     mobile: {strategy: same, describe: "то же"}
@@ -135,7 +135,7 @@ sections:
         easing: {token: motion.marketing.easing.out-strong}
         repeat: once
         interrupt: reverse
-        reduce: {strategy: crossfade, describe: "--mm-dur-state в reduce = 180 мс"}
+        reduce: {strategy: crossfade, describe: "--motion-marketing-duration-state в reduce = 180 мс"}
         mobile: {strategy: same}
     reduce: {strategy: crossfade, describe: "полоса появляется за 180 мс"}
     mobile: {strategy: same, describe: "только ширина ≤ 40rem; на десктопе полосы нет"}

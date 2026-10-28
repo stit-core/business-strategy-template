@@ -389,6 +389,20 @@ tells:
       - creative/05-motion/01-motion-principles-and-access.md §6.3 (период колебаний)
       - 3d/01-web-3d-landscape/01-effects-catalog.md §22
 
+  - id: god-rays-light
+    name: лучи света фоном без источника
+    surface: [page, asset]
+    owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#god-rays-light
+    also:
+      - 3d/16-js-scenes/05-techniques.md §3.2
+
+  - id: dither-halftone-shader
+    name: дизеринг и растр шейдером поверх фото или 3D
+    surface: [page, asset]
+    owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#dither-halftone-shader
+    also:
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §18.3
+
   # ── Типографика ─────────────────────────────────────────────────────────────────────────────────────────────────
 
   - id: overused-display-font

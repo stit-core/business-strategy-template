@@ -1,0 +1,510 @@
+# Примитивы набора движения страницы (11-motion-code). id = значение data-mk в разметке; спецификация движения ссылается
+# на примитив полем moment.primitive, опции — в moment.params (имя опции без префикса data-mk- / --mk-); spec_check.py
+# сверяет уровень, класс, эффекты и опции (MS-25). Поля записи:
+#   id, name_ru · class — класс моментов motion-spec (one-shot, scroll-linked, loop, pointer, transition; static — механизм,
+#   а не момент) · entrance — приём появления словаря page.primitives (fade-up, type-unmask, sweep, number-tick,
+#   line-draw) или null · effects — id эффектов ../06-effects-catalog/effects.yaml, которые примитив исполняет ·
+#   level_min — с какого уровня · js — нужен ли motion-kit.js · options — атрибуты (attr) и CSS-переменные (var)
+#   с умолчаниями (default — токен motion.marketing или число) · reduce — что остаётся при «уменьшить движение» и
+#   выборе «Меньше» · mobile — телефон и тач · demo — страница-демо с якорем, путь от этой папки · also — другие
+#   якоря демо того же примитива.
+# Опции времени по дорожкам у появлений: o- — прозрачность, t- — transform, c- — clip-path, f- — filter; у каждой
+# -dur, -ease, -delay (переменные --mk-o-dur …). Умолчания — 01-kit.md §4.
+version: "0.5.0"
+kit: {js: examples/motion-kit.js, css: examples/motion-kit.css, global: MotionKit}
+primitives:
+  # ── появление: один раз ───────────────────────────────────────────────────────────────────────────────────
+  - id: entrance
+    name_ru: Вход первого экрана
+    class: one-shot
+    entrance: fade-up
+    effects: [hero-entrance-once]
+    level_min: L0
+    js: false
+    options:
+      - {name: i, var: --i, default: 0, note: "порядок во входе; задержка = i × stagger.group"}
+      - {name: lcp, attr: data-mk-lcp, default: null, note: "элемент LCP — только сдвиг, без прозрачности"}
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.reveal}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: shift, var: --mk-shift, default: motion.marketing.distance.shift-reveal}
+      - {name: o-dur, var: --mk-o-dur, default: "0.6 × dur"}
+      - {name: o-ease, var: --mk-o-ease, default: motion.marketing.easing.out-strong}
+      - {name: o-delay, var: --mk-o-delay, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+    reduce: "конечное состояние с первого кадра (длительности и сдвиг токенов в reduce — 0)"
+    mobile: same
+    demo: examples/demos/scroll.html#hero-entrance-once
+  - id: rise
+    name_ru: Подъём
+    class: one-shot
+    entrance: fade-up
+    effects: [scroll-reveal-system]
+    level_min: L1
+    js: true
+    options:
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.reveal}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: shift, var: --mk-shift, default: motion.marketing.distance.shift-reveal}
+      - {name: o-dur, var: --mk-o-dur, default: "0.6 × dur"}
+      - {name: o-ease, var: --mk-o-ease, default: motion.marketing.easing.out-strong}
+      - {name: o-delay, var: --mk-o-delay, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+      - {name: stagger, attr: data-mk-stagger, default: null, note: "на родителе группы: один триггер, шаг stagger.group, сумма ≤ stagger.group-total-max"}
+      - {name: i, var: --i, default: "sibling-index() − 1"}
+      - {name: n, var: --n, default: "sibling-count()"}
+    reduce: "видно с первого кадра, без сдвига"
+    mobile: same
+    demo: examples/demos/scroll.html#scroll-reveal-system
+  - id: unmask
+    name_ru: Маска
+    class: one-shot
+    entrance: type-unmask
+    effects: [scroll-reveal-system]
+    level_min: L1
+    js: true
+    options:
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.split-line}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+      - {name: c-dur, var: --mk-c-dur, default: dur}
+      - {name: c-ease, var: --mk-c-ease, default: ease}
+      - {name: c-delay, var: --mk-c-delay, default: 0ms}
+    reduce: "блок на месте без маски"
+    mobile: same
+    demo: examples/demos/scroll.html#scroll-reveal-system
+  - id: split
+    name_ru: Разбиение текста
+    class: one-shot
+    entrance: type-unmask
+    effects: [split-text-reveal]
+    level_min: L1
+    js: true
+    options:
+      - {name: split, attr: data-mk-split, default: words, note: "lines | words | chars; куски — дочерние элементы разметки"}
+      - {name: dur, var: --mk-dur, default: "words, chars — duration.reveal; lines — duration.split-line"}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+      - {name: c-dur, var: --mk-c-dur, default: dur}
+      - {name: c-ease, var: --mk-c-ease, default: ease}
+      - {name: c-delay, var: --mk-c-delay, default: 0ms}
+      - {name: i, var: --i, default: "sibling-index() − 1"}
+      - {name: n, var: --n, default: "sibling-count()"}
+    reduce: "текст целиком"
+    mobile: same
+    demo: examples/demos/text.html#split-text-reveal
+  - id: sweep
+    name_ru: Шторка
+    class: one-shot
+    entrance: sweep
+    effects: [mask-reveal, scroll-reveal-system]
+    level_min: L0
+    js: true
+    options:
+      - {name: from, attr: data-mk-from, default: left, note: "left | right | top | bottom"}
+      - {name: r, var: --mk-r, default: 0px, note: "скругление окна"}
+      - {name: zoom, var: --mk-zoom, default: 1.06, note: "обратный масштаб [data-mk-inner]"}
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.split-line}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: c-dur, var: --mk-c-dur, default: dur}
+      - {name: c-ease, var: --mk-c-ease, default: ease}
+      - {name: c-delay, var: --mk-c-delay, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+    reduce: "кадр открыт"
+    mobile: same
+    demo: examples/demos/scroll.html#mask-reveal
+  - id: scale-in
+    name_ru: Проявление с масштабом
+    class: one-shot
+    entrance: scale-in
+    effects: [scroll-reveal-system]
+    level_min: L1
+    js: true
+    options:
+      - {name: blur, attr: data-mk-blur, var: --mk-blur, default: 6px, note: "по атрибуту; ≤ 8 px (L1)"}
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.split-line}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: o-dur, var: --mk-o-dur, default: "0.5 × dur"}
+      - {name: o-ease, var: --mk-o-ease, default: motion.marketing.easing.out-strong}
+      - {name: o-delay, var: --mk-o-delay, default: 0ms}
+      - {name: t-dur, var: --mk-t-dur, default: dur}
+      - {name: t-ease, var: --mk-t-ease, default: ease}
+      - {name: t-delay, var: --mk-t-delay, default: 0ms}
+      - {name: f-dur, var: --mk-f-dur, default: "0.7 × dur"}
+      - {name: f-ease, var: --mk-f-ease, default: motion.marketing.easing.out-strong}
+      - {name: f-delay, var: --mk-f-delay, default: 0ms}
+    reduce: "фигура на месте, резкая"
+    mobile: same
+    demo: examples/demos/scroll.html#scroll-reveal-system
+  - id: count
+    name_ru: Честный счётчик
+    class: one-shot
+    entrance: number-tick
+    effects: [counter-up]
+    level_min: L0
+    js: true
+    options:
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.counter}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.out-expo}
+      - {name: wait, var: --mk-wait, default: 0ms}
+      - {name: point, var: --mk-point, default: '","', note: "знак дробной части"}
+    reduce: "итог из HTML сразу"
+    mobile: same
+    demo: examples/demos/text.html#counter-up
+  - id: draw
+    name_ru: Линия рисуется один раз
+    class: one-shot
+    entrance: line-draw
+    effects: [scroll-reveal-system]
+    level_min: L1
+    js: true
+    options:
+      - {name: dur, var: --mk-dur, default: motion.marketing.duration.split-line}
+      - {name: ease, var: --mk-ease, default: motion.marketing.easing.in-out}
+      - {name: wait, var: --mk-wait, default: 0ms}
+    reduce: "линия целиком"
+    mobile: same
+    demo: examples/demos/scroll.html#scroll-reveal-system
+  # ── прокрутка на CSS: прогресс = положение прокрутки ────────────────────────────────────────────────────────
+  - id: progress
+    name_ru: Полоса прогресса
+    class: scroll-linked
+    effects: [scroll-driven-progress]
+    level_min: L0
+    js: false
+    options: []
+    reduce: "остаётся: это индикатор положения"
+    mobile: same
+    demo: examples/demos/scroll.html#scroll-driven-progress
+  - id: parallax
+    name_ru: Параллакс слоя
+    class: scroll-linked
+    effects: [parallax-layers]
+    level_min: L1
+    js: true
+    options:
+      - {name: depth, var: --mk-depth, attr: data-mk-depth, default: 0.2, note: "разница скоростей; |depth| ≤ scroll.parallax-ratio-max (0,4)"}
+    reduce: "слой неподвижен относительно страницы"
+    mobile: "половина амплитуды"
+    demo: examples/demos/scroll.html#parallax-layers
+  - id: scroll-draw
+    name_ru: Линия по прокрутке
+    class: scroll-linked
+    effects: [svg-line-draw]
+    level_min: L1
+    js: true
+    options:
+      - {name: from, var: --mk-from, default: cover 20%}
+      - {name: to, var: --mk-to, default: cover 60%}
+    reduce: "линия целиком"
+    mobile: same
+    demo: examples/demos/scroll.html#svg-line-draw
+  - id: highlight
+    name_ru: Подсветка слов
+    class: scroll-linked
+    effects: [scroll-text-highlight]
+    level_min: L1
+    js: true
+    options:
+      - {name: dim, var: --mk-dim, default: null, note: "цвет непрочитанного, контраст ≥ 3 : 1 при кегле ≥ 24 px — задаёт облик"}
+      - {name: ink, var: --mk-ink, default: currentColor}
+      - {name: i, var: --i, default: "sibling-index() − 1"}
+      - {name: n, var: --n, default: "sibling-count()"}
+    reduce: "абзац в цвете текста"
+    mobile: same
+    demo: examples/demos/text.html#scroll-text-highlight
+  - id: scroll-mask
+    name_ru: Маска по прокрутке
+    class: scroll-linked
+    effects: [mask-reveal]
+    level_min: L0
+    js: true
+    options:
+      - {name: r, var: --mk-r, default: 0px}
+      - {name: zoom, var: --mk-zoom, default: 1.06}
+    reduce: "кадр открыт"
+    mobile: same
+    demo: examples/demos/scroll.html#mask-reveal
+  - id: frame-expand
+    name_ru: Кадр до полного вылета
+    class: scroll-linked
+    effects: [scroll-mask-expand]
+    level_min: L1
+    js: true
+    options:
+      - {name: len, var: --mk-len, default: 150vh, note: "путь закрепления; ≤ scroll.pin-l1-max-vh на L1"}
+    reduce: "кадр на всю ширину без сцены"
+    mobile: "< 48 rem — кадр на всю ширину"
+    demo: examples/demos/scroll.html#scroll-mask-expand
+  - id: text-mask
+    name_ru: Текст-окно в картинку
+    class: scroll-linked
+    effects: [text-mask-media]
+    level_min: L1
+    js: true
+    options:
+      - {name: media, var: --mk-media, default: null, note: "фон букв: картинка или градиент"}
+      - {name: media-size, var: --mk-media-size, default: 100% 160%}
+    reduce: "кадр в буквах стоит"
+    mobile: same
+    demo: examples/demos/scroll.html#text-mask-media
+  - id: stack
+    name_ru: Стопка липких карточек
+    class: scroll-linked
+    effects: [sticky-stack]
+    level_min: L0
+    js: true
+    options:
+      - {name: stack-step, var: --mk-stack-step, default: 24px, note: "телефон — 14px"}
+      - {name: sink, var: --mk-sink, default: 0.94}
+      - {name: header, var: --mk-header, default: 72px}
+    reduce: "липкость остаётся, масштаба нет"
+    mobile: "отступ 14 px"
+    demo: examples/demos/pin.html#sticky-stack
+  - id: horizontal
+    name_ru: Горизонтальная секция
+    class: scroll-linked
+    effects: [horizontal-scroll]
+    level_min: L2
+    js: true
+    options:
+      - {name: panels, var: --mk-panels, default: "число панелей ленты (ставит набор)", note: "≤ 5"}
+    reduce: "родная лента со snap"
+    mobile: "< 48 rem — родная лента со свайпом"
+    demo: examples/demos/pin.html#horizontal-scroll
+  - id: header
+    name_ru: Сжатие шапки
+    class: scroll-linked
+    effects: [header-shrink-on-scroll]
+    level_min: L0
+    js: true
+    options:
+      - {name: plate-k, var: --mk-plate-k, default: 0.375, note: "доля, на которую сжимается плашка [data-mk-plate]"}
+      - {name: row-shift, var: --mk-row-shift, default: -8px, note: "сдвиг строки [data-mk-row]"}
+    reduce: "сразу компактная шапка"
+    mobile: same
+    demo: examples/demos/micro.html#header-shrink-on-scroll
+  - id: text-path
+    name_ru: Текст по кривой
+    class: scroll-linked
+    effects: [text-path]
+    level_min: L1
+    js: true
+    options:
+      - {name: from, attr: data-mk-from, default: 0%}
+      - {name: to, attr: data-mk-to, default: 40%}
+    reduce: "подпись на месте разметки (startOffset из HTML)"
+    mobile: same
+    demo: examples/demos/text.html#text-path
+  # ── DOM-сцена прокрутки: прогресс --mk-p, такт data-beat; пружина рантайма сцен 3D ───────────────────────────
+  - id: scene
+    name_ru: DOM-сцена прокрутки
+    class: [scroll-linked, one-shot]
+    effects: [pin-scrub-story]
+    level_min: L1
+    js: true
+    options:
+      - {name: mode, attr: data-mk-mode, default: scrub, note: "scrub | beats (L2: поле до scroll.pin-beats-max-vh) | glide | play"}
+      - {name: beats, attr: data-mk-beats, default: null, note: "точки покоя beats, 5–7"}
+      - {name: tempo, attr: data-mk-tempo, default: "scrub 6,5 · beats 3 · glide 2", note: "ω пружины"}
+      - {name: length, attr: data-mk-length, default: 150, note: "путь scrub и glide, vh"}
+      - {name: exit, attr: data-mk-exit, default: "0,45 высоты окна при [data-mk-veil]", note: "выход, px"}
+      - {name: dur, attr: data-mk-dur, default: 9, note: "play, с"}
+      - {name: range, attr: data-mk-range, default: "0,1"}
+    reduce: "без закрепления: конечный кадр (--mk-p = 1) и карточки тактов текстом"
+    mobile: "шаг 420 px, шапка 64 px, рельса нет"
+    demo: examples/demos/pin.html#pin-scrub-story
+    also: [examples/demos/pin.html#scene-beats, examples/demos/pin.html#scene-glide, examples/demos/pin.html#scene-play]
+  # ── петли: только при JS; вне экрана, по паузе, при наведении и фокусе стоят ───────────────────────────────
+  - id: marquee
+    name_ru: Бегущая строка
+    class: loop
+    effects: [marquee-logos, marquee-text]
+    level_min: L0
+    js: true
+    options:
+      - {name: speed, attr: data-mk-speed, default: motion.marketing.loop.marquee-speed, note: "30–60 px/с (effects.yaml)"}
+      - {name: boost, attr: data-mk-boost, default: 0, note: "разгон от скорости прокрутки, k; вход ≤ 900 px/с"}
+    reduce: "статичный ряд с переносом, дубль скрыт"
+    mobile: same
+    demo: examples/demos/marquee.html#marquee-logos
+    also: [examples/demos/marquee.html#marquee-text]
+  - id: drift
+    name_ru: Дыхание и вращение
+    class: loop
+    effects: [rotating-badge, mesh-gradient-css, glow-accent]
+    level_min: L0
+    js: true
+    options:
+      - {name: drift, attr: data-mk-drift, default: float, note: "float | orbit | spin | glow"}
+      - {name: period, var: --mk-period, default: motion.marketing.duration.breathe-period, note: "крупный объект ≥ 10 с; spin — 24 с"}
+      - {name: amp, var: --mk-amp, default: motion.marketing.loop.float-amplitude-pct, note: "% высоты, 2–4"}
+      - {name: ox, var: --mk-ox, default: 6, note: "орбита, % ширины"}
+      - {name: oy, var: --mk-oy, default: 4, note: "орбита, % высоты"}
+      - {name: wait, var: --mk-wait, default: 0s}
+    reduce: "кадр покоя"
+    mobile: same
+    demo: examples/demos/marquee.html#rotating-badge
+    also: [examples/demos/marquee.html#mesh-gradient-css, examples/demos/marquee.html#glow-accent]
+  # ── указатель: только мышь и перо, только full ────────────────────────────────────────────────────────────
+  - id: magnet
+    name_ru: Магнит
+    class: pointer
+    effects: [magnetic-cta]
+    level_min: L1
+    js: true
+    options:
+      - {name: magnet, var: --mk-magnet, default: motion.marketing.distance.magnet-max, note: "и ≤ 25 % высоты кнопки"}
+    reduce: "кнопка не смещается"
+    mobile: "тач — нет"
+    demo: examples/demos/pointer.html#magnetic-cta
+  - id: tilt
+    name_ru: Наклон карточки
+    class: pointer
+    effects: [tilt-card]
+    level_min: L1
+    js: true
+    options:
+      - {name: deg, attr: data-mk-deg, default: 6, note: "≤ 7°"}
+    reduce: "плоская карточка"
+    mobile: "тач — нет"
+    demo: examples/demos/pointer.html#tilt-card
+  - id: spotlight
+    name_ru: Прожектор
+    class: pointer
+    effects: [cursor-accent]
+    level_min: L1
+    js: true
+    options:
+      - {name: spot, var: --mk-spot, default: "rgb(255 196 140 / 0.24)"}
+      - {name: spot-r, var: --mk-spot-r, default: 36rem}
+      - {name: area, attr: data-mk-area, default: "родитель", note: "на предке: где ловить указатель"}
+    reduce: "свет идёт за курсором без хвоста (прямое управление)"
+    mobile: "пятно стоит в 70 % / 30 %"
+    demo: examples/demos/pointer.html#cursor-accent
+  # ── микродвижение и переходы: чистый CSS, reduce — затухание вместо смещения ───────────────────────────────
+  - id: dialog
+    name_ru: Вход и выход окна
+    class: transition
+    effects: [dialog-entry-exit]
+    level_min: L0
+    js: false
+    options: []
+    reduce: "проявление 180 мс без сдвига"
+    mobile: same
+    demo: examples/demos/micro.html#dialog-entry-exit
+  - id: accordion
+    name_ru: Аккордеон
+    class: transition
+    effects: [details-accordion]
+    level_min: L0
+    js: false
+    options: []
+    reduce: "мгновенно"
+    mobile: same
+    demo: examples/demos/micro.html#details-accordion
+  - id: button-label
+    name_ru: Кнопка раскрывает подпись
+    class: pointer
+    effects: [button-expand-label]
+    level_min: L0
+    js: false
+    options:
+      - {name: icon, var: --mk-icon, default: 3rem, note: "ширина видимой части со значком"}
+      - {name: side, attr: data-mk-side, default: end, note: "start — значок слева"}
+      - {name: r, var: --mk-r, default: 999px}
+    reduce: "подпись без анимации"
+    mobile: "тач — подпись видна всегда"
+    demo: examples/demos/micro.html#button-expand-label
+  - id: flip
+    name_ru: Переворот карточки
+    class: pointer
+    effects: [card-flip-3d]
+    level_min: L1
+    js: false
+    options: []
+    reduce: "без поворота: оборот стоит под лицом"
+    mobile: "кнопка [data-mk-flip-toggle] (нужен JS)"
+    demo: examples/demos/micro.html#card-flip-3d
+  - id: shine
+    name_ru: Блик по кадру
+    class: one-shot
+    effects: [light-sweep]
+    level_min: L0
+    js: false
+    options: []
+    reduce: "блика нет"
+    mobile: "тач — нет; фокус с клавиатуры — да"
+    demo: examples/demos/micro.html#light-sweep
+  - id: columns
+    name_ru: Раздвижные колонки
+    class: pointer
+    effects: [expanding-columns]
+    level_min: L0
+    js: false
+    options:
+      - {name: col-closed, var: --mk-col-closed, default: 34%, note: "насколько закрыто окно колонки с каждой стороны"}
+      - {name: r, var: --mk-r, default: 0px}
+    reduce: "раскрытие без перехода"
+    mobile: "тач — все колонки раскрыты"
+    demo: examples/demos/micro.html#expanding-columns
+  - id: state
+    name_ru: Смена состояния в View Transition
+    class: transition
+    effects: [view-transition]
+    level_min: L1
+    js: true
+    options:
+      - {name: target, attr: data-mk-target, default: null, note: "селектор цели"}
+      - {name: attr, attr: data-mk-attr, default: data-state}
+      - {name: value, attr: data-mk-value, default: null}
+    reduce: "смена без смещения, затухание 108 мс"
+    mobile: same
+    demo: examples/demos/transition-a.html#view-transition
+  - id: page-transition
+    name_ru: Переход между страницами
+    class: transition
+    effects: [page-transition]
+    level_min: L1
+    js: false
+    options: []
+    reduce: "затухание корня без сдвига"
+    mobile: same
+    demo: examples/demos/transition-a.html#page-transition
+    also: [examples/demos/transition-b.html#page-transition]
+  # ── механизм: переключатель движения и пауза ───────────────────────────────────────────────────────────────
+  - id: toggle
+    name_ru: Переключатель движения
+    class: static
+    effects: [motion-toggle]
+    level_min: L0
+    js: true
+    options: []
+    reduce: "работает: «Как в системе» при системном reduce = «Меньше»"
+    mobile: same
+    demo: examples/demos/micro.html#motion-toggle
+  - id: pause
+    name_ru: Пауза всех петель
+    class: static
+    effects: [motion-toggle]
+    level_min: L0
+    js: true
+    options: []
+    reduce: "скрыта: петли и так стоят"
+    mobile: same
+    demo: examples/demos/micro.html#motion-toggle

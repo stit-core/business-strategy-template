@@ -3,9 +3,15 @@ scripts/creative/README.md	data	data
 scripts/creative/ad_check.py	utility	help; run: --selftest; run: {skill}/kb/creative/01-creative-direction/examples/art-direction-kvarts.json	
 scripts/creative/marketing_audit.py	utility	help; run: --selftest	
 scripts/creative/motion_check.py	utility	help; run: --selftest	
+scripts/creative/motion_probe.py	utility	help; run: --selftest --no-browser	
+scripts/creative/motion_smoke.py	utility	help; run: --selftest	
 scripts/creative/recipe_check.py	step	help; run: {skill}/kb/creative/10-recipes/recipes/01-lead-services-l0.recipe.yaml	
 scripts/creative/refs_client.py	utility	help; run: selftest	run: самопроверка проверяет, что Brave на месте (DDD_BRAVE или PATH)
 scripts/creative/registry_check.py	utility	help; run: --selftest	
 scripts/creative/scroll_record.py	module	import-only	
 scripts/creative/spec_check.py	utility	help; run: --selftest; run: canvas-map; run: levels --check	
+scripts/creative/tests/fixtures/motion-probe/challenge.html	data	data	
+scripts/creative/tests/fixtures/motion-probe/gsap-fake.html	data	data	
+scripts/creative/tests/fixtures/motion-probe/scroll.html	data	data	
+scripts/creative/tests/fixtures/motion-probe/time.html	data	data	
 scripts/creative/validate_stack.py	utility	help; run: --selftest; run: 	

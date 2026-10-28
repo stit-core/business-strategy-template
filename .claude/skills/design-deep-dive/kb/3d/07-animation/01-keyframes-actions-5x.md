@@ -42,8 +42,10 @@ glTF-IO 5.2.40, three r186 (0.186.0). Блоки `python` выполнены в 
 17. **Поза покоя в GLB = кадр 0** — ставь ключи так, чтобы кадр 0 был осмысленной позой (или `export_current_frame`). → §4.3 [проверено]
 18. **Pivot = origin объекта**: двигающаяся часть — отдельный объект с origin на оси (петля, центр колеса). → §6.3 [проверено: H/12; V:OVbIOHAI3iY 07:52 по дайджесту W4]
 19. **Имена действий = имена клипов в three** (латиница, без точек): `AnimationClip.findByName(gltf.animations, "Reveal")`. → §5.4 [проверено]
-20. **Период «парения» 3–4 с, амплитуда 2–6 % высоты, наклон ≤ 5°**; экстремумы — AUTO_CLAMPED (нулевой наклон), фаза наклона
-    сдвинута на четверть. → §6.2 [проверено: H/11; мнение: числа — практика, не исследование]
+20. **«Парение» — период ≥ 10 с (по умолчанию 12 с) или непериодический шум, амплитуда ≤ 2–4 % высоты, наклон ≤ 3°**; полоса
+    2,5–6 с запрещена — пик укачивания; экстремумы — AUTO_CLAMPED (нулевой наклон), фаза наклона сдвинута на четверть; пульсация
+    CTA — 1–2 импульса по событию, не петля. Норма — `../../creative/05-motion/01-motion-principles-and-access.md` §6.3–6.4
+    (поправки П8, П10). → §4.1, §6.1 [проверено: петля и стык — H/11; исследование: числа — creative 05/01 §6.3]
 
 ## 1. Модель данных анимации 5.x
 
@@ -229,9 +231,9 @@ for kp in curves(turn)[0].keyframe_points:
 a = turn.animation_data.action; a.name = "Turntable"
 a.use_frame_range = True; a.frame_start, a.frame_end = 1, 121                        # клип glTF = ровно один оборот
 hero = bpy.data.objects.new("hero_gem", None); sc.collection.objects.link(hero)
-for f, z in ((1, 0.60), (46, 0.66), (91, 0.60)):                                     # bob 6 см, период 3 с
+for f, z in ((1, 0.60), (181, 0.66), (361, 0.60)):                                   # ±3 см (≤ 3 % высоты от 1 м), период 12 с
     hero.location.z = z; hero.keyframe_insert("location", index=2, frame=f)
-for f, deg in ((1, 0.0), (23, 4.0), (68, -4.0), (91, 0.0)):                          # наклон ±4°, фаза сдвинута на четверть
+for f, deg in ((1, 0.0), (91, 3.0), (271, -3.0), (361, 0.0)):                        # наклон ±3°, фаза сдвинута на четверть
     hero.rotation_euler.x = math.radians(deg); hero.keyframe_insert("rotation_euler", index=0, frame=f)
 for fc in curves(hero):
     for kp in fc.keyframe_points:
@@ -239,10 +241,10 @@ for fc in curves(hero):
     fc.modifiers.new(type="CYCLES")                                                  # только для просмотра в Blender
     fc.update()
 h = hero.animation_data.action; h.name = "Float"
-h.use_frame_range = True; h.frame_start, h.frame_end = 1, 91
+h.use_frame_range = True; h.frame_start, h.frame_end = 1, 361                        # период ≥ 10 с — creative 05/01 §6.3
 sc.frame_set(61); assert abs(math.degrees(turn.rotation_euler.z) - 180) < 1e-3
-sc.frame_set(91); assert abs(hero.location.z - 0.60) < 1e-6
-sc.frame_set(181); assert abs(hero.location.z - 0.60) < 1e-4                          # Cycles: вторая петля в Blender
+sc.frame_set(361); assert abs(hero.location.z - 0.60) < 1e-6
+sc.frame_set(721); assert abs(hero.location.z - 0.60) < 1e-4                          # Cycles: вторая петля в Blender
 ```
 
 ### 4.2 Турнтейбл: как сломать и как правильно
@@ -347,16 +349,17 @@ assert clips == {"Idle": ["case_root"], "Reveal": ["bud_l", "bud_r", "case_lid"]
 | паттерн | где делать | длительность / петля | кривая | пример |
 |---|---|---|---|---|
 | турнтейбл продукта | Blender-клип или JS (`rotation.y += ω·dt`) | 8–20 с на оборот, LoopRepeat | LINEAR | H/10 |
-| «парение» hero | Blender-клип или JS (sin/damp) | 3–4 с, петля | AUTO_CLAMPED, фазовый сдвиг наклона | H/11 |
-| пульсация CTA | Blender-клип или CSS | 1–1,5 с, петля с паузой | QUAD ease-out вверх, SINE вниз | H/11 |
+| «парение» hero | Blender-клип или JS (sin/damp) | период ≥ 10 с (12 с) или непериодический шум; амплитуда ≤ 2–4 % высоты, наклон ≤ 3°; петля — пауза и reduce | AUTO_CLAMPED, фазовый сдвиг наклона | H/11 (механизм) |
+| пульсация CTA | CSS или Blender-клип | не петля: 1–2 импульса по событию, 400–600 мс каждый, серия < 5 с; масштаб ≤ 1,05 или свечение без масштаба | QUAD ease-out вверх, SINE вниз | H/11 (механизм) |
 | раскрытие по частям | Blender-клип (слоты) | 1,5–2,5 с, один раз / скраб | BACK ease-out для крышки, BEZIER + стаггер 4–8 кадров | H/12 |
 | взрыв-схема | Blender-клип (слоты) или JS по `extras` | скраб по прокрутке | BEZIER ease-in-out | H/12 (тот же механизм) |
 | облёт/пролёт камеры | запечённая камера или JSON-путь | скраб | ease-in-out по пути | H/14 |
 | интро логотипа | Blender-клип или JS-таймлайн | 1–1,5 с, один раз | BACK/EXPO ease-out, стаггер 4 кадра | H/16 |
 
-Числа периодов и амплитуд — практика (H/10–H/16 и каталог A §2.2), не исследование восприятия [мнение]. Устойчивые
-колебания около 0,2 Гц (период ≈ 5 с) Apple советует избегать (руководство visionOS) — переносимость на веб не проверена
-[документация: Apple HIG, через `../../ui-research/08-motion/01-… §8.4`].
+Период, амплитуда и наклон «парения» и импульсы CTA — норма базы страницы (`../../creative/05-motion/01-motion-principles-and-access.md`
+§6.3–6.4, поправки П8 и П10): пик укачивания — 0,2–0,4 Гц, период 2,5–5 с (Diels 2013, Golding 2001; Apple советует избегать
+колебаний около 0,2 Гц) [исследование; документация: Apple HIG]; перенос с полноэкранного потока на объект страницы не проверен.
+Остальные длительности таблицы — практика (H/10–H/16 и каталог A §2.2) [мнение].
 
 ### 6.2 Библиотека паттернов (одно действие на паттерн)
 
@@ -369,8 +372,9 @@ sc = bpy.context.scene; sc.render.fps = 30
 def empty(name, loc=(0, 0, 0)):
     ob = bpy.data.objects.new(name, None); ob.location = loc; sc.collection.objects.link(ob); return ob
 
-def pulse(ob, peak=1.2, rise=12, total=45, name="Pulse"):
-    """Масштаб 1 → peak (QUAD ease-out) → 1 (SINE), петля total кадров."""
+def pulse(ob, peak=1.04, rise=5, total=15, name="Pulse"):
+    """Один импульс масштаба 1 → peak (QUAD ease-out) → 1 (SINE) за total кадров (0,5 с). Не петля: на странице клип играют
+    LoopOnce по событию, 1–2 раза, серия < 5 с; peak ≤ 1,05 (creative 05/01 §6.4)."""
     for f, s in ((1, 1.0), (1 + rise, peak), (1 + total, 1.0)):
         ob.scale = (s, s, s); ob.keyframe_insert("scale", frame=f)
     act = ob.animation_data.action; act.name = name
@@ -409,7 +413,7 @@ parts = [empty(f"layer_{i}", (0, 0, 0.1 * i)) for i in range(4)]
 a2 = explode(parts, center=(0, 0, 0.15))
 cam = bpy.data.objects.new("cam", bpy.data.cameras.new("cam")); sc.collection.objects.link(cam)
 pv = orbit_camera(cam, (0, 0, 0.3))
-sc.frame_set(13); assert abs(dot.scale.x - 1.2) < 1e-4
+sc.frame_set(6); assert abs(dot.scale.x - 1.04) < 1e-4
 sc.frame_set(40); assert (parts[3].location - Vector((0, 0, 0.3))).length > 0.3
 sc.frame_set(121); bpy.context.view_layer.update()
 assert abs(math.degrees(pv.rotation_euler.z) - 90) < 1e-3 and len(a2.slots) == 4
@@ -466,6 +470,7 @@ assert abs(math.degrees(pv.rotation_euler.z) - 90) < 1e-3 and len(a2.slots) == 4
 10. Кадр 0 = «объект за кадром» — модель на странице до старта клипа висит в этой позе.
 11. Рендер петли для видео кадрами 1…N — двойной кадр на стыке.
 12. Проверка анимации инструментами наблюдения MCP — они читают `action.fcurves` и анимацию не видят.
+13. «Парение» с периодом 3–4 с и бесконечная пульсация CTA — пик укачивания и петля без паузы: период ≥ 10 с, импульсы по событию.
 
 ## Чек-лист
 
@@ -480,6 +485,7 @@ assert abs(math.degrees(pv.rotation_euler.z) - 90) < 1e-3 and len(a2.slots) == 4
 - [ ] Кадр 0 — осмысленная поза покоя?
 - [ ] Имена действий и объектов — латиница без точек; клип в three находится `findByName`?
 - [ ] Двигающиеся части — отдельные объекты с origin на оси движения?
+- [ ] «Парение» и колебания — период ≥ 10 с или шум, амплитуда ≤ 2–4 % высоты, наклон ≤ 3°; пульсация CTA — импульс по событию?
 
 ## Открытые вопросы и противоречия
 
@@ -487,7 +493,8 @@ assert abs(math.degrees(pv.rotation_euler.z) - 90) < 1e-3 and len(a2.slots) == 4
 - Второй слой действия: API говорит «at most one layer»; экспортёр перебирает `layers` в `get_channelbag_for_slot` — поведение
   при появлении слоёв (6.x) неизвестно.
 - Порог «CUBICSPLINE приемлем»: на наших клипах ошибка 0,26°/1,5 мм/0,07 веса; на длинных плавных клипах камеры не мерялась.
-- Числа паттернов (периоды, амплитуды, стаггер) — практика; исследований восприятия для 3D на сайтах не найдено.
+- Числа паттернов (турнтейбл, стаггер, раскрытие) — практика; исследований восприятия для 3D на сайтах не найдено. Период и
+  амплитуда «парения» — норма creative 05/01 §6.3 по исследованиям полноэкранного потока; перенос на 3D-объект страницы не проверен.
 - Эвристика «closely related» (объект + shape keys в одном действии): экспортёр её переваривает (одна анимация), но если
   нужен отдельный клип весов — делить действие оператором Separate Slots (`anim.separate_slots`) — не проверено.
 

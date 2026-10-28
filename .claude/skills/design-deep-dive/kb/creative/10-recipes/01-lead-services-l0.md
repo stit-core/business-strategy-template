@@ -102,11 +102,11 @@ HTML + CSS, один встроенный скрипт 0,5 КБ; GSAP, Lenis, We
 ```css
 /* Chrome 153 · WebKit 26.6 · 2026-09-25 · [проверено] появление первого экрана без JS */
 @media (prefers-reduced-motion: no-preference) {
-  .hero__lead, .hero__proof, .hero__actions { animation: rise var(--mm-dur-reveal) var(--mm-ease-out-expo) both; }
+  .hero__lead, .hero__proof, .hero__actions { animation: rise var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo) both; }
   .hero__proof { animation-delay: 110ms; }  .hero__actions { animation-delay: 160ms; animation-duration: 440ms; }
-  .mark { animation: mark-in calc(var(--mm-dur-reveal) / 2) var(--mm-ease-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
+  .mark { animation: mark-in calc(var(--motion-marketing-duration-reveal) / 2) var(--motion-marketing-easing-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
 }
-@keyframes rise { from { opacity: .01; transform: translateY(var(--mm-shift-reveal)); } }
+@keyframes rise { from { opacity: .01; transform: translateY(var(--motion-marketing-distance-shift-reveal)); } }
 @keyframes mark-in { from { opacity: .01; scale: .5; } }
 ```
 

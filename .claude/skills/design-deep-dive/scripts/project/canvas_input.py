@@ -233,6 +233,11 @@ KB_DOCS = {                                             # документы б�
     "budgets": ("site", "07-seo-geo-performance-analytics", "budgets.yaml"),
     "tells": (None, "common", "tells.yaml"),
 }
+# набор движения страницы (этапы treatment и motion): источники базы, а не копии во входе — сессия читает файл целиком и
+# публикует JS файлом поддержки project/lib/motion-kit.js, CSS — в <helmet><style> артборда (cd 05/03 §3.2)
+MOTION_KIT = (("motion-kit", ("creative", "11-motion-code", "examples", "motion-kit.js")),
+              ("motion-kit-css", ("creative", "11-motion-code", "examples", "motion-kit.css")),
+              ("motion-kit-primitives", ("creative", "11-motion-code", "primitives.yaml")))
 VIEW_WIDE, VIEW_NARROW = "1440x900", "390x844"         # окна первого экрана site 03/03 §2
 MOTION_ORDER = ("none", "subtle", "expressive", "cinematic")
 DS_FILES = ("tokens-css", "tokens", "design-md", "system")
@@ -2231,14 +2236,15 @@ def refs_md(ctx, B):
                     src.path if src else ctx.dsurf("art-direction"), f"проверка входа: у референса {i} нет: "
                     f"{', '.join(miss)}", "запись мудборда по форме $defs/reference — этап art-direction")
         vals = r.get("values") if isinstance(r.get("values"), dict) else {}
+        vals_txt = "; ".join(f"{k} — {one_line(v) if isinstance(v, str) else ', '.join(one_line(x) for x in v)}"
+                             for k, v in vals.items() if v)
         out += [f"## Ref {i:02d} — {r.get('role') or '—'}", "",
                 f"- ссылка: {r.get('url') or r.get('ref') or '—'}",
                 f"- где: {r.get('applies_to') or 'page'}",
                 f"- роль: {r.get('role') or '—'}",
                 f"- брать: {'; '.join(one_line(x) for x in r.get('take') or []) or '—'}",
                 f"- не брать: {'; '.join(one_line(x) for x in r.get('dont_take') or []) or '—'}",
-                "- значения: " + ("; ".join(f"{k} — {', '.join(one_line(x) for x in v)}" for k, v in vals.items() if v)
-                                  or "—"),
+                f"- значения: {vals_txt or '—'}",
                 f"- снято: {r.get('captured') or '—'}", ""]
     return "\n".join(out)
 
@@ -2866,6 +2872,8 @@ def assemble_site(ctx):
         ctx.add("R-MAT-012", "warning", "motion-spec", "motion", ctx.dsurf("motion"), "проверка входа: ни у одной "
                 "страницы партии нет спецификации движения",
                 f"/design-deep-dive {ctx.slug} {ctx.surface} — этап motion")
+    if stage in ("treatment", "motion"):
+        motion_kit_sources(ctx)
     if ctx.maps.rules("facts.md", stage):
         ctx.files["facts.md"] = facts_md(ctx, B)
     if ctx.maps.rules("refs.md", stage):
@@ -2873,6 +2881,15 @@ def assemble_site(ctx):
     A = acc_context(ctx, brief.get("themes"), get(brief, "constraints", "accessibility"),
                     get(brief, "ambition", "level"))
     ctx.files[ACCEPT] = acceptance_md(ctx, site_items(ctx, A, work, brief), A)
+
+
+def motion_kit_sources(ctx):
+    """Набор движения — строками источников манифеста (путь и отпечаток файла базы): живые эскизы «Креатива» и «Подачи» и
+    проход движения собираются им, а не библиотеками. Файла нет в базе — пробел входа."""
+    for doc_id, parts in MOTION_KIT:
+        path = kbpaths.kb(*parts)
+        if ctx.load(doc_id, path, kind="kb", cover=False) is None:
+            ctx.gap(f"набора движения нет в базе: {'/'.join(parts)} — движение эскизов и прохода собирается без него")
 
 
 def ds_themes(ctx):

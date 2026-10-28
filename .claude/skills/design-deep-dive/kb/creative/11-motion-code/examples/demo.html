@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Движение кодом — набор</title>
+<meta name="description" content="Демо набора движения страницы: все примитивы, DOM-контракт спецификации движения, пауза и переключатель движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="look.css">
+<link rel="stylesheet" href="motion-kit.css">
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="#hero" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#reveal">Появление</a><a href="#ticker">Петли</a><a href="#beats">Сцены</a><a href="#micro">Отклик</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+
+<main>
+<!-- 01 · первый экран: акцент. H1 — кандидат LCP, только сдвиг; лид и призыв — вход по порядку; дыхание — в стороне от текста -->
+<section class="hero" id="hero" data-section="hero" data-mk-area>
+  <div data-mk="spotlight" data-fx="spot" data-moment="hero-spot" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="hero__text">
+      <p class="label" data-slot="eyebrow" data-mk="entrance" style="--i: 0"><b>Набор</b> · creative 11 · движение страницы своим кодом</p>
+      <h1 class="display" data-slot="title" data-moment="hero-title" data-mk="entrance" data-mk-lcp style="--i: 0">Движение, которое ведёт взгляд</h1>
+      <p class="lead" data-slot="lead" data-moment="hero-lead" data-mk="entrance" style="--i: 1">Появления, сцены прокрутки, петли и отклик — одним скриптом без библиотек. Набор ставит только атрибуты и переменные; без JS, при «уменьшить движение» и в обзоре холста видны конечные кадры.</p>
+      <div class="hero__actions" data-slot="actions" data-moment="hero-actions" data-mk="entrance" style="--i: 2">
+        <a class="btn" href="#reveal" data-mk="magnet" data-moment="hero-cta"><span data-mk-label>Смотреть примитивы</span>
+          <svg class="arrow" viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+        <a class="btn btn--ghost" href="#how">Как устроен</a>
+      </div>
+    </div>
+    <div class="orb" data-fx="orb" data-moment="hero-orb" data-mk="drift" style="--mk-period: 14s; --mk-amp: 2.4" aria-hidden="true"><i class="orb__ring"></i></div>
+  </div>
+</section>
+
+<!-- 02 · манифест: подсветка слов по прокрутке; слова размечены заранее -->
+<section class="sec" id="manifesto" data-section="manifesto">
+  <div class="wrap">
+    <p class="label" style="margin-bottom: 28px"><b>01</b> — Роль у каждого движения</p>
+    <p class="big" data-slot="text" data-moment="manifesto-highlight" data-mk="highlight"><span>Хорошее</span> <span>движение</span> <span>говорит</span> <span>одно:</span> <span>что</span> <span>важно,</span> <span>куда</span> <span>смотреть</span> <span>дальше,</span> <span>что</span> <span>изменилось.</span> <span>Остальное</span> <span>—</span> <span>шум,</span> <span>за</span> <span>который</span> <span>читатель</span> <span>платит</span> <span>вниманием.</span> <span>Поэтому</span> <span>у</span> <span>приёма</span> <span>здесь</span> <span>есть</span> <span>роль,</span> <span>пауза</span> <span>и</span> <span>тихая</span> <span>версия.</span></p>
+  </div>
+</section>
+
+<!-- 03 · система появления: три приёма по ролям — маска у заголовка, подъём у текста и карточек, шторка у кадра -->
+<section class="sec" id="reveal" data-section="reveal" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head">
+      <p class="label"><b>02</b> — Система появления</p>
+      <h2 class="h2" data-slot="title" data-moment="reveal-title" data-mk="unmask">Три приёма вместо одинакового появления</h2>
+      <p class="lead" data-slot="intro" data-moment="reveal-intro" data-mk="rise">Заголовки поднимаются из маски, кадры открываются шторкой, фигуры наводятся на резкость. Каждый — один раз и со своей кривой; спокойные секции не появляются вовсе.</p>
+    </div>
+    <div class="cards" data-mk-stagger data-slot="cards" data-moment="reveal-cards">
+      <article class="card" data-mk="rise" data-group="card-1"><span class="k">ПОДЪЁМ</span><h3 class="h3">Текст и карточки</h3><p>16 px и 560 мс; прозрачность вдвое короче сдвига и со своей кривой.</p></article>
+      <article class="card" data-mk="rise" data-group="card-2"><span class="k">МАСКА</span><h3 class="h3">Заголовки секций</h3><p>Строка поднимается из своей коробки: сдвиг и обрезка идут одной кривой.</p></article>
+      <article class="card" data-mk="rise" data-group="card-3"><span class="k">ШТОРКА</span><h3 class="h3">Кадры и полосы</h3><p>clip-path от края и обратный масштаб внутри — кадр «въезжает» в рамку.</p></article>
+    </div>
+    <div class="pair" style="margin-top: clamp(40px, 6vw, 88px)">
+      <figure style="margin: 0">
+        <div class="plate plate--dune" style="aspect-ratio: 4 / 3; --mk-r: 4px" data-slot="media" data-moment="reveal-media" data-mk="sweep"><div data-mk-inner></div></div>
+        <figcaption class="cap">Шторка: кадр открывается слева за 800 мс, внутри — масштаб 1,06 → 1.</figcaption>
+      </figure>
+      <figure style="margin: 0; display: grid; gap: 0; align-content: end">
+        <div class="plate plate--sea" style="aspect-ratio: 4 / 3" data-slot="figure" data-moment="reveal-figure" data-mk="scale-in" data-mk-blur><div class="fill"></div></div>
+        <figcaption class="cap">Проявление с масштабом: 0,96 → 1 и размытие 6 px → 0 — фигура «наводится на резкость».</figcaption>
+      </figure>
+    </div>
+    <svg viewBox="0 0 1200 120" style="margin-top: 56px; width: 100%; height: auto" data-slot="diagram" data-moment="reveal-diagram" data-mk="draw" aria-hidden="true">
+      <path pathLength="1" d="M0 90 C 200 90 260 30 420 30 S 640 90 800 90 1040 30 1200 30" fill="none" stroke="#b8431f" stroke-width="2"/>
+      <path pathLength="1" d="M0 110 H 1200" fill="none" stroke="rgb(20 19 15 / .2)" stroke-width="1"/>
+    </svg>
+  </div>
+</section>
+
+<!-- 04 · разбиение: слова и строки размечены заранее, доступный текст цел -->
+<section class="sec dark" id="statement" data-section="statement">
+  <div class="wrap split2">
+    <div style="display: grid; gap: 24px">
+      <p class="label"><b>03</b> — Разбиение текста</p>
+      <h2 class="h2" data-slot="title" data-moment="statement-words" data-mk="split" data-mk-split="words"><span>Слова</span> <span>приходят</span> <span>по</span> <span>одному,</span> <span>а</span> <span>читаются</span> <span>целиком</span></h2>
+    </div>
+    <p class="big" style="color: var(--ivory-2)" data-slot="lines" data-moment="statement-lines" data-mk="split" data-mk-split="lines"><span>Строки и слова размечены заранее:</span><span>на холсте их пишет автор артборда,</span><span>на сайте — компонент при сборке.</span></p>
+  </div>
+</section>
+
+<!-- 05 · честные числа: итог — в HTML; счёт — CSS-счётчик поверх прозрачного текста -->
+<section class="sec" id="proof" data-section="proof">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>04</b> — Честные числа</p><h2 class="h2" data-mk="unmask" data-moment="proof-title" data-slot="title">Набор о себе</h2></div>
+    <div class="proof" data-mk-stagger>
+      <div data-mk="rise"><span class="num" data-slot="n1" data-moment="proof-n1" data-mk="count">35</span><span class="unit">примитивов</span><p class="muted" style="margin: 0">Одно имя в <code>data-mk</code> — одна запись в <code>primitives.yaml</code>.</p></div>
+      <div data-mk="rise"><span class="num" data-slot="n2" data-moment="proof-n2" data-mk="count">33</span><span class="unit">эффекта каталога</span><p class="muted" style="margin: 0">Исполнены кодом набора, у каждого — якорь на странице-демо.</p></div>
+      <div data-mk="rise"><span class="num" data-slot="n3" data-moment="proof-n3" data-mk="count">12,9</span><span class="unit">КБ brotli</span><p class="muted" style="margin: 0">Скрипт и стили набора вместе, без библиотек и сети.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · петли: строка и бейдж — два движения в окне (бюджет L1); пауза в шапке стоп-кран для обеих -->
+<section class="sec" id="ticker" data-section="ticker" style="padding-top: 0">
+  <div class="wrap ticker-head">
+    <p class="label"><b>05</b> — Петли с паузой</p>
+    <div class="badge" data-mk="drift" data-mk-drift="spin" data-fx="badge" data-moment="ticker-badge" style="--mk-period: 24s" aria-hidden="true">
+      <svg viewBox="0 0 132 132"><defs><path id="badge-c" d="M66 66 m-52 0 a52 52 0 1 1 104 0 a52 52 0 1 1 -104 0"/></defs>
+        <text><textPath href="#badge-c">пауза в шапке · одна на все петли ·</textPath></text><circle cx="66" cy="66" r="5" fill="#b8431f"/></svg>
+    </div>
+  </div>
+  <h2 class="sr-only">Примитивы набора</h2>
+  <div class="ticker" data-mk="marquee" data-mk-speed="40" data-mk-boost="0.35" data-slot="strip" data-moment="ticker-strip" aria-hidden="true">
+    <div data-mk-track><span>подъём</span><span>маска</span><span>шторка</span><span>счётчик</span><span>подсветка</span><span>параллакс</span><span>стопка</span><span>сцена</span></div>
+    <div data-mk-track aria-hidden="true"><span>подъём</span><span>маска</span><span>шторка</span><span>счётчик</span><span>подсветка</span><span>параллакс</span><span>стопка</span><span>сцена</span></div>
+  </div>
+  <div class="wrap" style="margin-top: 36px"><p class="muted" style="max-width: 34rem; margin: 0">Петля идёт, только пока видна; при наведении и фокусе стоит, а пауза в шапке останавливает все петли сразу (WCAG 2.2.2). При «уменьшить движение» строка — статичный ряд.</p></div>
+</section>
+
+<!-- 07 · глубина: параллакс трёх слоёв, разница скоростей ≤ 40 %; текст едет со страницей -->
+<section class="sec" id="depth" data-section="depth">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>06</b> — Глубина</p><h2 class="h2" data-mk="unmask" data-slot="title" data-moment="depth-title">Фон отстаёт, текст — нет</h2></div>
+    <div class="layers">
+      <div class="plate plate--sea l1" data-mk="parallax" style="--mk-depth: 0.18" data-fx="far" data-moment="depth-far"><div class="fill"></div></div>
+      <div class="plate plate--ember l2" data-mk="parallax" style="--mk-depth: 0.08" data-fx="mid" data-moment="depth-mid"><div class="fill"></div></div>
+      <div class="plate plate--dune l3" data-mk="parallax" style="--mk-depth: -0.06" data-fx="near" data-moment="depth-near"><div class="fill"></div></div>
+      <p class="note muted">Дальний слой смещается на 18 % пути прокрутки, ближний — навстречу на 6 %. На телефоне амплитуда вдвое меньше.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 08 · линия пути: рисуется прокруткой по шкале своей коробки -->
+<section class="sec" id="path" data-section="path" style="padding-top: 0">
+  <div class="wrap" style="display: grid; gap: 48px">
+    <p class="label"><b>07</b> — Линия пути</p>
+    <div class="steps" data-mk="scroll-draw" data-slot="line" data-moment="path-line" style="--mk-from: cover 25%; --mk-to: cover 70%">
+      <svg class="line" viewBox="0 0 20 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M10 0 V 100"/></svg>
+      <div class="step"><span class="k">ШАГ 1</span><h3 class="h3">Разметка</h3><p class="muted" style="margin: 0">Атрибут <code>data-mk</code> и данные из спецификации движения — ничего больше.</p></div>
+      <div class="step"><span class="k">ШАГ 2</span><h3 class="h3">Стили</h3><p class="muted" style="margin: 0">Конечные состояния — по умолчанию, начальные — только под корнем набора.</p></div>
+      <div class="step"><span class="k">ШАГ 3</span><h3 class="h3">Запуск</h3><p class="muted" style="margin: 0"><code>MotionKit.mount(document)</code> — после LCP, одной строкой.</p></div>
+      <div class="step"><span class="k">ШАГ 4</span><h3 class="h3">Проверка</h3><p class="muted" style="margin: 0"><code>motion_smoke.py</code> во всех режимах и <code>motion_check.py</code> по уровню.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 09 · спокойная секция: без движения -->
+<section class="sec dark" id="how" data-section="how">
+  <div class="wrap split2" style="align-items: start">
+    <div style="display: grid; gap: 20px"><p class="label"><b>08</b> — Как устроено</p><h2 class="h2">Без JS страница полна</h2></div>
+    <div style="display: grid; gap: 18px">
+      <p class="lead">Корень получает <code>data-mk-on="full"</code>, только когда набор запущен и движение разрешено. До этого — и при «уменьшить движение», выборе «Меньше», в обзоре холста и статичной копии — видны конечные состояния.</p>
+      <p class="lead">Числа движения — переменные с именами токенов <code>--motion-marketing-…</code>: дизайн-система проекта подменяет их без правки набора. Прокрутку набор не перехватывает.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── витрина L2: на странице L1 эти секции не ставят ─── -->
+
+<!-- 10 · сцена тактами (beats): карточки идут прокруткой, сцена доигрывает такт пружиной ω 3 -->
+<section class="sec dark scene-beats" id="beats" data-section="beats" data-mk="scene" data-mk-mode="beats" data-mk-beats="0,0.299,0.585,0.835,1" data-mk-tempo="3" style="padding: 0">
+  <div data-mk-stage data-slot="stage" data-moment="beats-stage">
+    <div class="stage-art" aria-hidden="true">
+      <svg viewBox="0 0 600 520" style="width: 100%; height: 100%; overflow: visible">
+        <path d="M40 460 C 130 460 140 360 220 360 S 320 260 390 260 S 470 150 520 150 S 580 60 580 60" fill="none" stroke="rgb(238 232 220 / .14)" stroke-width="2"/>
+        <path d="M40 460 C 130 460 140 360 220 360 S 320 260 390 260 S 470 150 520 150 S 580 60 580 60" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1"
+              style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+      </svg>
+      <i class="node" style="left: 6.7%; top: 88.5%; --t: 0"></i><i class="node" style="left: 36.7%; top: 69.2%; --t: 0.299"></i>
+      <i class="node" style="left: 65%; top: 50%; --t: 0.585"></i><i class="node" style="left: 86.7%; top: 28.8%; --t: 0.835"></i>
+      <i class="node" style="left: 96.7%; top: 11.5%; --t: 1"></i>
+    </div>
+    <nav class="rail" data-mk-rail aria-label="Такты сцены">
+      <button type="button" data-mk-dot aria-label="Такт 1"></button><button type="button" data-mk-dot aria-label="Такт 2"></button>
+      <button type="button" data-mk-dot aria-label="Такт 3"></button><button type="button" data-mk-dot aria-label="Такт 4"></button>
+      <button type="button" data-mk-dot aria-label="Такт 5"></button>
+    </nav>
+    <button type="button" class="btn btn--ghost skip" data-mk-skip>Пропустить сцену</button>
+    <div class="veil" data-mk-veil aria-hidden="true"></div>
+  </div>
+  <div data-mk-steps>
+    <div data-mk-beat data-group="beat-0"><div><p class="label"><b>09</b> — Сцена тактами · витрина L2</p><h2 class="h2">Крутнул — сцена доиграла</h2><p class="lead">Листайте: каждый такт сцена доводит сама, пружиной без перелёта.</p></div></div>
+    <div data-mk-beat data-group="beat-1"><div><span class="label"><b>такт 1</b></span><h3 class="h3">Карточка дошла до линии 60 % окна</h3></div></div>
+    <div data-mk-beat data-group="beat-2"><div><span class="label"><b>такт 2</b></span><h3 class="h3">Пружина ω 3: 95 % пути за 1,58 с</h3></div></div>
+    <div data-mk-beat data-group="beat-3"><div><span class="label"><b>такт 3</b></span><h3 class="h3">Быстрый жест — одно движение до последнего такта</h3></div></div>
+    <div data-mk-beat data-group="beat-4"><div><span class="label"><b>такт 4</b></span><h3 class="h3">Финал держится, окно гаснет в фон и уезжает</h3></div></div>
+  </div>
+</section>
+
+<section class="sec" id="calm-1" data-section="calm-1"><div class="wrap"><p class="big muted">Между двумя сценами — спокойный блок: страница не идёт одним потоком.</p></div></section>
+
+<!-- 11 · стопка липких карточек: предыдущая уходит вглубь по шкале следующей -->
+<section class="sec" id="stack" data-section="stack" style="padding-top: 0">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>10</b> — Стопка</p><h2 class="h2" data-mk="unmask" data-slot="title" data-moment="stack-title">Карточки ложатся друг на друга</h2></div>
+    <div class="stack" data-mk="stack" data-slot="cards" data-moment="stack-cards">
+      <article class="card"><span class="k">01</span><h3 class="h2">Липкость — поведение прокрутки</h3><p>При «уменьшить движение» стопка остаётся липкой, уходит только масштаб.</p></article>
+      <article class="card"><span class="k">02</span><h3 class="h2">Масштаб 1 → 0,94</h3><p>По шкале следующей карточки через <code>timeline-scope</code>; 0 КБ JS.</p></article>
+      <article class="card"><span class="k">03</span><h3 class="h2">Только transform</h3><p>Без фильтров на липких слоях: Safari держит частоту кадров.</p></article>
+      <article class="card"><span class="k">04</span><h3 class="h2">Последняя не уходит</h3><p>Финал стопки читается целиком.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 12 · горизонталь (L2): липкое окно и сдвиг ленты по прогрессу; телефон и reduce — родная лента -->
+<section class="hs dark" id="horizontal" data-section="horizontal" data-mk="horizontal" aria-label="Горизонтальная лента">
+  <div data-mk-stage tabindex="0" aria-label="Панели ленты" data-slot="stage">
+    <div data-mk-track data-moment="horizontal-track" data-slot="track">
+      <div class="panel plate--night"><div class="fill"></div><p class="label"><b>11</b> — Горизонталь · L2</p><h3 class="h2">Колесо ведёт страницу вниз</h3></div>
+      <div class="panel plate--dune"><div class="fill"></div><h3 class="h2">А лента едет вбок</h3></div>
+      <div class="panel plate--sea"><div class="fill"></div><h3 class="h2">Одна панель — один экран</h3></div>
+      <div class="panel plate--ember"><div class="fill"></div><h3 class="h2">Не больше пяти</h3></div>
+    </div>
+    <div class="barbox" aria-hidden="true"><i data-mk-bar></i></div>
+  </div>
+</section>
+
+<section class="sec" id="calm-2" data-section="calm-2"><div class="wrap"><p class="big muted">Пауза перед большим кадром — вдох.</p></div></section>
+
+<!-- 13 · кадр раскрывается до полного вылета: липкое окно 100svh + 150vh пути -->
+<section class="fx dark" id="expand" data-section="expand" data-mk="frame-expand">
+  <div data-mk-stage>
+    <div class="plate plate--night" data-mk-frame data-slot="frame" data-moment="expand-frame"><div class="fill"></div></div>
+    <div data-mk-caption data-slot="caption" data-moment="expand-caption"><p class="label"><b>12</b> — Кадр до вылета</p><h3 class="h2">Окно растёт, пока не станет сценой</h3></div>
+  </div>
+</section>
+
+<!-- 14 · текст-окно: кадр внутри букв едет по шкале самого слова -->
+<section class="sec" id="mask" data-section="mask">
+  <div class="wrap">
+    <p class="label" style="margin-bottom: 24px"><b>13</b> — Текст-окно</p>
+    <p class="word" data-mk="text-mask" data-slot="word" data-moment="mask-word" style="--mk-media: linear-gradient(180deg, #f3d9b6 0%, #e9b98a 22%, #c97a4d 44%, #8f3f22 66%, #3a1a10 88%, #14130f 100%); --mk-media-size: 100% 260%">Движение</p>
+  </div>
+</section>
+
+<!-- 15 · скраб (L1, 150vh): прогресс = прокрутка, пружина ω 6,5; надписи на отрезках -->
+<section class="sec dark dial" id="dial" data-section="dial" data-mk="scene" data-mk-mode="scrub" data-mk-length="150" style="padding: 0">
+  <div data-mk-stage data-slot="stage" data-moment="dial-stage">
+    <svg viewBox="0 0 400 400" aria-hidden="true">
+      <circle cx="200" cy="200" r="160" fill="none" stroke="rgb(238 232 220 / .12)" stroke-width="2"/>
+      <circle cx="200" cy="200" r="160" fill="none" stroke="#e9875f" stroke-width="3" pathLength="1" transform="rotate(-90 200 200)"
+              style="stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--mk-p))"/>
+      <g style="transform-origin: 200px 200px; transform: rotate(calc(var(--mk-p) * 360deg))"><circle cx="200" cy="40" r="7" fill="#e9875f"/></g>
+    </svg>
+    <div class="segs" style="position: absolute; left: var(--gut); bottom: 12vh; max-width: 26rem">
+      <p class="label"><b>14</b> — Скраб · 150vh</p>
+      <h3 class="h2" data-mk-seg="0,0.33">Прогресс равен прокрутке</h3>
+      <h3 class="h2" data-mk-seg="0.34,0.66">Пружина догоняет за 0,73 с</h3>
+      <h3 class="h2" data-mk-seg="0.67,1">Без перелёта и без отставания</h3>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · указатель: наклон карточек ≤ 7°, только мышь -->
+<section class="sec" id="pointer" data-section="pointer">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>15</b> — Указатель</p><h2 class="h2" data-mk="unmask" data-slot="title" data-moment="pointer-title">Отвечает руке, а не времени</h2></div>
+    <div class="tilts" data-slot="cards">
+      <article class="card" data-mk="tilt" data-moment="pointer-tilt"><i data-mk-glare></i><span class="k">НАКЛОН</span><h3 class="h3">До 7° и блик</h3><p>Перспектива 900 px, сглаживание по времени — одинаково на 60 и 144 Гц.</p></article>
+      <article class="card" data-mk="tilt"><i data-mk-glare></i><span class="k">МАГНИТ</span><h3 class="h3">До 8 px к указателю</h3><p>Кнопка первого экрана: не больше четверти высоты, подпись — на 40 % дальше.</p></article>
+      <article class="card" data-mk="tilt"><i data-mk-glare></i><span class="k">ПРОЖЕКТОР</span><h3 class="h3">Свет под текстом</h3><p>Только внутри первого экрана; на тач-экране пятно стоит в покое.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 17 · отклик интерфейса: аккордеон, окно, подпись кнопки, переворот, блик, колонки -->
+<section class="sec dark" id="micro" data-section="micro">
+  <div class="wrap" style="display: grid; gap: clamp(56px, 8vw, 104px)">
+    <div class="split2" style="align-items: start">
+      <div style="display: grid; gap: 20px"><p class="label"><b>16</b> — Отклик</p><h2 class="h2">Короткие ответы на действие</h2>
+        <div class="icons">
+          <button type="button" class="ib" data-mk="button-label shine" data-moment="micro-label" commandfor="sheet" command="show-modal">Открыть окно
+            <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h12M9 3v12" stroke="currentColor" stroke-width="1.6"/></svg></button>
+          <a class="ib" href="#state" data-mk="button-label">К смене состояния <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M3 9h11m-4-4 4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></a>
+        </div>
+      </div>
+      <div class="faq" style="--accent: var(--ember)">
+        <details data-mk="accordion" name="faq" data-moment="micro-accordion"><summary>Можно ли без JS? <span data-mk-marker aria-hidden="true">+</span></summary><p class="ans">Да: страница полна, видны конечные состояния; работают аккордеон, окно по команде кнопки, переворот по фокусу.</p></details>
+        <details data-mk="accordion" name="faq"><summary>Что при «уменьшить движение»? <span data-mk-marker aria-hidden="true">+</span></summary><p class="ans">Конечные состояния и затухание вместо смещения: окно проявляется за 180 мс, петли стоят, сцены — конечным кадром.</p></details>
+        <details data-mk="accordion" name="faq"><summary>Почему высота — исключение? <span data-mk-marker aria-hidden="true">+</span></summary><p class="ans">Раскрытие по клику ≤ 300 мс: сдвиги идут за действием, раскладка на кадре дешева.</p></details>
+      </div>
+    </div>
+    <div class="flips">
+      <div data-mk="flip" data-moment="micro-flip">
+        <div data-mk-face class="card"><span class="k">ЛИЦО</span><h3 class="h2">Наведите</h3><p>Поворот 180° за 560 мс; при «уменьшить движение» оборот стоит под лицом.</p>
+          <button type="button" class="btn btn--ghost" data-mk-flip-toggle aria-expanded="false" style="justify-self: start">Подробнее</button></div>
+        <div data-mk-back class="card" style="background: var(--ivory); color: var(--night)"><span class="k">ОБОРОТ</span><h3 class="h2">Оборот</h3><p style="color: #3d3a34">Ссылка оборота в порядке Tab: скрыт прозрачностью, а не visibility.</p><a href="#micro" style="justify-self: start">Ссылка оборота</a></div>
+      </div>
+      <div class="plate plate--ember" data-mk="shine" tabindex="0" aria-label="Кадр с бликом" data-moment="micro-shine" style="min-height: 260px"><div class="fill"></div></div>
+    </div>
+    <div class="cols" data-mk="columns" data-moment="micro-columns">
+      <a href="#micro" data-mk-col><div class="plate plate--dune" data-mk-col-media><div class="fill"></div></div><span class="label">Пустыня</span></a>
+      <a href="#micro" data-mk-col><div class="plate plate--sea" data-mk-col-media><div class="fill"></div></div><span class="label">Море</span></a>
+      <a href="#micro" data-mk-col><div class="plate plate--night" data-mk-col-media><div class="fill"></div></div><span class="label">Ночь</span></a>
+      <a href="#micro" data-mk-col><div class="plate plate--ember" data-mk-col-media><div class="fill"></div></div><span class="label">Жар</span></a>
+    </div>
+  </div>
+  <dialog class="sheet" id="sheet" data-mk="dialog" data-fx="sheet" data-moment="micro-dialog" closedby="any" aria-labelledby="sheet-t">
+    <p class="label"><b>Окно</b></p><h3 class="h2" id="sheet-t" style="margin: 12px 0">Вход 320 мс, выход короче</h3>
+    <p class="muted">@starting-style и allow-discrete: окно не прыгает ни на входе, ни на выходе.</p>
+    <button type="button" class="btn" commandfor="sheet" command="close">Закрыть</button>
+  </dialog>
+</section>
+
+<!-- 18 · смена состояния: View Transition внутри страницы, атрибут цели меняет набор -->
+<section class="sec" id="state" data-section="state">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>17</b> — Смена состояния</p><h2 class="h2">Плитка ↔ список одним переходом</h2>
+      <div class="seg" role="group" aria-label="Вид галереи">
+        <button type="button" data-mk="state" data-mk-target="#gallery" data-mk-attr="data-view" data-mk-value="grid" aria-pressed="true">Плитка</button>
+        <button type="button" data-mk="state" data-mk-target="#gallery" data-mk-attr="data-view" data-mk-value="list" aria-pressed="false">Список</button>
+      </div></div>
+    <div class="gallery" id="gallery" data-view="grid" data-fx="gallery" data-moment="state-switch" aria-live="polite">
+      <div class="tile" style="view-transition-name: g1"><div class="plate plate--dune"><div class="fill"></div></div><span class="h3">Пустыня</span></div>
+      <div class="tile" style="view-transition-name: g2"><div class="plate plate--sea"><div class="fill"></div></div><span class="h3">Море</span></div>
+      <div class="tile" style="view-transition-name: g3"><div class="plate plate--night"><div class="fill"></div></div><span class="h3">Ночь</span></div>
+      <div class="tile" style="view-transition-name: g4"><div class="plate plate--ember"><div class="fill"></div></div><span class="h3">Жар</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 19 · текст по кривой: startOffset ставит набор, только пока секция видна -->
+<section class="sec" id="curve" data-section="curve" style="padding-top: 0">
+  <div class="wrap">
+    <p class="label" style="margin-bottom: 12px"><b>18</b> — Текст по кривой</p>
+    <h2 class="sr-only">Движение идёт за смыслом, а не за прокруткой</h2>
+    <svg class="curve" viewBox="0 0 1200 260" aria-hidden="true">
+      <path id="curve-p" d="M0 200 C 240 40 480 40 600 130 S 960 220 1200 60"/>
+      <text><textPath href="#curve-p" data-mk="text-path" data-mk-from="-2%" data-mk-to="38%" startOffset="18%" data-moment="curve-text">Движение идёт за смыслом, а не за прокруткой</textPath></text>
+    </svg>
+  </div>
+</section>
+</main>
+
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Страницы-демо по семействам каталога</p>
+    <ul>
+      <li><a href="demos/text.html">Текст и числа</a></li><li><a href="demos/scroll.html">Прокрутка и маски</a></li>
+      <li><a href="demos/pin.html">Закрепление и сцены</a></li><li><a href="demos/pointer.html">Указатель</a></li>
+      <li><a href="demos/micro.html">Микродвижение</a></li><li><a href="demos/marquee.html">Петли</a></li>
+      <li><a href="demos/transition-a.html">Переходы страниц</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

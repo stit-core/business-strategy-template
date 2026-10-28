@@ -2,10 +2,12 @@
 
 Волна 2 · агент G · 2026-09-24 · источников: 31 + 3 дайджеста W (целиком 24, соседи и своя база — 7) · опыты: `99-raw/experiments/G/00-registry`
 (npm 47 пакетов, GitHub 20, BCD и web-features), `01-lib-cost` (33 сценария: вес br и TBT при CPU ×4), `02-st-lenis-vt`
-(совместимость), `03-effect-module` (модуль эффекта) · версии на 2026-09-24: Chrome 154 / Edge 153 / Firefox 156 / Safari 27 (BCD 8.1.3); стенд — Chromium 153.0.8010.12
-(Playwright 1.63), WebKit 2359; gsap 3.15.0, lenis 1.3.26, motion 13.4.3, animejs 4.5.0, three 0.186.1, ogl 1.0.11, pixi.js 8.21.0,
-lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1, @splinetool/runtime 2.0.57, swup 4.10.0,
-@barba/core 2.10.3, astro 7.3.5, next 16.3.6, vite 8.3.1, react 19.3.0. Машиночитаемо — `stack.yaml`; паттерны кода — `02-implementation-patterns.md`.
+(совместимость), `03-effect-module` (модуль эффекта) · браузеры на 2026-10-28: Chrome 156, Firefox 159, Safari 27 (Chrome с 153 и
+Firefox с 157 выходят раз в 2 недели); поддержка — BCD 8.1.3 (2026-09-24) и заметки к выпускам по 2026-10-28 · стенд — Chromium
+153.0.8010.12 (Playwright 1.63), WebKit 2359 · замер G/01 — на версиях 2026-09-24: gsap 3.15.0, lenis 1.3.26, motion 13.4.3, animejs
+4.5.0, three 0.186.1, ogl 1.0.11, pixi.js 8.21.0, lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1,
+@splinetool/runtime 2.0.57, swup 4.10.0, @barba/core 2.10.3, astro 7.3.5, next 16.3.6, vite 8.3.1, react 19.3.0; версии библиотек
+движения на 2026-10-28 — §11. Машиночитаемо — `stack.yaml`; паттерны кода — `02-implementation-patterns.md`.
 
 Границы: список и цена эффектов — F (`../06-effects-catalog/`); правила движения и reduce — E (`../05-motion/`); 3D-рантайм в
 деталях — `../../3d/01-web-3d-landscape/03-runtime-landscape.md` и `09-web-runtime/*`; ворота страницы — site.
@@ -13,48 +15,58 @@ lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1, @
 ## Выжимка для агента
 
 1. **Стек выбирается снизу вверх по лестнице стоимости**: CSS и HTML (0 КБ) → свой код до 1 КБ → малые библиотеки (3–8 КБ br)
-   → GSAP (24–52 КБ br) → WebGL (6–120 КБ br без 3D, 108–345 с 3D) → no-code-рантаймы (42 КБ + CDN, 833 КБ). Следующая ступень
-   берётся, только если эффект не делается на предыдущей → §1. [проверено]
+   → набор движения базы `motion-kit` (JS и CSS 12,9 КБ br: DOM-движение по умолчанию на всех уровнях и на холсте) → GSAP
+   (24–52 КБ br) — сюжет, которого набор не делает → WebGL (6–120 КБ br без 3D, 108–345 с 3D) → no-code-рантаймы (42 КБ + CDN,
+   833 КБ). Следующая ступень берётся, только если эффект не делается на предыдущей → §1. [проверено]
 2. **Слой «подача» по уровням** (A): JS эффектов ≤ 20 / 100 / 150–200 КБ br для L0 / L1 / L2; `gsap + ScrollTrigger + SplitText`
    (42 КБ) помещается в L1, «набор Awwwards» GSAP (52 КБ) + Lenis (5 КБ) + свой код — в L2; React ради анимации (58 КБ базово,
    94 КБ с Motion) в L1 не помещается → §1.2. [проверено]
-3. **L0 — без библиотек анимации**: CSS-переходы, `@starting-style`, одно появление первого экрана, IntersectionObserver
-   (0,2 КБ, TBT 0); `scroll-driven`, закрепление и плавная прокрутка на L0 запрещены уровнем (A) → §2. [проверено]
-4. **L1 по умолчанию — CSS**: появление и параллакс — `animation-timeline: view()` под `@supports ((animation-timeline: scroll())
-   and (animation-range: 0% 100%))`; GSAP — только если в `treatment` есть закреплённая сцена, split-заголовок, Flip или
-   сюжет прокрутки, который должен работать и в Firefox → §2, §3.1. [документация: S7, S10]
-5. **Scroll-driven animations не Baseline** (2026-09-24): Chrome/Edge 115+, Safari/iOS 26+, Samsung 23+; Firefox 156 — только
-   Nightly. Декоративное — улучшение без фолбэка; смысловое — фолбэк IO или GSAP; `scroll-timeline-polyfill` не ставить;
-   scroll-triggered (`animation-trigger`) — только Chrome 146+, поверх IO → §3.1. [документация: S7, S9, S10]
-6. **GSAP 3.15.0 бесплатен целиком** (SplitText, MorphSVG, ScrollSmoother), и для коммерции; сайты, собранные ИИ, — можно;
+3. **L0 — без сторонних библиотек анимации**: CSS-переходы, `@starting-style`, одно появление первого экрана, IntersectionObserver
+   (0,2 КБ, TBT 0), примитивы набора движения с `level_min` L0 (весь набор — 12,9 КБ br при бюджете 20); `scroll-driven`,
+   закрепление и плавная прокрутка на L0 запрещены уровнем (A) → §2. [проверено]
+4. **L1 по умолчанию — CSS и набор движения**: появление и параллакс — `animation-timeline: view()` под `@supports ((animation-timeline:
+   scroll()) and (animation-range: 0% 100%))`, DOM-эффекты — примитивы набора (`../11-motion-code/primitives.yaml`); GSAP —
+   только если в `treatment` есть то, чего не делает набор: сложный таймлайн, Flip, синхрон с canvas и WebGL → §2, §3.1.
+   [документация: S7, S10]
+5. **Scroll-driven animations — во всех движках**: Chrome/Edge 115+, Safari/iOS 26+, Samsung 23+, Firefox и Firefox Android 159+
+   (2026-10-27). Фолбэк — для старых версий: декоративное — без фолбэка, смысловое видно в конечном состоянии, разыгрывание по
+   порогам — IO; `scroll-timeline-polyfill` не ставить; scroll-triggered (`animation-trigger`) — Chrome 146+ по умолчанию, у Gecko
+   и WebKit сигнала нет — улучшение поверх IO → §3.1. [документация: S7, S9, S10, S35, S37]
+6. **GSAP 3.15.0 (последняя на 2026-10-28) бесплатен целиком** (SplitText, MorphSVG, ScrollSmoother), и для коммерции; сайты, собранные ИИ, — можно;
    нельзя — no-code-конструктор анимаций, конкурирующий с Webflow, и удаление `/*! … @license … */` из бандла → §3.2, §9. [документация: S1, S2]
 7. **Не вырезай уведомления лицензий** (`legalComments: 'none'`, `comments: false` — запрещено разд. III п. 3 лицензии GSAP) → §9. [документация: S1]
-8. **SplitText 3.13+** — выбор по умолчанию для split-заголовков: бесплатный, ставит `aria-label` на родителя и `aria-hidden` на
-   части, `autoSplit` пересплитывает после шрифтов и ресайза; `splitText` Motion — платный Motion+ (разовая оплата, пожизненное членство; установка по токену доступа) → §3.2, §3.3.
-   [документация: S2, S5]
-9. **Motion — для сайтов на React/Next и для точечных задач**: `motion/mini` 3,5 КБ br (WAAPI), `animate` 18,3, `scroll` +
-   `inView` 20,6; `scroll()` сам уходит на ScrollTimeline, где он есть → §3.3. [проверено: G/01; документация: S5]
+8. **Split-заголовок — примитив `split` набора движения** (куски в разметке заранее, `aria-label` на заголовке); **SplitText
+   3.13+** — в коде сайта, когда строки должны следовать переносу по ширине: бесплатный, ставит `aria-label` на родителя и
+   `aria-hidden` на части, `autoSplit` пересплитывает после шрифтов и ресайза; `splitText` Motion — платный Motion+ ($399 разово
+   за разработчика; установка по токену доступа) → §3.2, §3.3. [документация: S2, S5]
+9. **Motion 14 — для сайтов на React/Next и для точечных задач**: `animate` mini (WAAPI; вендор — 3,2 КБ, наш замер 13.4.3 —
+   3,5 br), hybrid (вендор — 22 КБ, наш замер — 18,3), `scroll()` (вендор — 3,8 КБ) сам уходит на `ScrollTimeline`, где можно →
+   §3.3. [проверено: G/01 на 13.4.3; документация: S5, S38]
 10. **Плавная прокрутка — только L2 и только Lenis 1.3.x** (пакет `lenis`, 4,8 КБ br, TBT 0): `anchors: true`, reduce Lenis
     соблюдает сам, с ScrollTrigger — один цикл `gsap.ticker`; не сочетать с ScrollSmoother, Locomotive и CSS `scroll-snap` → §4.
     [документация: S6; проверено: G/01, G/02]
 11. **Переходы между страницами — нативные View Transitions**: same-document — Baseline с 2025-10-14 (Chrome 111, Firefox 144,
-    Safari 18); cross-document `@view-transition` — Chrome 126+, Safari 18.2+, Firefox нет → только как улучшение, внутри
+    Safari 18); cross-document `@view-transition` — Chrome 126+, Safari 18.2+, Firefox нет (в Interop 2026) → только как улучшение, внутри
     `@media (prefers-reduced-motion: no-preference)` → §5. [документация: S7, S10]
 12. **Библиотека переходов — только когда нужно состояние между страницами** (играющее видео, WebGL-сцена, аудио): Swup 4.10
-    (`native: true` — поверх VT, плагины head и a11y) или `<ClientRouter />` на Astro; Barba 2.10.3 без релизов с 2024-08 —
-    только на существующих сайтах → §5. [документация: S11–S13]
+    (`native: true` — поверх VT с 4.5.0; плагины head и a11y, у a11y 5.2.1 `respectReducedMotion: true` по умолчанию) или
+    `<ClientRouter />` на Astro; Barba 2.10.3 без релизов с 2024-08 — только на существующих сайтах → §5. [документация: S11–S13, S39]
 13. **Один шейдерный фон — не three.js**: `@paper-design/shaders` 5,9 КБ br или свой шейдер на OGL (10,8 КБ) / WebGL2; three — при
     3D (3d); pixi.js 8 (120 КБ, TBT 116 мс) — только 2D-сцены с тысячами спрайтов → §6.1. [проверено]
 14. **Lottie: для одной-двух небольших анимаций — `lottie-web` light** (41,6 КБ br, без wasm); dotLottie (12,2 КБ + wasm 379 КБ br)
     — когда анимаций много или нужен Worker; у dotLottie рендер на главном потоке стоит ≈ 0,95 с скрипта за 3 с проигрывания при
-    CPU ×4 → `DotLottieWorker`; wasm dotLottie и Rive по умолчанию — с jsDelivr/unpkg → `setWasmUrl()` на свой домен → §6.2. [проверено]
-15. **Rive**: вендор советует `@rive-app/webgl2`; для сайта без Rive Text, Layouts, Scripting и Audio — `canvas-lite`
-    (42,5 КБ + wasm 272 КБ br) → §6.2. [документация: S14; проверено: G/01]
+    CPU ×4 → `DotLottieWorker` (под CSP — `setWorkerUrl()`); wasm dotLottie и Rive по умолчанию — с jsDelivr/unpkg → `setWasmUrl()`
+    на свой домен → §6.2. [проверено]
+15. **Rive 2.48**: Rive Renderer — только в `@rive-app/webgl2` (вендор советует его; `rive.wasm` 2 323 803 Б без сжатия); для
+    сайта без текста, раскладок, аудио и скриптов — `canvas-lite` (замер 2.43.1: 42,5 КБ + wasm 272 КБ br); `@rive-app/webgl`
+    устарел после 2.37.0 → §6.2. [документация: S14, S38; проверено: G/01]
 16. **Spline и Unicorn Studio — не по умолчанию**: Spline-рантайм 833 КБ br; Unicorn — SDK 42 КБ br с jsDelivr, сцена с их
     CDN, свой JSON — только тариф Legend, в репозитории SDK нет лицензии, reduce не описан → §6.3. [проверено: G/01; документация: S16]
-17. **Не бери**: Theatre.js (релиз 2024-05, studio AGPL), `framer-motion-3d` (снят), AOS (релиз 2018), `@studio-freight/lenis`
-    (переименован), `split-type` (2023), `typed.js` 3.0.0 (GPL-3.0), `vanta` (2022), `scroll-timeline-polyfill` → §7.
-    [документация: S23]
+17. **Не бери**: Theatre.js (заморожен: последний публичный коммит 2024-04-11, studio AGPL), `framer-motion-3d` (снят), AOS и
+    его `next` (2018, reduce нет), `@studio-freight/lenis` (переименован), `split-type` (2023), typed.js 3.0.0 и TypeIt (GPL с
+    платной коммерческой лицензией), ScrollReveal (GPL), sal.js (2021), Popmotion (2022), Velocity (2018), Vivus (2021), mo.js
+    (2023), Zdog (2022), `tailwindcss-animate` (устарел), Animate.css зависимостью, `vanta` (2022), `scroll-timeline-polyfill` →
+    §7. [документация: S23, S39]
 18. **Смысл страницы — в HTML сервера**: статическая сборка или SSG/SSR; клиентский SPA для маркетинговой страницы запрещён
     (ИИ-боты JS не исполняют, Яндекс рендерит JS только по бета-опции) → §8. [документация: site 07/01 §1.3, 07/02 §3]
 19. **Фреймворк по умолчанию — никакого** (HTML + Vite 8) для лендинга; Astro 7 — многостраничник и острова; Next 16 — если
@@ -63,8 +75,8 @@ lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1, @
     всё, через тему/шаблон и один собранный файл; Webflow — GSAP из настроек сайта и ≤ 50 000 символов кода на платном плане;
     Framer — Motion внутри и код-компоненты; на Тильде Zero-анимация на телефоне выключена по умолчанию, в Битриксе `addJs`
     не гарантирует порядок → §10. [документация: S18–S21]
-21. **Версии — из `npm view` на дату сборки, не по памяти**: three 0.186.1 вышел 2026-09-24, motion — 75 релизов за 12 мес.;
-    `stack.yaml` хранит `checked_at` → §11. [проверено]
+21. **Версии — из `npm view` на дату сборки, не по памяти**: motion 14.0.0 вышел 2026-10-02, на 2026-10-28 — уже 14.7.1; Chrome и
+    Firefox выходят раз в 2 недели; `stack.yaml` хранит `checked_at` → §11. [проверено]
 
 ## 1. Лестница стоимости
 
@@ -82,6 +94,7 @@ minify, production → brotli q11; страница в Chromium 153 headless, CP
 | малые | `motion/mini` | 3,5 | — | 0 [0–0] | 46 |
 | малые | taxi 1.9.1 · lenis 1.3.26 · paper-shaders · swup 4.10 · locomotive 5 | 4,4 · 4,8 · 5,9 · 6,6 · 7,8 | — | 0 у всех | 34–74 |
 | малые | barba 2.10.3 · ogl · animejs 4.5 | 9,2 · 10,8 · 12,6 | — | 0–4 | 63–69 |
+| набор | набор движения базы `motion-kit` 0.5.0: JS + CSS в сжатом виде, 35 примитивов, 33 эффекта каталога | 8,0 + 4,9 | — | 0 на демо L1 (`motion_check.py` desk — другой метод) | — |
 | средние | motion `animate` · `scroll`+`inView` · swiper 14.2 | 18,3 · 20,6 · 17,9 | — | 0 | 38–44 |
 | GSAP | ядро · +Flip · +MorphSVG | 24,3 · 31,9 · 32,1 | — | 0 · 1 [0–57] · 0 | 46–95 |
 | GSAP | +ScrollTrigger (20 триггеров) | 39,7 | — | 12 [0–17] | 84 |
@@ -95,12 +108,16 @@ minify, production → brotli q11; страница в Chromium 153 headless, CP
 | WebGL | three 0.186 (куб, 1 кадр) · pixi 8.21 (Application + прямоугольник) | 107,7 · 119,9 | — | 49 · 116 | 144–225 |
 | no-code | Unicorn SDK 2.2.14 (без сцены, с jsDelivr) · Spline runtime 2.0.57 (Application без сцены) | 42,4 · 833,4 | — | — · 82 | — · 241 |
 
+Набор движения — свой код базы (`../11-motion-code/`): без зависимостей и сети, DOM не строит; вес — `../11-motion-code/01-kit.md`
+§8 (esbuild `--minify`, brotli 11; исходники с комментариями — JS 12,1 и CSS 7,9 КБ br) [проверено: 11-motion-code].
 Unicorn — вес SDK снят в памяти без запуска; TBT главной unicorn.studio 254–1 158 мс — замер 3d (`3d 01/01` §5.7).
 Theatre core (30,1 КБ, TBT 20) без экспорта состояния studio падает с ошибкой — см. §7. Полная таблица — `summary.md` опыта.
 
 Выводы:
 - «Малые» (≤ 8 КБ br, TBT 0) почти бесплатны; GSAP-набор (24–52 КБ, TBT до 60 мс при CPU ×4) укладывается в бюджет L1 (TBT ≤ 300/200
   мс, A); SplitText (+≈ 27 мс) и ScrollSmoother (+≈ 47 мс) — основная цена GSAP, запускать после LCP. [проверено]
+- Набор движения (JS и CSS 12,9 КБ) исполняет 33 эффекта каталога и легче одного GSAP + ScrollTrigger (39,7 КБ JS): DOM-движение
+  берётся им, GSAP остаётся для сюжета, которого набор не делает (сложный таймлайн, Flip) [проверено: 11-motion-code, G/01].
 - Цена «вау» — в WebGL, wasm и фреймворке: React без единой анимации (58 КБ, TBT 32) дороже GSAP с ScrollTrigger (40 КБ, TBT 12).
   [проверено]
 - Замер C на живых сайтах: JS за сессию — медиана 694 КБ сжатого; библиотеки подачи из таблицы (40–60 КБ) — 6–9 % этого
@@ -111,8 +128,8 @@ Theatre core (30,1 КБ, TBT 20) без экспорта состояния stud
 
 | Уровень | JS подачи, КБ br (A) | Что помещается (G/01) | Что не помещается |
 |---|---|---|---|
-| L0 | ≤ 20 | CSS, свой IO (0,2), `motion/mini` (3,5), Lenis запрещён уровнем | GSAP (24+), любой WebGL |
-| L1 | ≤ 100 | GSAP+ST+SplitText (42) + свой код; или `motion` (18–21); paper-shaders (6) или OGL (11) для одного шейдера | React ради анимации, pixi, three без 3D-задачи |
+| L0 | ≤ 20 | CSS, свой IO (0,2), набор движения (12,9 — JS и CSS, `01-kit.md` §8), `motion/mini` (3,5); Lenis запрещён уровнем | GSAP (24+), любой WebGL |
+| L1 | ≤ 100 | набор движения (12,9), для сюжета вне набора — + GSAP+ST+SplitText (42); или `motion` (18–21); paper-shaders (6) или OGL (11) для одного шейдера | React ради анимации, pixi, three без 3D-задачи |
 | L2 | ≤ 150 телефон / 200 десктоп (+ JS 3D ≤ 250/350) | «набор Awwwards» (52) + Lenis (5) + свой код ≈ 30–50; three (108–158) — в слое 3D | Spline-рантайм (833) без явного исключения в `budget.overrides` |
 
 Wasm (dotLottie 379, Rive 272–613 КБ br) — после LCP по видимости; сторонние домены до ввода L0 ≤ 1, L1–L2 ≤ 2 (site `budgets.yaml`).
@@ -124,10 +141,11 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 | effect | L0 | L1 | L2 | Фолбэк без JS / без поддержки |
 |---|---|---|---|---|
+| 33 эффекта набора движения (`../11-motion-code/primitives.yaml`, поле `effects`) | примитив набора с `level_min` L0 | примитив набора | примитив набора; GSAP — сюжет, которого набор не делает (сложный таймлайн, Flip) | конечное состояние: без JS, в reduce, при «Меньше» и в обзоре холста |
 | `hero-entrance-once` | CSS keyframes, `@starting-style` | то же | то же или GSAP-таймлайн сцены | конечное состояние; LCP-элемент не из `opacity: 0` |
-| `split-text-reveal` | — | GSAP SplitText | SplitText + таймлайн | текст целиком |
+| `split-text-reveal` | — | примитив `split` (куски в разметке); GSAP SplitText — строки по переносу ширины | то же + таймлайн | текст целиком |
 | `kinetic-headline` | — | CSS keyframes осей вариативного шрифта | GSAP | статичный заголовок |
-| `scroll-reveal-system` | одно появление через IO | CSS `view()` + IO-ветка для Firefox | GSAP `ScrollTrigger.batch` | контент видим |
+| `scroll-reveal-system` | одно появление через IO | CSS `view()` + IO-ветка для браузеров без SDA | GSAP `ScrollTrigger.batch` | контент видим |
 | `scroll-driven-progress` | — | CSS `scroll()` | CSS `scroll()` | нет полосы |
 | `parallax-layers` | — | CSS `view()` | GSAP scrub (с Lenis) | статично |
 | `sticky-stack` | CSS `position: sticky` | + `view()` масштаб | GSAP pin | обычный стек |
@@ -148,17 +166,23 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 | `page-transition` | — | cross-document `@view-transition` | + Swup 4 / Astro ClientRouter для состояния между страницами | обычная навигация |
 | `smooth-scroll` | запрещено | запрещено | Lenis 1.3.x | родная прокрутка |
 
-В ячейке — сначала левый вариант; правый — для сюжета во всех браузерах или синхронизации с WebGL. Форма, цена, калькулятор — всегда L0 (A).
+Первая строка — умолчание: эффекты набора движения на всех уровнях и на холсте исполняет набор (`motion-kit`); строки ниже —
+как эффект делается без набора (стек заказчика, платформа §10) и чем его дополняют, когда сюжет выходит за набор. В ячейке —
+сначала левый вариант; правый — для того, чего CSS и набор не делают: сложный сюжет закрепления, синхронизация с WebGL. Форма,
+цена, калькулятор — всегда L0 (A).
 
 ## 3. Анимация и прокрутка
 
 ### 3.1. Платформа браузера: CSS, scroll-driven, scroll-triggered, WAAPI
 
-| Возможность | Chrome/Edge | Firefox | Safari/iOS | Baseline (web-features 3.39.0) |
+| Возможность | Chrome/Edge | Firefox | Safari/iOS | Baseline |
 |---|---|---|---|---|
-| `animation-timeline: scroll()/view()`, `animation-range`, `ScrollTimeline`, `ViewTimeline` | 115 | только Nightly; Android — нет | 26 | нет |
-| `timeline-scope` | 116 | Nightly | 26 | нет |
-| `timeline-trigger`, `animation-trigger` (scroll-triggered) | 146 (exp.) | нет | нет | нет |
+| `animation-timeline: scroll()/view()`, `animation-range`, `ScrollTimeline`, `ViewTimeline` | 115 | 159 (2026-10-27); Android 159 | 26 | во всех движках с 2026-10-27; Interop 2026 |
+| `timeline-scope` | 116 | Nightly по BCD 8.1.3; в 159 не сверено | 26 | нет |
+| `timeline-trigger`, `animation-trigger` (scroll-triggered) | 146 | нет | нет | нет; у Gecko и WebKit сигнала нет |
+| `@container scroll-state()`: `stuck`, `snapped`, `scrollable`; `scrolled` | 133; `scrolled` — 144 | нет | нет | нет |
+| `sibling-index()`, `sibling-count()` (стаггер чистым CSS) | да | да | да | newly available с 2026-08 |
+| `clip-path: shape()` (морфинг формы маски) | да | да | да | во всех движках; Interop 2026 |
 | `@starting-style`, `transition-behavior` | 117 | 129 | 17.5 / 17.4 | с 2024-08-06 |
 | `@property` (анимация градиентов, счётчиков) | 85 | 128 | 16.4 | с 2024-07-09 |
 | `linear()` (пружины и отскоки в CSS) | 113 | 112 | 17.2 | широко с 2026-06-11 |
@@ -166,23 +190,32 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 | `interpolate-size`, `calc-size` (анимация к `auto`) | 129 | нет | нет | нет |
 | `requestIdleCallback` | 47 | 55 | нет (Technology Preview) | нет |
 
-Источник: BCD 8.1.3 от 2026-09-24 и web-features 3.39.0, `99-raw/experiments/G/00-registry/support.json` [документация: S7].
+Источник: BCD 8.1.3 от 2026-09-24 и web-features 3.39.0, реестр `../99-raw/experiments/G/00-registry/` [документация: S7];
+scroll-driven в Firefox 159 и `sibling-index()` — MDN [S35]; scroll-triggered, `scroll-state()` — blink-dev и заметки к выпускам
+Chrome [S9, S37]; `shape()` и направления Interop 2026 — web.dev [S36]; сверено 2026-10-28 [документация].
 
 Правила:
 - **Проверка поддержки SDA** — `@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))`: без второй части
   пропускаются частичные реализации; декларации `animation-timeline` и `animation-range` — после шортката `animation` (иначе
   шорткат сбросит таймлайн) [документация: S10].
 - **Декоративное — без фолбэка, смысловое — с фолбэком.** Если на прокрутке раскрывается текст, цифра или шаг сюжета, в
-  Firefox (и при выключенном JS) содержимое обязано быть видимо в конечном состоянии; для «разыгрывания» по порогам — IO
-  с набором `threshold` или GSAP [документация: S10; практика]. Carmen Ansio (CSS Day 2024) — тот же принцип `@supports` →
+  браузере без SDA (Safari до 26, Firefox до 159) и при выключенном JS содержимое обязано быть видимо в конечном состоянии;
+  для «разыгрывания» по порогам — IO с набором `threshold` (CSS scroll-triggered — пока только Chrome) [документация: S10; практика]. Carmen Ansio (CSS Day 2024) — тот же принцип `@supports` →
   «basic experience» `[V:YGxOh85VtFg 27:25]`, но полифил она допускает `[V:YGxOh85VtFg 45:09]` — против запрета Chrome 2026 [спорно;
   позиция базы — без полифила].
 - **CSS SDA — дешевле по главному потоку**: таймлайны прокрутки встроены в WAAPI и CSS Animations и для `transform`/`opacity`
   могут идти вне главного потока; обработчик `scroll` получает события асинхронно и подвержен рывкам [документация: вендор браузера — S8].
   Проверка на нашей машине — открытый вопрос (опыт «SDA против JS под нагрузкой» не выполнялся).
-- **Scroll-triggered (Chrome 146+)**: `timeline-trigger: --t view() …; animation-trigger: --t play-forwards play-backwards;` —
-  анимация по времени после пересечения порога (не скраб). Блог Chrome называл 145, BCD — 146. Только прогрессивное
-  улучшение поверх IO [документация: S7, S9].
+- **Scroll-triggered (Chrome 146+ по умолчанию)**: `timeline-trigger: --t view() …; animation-trigger: --t play-forwards
+  play-backwards;` — анимация по времени после пересечения порога (не скраб). У Gecko и WebKit сигнала нет — только
+  прогрессивное улучшение поверх IO [документация: S9, S37].
+- **Новое в CSS для подачи**: стаггер без JS — `sibling-index()` и `sibling-count()` (норма — `../05-motion/01-motion-principles-and-access.md` §7.4);
+  раскрытие маской сложной формы — `clip-path: shape()`; состояние прокрутки контейнера — `@container scroll-state()`: шапка
+  «прилипла», карточка «пристыкована», страница прокручена (`scrolled`) — только Chrome, улучшение поверх статики
+  [документация: S35–S37].
+- **Interop 2026 по движению** (web.dev, 2026-02-12): scroll-driven animations, view transitions (с межстраничными,
+  `blocking="render"`, `<link rel="expect">`, `:active-view-transition-type()`), scroll snap, `shape()`, anchor positioning —
+  движки выравнивают эти возможности в 2026 году; до поддержки — тот же фолбэк [документация: S36].
 - **Практика отстаёт от платформы**: CSS SDA — у 2 из 49 наградных сайтов, View Transitions объявлены у 1 из 49 (строка
   `startViewTransition` в бандле роутера — ещё у 15) → генератор, выбирающий CSS, отличается от «среднего Awwwards» по коду,
   но не по виду [данные: C].
@@ -190,11 +223,14 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 ### 3.2. GSAP 3.15.0
 
 - **Статус.** Webflow купил GSAP осенью 2024; с 30.04.2025 все плагины в публичном npm `gsap`; команда Jack, Cassie, Rodrigo
-  продолжает; 3.15.0 — 2026-04-13, 4 релиза за 12 мес., 28 610★; `@gsap/react` 2.1.2 [документация: S2, S3; данные: S23].
-- **Когда брать**: закреплённая сцена со скрабом (`pin` + `scrub`), горизонтальная секция (`containerAnimation`), таймлайн из
-  4+ шагов, split-заголовки, Flip (смена раскладки с анимацией), MorphSVG, синхронизация с WebGL и Lenis через `gsap.ticker`,
-  сюжет прокрутки, который обязан работать в Firefox. [практика; данные: C — GSAP у 27 из 49 наградных, ScrollTrigger у 23]
-- **Когда не брать**: одно появление, hover, бегущая строка, параллакс слоёв, полоса прогресса — это CSS (0 КБ).
+  продолжает; 3.15.0 — 2026-04-13, последняя на 2026-10-28; на 2026-09-24 — 4 релиза за 12 мес., 28 610★; `@gsap/react` 2.1.2
+  [документация: S2, S3, S38; данные: S23].
+- **Когда брать** — в коде сайта, когда сюжет выходит за набор движения (его DOM-сцены, горизонталь и разбиение — примитивы
+  `scene`, `horizontal`, `split`): таймлайн из 4+ шагов, Flip (смена раскладки с анимацией), MorphSVG, синхронизация с WebGL и
+  Lenis через `gsap.ticker`, закреплённая сцена и горизонталь со сложным сюжетом (`pin` + `scrub`, `containerAnimation`), строки
+  split-заголовка по переносу ширины — то, чего не делают CSS и набор. [практика; данные: C — GSAP у 27 из 49 наградных,
+  ScrollTrigger у 23]
+- **Когда не брать**: одно появление, hover, бегущая строка, параллакс слоёв, полоса прогресса — это CSS (0 КБ) или примитив набора.
 - **SplitText 3.13+**: −50 % размера, `aria-label` на родителе и `aria-hidden` на частях, `autoSplit` + `onSplit()` (пересплит при
   ресайзе и загрузке шрифтов, анимации пересоздаются), `mask` для «раскрытия», `deepSlice` (ссылки и `<strong>` через строки),
   `propIndex` (`--word: 3`), standalone без ядра; удалены `position: "absolute"` и `lineThreshold` — код «по памяти» с ними
@@ -208,26 +244,28 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
   правилами [документация: вендор — S22, прочитано целиком]. Практика студий: basement.studio — GSAP-таймлайн + ScrollTrigger в React с
   `timeline.revert()` при очистке `[V:ufHQG7fDLQc 09:13]`; «GSAP 26 KB» со слайда — ядро (наш замер 24,3 br / 26,9 gzip), с ScrollTrigger — 39,7.
 
-### 3.3. Motion 13.4 (motion.dev), WAAPI, anime.js
+### 3.3. Motion 14 (motion.dev), WAAPI, anime.js
 
-- Motion (MIT, 75 стабильных релизов за 12 мес., 33 717★): `animate` в двух размерах — mini (вендор: 2,3 КБ; наш замер 3,5 br —
-  WAAPI, стили HTML/SVG, зарегистрированные CSS-свойства, пружина) и hybrid (вендор 18 КБ; наш 18,3 — независимые `x/y/rotate`,
-  SVG `pathLength`, JS-объекты, последовательности); `scroll()` использует ScrollTimeline, где он есть; для закрепления вендор
-  советует `position: sticky` [документация: S5; проверено: G/01].
+- Motion 14.7.1 (MIT; 14.0.0 — 2026-10-02, ломает только внутренние API): `animate` в двух размерах — mini (вендор: 3,2 КБ; наш
+  замер 13.4.3 — 3,5 br: WAAPI, стили HTML/SVG, зарегистрированные CSS-свойства, пружина) и hybrid (вендор: 22 КБ; наш замер
+  13.4.3 — 18,3: независимые `x`, `y`, `rotate`, SVG `pathLength`, JS-объекты, последовательности); `scroll()` (вендор: 3,8 КБ) идёт
+  на `ScrollTimeline`, где можно; для закрепления вендор советует `position: sticky` [документация: S5, S38; проверено: G/01].
 - Где Motion лучше GSAP: сайт уже на React/Next (`motion/react` ≈ +36 КБ br к React), продуктовые главные (C: Stripe, Linear,
   Vercel, Apple — React/Next + Motion, без GSAP и Lenis), микродвижение без таймлайнов [данные: C].
-- Ограничения: `splitText` — только Motion+ (разовая оплата, установка по токену) → агенту недоступен; three.js и vgpu через
-  `motion/three` (`threeEffect`) — «Motion+ early access», хотя код в публичном пакете 13.4.3 — поправка к `3d 01/03`
-  п.25 («Motion 13 — только DOM/SVG») [документация: S5; проверено: типы пакета].
+- Ограничения: `splitText` — только Motion+ ($399 разово за разработчика; там же Cursor, Ticker, AnimateNumber, Typewriter,
+  ScrambleText, Carousel, Motion Studio, AI Kit; установка по токену) → агенту недоступен; three.js и vgpu через `motion/three`
+  (`threeEffect`) — «Motion+ early access», хотя код лежал в публичном пакете 13.4.3 — поправка к `3d 01/03` п.25 («Motion 13 —
+  только DOM/SVG») [документация: S5, S38; проверено: типы пакета 13.4.3].
 - WAAPI (`el.animate`) — 0 КБ, Baseline с 2020; для одиночных JS-анимаций без библиотек (раскрытие, счётчик, магнит).
-- anime.js 4.5.0 (MIT, 12,6 КБ br, TBT 0; ветка 5.0 в бете) — живая альтернатива GSAP-ядру; своих scroll-сцен уровня
+- anime.js 4.5.0 (MIT, 12,6 КБ br, TBT 0; бета — 5.0.0-beta.2) — живая альтернатива GSAP-ядру; своих scroll-сцен уровня
   ScrollTrigger и SplitText-аналога с aria в стеке базы не проверяли → не по умолчанию [проверено: G/01; практика].
 
 ## 4. Плавная прокрутка
 
-- **Уровень**: только L2 (A: на L0–L1 запрещено); C — Lenis активен у 16 из 49 наградных, на телефоне не отключается
-  [данные: C].
-- **Lenis 1.3.26** (MIT, 2026-08-05, 15 стабильных релизов за 12 мес., 16 000★; 4,8 КБ br, TBT 0): оборачивает родную прокрутку —
+- **Уровень**: только L2 (A: на L0–L1 запрещено); C — плавная прокрутка на Lenis активна у 17 из 49 наградных (Lenis — 16,
+  Locomotive на Lenis — 1), на телефоне не отключается [данные: C].
+- **Lenis 1.3.27** (MIT, 2026-10-15; на 2026-09-24 — 15 стабильных релизов за 12 мес., 16 000★; замер G/01 на 1.3.26 — 4,8 КБ br,
+  TBT 0): оборачивает родную прокрутку —
   `position: sticky`, якоря и доступность работают; `respectReducedMotion: true` по умолчанию — при reduce `lerp = 1`
   (прокрутка 1:1), `scrollTo` и якоря мгновенно, настройка подхватывается без перезагрузки, `lenis.prefersReducedMotion`
   [документация: S6].
@@ -244,7 +282,9 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 - **Пакеты**: `lenis` (не `@studio-freight/lenis` — переименован, последний 1.0.42); `lenis/react`, `lenis/vue`, сборка для Framer
   (dist-tag `framer` 1.3.25-framer); ветка 2.0 — `dev` (2.0.0-dev.5), не ставить [данные: S23].
 - **Альтернативы**: GSAP ScrollSmoother (43,6 КБ с ST, TBT 59 мс — дороже; двигает контент `transform` внутри обёртки) —
-  только на сайтах, уже построенных на нём; Locomotive Scroll 5 (7,8 КБ) построен на Lenis — брать Lenis напрямую.
+  только на сайтах, уже построенных на нём; Locomotive Scroll 5 (7,8 КБ) построен на Lenis — брать Lenis напрямую: внутри
+  Lenis зафиксирован на 1.3.17, reduce в коде нет (README обещает «proper ARIA support»), вход CommonJS ведёт на файл, которого нет
+  в пакете [документация: S39; исходник — запуском не проверено].
 
 ## 5. Переходы: View Transitions и библиотеки
 
@@ -253,17 +293,20 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 | same-document `document.startViewTransition()` | Chrome 111, Firefox 144, Safari 18 — Baseline 2025-10-14 | смена состояния блока, фильтры, табы, раскрытие карточки (L1+) |
 | типы переходов (`types`, `:active-view-transition-type`) | Chrome 125, Firefox 147, Safari 18.2 | направление «вперёд/назад» |
 | `view-transition-class` | Chrome 125, Firefox 144, Safari 18.2 — Baseline 2025-10-14 | одна анимация на группу карточек |
-| cross-document `@view-transition { navigation: auto }` | Chrome 126, Safari 18.2; Firefox — нет | переходы многостраничника (MPA): улучшение, без JS |
+| cross-document `@view-transition { navigation: auto }` | Chrome 126, Safari 18.2; Firefox — нет (в Interop 2026) | переходы многостраничника (MPA): улучшение, без JS |
 | `pageswap`/`pagereveal` | Chrome 124/123, Safari 18.2; Firefox — нет | выбрать тип перехода, проверить `e.viewTransition` |
-| scoped `element.startViewTransition()`, `view-transition-group` | Chrome 147/140 (exp.) | не использовать без фолбэка |
+| scoped `element.startViewTransition()` | Chrome 147 по умолчанию; Firefox, Safari — нет (BCD 8.1.3) | переход внутри одного блока, остальная страница живёт; только с фолбэком — мгновенной сменой или `document.startViewTransition` |
+| `view-transition-group` | Chrome 140 (BCD 8.1.3) | не использовать без фолбэка |
 
 - **Умолчание для MPA**: `@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }` +
   `view-transition-name` у 1–3 общих элементов (логотип, заголовок, обложка); Firefox и reduce получают обычную
-  навигацию [документация: S10, S11].
+  навигацию [документация: S10, S11]. View transitions с межстраничными, `blocking="render"`, `<link rel="expect">` и
+  `:active-view-transition-type()` входят в Interop 2026 [документация: S36].
 - **Swup 4.10.0** (MIT, релиз 2026-09-03, 5 234★; 6,6 КБ br, TBT 0): «page transition library for server-rendered websites» —
-  кэш, preload, история, доступность; `native: true` — анимация средствами VT; плагины head (обновляет meta и стили), a11y
-  (объявление смены страницы), preload, scroll, forms. Брать, когда между страницами живёт состояние (видео, WebGL, аудио) или
-  нужен переход в Firefox [документация: S12].
+  кэш, preload, история, доступность; `native: true` — анимация средствами VT (с 4.5.0, 2023-12-01); плагины head (обновляет
+  meta и стили), a11y (объявление смены страницы; `@swup/a11y-plugin` 5.2.1 — `respectReducedMotion: true` по умолчанию),
+  preload, scroll, forms. Брать, когда между страницами живёт состояние (видео, WebGL, аудио) или нужен переход в Firefox
+  [документация: S12, S39].
 - **Astro 7 `<ClientRouter />`**: SPA-режим с `transition:persist`, фолбэк `animate` | `swap` | `none` для браузеров без VT, объявление
   маршрута (с astro 3.2), при reduce выключает все VT-анимации; минус — модульные скрипты исполняются один раз, эффекты
   переинициализировать на `astro:page-load`; сама Astro пишет, что ClientRouter «will increasingly become unnecessary» по мере
@@ -290,23 +333,25 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 | Рантайм | br КБ JS + wasm | TBT / готово | Живость | Когда |
 |---|---|---|---|---|
-| `lottie-web` 5.13.0 light (SVG) | 41,6 + 0 | 25 / 94 мс | последний релиз 2025-05-21, 857 открытых issues | 1–2 небольшие анимации, без wasm |
+| `lottie-web` 5.13.0 light (SVG) | 41,6 + 0 | 25 / 94 мс | последний релиз 2025-05-21, новых выпусков нет (2026-10-28); 857 открытых issues | 1–2 небольшие анимации, без wasm |
 | `lottie-web` полный | 64,4 + 0 | 21 / 97 | то же | нужны выражения и canvas-рендер |
-| `@lottiefiles/dotlottie-web` 0.80.0 | 12,2 + 379 | 20 / 172 | 40 релизов за 12 мес. | много анимаций, `.lottie`, темы, Worker |
-| `@rive-app/canvas-lite` 2.43.1 | 42,5 + 272 | 38 / 210 | 45 релизов за 12 мес. | интерактив (state machine) без Text/Layouts/Scripting/Audio |
+| `@lottiefiles/dotlottie-web` 0.80.0 | 12,2 + 379 | 20 / 172 | 40 релизов за 12 мес.; текущая 0.81.0 — ThorVG, рендер Canvas2D / WebGL2 / WebGPU (эксп.), `setWorkerUrl()` для CSP | много анимаций, `.lottie`, темы, Worker |
+| `@rive-app/canvas-lite` 2.43.1 | 42,5 + 272 | 38 / 210 | 45 релизов за 12 мес.; текущая 2.48.0 | интерактив (state machine) без текста, раскладок, аудио и скриптов |
 | `@rive-app/canvas` 2.43.1 | 49,0 + 613 | 71 / 231 | то же | Rive Text и пр., много холстов (нет лимита WebGL-контекстов) |
-| `@rive-app/webgl2` 2.43.1 | не мерили | — | то же | рекомендация вендора «для большинства проектов» (Rive Renderer) |
+| `@rive-app/webgl2` 2.48.0 | не мерили; `rive.wasm` 2 323 803 Б без сжатия | — | то же | единственный рантайм с Rive Renderer; рекомендация вендора «для большинства проектов» |
+| `@rive-app/webgl` | — | — | устарел после 2.37.0 | не брать: вместо него `webgl2` |
 
-[проверено: G/01; документация: S14, S15]
+[проверено: G/01 на версиях 2026-09-24; документация: S14, S15, S38]
 
 - **Главный поток при проигрывании**: dotLottie рендерит в wasm на главном потоке — скрипт ≈ 0,95 с за ≈ 3,2 с проигрывания
   (CPU ×4), `lottie-web` SVG — 0,15 с; для длинных петель dotLottie — `DotLottieWorker` (OffscreenCanvas) [проверено: G/01;
   одна тестовая анимация 200×200].
 - **CDN по умолчанию**: dotLottie грузит `dotlottie-player.wasm` с jsDelivr (запас unpkg), Rive — `rive.wasm` с jsDelivr/unpkg;
   документация Rive ставит рантайм через `unpkg.com/@rive-app/webgl2@latest` → в нашей сборке `DotLottie.setWasmUrl()` и
-  `RuntimeLoader.setWasmUrl()` на свой домен, версию фиксировать [документация: исходники пакетов; документация: S14, S15].
+  `RuntimeLoader.setWasmUrl()` на свой домен, версию фиксировать; Worker dotLottie под CSP — `setWorkerUrl()` на свой домен
+  [документация: исходники пакетов; документация: S14, S15, S38].
 - **Лицензии**: рантаймы MIT; лицензия анимации — у каждого ассета своя (LottieFiles — противоречиво, B2) → ассет только со
-  своей лицензией в паспорте визуала ai-media.
+  своей лицензией в паспорте визуала ai-media. Формат Lottie — спецификация 1.0.1 (2025-04-15) [документация: S38].
 - **Доклад Прокопьева (HolyJS 2023)**: Lottie — только прогресс/проигрывание, Rive — state machine (Boolean, Trigger, Number) и
   события в код `[V:iqtCk5cY5Xs 19:29]`; память Rive на порядок меньше при сопоставимом FPS (один Pixel 7) `[V:iqtCk5cY5Xs 28:43]`;
   веса 2023 — `@rive-app/canvas` 2.7.3: 24,7 КБ gzip + `rive.wasm` 83,7 КБ `[V:iqtCk5cY5Xs 32:47]` — в 2.43.1 wasm вырос до 613 КБ br
@@ -336,26 +381,43 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
   разобрать, как сделан этот конкретный компонент» (01:48–01:54) [мнение: S32]; сайт уже на React/Next — компонент допустим в бюджете.
 - **Magic UI MCP** (`@magicuidesign/mcp` 2.0.0, `npx @magicuidesign/cli@latest install claude`): компонент выбирает агент — выбор
   облика уходит модели (X-67); лицензия — MIT в LICENSE.md, ISC в `package.json` [документация: S33].
-- **anime.js** в ролике — для «сложного скролла» уровня Awwwards (05:35–05:44) [мнение: S32]; позиция базы прежняя — не по умолчанию
+- **anime.js** в ролике — для «сложного скролла» уровня Awwwards (05:35–05:44) [мнение: S32]; позиция базы — не по умолчанию
   (§3.3). **Rive** — «встроенной интеграции с нейросетями нет» (06:23): на 2026-09-25 неточно, в редакторе с 12.01.2026 есть AI Coding
   Agent (Luau-скрипты) [документация: S34]; экспорт `.riv` для сайта — с тарифа Cadet (§9).
 
 ## 7. От чего отказаться
 
-| Пакет | Статус на 2026-09-24 | Почему | Вместо |
+Код «по памяти» — эти пакеты агент ставит сам, если не сверил версию, дату и лицензию: запись `stack.yaml` каждого — `avoid`.
+
+| Пакет | Статус (выпуск, лицензия) | Почему | Вместо |
 |---|---|---|---|
-| Theatre.js (`@theatre/core`, `studio`) | 0.7.2 от 2024-05-19, push 2024-08-14; studio AGPL-3.0 | заморожен; 30,1 КБ br, TBT 20 | GSAP-таймлайн, анимация из Blender |
+| Theatre.js (`@theatre/core`, `studio`) | 0.7.2 от 2024-05-19; последний публичный коммит 2024-04-11 (сверено 2026-10-28); studio AGPL-3.0 | заморожен; 30,1 КБ br, TBT 20 | GSAP-таймлайн, анимация из Blender |
 | `framer-motion-3d` | npm: «Package no longer supported» | снят | three + GSAP или `motion/three` (Motion+) |
-| AOS 2.3.4 | релиз 2018-10-03 | мёртв; «fade-up на каждом блоке» — почерк генераторов | CSS `view()` + IO по системе E |
+| AOS 2.3.4 и его `next` 3.0.0-beta.6 | оба — 2018-10-03 | мёртв; reduce нет — только отключение по типу устройства; «fade-up на каждом блоке» — почерк генераторов | система появления по ролям: примитивы `rise`, `unmask`, `sweep`, `scale-in` набора движения (CSS `view()` + IO) |
+| ScrollReveal 4.0.9 | 2021-03-05; GPL-3.0 + коммерческие $30–400 | копилефт; слушатель `scroll` без IO, reduce нет; одно появление на каждый блок | то же |
+| sal.js 0.8.5 | 2021-05-01, MIT | без релизов с 2021, reduce нет; одно появление на каждый блок | примитив `rise`; свой IO 0,2 КБ |
 | `@studio-freight/lenis` | 1.0.42, deprecated | переименован | `lenis` 1.3.x |
-| `split-type` 0.3.4, `splitting` 1.1.0 | 2023-10 и 2024-05 | без релизов, без aria | GSAP SplitText 3.13+ |
-| `typed.js` 3.0.0 | 2026-01-24, **GPL-3.0** (2.1.0 была MIT) | копилефт в коммерческом бандле | свой «печатающийся» текст (≈ 1 КБ) с `aria-label` |
+| `split-type` 0.3.4, `splitting` 1.1.0 | 2023-10 и 2024-05; у `split-type` ISC — только поле `package.json`, файла лицензии нет | без релизов, без aria; разметку строят скриптом | примитив `split` (куски в разметке); строки по переносу ширины — GSAP SplitText 3.13+ |
+| typed.js 3.0.0 | 2026-01-24, **GPL-3.0-or-later** + платные Limited и Unlimited; 2.1.0 (2023-11-08) — последняя под MIT | копилефт в коммерческом бандле; текст через `innerHTML`, reduce нет | свой «печатающийся» текст (≈ 1 КБ) с `aria-label` — момент `custom`, только «терминальный» мир |
+| TypeIt 8.8.7 | 2024-10-25; GPL-3.0 + коммерческие $9 и $29 | копилефт; вставляет узлы, курсор и `<style>`, aria и reduce нет | то же |
+| Popmotion 11.0.5 | 2022-08-15 | заморожен, README о преемнике молчит | WAAPI или `motion/mini`; пружина в CSS — `linear()` |
+| Velocity (`velocity-animate`) 1.5.2 | 2018-07-31; бета 2.0.6 — 2020-04-10 | эпоха jQuery, v2 не вышла из беты | WAAPI |
+| Vivus 0.4.6 | 2021-04-17 | без релизов 5 лет; заменяет фигуры на `<path>`, с `file` вставляет SVG через `innerHTML`; reduce нет | примитивы `draw`, `scroll-draw` (`effect:svg-line-draw` на CSS) |
+| mo.js (`@mojs/core`) 1.7.1 | 2023-10-06 | 30,4 КБ min + gzip, создаёт `<svg>` в `body`, релизов нет 3 года | вспышка — CSS или WAAPI по концепции (момент `custom`); частицы — свой движок WebGL2 (`../../3d/16-js-scenes/`) |
+| Zdog 1.1.3 | 2022-01-22, v1 — «бета»; MIT — только README и `package.json` | релизов нет почти 5 лет | объём — свой движок WebGL2, плоский рисунок — canvas 2D |
+| `tailwindcss-animate` 1.0.7 | 2023-08-28 | устарел: shadcn/ui ставит `tw-animate-css` (2025-03-19) | кабинет на Tailwind v4 — `tw-animate-css` 1.4.0 с токенами ДС (`stack.yaml#tw-animate-css`); страница — набор движения |
+| Animate.css 4.1.1 зависимостью | 2020-09-07; MIT у пакета npm, ветка `main` — Hippocratic-2.1 | 71,7 КБ CSS ради 1–2 входов; бесконечные «сигналы внимания» — `cliche:pulsing-cta` | свои ключевые кадры с токенами `motion.marketing`: примитивы `entrance`, `rise`, `scale-in`, `dialog` |
 | `vanta` 0.5.24 | 2022-09 | мёртв, тянет three | paper-shaders или свой шейдер |
 | `scroll-timeline-polyfill` | — | «not feature complete» (Chrome) | IO-фолбэк |
 | `@motionone/dom` 10.18; Locomotive Scroll ≤ 4 | 2024-06; — | влился в `motion`; заменён v5 на Lenis | `motion`; `lenis` |
 | `@bsmnt/scrollytelling` 0.3.3 | 2024-02-22, push тот же | застой; идея API (Root, Waypoint, Parallax, ImageSequenceCanvas) — взять `[V:ufHQG7fDLQc 11:14]` | GSAP ST + свой модуль (`02` §6) |
 
-[документация: S23 (npm, GitHub API), S10; проверено: G/01]
+Идеи части этих пакетов набор берёт, а код пишет свой: индекс куска как CSS-переменная (Splitting), атрибуты длительности и
+задержки (sal.js), «круглые» плоские фигуры (Zdog), анимация детей одной строкой (AutoAnimate — на сайте это View Transitions,
+примитив `state`). Не по памяти, а по записи `stack.yaml`: react-spring — только React (на React-продукте — `motion/react`), Open
+Props — сверка кривых с токенами, а не зависимость [документация: S39].
+
+[документация: S23 (npm, GitHub API), S10, S39; проверено: G/01]
 
 ## 8. Фреймворки, SSR и SSG — стык с SEO и GEO
 
@@ -382,17 +444,19 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 | Что | Лицензия (2026-09-24) | Условие для генератора сайтов |
 |---|---|---|
-| GSAP 3.15 и все плагины | Standard «No Charge» (Webflow; eff. 2025-04-30, ред. 2025-05-30) | сайты любого вида, включая коммерцию и конкурентов Webflow, — можно; код, написанный ИИ, — можно; **нельзя**: no-code-билдер анимаций, конкурирующий с Webflow, реверс для такого продукта, удаление уведомлений; Webflow может менять лицензию (без «material degradation»), прекратить за нарушение; при сомнении — «contact us» |
+| GSAP 3.15 и все плагины (SplitText, ScrollSmoother, MorphSVG и др.) | Standard «No Charge» (Webflow; eff. 2025-04-30, ред. 2025-05-30; сверено 2026-10-28) | сайты любого вида, включая коммерцию и конкурентов Webflow, — можно; код, написанный ИИ, — можно; **нельзя**: no-code-билдер анимаций, конкурирующий с Webflow, реверс для такого продукта, удаление уведомлений; Webflow может менять лицензию (без «material degradation»), прекратить за нарушение; при сомнении — «contact us» |
 | `@gsap/react` | та же | то же |
-| Lenis, Motion, anime.js, three, pixi, swup, barba, lottie-web, dotLottie, Rive-рантаймы, swiper | MIT | уведомление MIT в бандле (legal comments) |
+| Lenis, Motion, anime.js, three, pixi, swup, barba, lottie-web, dotLottie, Rive-рантаймы, swiper; `tw-animate-css` (код кабинета) | MIT | уведомление MIT в бандле (legal comments) |
+| набор движения `motion-kit` | код шаблона — лицензия репозитория (Apache-2.0) | свой код базы, сторонних зависимостей и уведомлений нет |
 | OGL | Unlicense | — |
 | @paper-design/shaders, Theatre core | Apache-2.0 | NOTICE при распространении |
 | Theatre studio | AGPL-3.0 | не включать |
 | taxi | BSD-3-Clause | уведомление |
-| typed.js 3.0.0 | GPL-3.0 | не включать |
+| typed.js 3.0.0, TypeIt 8.8.7, ScrollReveal 4.0.9 | GPL-3.0 (у typed.js — GPL-3.0-or-later) + платные коммерческие: у typed.js — Limited и Unlimited, у TypeIt — $9 и $29, у ScrollReveal — $30, $100, $400 (2026-10-28) [S39] | не включать |
+| Animate.css 4.1.1 | MIT у пакета npm; в ветке `main` — Hippocratic-2.1 при той же версии (2026-10-28) [S39] | не зависимостью; ключевые кадры по мотивам — свои, сверка — с пакетом npm, а не с `main` |
 | `@splinetool/runtime` | не указана в npm | условия Spline (ToS не читались) → только по решению заказчика |
 | unicornstudio.js | файла лицензии нет в репозитории | не вендорить; только их загрузчик по решению заказчика |
-| Motion+ (`splitText`, `motion/three`) | платное членство: разовая оплата, lifetime (кэш `motion.dev_docs_split-text`, 2026-09-25); установка по токену | агенту недоступно |
+| Motion+ (splitText, Cursor, Ticker, AnimateNumber, Typewriter, ScrambleText, Carousel, Motion Studio, AI Kit; `motion/three`) | платное: $399 разово за разработчика (motion.dev, 2026-10-28); установка по токену | агенту недоступно |
 | React Bits — компоненты (дополнение 25.09.2026) | MIT + Commons Clause License Condition v1.0 (LICENSE.md, 2026-09-25) [документация: S33] | сайт, в том числе коммерческий, — можно; продавать, сублицензировать и распространять сами компоненты (набором, по одному, портом) — нельзя: не класть в продаваемый шаблон или кит |
 | Kokonut UI, Magic UI, Bklit UI, daisyUI (дополнение 25.09.2026) | MIT (у Magic UI MCP — MIT в LICENSE.md, ISC в `package.json`) [документация: S33] | уведомление MIT |
 | Rive — редактор (дополнение 25.09.2026) | Free — 3 совместных файла; экспорт `.riv` («to ship») — с Cadet, $9 за место в месяц (rive.app/pricing, 2026-09-25) [документация: S34] | рантайм MIT, но файл для сайта — с платного тарифа |
@@ -429,23 +493,29 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
   движение — `gsap@3` (+ `lenis@1`) только при `expressive`/`cinematic`; CDN и глобальные установки запрещены.
 - **Предложения kimi** (в отчёт; файлы kimi не правим): (1) при `expressive` без pin/split/Flip/горизонтали — без GSAP (CSS SDA + IO),
   `lenis@1` — только при `cinematic` (L2; совпадает с запретом A на L1); (2) добавить в «You MAY install exactly»
-  `@paper-design/shaders@0.0.81`, `lottie-web@5` или `@lottiefiles/dotlottie-web@0.80` (если дан ассет), `@rive-app/canvas-lite@2`
-  (если дан `.riv`), `motion@13` (webapp на React), `swup@4`, `astro@7` (по решению site); (3) wasm — в `public/` и `setWasmUrl()`
-  (иначе скрытый CDN); (4) не вырезать legal comments GSAP; (5) версии 2026-09-24: gsap 3.15.0, lenis 1.3.26, motion 13.4.3,
-  three 0.186.1, vite 8.3.1, astro 7.3.5, next 16.3.6, react 19.3.0 + `npm view … dist-tags` (lenis `dev` 2.0.0-dev.5, animejs `beta`).
-- **Скоропортящееся** (перепроверять раз в квартал и перед сборкой): поддержка SDA в Firefox, cross-document VT в Firefox,
-  scroll-triggered в Safari/Firefox, лицензия GSAP (право Webflow менять), живость Barba и lottie-web, тарифы Webflow/Tilda/
-  Unicorn — поле `checked_at` в `stack.yaml`.
+  `@paper-design/shaders@0.0.81`, `lottie-web@5` или `@lottiefiles/dotlottie-web@0.81` (если дан ассет), `@rive-app/canvas-lite@2`
+  (если дан `.riv`), `motion@14` (webapp на React), `swup@4`, `astro@7` (по решению site); (3) wasm — в `…/public/` и `setWasmUrl()`
+  (иначе скрытый CDN); (4) не вырезать legal comments GSAP; (5) версии движения на 2026-10-28: gsap 3.15.0, lenis 1.3.27,
+  motion 14.7.1, animejs 4.5.0, @rive-app/* 2.48.0, @lottiefiles/dotlottie-web 0.81.0, lottie-web 5.13.0; прочее на 2026-09-24:
+  three 0.186.1, vite 8.3.1, astro 7.3.5, next 16.3.6, react 19.3.0 + `npm view … dist-tags` (lenis `dev` 2.0.0-dev.5, animejs
+  `beta` 5.0.0-beta.2).
+- **Скоропортящееся** — перепроверять перед сборкой, записи поддержки браузеров — не реже раза в месяц: Chrome (с 153,
+  2026-09-08) и Firefox (с 157, 2026-09-29) выходят раз в 2 недели; остальное — раз в квартал. Что сверять: cross-document VT
+  и scroll-triggered в Firefox и Safari, `scroll-state()` вне Chrome, лицензия GSAP (право Webflow менять), живость Barba,
+  lottie-web и Theatre.js, тарифы Webflow/Tilda/Unicorn и Motion+ — поле `checked_at` в `stack.yaml`.
 
 ## Частые ошибки
 
 1. GSAP на странице ради одного fade-up или бегущей строки (24–40 КБ и TBT вместо 0) — K3 и генераторы повторяют наградной стек
    (C: K3 набирает L2 «за курсор и плавную прокрутку»).
 2. Lenis на L0–L1 и Lenis без `anchors: true` — якоря в меню перестают работать.
-3. `@studio-freight/lenis`, `@theatre/*`, `framer-motion-3d`, `split-type`, AOS, `typed.js` 3 — код «по памяти» из 2022–2024.
+3. `@studio-freight/lenis`, `@theatre/*`, `framer-motion-3d`, `split-type`, AOS и его `next`, typed.js 3, TypeIt, ScrollReveal,
+   sal.js, Popmotion, Velocity, Vivus, mo.js, Zdog, `tailwindcss-animate` на Tailwind v4, Animate.css зависимостью — код «по
+   памяти» (§7); «MIT, потому что 2.x была MIT» — typed.js 3 под GPL.
 4. «SplitText платный» и подключение `SplitText` из `gsap-trial`/чужих «nulled»-репозиториев — с 3.13 всё в npm `gsap`.
 5. `@supports (animation-timeline: scroll())` без `animation-range` — ловит частичные реализации; `scroll-timeline-polyfill`.
-6. Содержимое скрыто до анимации (`opacity: 0` в CSS) без JS-фолбэка — в Firefox (нет SDA) или при ошибке скрипта текст невидим.
+6. Содержимое скрыто до анимации (`opacity: 0` в CSS) без JS-фолбэка — в браузере без SDA (Safari до 26, Firefox до 159) или при
+   ошибке скрипта текст невидим.
 7. dotLottie/Rive без `setWasmUrl` — скрытый запрос к jsDelivr/unpkg при запрете CDN; Rive по документации — `unpkg …@latest`.
 8. three.js ради одного шейдерного фона (108 КБ вместо 6–11); pixi.js ради частиц в hero (120 КБ, TBT 116).
 9. Spline-сцена «как лёгкий вариант» 3D (833 КБ br рантайма) и Unicorn-аврора без решения заказчика (третьи домены, тариф).
@@ -459,7 +529,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 - [ ] Эффект разложен по лестнице: взята самая низкая ступень, которая его делает?
 - [ ] JS слоя «подача» ≤ 20 / 100 / 150–200 КБ br по уровню, wasm — после LCP?
-- [ ] GSAP есть, только если в `treatment` pin, split, Flip, горизонталь или сюжет для Firefox?
+- [ ] GSAP есть, только если в `treatment` то, чего CSS не делает: pin со сложным сюжетом, split, Flip, горизонталь, синхрон с WebGL?
 - [ ] SDA под `@supports (… and (animation-range: 0% 100%))`, смысловое содержимое видно без SDA и без JS?
 - [ ] Lenis только на L2, пакет `lenis`, `anchors: true`, один цикл с `gsap.ticker`?
 - [ ] Переходы: нативный `@view-transition` в `prefers-reduced-motion: no-preference`; библиотека — только для состояния между страницами?
@@ -474,8 +544,9 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 1. **TBT шумит**: замер на общей машине при load average 6,8–10,3; порядок величин надёжен, единицы мс — нет; на реальных
    телефонах не мерили → «Что проверить в живой фазе».
-2. **Позиция базы «scroll-driven — основной инструмент подачи»** (поправки PLAN) против практики (2 из 49) и поддержки (нет Firefox) —
-   в стеке: CSS SDA — умолчание L1 для декоративного, GSAP — для смыслового; решение E о нормах движения может сдвинуть границу.
+2. **Позиция базы «scroll-driven — основной инструмент подачи»** (поправки PLAN) против практики (2 из 49): поддержка — во всех
+   движках с Firefox 159; в стеке CSS SDA — умолчание L1, GSAP — для того, чего CSS не делает; решение E о нормах движения может
+   сдвинуть границу.
 3. **Главный поток SDA против GSAP под нагрузкой** — тезис вендора браузера («off the main thread»), нашим опытом не проверен.
 4. **Разбор JS по назначению** (фреймворк / эффекты / аналитика) на живых сайтах не сделан: сырьё C без списка скриптов;
    доля библиотек подачи 6–9 % — расчёт.
@@ -483,7 +554,8 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
    косвенно; справка Webflow отдала 403.
 6. **Не прочитано/не замерено**: лицензия Spline-рантайма и SDK Unicorn; Rive webgl2 и dotLottie Worker; условия `motion/three`
    («Motion+ early access», но код в публичном пакете).
-7. **Firefox** не установлен в Playwright (решение заказчика 13 разрешает) — фолбэки для Firefox проверены только чтением BCD.
+7. **Firefox** не установлен в Playwright (решение заказчика 13 разрешает) — SDA в Firefox 159 и фолбэки старых версий проверены
+   только чтением BCD и заметок к выпуску.
 
 ## Источники
 
@@ -495,7 +567,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 - [S6] darkroomengineering/lenis README (main, 2026-09-24), npm lenis 1.3.26; 16 000★, push 2026-09-22. Надёжно.
 - [S7] @mdn/browser-compat-data 8.1.3 (2026-09-24T13:25Z), web-features 3.39.0 — опыт G/00. Надёжно.
 - [S8] Chrome for Developers, «Scroll-driven animations», https://developer.chrome.com/docs/css-ui/scroll-driven-animations. Вендор браузера.
-- [S9] Chrome for Developers, «CSS scroll-triggered animations are coming», https://developer.chrome.com/blog/scroll-triggered-animations (145 против 146 в BCD).
+- [S9] Chrome for Developers, «CSS scroll-triggered animations are coming», https://developer.chrome.com/blog/scroll-triggered-animations; blink-dev Intent to Ship и заметки к выпуску Chrome 146 — по умолчанию с 146 (сверено 2026-10-28).
 - [S10] GoogleChrome/modern-web-guidance 0.0.190 (Apache-2.0): `scrollytelling.md`, `cross-document-transitions.md` — клон `../../kimi-research/99-raw/cache/repos/`. Официальный скилл Chrome.
 - [S11] Astro, «View transitions», https://docs.astro.build/en/guides/view-transitions/ (astro 7.3.5). Надёжно.
 - [S12] swup, https://swup.js.org/options/, /getting-started/ (4.10.0, 2026-09-03; 5 234★). Надёжно.
@@ -524,3 +596,22 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
   https://github.com/DavidHDev/react-bits — первоисточник [документация]. Дополнение 25.09.2026.
 - [S34] Rive, «Pricing», https://rive.app/pricing, и «FAQ: Rive AI Coding Agent» (12.01.2026), https://rive.app/blog/rive-ai-coding-agent-faq —
   сняты 2026-09-25, кэш `../../claude-design-research/99-raw/cache/rive.app_pricing_ebd26c5e.md`; вендор [документация]. Дополнение 25.09.2026.
+- [S35] MDN: «Firefox 159 release notes» (выпуск 2026-10-27) — «Scroll-driven animations are now enabled by default», и Firefox для
+  Android 159; `sibling-index()` и `sibling-count()` — Baseline newly available с 2026-08; сверено 2026-10-28. Первоисточник.
+- [S36] web.dev, «Interop 2026», https://web.dev/blog/interop-2026 (2026-02-12): scroll-driven animations, view transitions (с
+  межстраничными, `blocking="render"`, `<link rel="expect">`, `:active-view-transition-type()`), scroll snap, `shape()`, anchor
+  positioning. Надёжно.
+- [S37] Chrome: заметки к выпускам Chrome 133 (`@container scroll-state()`), 144 (`scrolled`), 146 (`timeline-trigger`,
+  `animation-trigger` по умолчанию), 147 (`element.startViewTransition()` по умолчанию); blink-dev Intent to Ship; сверено
+  2026-10-28. Вендор браузера.
+- [S38] npm registry и страницы вендоров на 2026-10-28: gsap 3.15.0 (лицензия Standard «No Charge»: все плагины бесплатно и для
+  коммерции, код ИИ разрешён); motion 14.7.1 (14.0.0 — 2026-10-02; размеры `animate` mini 3,2 КБ, hybrid 22 КБ, `scroll()`
+  3,8 КБ; Motion+ — $399 разово за разработчика), animejs 4.5.0 и 5.0.0-beta.2, lenis 1.3.27 (2026-10-15) и 2.0.0-dev.5,
+  Theatre.js 0.7.2 (последний публичный коммит 2024-04-11), @rive-app/* 2.48.0 (Rive Renderer — только webgl2, `rive.wasm`
+  2 323 803 Б; webgl устарел после 2.37.0), lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.81.0, спецификация Lottie 1.0.1
+  (2025-04-15). Данные и документация вендоров.
+- [S39] Обзор библиотек движения — `../02-references-moodboards/04-motion-libraries-and-rules.md` §2 (2026-10-28): npm registry
+  (`latest`, даты, dist-tags), bundlephobia (min + gzip), jsDelivr (файлы дистрибутивов: `aria`, reduce, `innerHTML`), GitHub
+  (лицензии, коммиты) 23 пакетов — splitting, split-type, typed.js, typeit, aos, scrollreveal, sal.js, @barba/core, swup,
+  @swup/a11y-plugin, locomotive-scroll, @formkit/auto-animate, @react-spring/web, popmotion, velocity-animate, vivus, @mojs/core,
+  zdog, open-props, tailwindcss-animate, tw-animate-css, animate.css; первоисточники — там [S1]–[S20]. Документация и исходник.

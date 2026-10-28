@@ -227,7 +227,8 @@ python3 ../../scripts/creative/motion_check.py report --in DIR --level L1 --gate
     `[не проверено: пороги]` {L0–L2} → `05/01` §5; X-20, X-22
 24. **Закрепление и прокрутка**: закреплять `position: sticky` или `pinType: 'transform'` (обычный `pin` дал CLS прокрутки 1,6–2,0
     и 0,35 / 0,99); CSS SDA — для DOM-эффектов под `@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))`,
-    без полифила (в Firefox — конечное состояние), ScrollTrigger — для pin и сюжета; в жанре SDA у 2 из 49, ScrollTrigger — у 23.
+    без полифила (без поддержки — Safari < 26, Firefox < 159 — конечное состояние), ScrollTrigger — для сюжета, которого CSS
+    не делает; в жанре SDA у 2 из 49, ScrollTrigger — у 23.
     `[проверено]` `[документация: BCD 8.1.3]` `[данные: C]` {L1–L2} → `05/02` §3–4; X-01
 25. **Переходы страниц — нативный `@view-transition { navigation: auto }` (0 КБ JS) как улучшение**: `@supports`, анимация только
     в `no-preference` (Chrome 126+, Safari 18.2+, Firefox нет), 300–500 мс, на многостраничнике 250–400; навигация > 4 с —
@@ -455,7 +456,7 @@ Unseen (unseen.co, illoca.unseen.co, hubtown.co.in) в рубрике K — по
 
 ## Карта файлов
 
-У каждой папки 01–10 — `README.md` (файлы и выжимка на 10 строк).
+У каждой папки 01–11 — `README.md` (файлы и выжимка на 10 строк).
 
 | Путь | Что внутри |
 |---|---|
@@ -464,14 +465,16 @@ Unseen (unseen.co, illoca.unseen.co, hubtown.co.in) в рубрике K — по
 | **`01-creative-direction/`** (A, A2) `01-concept-and-directions.md` | процедура «бриф → концепция → территории → главный приём → 3–5 направлений → выбор», Design Read, оси различия, бренд, чек-лист CRV-CD |
 | `02-art-direction-document.md` · `art-direction.schema.json` · `examples/` | документ `art-direction` v0: поля, соответствие паспорту ai-media, 3d, kimi, `treatment` site; решения по пяти проверкам; бюджет и исключения; 5 примеров («Кварц», «Лесная обжарка» L0 и L2, «Окошко», «Отвес») |
 | `03-ambition-levels.md` · `ambition-levels.yaml` · `drafts-for-site/` | L0/L1/L2: WCAG дословно, CRV-AL, разрешено и запрещено, бюджеты двух слоёв, выбор уровня, лидогенерация, распределение по секциям, уровни 43 типов страниц site; точка C1 — поля брифа подачи и `treatment.v0.schema.json` (приняты site) |
-| **`02-references-moodboards/`** (B, B2) `01-sources-landscape.md` · `sources.yaml` | паспорт 36 площадок: живость, API, вход, антибот, `robots.txt`, условия дословно, лицензии кода |
+| **`02-references-moodboards/`** (B, B2) `01-sources-landscape.md` · `sources.yaml` | паспорт 62 площадок: живость, API, вход, антибот, robots.txt, условия дословно, лицензии кода |
 | `02-refs-client-and-library.md` · `refs-library.schema.json` · `library-example/` | клиент `refs_client.py`: вход заказчика, режимы, частоты, адаптеры, превью, dHash, палитра, формат `refs-library/1`, Are.na; 5 записей-образцов |
 | `03-moodboard-and-handoff.md` | процедура мудборда, карточка ДНК, роли и «одна секция», Take / Do not take, передача K3, ai-media, 3d |
+| `04-motion-libraries-and-rules.md` | библиотеки движения, библиотеки анимированных компонентов, своды правил движения дизайн-систем и генераторы анимации: позиция «брать / идея, код свой / не брать», лицензии, клише, чем то же делает набор движения |
 | **`03-live-sites-measured/`** (C) `01-effects-sites-measured.md` · `sites.csv` | 49 эффектных страниц 2025–2026: библиотеки, анимации, WebGL, видео, шрифты, веса, лабораторные CWV, reduce, телефон, признаки уровней |
 | `02-motion-on-live-sites.md` · `recordings/` | движение по записям прокрутки (десктоп 25, из них 23 валидны; reduce 3; телефон 3; листы 4×4): ритм, «вау»-переходы, живые фоны, виртуальная прокрутка, телефон, reduce |
+| `03-reference-motion-probe.md` | замер движения референса и прототипа (`motion_probe.py probe`, сверка `compare`): паспорт движения — `09-ai-execution-evaluation/motion-passport.schema.json`; что замер видит и чего нет, допуски, границы этики |
 | **`04-visual-language/`** (D) `01-display-typography.md` · `cyrillic-display-fonts.yaml` | display-роли и clamp, размер по длине H1, кириллица (капс, «ухо»), 37 гарнитур, метрический фолбэк, eyebrow, hero-CTA |
 | `02-composition-rhythm-sections.md` · `03-color-surfaces-product.md` | композиция и hero «текст ↔ медиа», высота hero, этажи 64–160 px, фоны и стыки, шапка; цвет по уровню, тёмные сайты, градиенты, стекло, зерно, продукт |
-| `marketing-tokens.json` · `marketing-tokens.css` | DTCG: `type.display-*`, `space.section-*`, поверхности, скримы, градиенты-стыки; `motion.marketing` (47 токенов E, `lenis-lerp` 0,15 — S1) |
+| `marketing-tokens.json` · `marketing-tokens.css` | DTCG: `type.display-*`, `space.section-*`, поверхности, скримы, градиенты-стыки; `motion.marketing` (45 токенов E, `lenis-lerp` 0,15 — S1) |
 | **`05-motion/`** (E) `01-motion-principles-and-access.md` | классы движения, поправки П1–П13 к соседям, WCAG 2.2.2, 2.3.1, 2.3.3, reduce, переключатель, бюджет внимания, громкость, «парение», длительности и кривые |
 | `02-choreography-scroll-transitions.md` | ритм, система появления, SDA против ScrollTrigger, pin и скраб, горизонталь, параллакс, Lenis, переходы страниц, прелоадер, LCP-безопасное появление |
 | `03-micro-motion-and-performance.md` | наведение, CTA, курсор, магнит, движение текста; цена свойств, LoAF, INP, телефон, слабые устройства |
@@ -488,6 +491,7 @@ Unseen (unseen.co, illoca.unseen.co, hubtown.co.in) в рубрике K — по
 | `04-effectiveness-rubric.md` · `effectiveness.rubric.json` | рубрика: 5 критериев, якоря, попарно с референсами класса, Awwwards и CSSDA, VLM-судья, калибровка, опыт K/03 |
 | **`10-recipes/`** (J, J2) `00-how-to-use.md` · `01`–`10` · `recipes/` | маршрут из 9 шагов; рецепты 01 лидогенерация L0, 02 SaaS L1, 03 запуск продукта L2 (`verified`), 04 кампания D2C L2, 05 мероприятие L1, 06 портфолио L2, 07 промо приложения L1, 08 корпорат L0/L1, 09 рунет с кириллическим display L1, 10 тёмный продукт с переливом L1 (`proposed`); YAML рецептов, схема, журнал вариативности |
 | `examples/` | рабочие страницы «Сдано» (L0), «Сверка» (L1), «Звено» (L2): код, `motion-spec`, свой рендер, шрифты OFL в `_shared/`; ворота 0/0/0 на `motion_check.py` 0.1.3 |
+| **`11-motion-code/`** `README.md` · `01-kit.md` … `04-where-it-runs.md` · `primitives.yaml` | набор движения страницы своим кодом: контракт и таблица «поле `motion-spec` → разметка», примитивы, DOM-сцены прокрутки на пружине 3D, холст и код сайта; `examples/` — `motion-kit.js`, `motion-kit.css`, `demo.html`, демо по семействам эффектов, пример артборда; живая проверка — `motion_smoke.py` |
 | **`90-sources/`** (S1b) | сводная библиография `sources.tsv` (271 источник: 163 внешних, 108 файлов соседей) и `README.md` |
 | **`91-videos/`** (V, W1–W3) | `catalog.md`, `catalog.tsv` (20 роликов, P1 — 14), `digests/` (18 дайджестов и 3 индекса), `transcripts/` (18), `frames/` (15 роликов, 3 060 кадров) |
 | **`99-raw/`** | `prompts/`, `notes/` (заметки, контракт тройки, журнал оркестратора, извлечения волны 4), `reports/` (отчёты агентов), `tools/`, `experiments/` (опыты по буквам агентов), `cache/` (первоисточники — только для внутренней работы), `youtube/` (≈ 4,5 ГБ видео — удаление решает заказчик), `handoff-to-neighbours.md` (S1b), `skills-map.md` (S2b) |

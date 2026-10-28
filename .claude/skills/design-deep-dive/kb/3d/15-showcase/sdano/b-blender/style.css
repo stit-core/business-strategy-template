@@ -28,9 +28,9 @@ a { color: inherit; }
 .btn { display: inline-flex; align-items: center; justify-content: center; min-height: var(--size-cta-hero-h);
   padding: 0 1.6em; background: var(--c-ink); color: #fff; font: 600 var(--type-cta-hero)/1.2 var(--font-text);
   text-decoration: none; border: 0; border-radius: 0; cursor: pointer;
-  transition: background-color var(--mm-dur-hover) var(--mm-ease-out-strong), transform var(--mm-dur-feedback) var(--mm-ease-out-strong); }
+  transition: background-color var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong), transform var(--motion-marketing-duration-feedback) var(--motion-marketing-easing-out-strong); }
 .btn:hover { background: #2c2c2c; }
-.btn:active { transform: scale(var(--mm-scale-press)); }
+.btn:active { transform: scale(var(--motion-marketing-scale-press)); }
 .btn--small { min-height: 44px; font-size: 1rem; padding: 0 1.1em; }
 .btn--wide { width: 100%; }
 
@@ -67,13 +67,13 @@ a { color: inherit; }
 
 /* одно появление первого экрана: CSS без JS, LCP-заголовок не анимируется (E 05/02 §10); ≤ 600 мс */
 @media (prefers-reduced-motion: no-preference) {
-  .hero__lead, .hero__proof, .hero__actions { animation: rise var(--mm-dur-reveal) var(--mm-ease-out-expo) both; }
+  .hero__lead, .hero__proof, .hero__actions { animation: rise var(--motion-marketing-duration-reveal) var(--motion-marketing-easing-out-expo) both; }
   .hero__lead { animation-delay: 60ms; }
   .hero__proof { animation-delay: 110ms; }
   .hero__actions { animation-delay: 160ms; animation-duration: 440ms; }
-  .mark { animation: mark-in calc(var(--mm-dur-reveal) / 2) var(--mm-ease-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
+  .mark { animation: mark-in calc(var(--motion-marketing-duration-reveal) / 2) var(--motion-marketing-easing-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
 }
-@keyframes rise { from { opacity: .01; transform: translateY(var(--mm-shift-reveal)); } }
+@keyframes rise { from { opacity: .01; transform: translateY(var(--motion-marketing-distance-shift-reveal)); } }
 @keyframes mark-in { from { opacity: .01; scale: .5; } }
 
 /* цифры: статичные, без счётчика (L0; факты) */
@@ -123,18 +123,18 @@ a { color: inherit; }
 .doc__table td:first-child { color: var(--c-mark); font-weight: 700; }
 
 /* FAQ: <details>. Высоту не анимируем (свойство раскладки: MKT-M2, схема motion-spec v1 его не допускает) — ответ проявляется
-   opacity + сдвиг 4 px за --mm-dur-state; стрелка поворачивается. interpolate-size (W1: I/O 2025) — осознанно не взят. */
+   opacity + сдвиг 4 px за --motion-marketing-duration-state; стрелка поворачивается. interpolate-size (W1: I/O 2025) — осознанно не взят. */
 .faq__in { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(24px, 4vw, 64px); }
 .faq__list { border-top: 2px solid var(--c-ink); }
 .faq details { border-bottom: 1px solid var(--c-line); }
 .faq summary { cursor: pointer; list-style: none; padding: 18px 40px 18px 0; font: 700 1.2rem/1.3 var(--font-display); position: relative; }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after { content: ""; position: absolute; right: 6px; top: 50%; width: 12px; height: 12px; border-right: 2px solid; border-bottom: 2px solid;
-  translate: 0 -70%; rotate: 45deg; transition: rotate var(--mm-dur-state) var(--mm-ease-out-strong); }
+  translate: 0 -70%; rotate: 45deg; transition: rotate var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong); }
 .faq details[open] summary::after { rotate: 225deg; translate: 0 -20%; }
 .faq details p { margin: 0 0 18px; color: var(--c-ink-2); }
-.faq details[open] p { animation: answer-in var(--mm-dur-state) var(--mm-ease-out-strong) both; }
-@keyframes answer-in { from { opacity: .01; transform: translateY(calc(var(--mm-shift-reveal) / 4)); } }
+.faq details[open] p { animation: answer-in var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong) both; }
+@keyframes answer-in { from { opacity: .01; transform: translateY(calc(var(--motion-marketing-distance-shift-reveal) / 4)); } }
 
 /* форма — конверсия, L0: без эффектов */
 .lead { border-top: 2px solid var(--c-ink); }
@@ -177,8 +177,8 @@ a { color: inherit; }
   /* липкий призыв появляется, когда кнопка первого экрана ушла из вида (скрипт ставит .is-off); без JS — виден всегда */
   .sticky-cta { display: flex; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 5; padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
     background: rgb(255 255 255 / .96); border-top: 1px solid var(--c-line);
-    transition: translate var(--mm-dur-state) var(--mm-ease-out-strong), visibility 0s linear 0s; }
-  .sticky-cta.is-off { translate: 0 110%; visibility: hidden; transition: translate var(--mm-dur-state) var(--mm-ease-out-strong), visibility 0s linear var(--mm-dur-state); }
+    transition: translate var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong), visibility 0s linear 0s; }
+  .sticky-cta.is-off { translate: 0 110%; visibility: hidden; transition: translate var(--motion-marketing-duration-state) var(--motion-marketing-easing-out-strong), visibility 0s linear var(--motion-marketing-duration-state); }
   .sticky-cta__tel { display: inline-flex; align-items: center; padding: 0 16px; border: 2px solid var(--c-ink); font-weight: 600; text-decoration: none; }
   .doc { padding: 18px; }
   .doc__table { font-size: .85rem; }
@@ -201,17 +201,17 @@ a { color: inherit; }
 .plan--iso .plan__cap { position: absolute; left: 0; top: 10px; width: min(22rem, 50%); z-index: 2; font-size: .9rem;
   background: var(--c-paper); border: 1px solid var(--c-line); box-shadow: 0 14px 32px -24px rgb(0 0 0 / .4); padding: 14px 16px 16px; }
 .plan--iso .plan__list { grid-template-columns: 1fr; gap: 2px; }
-.plan--iso .plan__list li { padding: 5px 6px; margin: 0 -6px; transition: background-color var(--mm-dur-hover) var(--mm-ease-out-strong); }
+.plan--iso .plan__list li { padding: 5px 6px; margin: 0 -6px; transition: background-color var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong); }
 
 /* номера-выноски на головках булавок */
 .plan__pins { list-style: none; margin: 0; padding: 0; position: absolute; inset: 0; pointer-events: none; z-index: 1; }
 .pin { position: absolute; left: var(--x); top: var(--y); translate: -50% -50%; pointer-events: auto; }
 .pin b { display: grid; place-items: center; width: clamp(26px, 4.4cqw, 38px); aspect-ratio: 1; border-radius: 50%; background: var(--c-mark);
   color: #fff; font: 700 clamp(13px, 2.3cqw, 18px)/1 var(--font-text); box-shadow: 0 0 0 2px #fff;
-  transition: scale var(--mm-dur-hover) var(--mm-ease-out-strong), box-shadow var(--mm-dur-hover) var(--mm-ease-out-strong); }
+  transition: scale var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong), box-shadow var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong); }
 .pin__tip { position: absolute; left: calc(100% + 8px); top: 50%; translate: 0 -50%; white-space: nowrap; pointer-events: none;
   background: var(--c-paper); border: 1px solid var(--c-line); padding: 5px 9px; font: 600 .875rem/1.2 var(--font-text); color: var(--c-ink);
-  opacity: 0; transition: opacity var(--mm-dur-hover) var(--mm-ease-out-strong); }
+  opacity: 0; transition: opacity var(--motion-marketing-duration-hover) var(--motion-marketing-easing-out-strong); }
 .pin[data-d="4"] .pin__tip { left: auto; right: calc(100% + 8px); }
 /* булавка под курсором (или в луче фонаря C) — поверх соседей: подсказка «1» не прячется под номером «3» */
 .pin:hover, .pin.is-lit,
@@ -228,7 +228,7 @@ a { color: inherit; }
 .hero:has(.pin[data-d="1"]:hover) .plan__list li[data-d="1"], .hero:has(.pin[data-d="2"]:hover) .plan__list li[data-d="2"],
 .hero:has(.pin[data-d="3"]:hover) .plan__list li[data-d="3"], .hero:has(.pin[data-d="4"]:hover) .plan__list li[data-d="4"] { background: #fcefee; }
 @media (prefers-reduced-motion: no-preference) {
-  .pin { animation: mark-in calc(var(--mm-dur-reveal) / 2) var(--mm-ease-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
+  .pin { animation: mark-in calc(var(--motion-marketing-duration-reveal) / 2) var(--motion-marketing-easing-out-expo) both; animation-delay: calc(80ms + var(--i) * 40ms); }
 }
 
 /* подписи комнат (площади — по геометрии чертежа; на телефоне скрыты) */

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Петли — набор движения</title>
+<meta name="description" content="Бегущие строки, вращающийся бейдж, дыхание фона и свечение акцента набора движения — с общей паузой.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html">Текст</a>
+      <a href="scroll.html">Прокрутка</a>
+      <a href="pin.html">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html" aria-current="page">Петли</a>
+      <a href="transition-a.html">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec" data-section="intro" style="padding-bottom: clamp(48px, 7vw, 96px)">
+  <div class="wrap head" style="margin-bottom: 0">
+    <p class="label">Семейства marquee, background, surface</p>
+    <h1 class="display" data-mk="entrance" data-mk-lcp style="--i: 0">Петля — только с паузой</h1>
+    <p class="lead" data-mk="entrance" style="--i: 1">Каждая петля идёт, пока видна; при наведении и фокусе стоит; пауза в шапке останавливает все сразу. В окне — не больше двух, на телефоне — одна.</p>
+  </div>
+</section>
+
+<section class="sec" id="marquee-logos" data-section="logos" style="padding-top: 0">
+  <div class="wrap" style="margin-bottom: 28px"><div class="head"><p class="label"><b>01</b> — Строка знаков · <code>marquee-logos</code></p><p class="muted" style="margin: 0; max-width: 40rem">40 px/с, период = ширина дорожки / скорость; второй список aria-hidden; при reduce — статичный ряд с переносом.</p></div></div>
+  <div class="ticker logos" data-mk="marquee" data-mk-speed="40" role="list" aria-label="Знаки-заглушки">
+    <div data-mk-track><span class="logo" role="listitem"><i></i>Знак 01</span><span class="logo" role="listitem"><i></i>Знак 02</span><span class="logo" role="listitem"><i></i>Знак 03</span><span class="logo" role="listitem"><i></i>Знак 04</span><span class="logo" role="listitem"><i></i>Знак 05</span><span class="logo" role="listitem"><i></i>Знак 06</span><span class="logo" role="listitem"><i></i>Знак 07</span></div>
+    <div data-mk-track aria-hidden="true"><span class="logo"><i></i>Знак 01</span><span class="logo"><i></i>Знак 02</span><span class="logo"><i></i>Знак 03</span><span class="logo"><i></i>Знак 04</span><span class="logo"><i></i>Знак 05</span><span class="logo"><i></i>Знак 06</span><span class="logo"><i></i>Знак 07</span></div>
+  </div>
+</section>
+<section class="sec" style="min-height: 100vh; display: grid; align-items: center"><div class="wrap"><p class="big muted">Между петлями — экран покоя: в окне не больше двух движений.</p></div></section>
+
+<section class="sec dark" id="marquee-text" data-section="words" style="padding-top: 0">
+  <div class="wrap" style="margin-bottom: 28px; padding-top: var(--sec)"><div class="head"><p class="label"><b>02</b> — Строка слов · <code>marquee-text</code></p><p class="muted" style="margin: 0; max-width: 40rem">60 px/с, от скорости прокрутки разгоняется (вход ≤ 900 px/с, k 0,35) и плавно возвращается; «заметная» петля — не под текстом.</p></div></div>
+  <h2 class="sr-only">Движение, пауза, тихая версия</h2>
+  <div class="ticker" data-mk="marquee" data-mk-speed="60" data-mk-boost="0.35" aria-hidden="true">
+    <div data-mk-track><span>движение</span><span>пауза</span><span>тихая версия</span><span>роль</span></div>
+    <div data-mk-track aria-hidden="true"><span>движение</span><span>пауза</span><span>тихая версия</span><span>роль</span></div>
+  </div>
+</section>
+<section class="sec" style="min-height: 100vh; display: grid; align-items: center"><div class="wrap"><p class="big muted">Экран покоя.</p></div></section>
+
+<section class="sec" id="rotating-badge" data-section="badge" style="padding-top: 0">
+  <div class="wrap" style="display: flex; justify-content: space-between; align-items: center; gap: 32px">
+    <div class="head"><p class="label"><b>03</b> — Вращающийся бейдж · <code>rotating-badge</code></p><p class="muted" style="margin: 0; max-width: 40rem">Вращается обёртка div, а не &lt;svg&gt;: так композитор держит кадр; оборот 24 с; один на страницу.</p></div>
+    <div data-mk="drift" data-mk-drift="spin" style="--mk-period: 24s; width: 140px; height: 140px; flex: none" aria-hidden="true">
+      <svg viewBox="0 0 132 132" style="width: 100%"><defs><path id="bc" d="M66 66 m-52 0 a52 52 0 1 1 104 0 a52 52 0 1 1 -104 0"/></defs><text style="font: 500 11px var(--f-mono); letter-spacing: .26em; fill: var(--ink-2)"><textPath href="#bc">ОДНА ПАУЗА · НА ВСЕ ПЕТЛИ ·</textPath></text><circle cx="66" cy="66" r="5" fill="#b8431f"/></svg>
+    </div>
+  </div>
+</section>
+<section class="sec" style="min-height: 100vh; display: grid; align-items: center"><div class="wrap"><p class="big muted">Экран покоя.</p></div></section>
+
+<section class="sec dark" id="mesh-gradient-css" data-section="mesh" style="position: relative; overflow: hidden; isolation: isolate; min-height: 80vh">
+  <div aria-hidden="true" style="position: absolute; inset: 0; z-index: -1">
+    <div data-mk="drift" data-mk-drift="orbit" style="--mk-period: 29s; --mk-ox: 8; --mk-oy: 6; position: absolute; width: 60vmax; height: 60vmax; left: -10vmax; top: -20vmax; border-radius: 50%; background: radial-gradient(closest-side, rgb(233 135 95 / .55), transparent)"></div>
+    <div data-mk="drift" data-mk-drift="orbit" style="--mk-period: 37s; --mk-ox: -7; --mk-oy: 5; position: absolute; width: 55vmax; height: 55vmax; right: -12vmax; top: 10%; border-radius: 50%; background: radial-gradient(closest-side, rgb(47 76 90 / .7), transparent)"></div>
+    <div data-mk="drift" data-mk-drift="orbit" style="--mk-period: 43s; --mk-ox: 5; --mk-oy: -6; position: absolute; width: 45vmax; height: 45vmax; left: 30%; bottom: -25vmax; border-radius: 50%; background: radial-gradient(closest-side, rgb(240 179 108 / .4), transparent)"></div>
+  </div>
+  <div class="wrap"><div class="head" style="padding: 24px; background: rgb(18 17 15 / .72); border-radius: 4px"><p class="label"><b>04</b> — Дыхание фона · <code>mesh-gradient-css</code></p><p class="muted" style="margin: 0; max-width: 40rem">Вариант «пятна»: три мягких круга на transform с некратными периодами 29 / 37 / 43 с — рисунок не повторяется, кадр на композиторе; reduce — один кадр.</p></div></div>
+</section>
+<section class="sec" style="min-height: 100vh; display: grid; align-items: center"><div class="wrap"><p class="big muted">Экран покоя.</p></div></section>
+
+<section class="sec" id="glow-accent" data-section="glow">
+  <div class="wrap" style="display: grid; gap: 40px; justify-items: start">
+    <div class="head"><p class="label"><b>05</b> — Свечение акцента · <code>glow-accent</code></p><p class="muted" style="margin: 0; max-width: 40rem">Дышит размытый слой за кнопкой — opacity и transform, период 12 с; сама кнопка не пульсирует.</p></div>
+    <div style="position: relative; isolation: isolate">
+      <div data-mk="drift" data-mk-drift="glow" aria-hidden="true" style="position: absolute; inset: -18px -28px; z-index: -1; border-radius: 999px; background: radial-gradient(closest-side, rgb(184 67 31 / .45), transparent)"></div>
+      <a class="btn" href="#marquee-logos">Призыв со свечением</a>
+    </div>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Конец страницы: дальше — переходы.</p></div></section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

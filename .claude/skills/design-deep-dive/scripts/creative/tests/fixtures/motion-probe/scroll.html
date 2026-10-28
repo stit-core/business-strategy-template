@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>motion_probe: движение по прокрутке</title>
+<!-- Тестовая страница motion_probe.py --selftest (окно 1440×900): раскладка в px, числа известны заранее.
+     0–900 первый экран; 900–2000 появление карточек; 2000–2600 полоса scroll-driven (верх 2250, высота 100);
+     2600–5300 закрепление sticky высотой 900 (стоит 2600–4400 = 200 vh) и два скраба; 5300–6200 подвал.
+     В первом экране — значок, который скрипт вращает без остановки 90°/с: петля по времени, а не скраб. -->
+<style>
+  html, body { margin: 0; background: #fff; color: #111; font: 16px/1.4 system-ui, sans-serif; }
+  section { position: relative; margin: 0; }
+  .hero { height: 900px; background: #eee; }
+  .badge { position: absolute; left: 80px; top: 120px; width: 120px; height: 120px; background: #fc3; }
+  .reveal { height: 1100px; padding: 200px 40px 0; box-sizing: border-box; }
+  .rcard { display: inline-block; width: 200px; height: 160px; margin-right: 16px; background: #2a6; }
+  .sdwrap { height: 600px; padding-top: 250px; box-sizing: border-box; }
+  /* CSS scroll-driven: полоса растёт по view() от входа снизу до середины диапазона cover */
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .sd { height: 100px; width: 600px; background: #36c; transform-origin: left; animation: grow linear both;
+        animation-timeline: view(); animation-range: entry 0% cover 50%; }
+  .pin { height: 2700px; background: #fafafa; }
+  .sticky { position: sticky; top: 0; height: 900px; overflow: hidden; }
+  .bar { position: absolute; left: 0; top: 400px; width: 100px; height: 40px; background: #c33; }
+  .bar2 { top: 500px; background: #933; }
+  .foot { height: 900px; background: #ddd; }
+</style>
+</head>
+<body>
+<section class="hero"><div class="badge" id="badge"></div></section>
+<section class="reveal" id="reveal"><div class="rcard"></div><div class="rcard"></div><div class="rcard"></div><div class="rcard"></div></section>
+<section class="sdwrap"><div class="sd" id="sd"></div></section>
+<section class="pin" id="pin"><div class="sticky"><div class="bar" id="bar"></div><div class="bar bar2" id="bar2"></div></div></section>
+<section class="foot"></section>
+<script>
+  // петля по времени: поворот без разворотов и сбросов, 90°/с, пишется в каждом кадре
+  const badge = document.getElementById('badge'), b0 = performance.now();
+  const spin = (now) => { badge.style.transform = 'rotate(' + (((now - b0) * 0.09) % 360).toFixed(3) + 'deg)'; requestAnimationFrame(spin); };
+  requestAnimationFrame(spin);
+  // появление в зоне видимости: IntersectionObserver → аниматор rAF, 4 карточки, easeOutCubic 500 мс, стаггер 80 мс,
+  // сдвиг 30 px → 0 и opacity 0 → 1
+  const cards = Array.from(document.querySelectorAll('.rcard'));
+  const ease = (p) => 1 - Math.pow(1 - p, 3);
+  cards.forEach((c) => { c.style.opacity = '0'; c.style.transform = 'translate3d(0px, 30px, 0px)'; });
+  const io = new IntersectionObserver((es) => {
+    if (!es.some((e) => e.isIntersecting)) return;
+    io.disconnect();
+    const t0 = performance.now(), D = 500, S = 80;
+    const frame = (now) => {
+      let left = false;
+      cards.forEach((c, i) => {
+        const p = (now - t0 - i * S) / D;
+        if (p <= 0) { left = true; return; }
+        if (c.dataset.done) return;
+        const v = ease(Math.min(1, p));
+        c.style.opacity = v.toFixed(6);
+        c.style.transform = 'translate3d(0px, ' + (30 * (1 - v)).toFixed(6) + 'px, 0px)';
+        if (p >= 1) c.dataset.done = '1'; else left = true;
+      });
+      if (left) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  }, {threshold: 0.2});
+  io.observe(document.getElementById('reveal'));
+  // два скраба инлайн-стилями: сдвиг X 0 → 400 px на прокрутке 2600–4400 (пока секция закреплена);
+  // первый — сразу, второй — со сглаживанием (догоняет цель на 12 % за кадр)
+  const bar = document.getElementById('bar'), bar2 = document.getElementById('bar2');
+  const target = () => 400 * Math.min(1, Math.max(0, (scrollY - 2600) / 1800));
+  let cur = target(), raf = 0;
+  const loop = () => {
+    const t = target();
+    bar.style.transform = 'translateX(' + t.toFixed(2) + 'px)';
+    cur += (t - cur) * 0.12;
+    if (Math.abs(t - cur) < 0.01) cur = t;
+    bar2.style.transform = 'translateX(' + cur.toFixed(2) + 'px)';
+    raf = cur !== t ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(loop); }, {passive: true});
+  loop();
+</script>
+</body>
+</html>

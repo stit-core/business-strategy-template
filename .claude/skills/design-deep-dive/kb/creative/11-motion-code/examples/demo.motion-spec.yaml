@@ -1,0 +1,742 @@
+# Спецификация движения для demo.html — витрины набора движения (11-motion-code). Учебная.
+# Проверка: scripts/creative/spec_check.py spec kb/creative/11-motion-code/examples/demo.motion-spec.yaml
+# Живая сверка: scripts/creative/motion_check.py kb/creative/11-motion-code/examples/demo.html --level L1 --modes desk,rm,nojs
+#   --spec kb/creative/11-motion-code/examples/demo.motion-spec.yaml
+# Каждый момент собран примитивом набора (primitive = значение data-mk); цели — DOM-контракт демо: data-section,
+# data-slot, data-group, data-moment. Плана страницы у витрины нет: id секций и слотов задаёт разметка demo.html.
+motion_spec_version: "1.0"
+id: motion-kit-demo
+example: true
+status: proposed
+checked_at: "2026-10-28"
+refs:
+  page_plan: "нет: витрина набора — id секций, слотов и групп задаёт разметка demo.html (data-section, data-slot, data-group)"
+  tokens: ../../04-visual-language/marketing-tokens.json
+  effects: ../../06-effects-catalog/effects.yaml
+level: L1
+executor: {target: any, harness: any, video_in: false}
+page:
+  thesis: "Каждое движение говорит одно: что важно, куда смотреть, что изменилось. Первый экран — один вход; ниже — система из трёх приёмов, петли с общей паузой, сцены прокрутки без перехвата."
+  character: [measured, precise]
+  base: {duration_ms: 560, easing: {token: motion.marketing.easing.out-expo}}
+  primitives: [type-unmask, fade-up, sweep]
+  lcp: {target: hero.title, entrance: transform-only, note: "H1 — кандидат LCP: только сдвиг 16 px, без прозрачности"}
+  toggle: {required: true, attr: data-motion, states: [system, reduced, full, paused], placement: sticky-header, remember: true}
+  scroll: {smooth: false, tail_ms_max: 0, jacking: never}
+  transitions:
+    kind: view-transitions
+    base_ms: 320
+    names:
+      - {name: g1, role: shared}
+      - {name: g2, role: shared}
+      - {name: g3, role: shared}
+      - {name: g4, role: shared}
+  properties_allowed: [transform, translate, opacity, color, clip-path, filter, stroke-dashoffset, "--*", view-transition, block-size]
+  budget: {loops_in_view_max: 2, loops_in_view_max_mobile: 1, first_screen_scene_ms_max: 1200, js_kb_br_effects_max: 13, long_frames_pct_max: 2, cls_scroll_max: 0.1}
+  never:
+    - "одинаковый подъём на всех секциях: появление — три приёма по ролям, спокойные секции не появляются"
+    - "петля без общей паузы и вне бюджета внимания; петля под абзацем"
+    - "перехват колеса, своя скорость прокрутки, привязка к станциям"
+    - "LCP-заголовок из прозрачности, разбиением или маской строк"
+sections:
+  - id: hero
+    role: accent
+    level: L1
+    intent: "один вход первого экрана: заголовок сдвигом, лид и призыв по порядку; справа дышит шар, под текстом — свет за курсором"
+    moments:
+      - id: hero-title
+        class: one-shot
+        purpose: attention
+        transition_type: entrance
+        primitive: entrance
+        effect: "effect:hero-entrance-once"
+        target: hero.title
+        trigger: {type: load}
+        tracks:
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        lcp: is-lcp
+        reduce: {strategy: final-state, describe: "заголовок на месте с первого кадра"}
+        mobile: {strategy: same}
+      - id: hero-lead
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: entrance
+        effect: "effect:hero-entrance-once"
+        target: hero.lead
+        trigger: {type: load, delay_ms: 60}
+        tracks:
+          - {property: opacity, from: 0.01, to: 1, duration: {share: 0.6}, easing: {token: motion.marketing.easing.out-strong}}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        lcp: not-lcp
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: hero-actions
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: entrance
+        effect: "effect:hero-entrance-once"
+        target: hero.actions
+        trigger: {type: load, delay_ms: 120}
+        tracks:
+          - {property: opacity, from: 0.01, to: 1, duration: {share: 0.6}, easing: {token: motion.marketing.easing.out-strong}}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        lcp: not-lcp
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: hero-orb
+        class: loop
+        purpose: personality
+        transition_type: persistent
+        primitive: drift
+        params: {period: 14s, amp: 2.4}
+        target: hero.fx-orb
+        trigger: {type: idle-loop}
+        tracks:
+          - {property: transform, from: "translateY(-2.4%)", to: "translateY(2.4%)", unit_note: "период 14 с, alternate; шар справа, текст в стороне"}
+        easing: {token: motion.marketing.easing.breathe}
+        repeat: infinite
+        loop: {period_ms: 14000, direction: alternate, idle_pixels_pct_s_max: 2.5}
+        pause: {control: page-toggle, offscreen: true, hidden_tab: true}
+        reduce: {strategy: stop-loop, describe: "шар стоит"}
+        mobile: {strategy: same}
+      - id: hero-spot
+        class: pointer
+        purpose: personality
+        primitive: spotlight
+        effect: "effect:cursor-accent"
+        target: hero.fx-spot
+        trigger: {type: pointer}
+        tracks:
+          - {property: "--mk-x", from: "70%", to: "указатель", unit_note: "свет под текстом, сглаживание λ 10; --mk-y — так же от 30 %"}
+        reduce: {strategy: no-motion-needed, describe: "свет идёт за курсором без хвоста: прямое управление"}
+        mobile: {strategy: static, describe: "пятно стоит в 70 % / 30 %"}
+      - id: hero-cta
+        class: pointer
+        purpose: feedback
+        primitive: magnet
+        effect: "effect:magnetic-cta"
+        target: hero.actions
+        selector_hint: "[data-moment=hero-cta]"
+        trigger: {type: pointer}
+        tracks:
+          - {property: translate, from: "0 0", to: "≤ 8px к указателю", unit_note: "≤ токена distance.magnet-max и ≤ 25 % высоты; подпись — на 40 % дальше"}
+        reduce: {strategy: final-state, describe: "кнопка не смещается"}
+        mobile: {strategy: static, describe: "тач — обычная кнопка"}
+    reduce: {strategy: final-state, describe: "весь первый экран — с первого кадра; шар стоит"}
+    mobile: {strategy: same, describe: "шар над текстом, меньше; пятно стоит"}
+    fallback: {no_js: "вход идёт на CSS и без JS; шар стоит, магнита и света нет", unsupported: "—"}
+    budget: {loops_in_view: 1, load: eager}
+
+  - id: manifesto
+    role: accent
+    level: L1
+    intent: "абзац подсвечивается по мере чтения"
+    moments:
+      - id: manifesto-highlight
+        class: scroll-linked
+        purpose: guide
+        primitive: highlight
+        effect: "effect:scroll-text-highlight"
+        target: manifesto.text
+        trigger: {type: scroll-scrub, subject: manifesto.text, range: {start: "cover 22%", end: "cover 62%"}}
+        model: scrub
+        tracks:
+          - {property: color, from: "#827a6e", to: "#14130f", unit_note: "непрочитанное — цвет 3,5 : 1, а не прозрачность"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "абзац целиком в цвете текста"}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "абзац в цвете текста"}
+    mobile: {strategy: same, describe: "так же"}
+    fallback: {no_js: "абзац в цвете текста", unsupported: "без шкал прокрутки — абзац в цвете текста"}
+
+  - id: reveal
+    role: support
+    level: L1
+    intent: "система появления: маска у заголовка, подъём у текста и карточек, шторка у кадра, резкость у фигуры, линия у схемы"
+    moments:
+      - id: reveal-title
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: unmask
+        effect: "effect:scroll-reveal-system"
+        target: reveal.title
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: transform, from: "translateY(100%)", to: "none"}
+          - {property: clip-path, from: "inset(-0.3em -0.2em calc(100% + 0.3em) -0.2em)", to: "inset(-0.3em -0.2em)"}
+        duration: {token: motion.marketing.duration.split-line}
+        easing: {token: motion.marketing.easing.out-expo}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: reveal-intro
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: rise
+        effect: "effect:scroll-reveal-system"
+        target: reveal.intro
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: opacity, from: 0.01, to: 1, duration: {share: 0.6}, easing: {token: motion.marketing.easing.out-strong}}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: reveal-cards
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: rise
+        effect: "effect:scroll-reveal-system"
+        target: reveal.card-1
+        stagger_targets: [reveal.card-2, reveal.card-3]
+        selector_hint: "[data-group=card-1]"
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: opacity, from: 0.01, to: 1, duration: {share: 0.6}, easing: {token: motion.marketing.easing.out-strong}}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-reveal))", to: "none"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        stagger: {each: {token: motion.marketing.stagger.group}, order: dom, max_items: 3, total_ms_max: 600}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: reveal-media
+        class: one-shot
+        purpose: attention
+        transition_type: entrance
+        primitive: sweep
+        effect: "effect:mask-reveal"
+        target: reveal.media
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: clip-path, from: "inset(0 100% 0 0)", to: "inset(0)"}
+          - {property: transform, from: "scale(1.06)", to: "none", unit_note: "внутренний слой [data-mk-inner]"}
+        duration: {token: motion.marketing.duration.split-line}
+        easing: {token: motion.marketing.easing.out-expo}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: reveal-figure
+        class: one-shot
+        purpose: attention
+        transition_type: entrance
+        primitive: scale-in
+        params: {blur: 6px}
+        effect: "effect:scroll-reveal-system"
+        target: reveal.figure
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: opacity, from: 0.01, to: 1, duration: {share: 0.7}, easing: {token: motion.marketing.easing.out-strong}}
+          - {property: transform, from: "scale(var(--motion-marketing-scale-reveal-in))", to: "none"}
+          - {property: filter, from: "blur(6px)", to: "none", duration: {token: motion.marketing.duration.reveal}}
+        duration: {token: motion.marketing.duration.split-line}
+        easing: {token: motion.marketing.easing.out-expo}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: reveal-diagram
+        class: one-shot
+        purpose: narrate
+        transition_type: entrance
+        primitive: draw
+        effect: "effect:scroll-reveal-system"
+        target: reveal.diagram
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: stroke-dashoffset, from: 1, to: 0, unit_note: "pathLength=1; второй путь — на шаг группы позже"}
+        duration: {token: motion.marketing.duration.split-line}
+        easing: {token: motion.marketing.easing.in-out}
+        interrupt: jump-to-end
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "всё видно с первого кадра, без сдвигов и масок"}
+    mobile: {strategy: same, describe: "кадры в колонку"}
+    fallback: {no_js: "всё видно: скрытое состояние только под data-mk-on=full", unsupported: "—"}
+
+  - id: statement
+    role: accent
+    level: L1
+    intent: "разбиение: слова заголовка и строки фразы поднимаются из своих коробок"
+    moments:
+      - id: statement-words
+        class: one-shot
+        purpose: personality
+        transition_type: entrance
+        primitive: split
+        params: {split: words}
+        effect: "effect:split-text-reveal"
+        target: statement.title
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: transform, from: "translateY(100%)", to: "none"}
+          - {property: clip-path, from: "inset(-0.3em -0.2em calc(100% + 0.3em) -0.2em)", to: "inset(-0.3em -0.2em)"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.out-expo}
+        stagger: {each: {token: motion.marketing.stagger.text}, order: dom, max_items: 7}
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: statement-lines
+        class: one-shot
+        purpose: guide
+        transition_type: entrance
+        primitive: split
+        params: {split: lines}
+        effect: "effect:split-text-reveal"
+        target: statement.lines
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: transform, from: "translateY(100%)", to: "none"}
+          - {property: clip-path, from: "inset(-0.3em -0.2em calc(100% + 0.3em) -0.2em)", to: "inset(-0.3em -0.2em)"}
+        duration: {token: motion.marketing.duration.split-line}
+        easing: {token: motion.marketing.easing.out-expo}
+        stagger: {each: {token: motion.marketing.stagger.text}, order: dom, max_items: 3}
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "заголовок и фраза целиком"}
+    mobile: {strategy: same, describe: "так же"}
+
+  - id: proof
+    role: support
+    level: L1
+    intent: "честные числа о наборе: итог в HTML, счёт один раз"
+    moments:
+      - id: proof-n1
+        class: one-shot
+        purpose: inform
+        transition_type: entrance
+        primitive: count
+        effect: "effect:counter-up"
+        target: proof.n1
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: "--mk-num", from: 0, to: 35, unit_note: "цифры рисует CSS-счётчик поверх прозрачного итога"}
+        duration: {token: motion.marketing.duration.counter}
+        easing: {token: motion.marketing.easing.out-expo}
+        reduce: {strategy: final-state, describe: "итог сразу"}
+        mobile: {strategy: same}
+      - id: proof-n2
+        class: one-shot
+        purpose: inform
+        transition_type: entrance
+        primitive: count
+        effect: "effect:counter-up"
+        target: proof.n2
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: "--mk-num", from: 0, to: 33}
+        duration: {token: motion.marketing.duration.counter}
+        easing: {token: motion.marketing.easing.out-expo}
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+      - id: proof-n3
+        class: one-shot
+        purpose: inform
+        transition_type: entrance
+        primitive: count
+        effect: "effect:counter-up"
+        target: proof.n3
+        trigger: {type: in-view, threshold: 0.01, once: true}
+        tracks:
+          - {property: "--mk-num", from: 0, to: 129, unit_note: "129 десятых: «12,9»"}
+        duration: {token: motion.marketing.duration.counter}
+        easing: {token: motion.marketing.easing.out-expo}
+        reduce: {strategy: final-state}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "числа сразу"}
+    mobile: {strategy: same, describe: "в колонку"}
+    fallback: {no_js: "итоговые числа в HTML", unsupported: "без mod() и round() — итог без счёта"}
+
+  - id: ticker
+    role: support
+    level: L1
+    intent: "петли с общей паузой: строка слов и вращающийся бейдж — два движения в окне"
+    moments:
+      - id: ticker-strip
+        class: loop
+        purpose: personality
+        transition_type: persistent
+        primitive: marquee
+        params: {speed: 40, boost: 0.35}
+        effect: "effect:marquee-text"
+        target: ticker.strip
+        trigger: {type: idle-loop}
+        tracks:
+          - {property: transform, from: "translateX(0)", to: "translateX(-100%)"}
+        easing: {token: motion.marketing.easing.linear}
+        repeat: infinite
+        loop: {speed_px_s: 40, direction: normal, idle_pixels_pct_s_max: 5}
+        pause: {control: page-toggle, offscreen: true, hidden_tab: true}
+        reduce: {strategy: stop-loop, describe: "статичный ряд, дубль скрыт"}
+        mobile: {strategy: same}
+      - id: ticker-badge
+        class: loop
+        purpose: personality
+        transition_type: persistent
+        primitive: drift
+        params: {drift: spin, period: 24s}
+        effect: "effect:rotating-badge"
+        target: ticker.fx-badge
+        trigger: {type: idle-loop}
+        tracks:
+          - {property: transform, from: "rotate(0)", to: "rotate(1turn)"}
+        easing: {token: motion.marketing.easing.linear}
+        repeat: infinite
+        loop: {period_ms: 24000, direction: normal}
+        pause: {control: page-toggle, offscreen: true, hidden_tab: true}
+        reduce: {strategy: stop-loop, describe: "бейдж стоит"}
+        mobile: {strategy: hidden, describe: "на телефоне бейджа нет: петель в окне ≤ 1"}
+    reduce: {strategy: final-state, describe: "строка — статичный ряд, бейдж стоит"}
+    mobile: {strategy: hidden-decor, describe: "бейдж скрыт"}
+    budget: {loops_in_view: 2}
+
+  - id: depth
+    role: accent
+    level: L1
+    intent: "три слоя с разной скоростью, разница ≤ 40 %; текст едет со страницей"
+    moments:
+      - id: depth-far
+        class: scroll-linked
+        purpose: personality
+        primitive: parallax
+        params: {depth: 0.18}
+        effect: "effect:parallax-layers"
+        target: depth.fx-far
+        trigger: {type: scroll-scrub, range: {start: "cover 0%", end: "cover 100%"}}
+        model: scrub
+        tracks:
+          - {property: transform, from: "translateY(calc(-0.18 * (50vh + 50%)))", to: "translateY(calc(0.18 * (50vh + 50%)))"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "слои неподвижны относительно страницы"}
+        mobile: {strategy: simplified, describe: "амплитуда вдвое меньше"}
+      - id: depth-near
+        class: scroll-linked
+        purpose: personality
+        primitive: parallax
+        params: {depth: -0.06}
+        effect: "effect:parallax-layers"
+        target: depth.fx-near
+        trigger: {type: scroll-scrub, range: {start: "cover 0%", end: "cover 100%"}}
+        model: scrub
+        tracks:
+          - {property: transform, from: "translateY(calc(0.06 * (50vh + 50%)))", to: "translateY(calc(-0.06 * (50vh + 50%)))"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state}
+        mobile: {strategy: simplified}
+    reduce: {strategy: final-state, describe: "слои на местах"}
+    mobile: {strategy: simplified, describe: "половина амплитуды"}
+    fallback: {no_js: "слои на местах", unsupported: "слои на местах"}
+
+  - id: path
+    role: support
+    level: L1
+    intent: "линия пути рисуется прокруткой вдоль четырёх шагов"
+    moments:
+      - id: path-line
+        class: scroll-linked
+        purpose: orient
+        primitive: scroll-draw
+        params: {from: "cover 25%", to: "cover 70%"}
+        effect: "effect:svg-line-draw"
+        target: path.line
+        trigger: {type: scroll-scrub, subject: path.line, range: {start: "cover 25%", end: "cover 70%"}}
+        model: scrub
+        tracks:
+          - {property: stroke-dashoffset, from: 1, to: 0}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "линия целиком"}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "линия целиком"}
+    mobile: {strategy: same, describe: "так же"}
+    fallback: {no_js: "линия целиком", unsupported: "линия целиком"}
+
+  - id: beats
+    role: peak
+    level: L2
+    intent: "сцена тактами (витрина L2): карточки идут прокруткой, сцена доигрывает такт пружиной ω 3 до точки покоя"
+    scene:
+      scroll_mode: beats
+      pin: sticky
+      length_vh: 380
+      stations:
+        - {id: b0, anchor: beats.beat-0, anchor_line: viewport-center, describe: "заставка: линия не начата, узел 1 светится"}
+        - {id: b1, anchor: beats.beat-1, anchor_line: viewport-center, describe: "такт 1: линия до узла 2"}
+        - {id: b2, anchor: beats.beat-2, anchor_line: viewport-center, describe: "такт 2: линия до узла 3"}
+        - {id: b3, anchor: beats.beat-3, anchor_line: viewport-center, describe: "такт 3: линия до узла 4"}
+        - {id: b4, anchor: beats.beat-4, anchor_line: viewport-center, describe: "финал: линия целиком, все узлы светятся"}
+    moments:
+      - id: beats-stage
+        class: scroll-linked
+        purpose: narrate
+        primitive: scene
+        params: {mode: beats, beats: "0,0.299,0.585,0.835,1", tempo: 3}
+        target: beats.stage
+        trigger: {type: pin-scrub, progress: {start: 0, end: 1}}
+        model: spring
+        spring: {stiffness: 9, damping: 6, mass: 1, bounce: 0}
+        tracks:
+          - {property: "--mk-p", keyframes: [{at: 0, value: 0}, {at: 0.25, value: 0.299}, {at: 0.5, value: 0.585}, {at: 0.75, value: 0.835}, {at: 1, value: 1}], unit_note: "точки покоя; доигрыш — критически демпфированная пружина ω 3 (95 % за 1,58 с)"}
+        interrupt: follow-input
+        reduce: {strategy: stations, describe: "без закрепления: конечный кадр сцены и карточки тактов текстом"}
+        mobile: {strategy: same, describe: "шаг 420 px, без рельса"}
+    reduce: {strategy: stations, describe: "конечный кадр и карточки тактов"}
+    mobile: {strategy: simplified, describe: "шаг 420 px, рельса нет"}
+    fallback: {no_js: "конечный кадр и карточки тактов", unsupported: "—"}
+
+  - id: stack
+    role: support
+    level: L1
+    intent: "стопка: предыдущая карточка уходит вглубь по шкале следующей"
+    moments:
+      - id: stack-cards
+        class: scroll-linked
+        purpose: continuity
+        primitive: stack
+        effect: "effect:sticky-stack"
+        target: stack.cards
+        trigger: {type: scroll-scrub, range: {start: "entry 0%", end: "entry 100%"}}
+        model: scrub
+        tracks:
+          - {property: transform, from: "scale(1)", to: "scale(0.94)", unit_note: "по шкале следующей карточки (timeline-scope)"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "липкость остаётся, масштаба нет"}
+        mobile: {strategy: same, describe: "отступ 14 px"}
+    reduce: {strategy: final-state, describe: "липкие карточки без масштаба"}
+    mobile: {strategy: same, describe: "так же"}
+
+  - id: horizontal
+    role: peak
+    level: L2
+    intent: "горизонталь (витрина L2): липкое окно, лента едет вбок по прогрессу"
+    scene: {pin: sticky, length_vh: 300}
+    moments:
+      - id: horizontal-track
+        class: scroll-linked
+        purpose: narrate
+        primitive: horizontal
+        effect: "effect:horizontal-scroll"
+        target: horizontal.track
+        trigger: {type: pin-scrub, range: {start: "contain 0%", end: "contain 100%"}}
+        model: scrub
+        tracks:
+          - {property: transform, from: "translateX(0)", to: "translateX(calc(-100% + 100cqw))"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "родная лента со snap"}
+        mobile: {strategy: stacked, describe: "родная лента со свайпом"}
+    reduce: {strategy: final-state, describe: "родная лента"}
+    mobile: {strategy: simplified, describe: "родная лента со свайпом"}
+    fallback: {no_js: "родная лента со snap и клавиатурой", unsupported: "родная лента"}
+
+  - id: expand
+    role: peak
+    level: L1
+    intent: "кадр раскрывается до полного вылета за 70 % пути, подпись — в последней четверти"
+    scene: {pin: sticky, length_vh: 150}
+    moments:
+      - id: expand-frame
+        class: scroll-linked
+        purpose: attention
+        primitive: frame-expand
+        effect: "effect:scroll-mask-expand"
+        target: expand.frame
+        trigger: {type: pin-scrub, range: {start: "contain 0%", end: "contain 70%"}}
+        model: scrub
+        tracks:
+          - {property: clip-path, from: "inset(22% 30% round 28px)", to: "inset(0)"}
+        easing: {none: true}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "кадр на всю ширину без сцены"}
+        mobile: {strategy: static, describe: "кадр на всю ширину"}
+      - id: expand-caption
+        class: scroll-linked
+        purpose: inform
+        primitive: frame-expand
+        effect: "effect:scroll-mask-expand"
+        target: expand.caption
+        trigger: {type: pin-scrub, range: {start: "contain 72%", end: "contain 92%"}}
+        model: scrub
+        tracks:
+          - {property: opacity, from: 0, to: 1}
+        easing: {none: true}
+        reduce: {strategy: final-state}
+        mobile: {strategy: static}
+    reduce: {strategy: final-state, describe: "кадр и подпись"}
+    mobile: {strategy: static, describe: "кадр на всю ширину"}
+    fallback: {no_js: "кадр и подпись", unsupported: "кадр и подпись"}
+
+  - id: mask
+    role: accent
+    level: L1
+    intent: "текст-окно: кадр внутри букв едет по шкале слова"
+    moments:
+      - id: mask-word
+        class: scroll-linked
+        purpose: personality
+        primitive: text-mask
+        effect: "effect:text-mask-media"
+        target: mask.word
+        trigger: {type: scroll-scrub, subject: mask.word, range: {start: "cover 0%", end: "cover 100%"}}
+        model: scrub
+        tracks:
+          - {property: "--mk-pan", from: "0%", to: "100%", unit_note: "положение кадра в буквах (background-position)"}
+        easing: {none: true}
+        reduce: {strategy: final-state, describe: "кадр в буквах стоит"}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "кадр стоит"}
+    mobile: {strategy: same, describe: "так же"}
+
+  - id: dial
+    role: peak
+    level: L1
+    intent: "скраб 150vh: дуга рисуется прокруткой, пружина ω 6,5 догоняет без перелёта"
+    scene: {scroll_mode: scrub, pin: sticky, length_vh: 150}
+    moments:
+      - id: dial-stage
+        class: scroll-linked
+        purpose: narrate
+        primitive: scene
+        params: {mode: scrub, length: 150}
+        effect: "effect:pin-scrub-story"
+        target: dial.stage
+        trigger: {type: pin-scrub, range_vh: {length: 150}}
+        model: spring
+        spring: {stiffness: 42.25, damping: 13, mass: 1, bounce: 0}
+        tracks:
+          - {property: "--mk-p", from: 0, to: 1, unit_note: "дуга stroke-dashoffset и точка rotate — от --mk-p"}
+        interrupt: follow-input
+        reduce: {strategy: final-state, describe: "дуга целиком, все надписи"}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "дуга целиком"}
+    mobile: {strategy: same, describe: "так же"}
+
+  - id: pointer
+    role: support
+    level: L1
+    intent: "наклон карточек к указателю ≤ 7° с бликом"
+    moments:
+      - id: pointer-tilt
+        class: pointer
+        purpose: feedback
+        primitive: tilt
+        params: {deg: 6}
+        effect: "effect:tilt-card"
+        target: pointer.cards
+        selector_hint: "[data-moment=pointer-tilt]"
+        trigger: {type: pointer}
+        tracks:
+          - {property: transform, from: "rotateX(0) rotateY(0)", to: "≤ 7°", unit_note: "perspective 900px; λ 7"}
+        reduce: {strategy: final-state, describe: "плоская карточка"}
+        mobile: {strategy: static, describe: "тач — плоская карточка"}
+    reduce: {strategy: final-state, describe: "плоские карточки"}
+    mobile: {strategy: static, describe: "плоские карточки"}
+
+  - id: micro
+    role: support
+    level: L1
+    intent: "отклик интерфейса на CSS: аккордеон, окно, подпись кнопки, переворот, блик, колонки"
+    moments:
+      - id: micro-accordion
+        class: transition
+        purpose: feedback
+        primitive: accordion
+        effect: "effect:details-accordion"
+        target: micro.fx-accordion
+        selector_hint: "[data-moment=micro-accordion]"
+        trigger: {type: click}
+        tracks:
+          - {property: block-size, from: 0, to: auto}
+        duration: {token: motion.marketing.duration.hover}
+        easing: {token: motion.marketing.easing.out-strong}
+        reduce: {strategy: final-state, describe: "мгновенно"}
+        mobile: {strategy: same}
+      - id: micro-label
+        class: pointer
+        purpose: feedback
+        primitive: button-label
+        effect: "effect:button-expand-label"
+        target: micro.fx-label
+        selector_hint: "[data-moment=micro-label]"
+        trigger: {type: hover}
+        tracks:
+          - {property: clip-path, from: "inset(0 0 0 calc(100% - 48px) round 999px)", to: "inset(0 round 999px)"}
+        duration: {token: motion.marketing.duration.hover}
+        easing: {token: motion.marketing.easing.out-strong}
+        reduce: {strategy: final-state, describe: "подпись без анимации"}
+        mobile: {strategy: touch-alternative, describe: "подпись видна всегда"}
+      - id: micro-flip
+        class: pointer
+        purpose: inform
+        primitive: flip
+        effect: "effect:card-flip-3d"
+        target: micro.fx-flip
+        selector_hint: "[data-moment=micro-flip]"
+        trigger: {type: hover}
+        tracks:
+          - {property: transform, from: "rotateY(0)", to: "rotateY(180deg)"}
+        duration: {token: motion.marketing.duration.reveal}
+        easing: {token: motion.marketing.easing.in-out}
+        reduce: {strategy: final-state, describe: "оборот стоит под лицом"}
+        mobile: {strategy: touch-alternative, describe: "кнопка «Подробнее»"}
+      - id: micro-dialog
+        class: transition
+        purpose: continuity
+        primitive: dialog
+        effect: "effect:dialog-entry-exit"
+        target: micro.fx-sheet
+        selector_hint: "#sheet"
+        trigger: {type: click}
+        tracks:
+          - {property: opacity, from: 0, to: 1}
+          - {property: transform, from: "translateY(var(--motion-marketing-distance-shift-hero)) scale(0.98)", to: "none"}
+        duration: {token: motion.marketing.duration.state}
+        easing: {token: motion.marketing.easing.out-expo}
+        exit: {behavior: fade, duration: {ms: 250}, easing: {token: motion.marketing.easing.in}}
+        reduce: {strategy: crossfade, describe: "проявление 180 мс без сдвига"}
+        mobile: {strategy: same}
+    reduce: {strategy: final-state, describe: "раскрытия мгновенно, окно — затухание"}
+    mobile: {strategy: simplified, describe: "подписи видны, переворот кнопкой"}
+
+  - id: state
+    role: support
+    level: L1
+    intent: "смена вида галереи одним переходом"
+    moments:
+      - id: state-switch
+        class: transition
+        purpose: continuity
+        transition_type: persistent
+        primitive: state
+        effect: "effect:view-transition"
+        target: state.fx-gallery
+        selector_hint: "#gallery"
+        trigger: {type: click}
+        tracks:
+          - {property: view-transition, from: "плитка", to: "список", unit_note: "группы g1–g4, тип перехода mk-state"}
+        duration: {token: motion.marketing.duration.state}
+        easing: {token: motion.marketing.easing.in-out}
+        reduce: {strategy: crossfade, describe: "группы без смещения, затухание 108 мс"}
+        mobile: {strategy: same}
+    reduce: {strategy: crossfade, describe: "без смещения"}
+    mobile: {strategy: same, describe: "так же"}
+open_questions:
+  - "Текст по кривой (секция curve) в спецификацию не входит: startOffset — атрибут SVG, в дорожках схемы такого свойства нет."
+  - "Витрина держит все примитивы на одной странице: система появления здесь шире трёх приёмов, а секции beats и horizontal — уровня L2."
+notes: "Измерения прогонов — ../README.md § Проверки."

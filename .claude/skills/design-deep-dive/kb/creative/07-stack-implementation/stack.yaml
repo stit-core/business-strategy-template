@@ -1,7 +1,10 @@
 # stack.yaml — каталог стека подачи: платформа браузера, библиотеки, рантаймы, фреймворки, платформы заказчика.
 # Владелец: creative. Читают: подача (treatment → стек исполнителя), рецепты, ворота эффектов (вес слоя «подача»), вход холста
 # (build.stack), site (стык с constraints.cms). Текст правил — 01-stack-choice.md, код — 02. Проверка — ../../../scripts/creative/validate_stack.py.
-# Скоропортящееся: перепроверка раз в квартал и перед сборкой (`npm view <пакет> version dist-tags`, BCD) — поле checked_at.
+# Скоропортящееся — поле checked_at: у записи, если её сверяли позже всего каталога, иначе — у каталога. Записи поддержки
+# браузеров (kind: platform) — не реже раза в месяц: Chrome (с 153, 2026-09-08) и Firefox (с 157, 2026-09-29) выходят раз в
+# 2 недели; библиотеки, рантаймы и платформы — раз в квартал; всё — перед сборкой (`npm view <пакет> version dist-tags`, BCD,
+# заметки к выпускам).
 
 version: 0.1
 checked_at: 2026-09-24
@@ -10,11 +13,11 @@ measure:
   size_br: "минимальный бандл: esbuild 0.25.12, ESM, minify, production, brotli q11 (как в базе 3d); число — сценарий «типовая инициализация», словарь — ключ сцены: {<сцена>: КБ}; wasm — отдельно"
   size_net_kb: "вес по сети на странице (CDP, как ворота): {<сцена или способ загрузки>: КБ}; источник — refs записи"
   init_tbt_ms: "Chromium 153.0.8010.12 headless, CPU ×4, холодный кэш, 5 прогонов: медиана и [мин, макс]; TBT до «готово» + 3 с; load average 6,8–10,3 — сравнивать порядок, не единицы мс"
-  support: "@mdn/browser-compat-data 8.1.3 (2026-09-24T13:25Z) и web-features 3.39.0; текущие: Chrome 154, Edge 153, Firefox 156, Safari 27"
-  alive: "npm registry (дата релиза последней версии, стабильных релизов за 365 дней) и GitHub API (звёзды, pushed_at), 2026-09-24"
+  support: "@mdn/browser-compat-data 8.1.3 (2026-09-24T13:25Z) и web-features 3.39.0; у записей с checked_at 2026-10-28 — MDN и заметки к выпускам на эту дату; текущие на 2026-10-28: Chrome 156, Firefox 159, Safari 27"
+  alive: "npm registry (дата релиза последней версии, стабильных релизов за 365 дней) и GitHub API (звёзды, pushed_at), 2026-09-24; версии и даты выпусков у записей с checked_at 2026-10-28 — на эту дату"
 budget_ref: "../01-creative-direction/ambition-levels.yaml#levels[*].budgets.effects.js_presentation_kb_br (по уровню)"
 vocab:
-  kind: {platform: "возможность браузера, 0 КБ", library: "npm-библиотека движения/прокрутки/переходов", runtime: "рантайм графики или анимации (WebGL, wasm)", framework: "сборка и рендеринг страниц", avoid: "не брать в новый код"}
+  kind: {platform: "возможность браузера, 0 КБ", library: "библиотека движения, прокрутки и переходов: npm-пакет или свой набор базы (motion-kit)", runtime: "рантайм графики или анимации (WebGL, wasm)", framework: "сборка и рендеринг страниц", avoid: "не брать в новый код"}
   status: {default: "умолчание для своих уровней", conditional: "по условию из when", legacy-only: "только на существующем сайте", avoid: "не использовать"}
   effect_ids: "id каталога эффектов 06-effects-catalog/effects.yaml с префиксом effect:"
 
@@ -44,15 +47,16 @@ entries:
     license: "стандарт W3C (Scroll-driven Animations)"
     size_br: 0
     init_tbt_ms: 0
-    support: {baseline: false, chrome: 115, edge: 115, safari: "26", safari_ios: "26", samsung: "23", firefox: "только Nightly", firefox_android: false, feature_check: "@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))"}
+    support: {baseline: "low 2026-10-27 (по датам выпусков: Firefox 159 — последний движок)", chrome: 115, edge: 115, safari: "26", safari_ios: "26", samsung: "23", firefox: 159, firefox_android: 159, interop: "2026", feature_check: "@supports ((animation-timeline: scroll()) and (animation-range: 0% 100%))"}
     use_for: [effect:scroll-reveal-system, effect:scroll-driven-progress, effect:parallax-layers, effect:mask-reveal, effect:sticky-stack, effect:pin-scrub-story]
     levels: [L1, L2]
     status: default
-    when: "декоративное — без фолбэка; смысловое (текст, цифры, шаги) — фолбэк IO или GSAP; pin-scrub-story на CSS — только декоративный"
+    when: "во всех движках; фолбэк — для старых версий: декоративное — без фолбэка, смысловое (текст, цифры, шаги) видно в конечном состоянии, разыгрывание по порогам — IO; pin-scrub-story на CSS — декоративный, сложный сюжет закрепления — GSAP"
     alternatives: [intersection-observer, gsap-scrolltrigger, motion]
-    risks: ["нет Firefox → содержимое обязано быть видно без анимации", "шорткат animation после animation-timeline сбрасывает таймлайн", "scroll-timeline-polyfill не использовать"]
+    risks: ["старые версии (Safari < 26, Firefox < 159) — содержимое обязано быть видно без анимации", "шорткат animation после animation-timeline сбрасывает таймлайн", "scroll-timeline-polyfill не использовать", "timeline-scope в Firefox 159 не сверен", "Firefox стендом не проверялся"]
     alive: {kind: web-standard, practice: "2 из 49 наградных сайтов"}
-    refs: ["01-stack-choice.md §3.1", "S7, S8, S10"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §3.1", "S7, S8, S10, S35, S36"]
 
   - id: css-scroll-triggered
     name: "CSS scroll-triggered animations (timeline-trigger, animation-trigger, trigger-scope)"
@@ -61,15 +65,16 @@ entries:
     license: "черновик CSS WG"
     size_br: 0
     init_tbt_ms: 0
-    support: {baseline: false, chrome: "146 (experimental)", firefox: false, safari: false}
+    support: {baseline: false, chrome: 146, firefox: false, safari: false, note: "Chrome 146 — по умолчанию; у Gecko и WebKit сигнала нет"}
     use_for: [effect:scroll-reveal-system]
     levels: [L1, L2]
     status: conditional
     when: "только прогрессивное улучшение поверх IntersectionObserver"
     alternatives: [intersection-observer]
-    risks: ["блог Chrome называет 145, BCD — 146; синтаксис может меняться"]
+    risks: ["только Chrome", "синтаксис может меняться (черновик)"]
     alive: {kind: web-standard-draft}
-    refs: ["01-stack-choice.md §3.1", "S9"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §3.1", "S9, S37"]
 
   - id: view-transitions-same-document
     name: "View Transitions, same-document (document.startViewTransition, view-transition-name/class, types)"
@@ -78,14 +83,15 @@ entries:
     license: "стандарт W3C (CSS View Transitions 1–2)"
     size_br: 0
     init_tbt_ms: 0
-    support: {baseline: "low 2025-10-14", chrome: 111, firefox: 144, safari: "18", types: {chrome: 125, firefox: 147, safari: "18.2"}, scoped_element_vt: "Chrome 147 exp."}
+    support: {baseline: "low 2025-10-14", chrome: 111, firefox: 144, safari: "18", types: {chrome: 125, firefox: 147, safari: "18.2"}, scoped_element_vt: "Chrome 147 по умолчанию", interop: "2026"}
     use_for: [effect:view-transition]
     levels: [L1, L2]
     status: default
     alternatives: [gsap-flip]
     risks: ["после VT со сменой раскладки — ScrollTrigger.refresh()", "reduce: не запускать (проверка matchMedia)"]
     alive: {kind: web-standard}
-    refs: ["01-stack-choice.md §5", "02-implementation-patterns.md §7"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §5", "02-implementation-patterns.md §7", "S36, S37"]
 
   - id: view-transitions-cross-document
     name: "View Transitions, cross-document (@view-transition { navigation: auto }, pageswap/pagereveal)"
@@ -94,15 +100,16 @@ entries:
     license: "стандарт W3C (CSS View Transitions 2)"
     size_br: 0
     init_tbt_ms: 0
-    support: {baseline: false, chrome: 126, safari: "18.2", samsung: "28", firefox: false, pagereveal: {chrome: 123, safari: "18.2", firefox: false}}
+    support: {baseline: false, chrome: 126, safari: "18.2", samsung: "28", firefox: false, pagereveal: {chrome: 123, safari: "18.2", firefox: false}, interop: "2026"}
     use_for: [effect:page-transition]
     levels: [L1, L2]
     status: default
     when: "многостраничник (MPA); правило внутри @media (prefers-reduced-motion: no-preference); 1–3 общих view-transition-name"
     alternatives: [swup, astro-client-router]
-    risks: ["Firefox — обычная навигация", "состояние (видео, WebGL) между страницами не сохраняется — тогда swup/Astro"]
+    risks: ["Firefox — обычная навигация (межстраничные VT — в Interop 2026)", "состояние (видео, WebGL) между страницами не сохраняется — тогда swup/Astro"]
     alive: {kind: web-standard}
-    refs: ["01-stack-choice.md §5", "S10, S11"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §5", "S10, S11, S36"]
 
   - id: waapi
     name: "Web Animations API (element.animate, getAnimations, commitStyles)"
@@ -186,6 +193,25 @@ entries:
     refs: ["01-stack-choice.md §6.1"]
 
   # ---------------------------------------------------------------- библиотеки движения и прокрутки
+  - id: motion-kit
+    name: "Набор движения страницы MotionKit (свой код базы): 35 примитивов data-mk, DOM-сцены прокрутки, переключатель движения"
+    kind: library
+    package: "свой код базы: ../11-motion-code/examples/motion-kit.js + motion-kit.css (одно глобальное имя MotionKit)"
+    version: "0.5.0"
+    license: "код шаблона — лицензия репозитория (Apache-2.0)"
+    size_br: {kit-min: {js: 8.0, css: 4.9}, kit-source: {js: 12.1, css: 7.9}}   # 01-kit.md §8: esbuild --minify, brotli 11 — весь набор 56,1 / 14,3 / 12,9 КБ (raw / gzip / br); исходники с комментариями: JS 45,8 / 13,9 / 12,1, CSS 41,4 / 9,2 / 7,9
+    init_tbt_ms: {demo_desk: 0}   # motion_check.py desk на демо L1 (README 11-motion-code, «Цена») — не метод G/01
+    support: {browsers: "все современные; прокрутка на CSS — под @supports (Chrome 115+, Safari 26+, Firefox 159+), без поддержки — конечное состояние", deps: "нет: без библиотек и сети, DOM не строит — только атрибуты, классы и CSS-переменные", canvas: "файл поддержки lib/motion-kit.js и CSS в <helmet>; на claude.ai не проверялся", scenes: "DOM-сцены scrub · beats · glide · play — пружина рантайма 3D (../../3d/16-js-scenes/)"}
+    use_for: [effect:hero-entrance-once, effect:scroll-reveal-system, effect:split-text-reveal, effect:mask-reveal, effect:counter-up, effect:scroll-driven-progress, effect:parallax-layers, effect:svg-line-draw, effect:scroll-text-highlight, effect:scroll-mask-expand, effect:text-mask-media, effect:sticky-stack, effect:horizontal-scroll, effect:header-shrink-on-scroll, effect:text-path, effect:pin-scrub-story, effect:marquee-logos, effect:marquee-text, effect:rotating-badge, effect:mesh-gradient-css, effect:glow-accent, effect:magnetic-cta, effect:tilt-card, effect:cursor-accent, effect:dialog-entry-exit, effect:details-accordion, effect:button-expand-label, effect:card-flip-3d, effect:light-sweep, effect:expanding-columns, effect:view-transition, effect:page-transition, effect:motion-toggle]   # 33 эффекта — поле effects в ../11-motion-code/primitives.yaml
+    levels: [L0, L1, L2]
+    status: default
+    when: "DOM-движение страницы на всех уровнях и на холсте — ступенью до GSAP: момент motion-spec → примитив ../11-motion-code/primitives.yaml; уровень примитива — его level_min; GSAP — в коде сайта для сюжета, которого набор не делает (сложный таймлайн, Flip); WebGL, 3D, видео, Lottie и Rive набор не исполняет"
+    alternatives: [gsap, gsap-scrolltrigger, gsap-flip, css-animations]
+    risks: ["на холсте claude.ai не проверялся", "приёмы без примитива (печать текста, вспышка по нажатию, перебор знаков, сравнение «до и после») — момент custom своим кодом", "состояние paused контракта data-motion в код сайта не входит"]
+    alive: {kind: own-code, release: "база скилла design-deep-dive 0.5.0"}
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §1, §2", "02-implementation-patterns.md §6", "../11-motion-code/README.md", "../11-motion-code/01-kit.md §8", "../11-motion-code/04-where-it-runs.md"]
+
   - id: gsap
     name: "GSAP (ядро: tween, timeline, matchMedia, context, quickTo)"
     kind: library
@@ -193,18 +219,19 @@ entries:
     version: "3.15.0"
     released: 2026-04-13
     license: "Standard «No Charge» (Webflow; eff. 2025-04-30, ред. 2025-05-30)"
-    license_caveats: ["запрещено: no-code-билдер анимаций, конкурирующий с Webflow; реверс для такого продукта", "не удалять уведомления @license из бандла", "Webflow вправе менять лицензию; прекращение — за нарушение", "ИИ-генерация кода — разрешена (FAQ)"]
+    license_caveats: ["все плагины, включая SplitText, ScrollSmoother и MorphSVG, — бесплатно и для коммерции", "запрещено: no-code-билдер анимаций, конкурирующий с Webflow; реверс для такого продукта", "не удалять уведомления @license из бандла", "Webflow вправе менять лицензию; прекращение — за нарушение", "ИИ-генерация кода — разрешена (FAQ)"]
     size_br: 24.3
     init_tbt_ms: {median: 0, range: [0, 0]}
     support: {browsers: "все современные (ES2019+)"}
     use_for: [effect:hero-entrance-once, effect:kinetic-headline, effect:cursor-accent, effect:custom-cursor, effect:magnetic-cta]
     levels: [L1, L2]
     status: conditional
-    when: "таймлайн 4+ шагов, синхронизация с WebGL/Lenis, quickTo для курсора; для одного появления — CSS"
-    alternatives: [motion, animejs, waapi]
+    when: "в коде сайта — сюжет, которого не делает набор движения: таймлайн 4+ шагов, Flip, синхронизация с WebGL/Lenis, quickTo для своего курсора; DOM-эффекты набора — motion-kit, одно появление — CSS"
+    alternatives: [motion-kit, motion, animejs, waapi]
     risks: ["код «по памяти»: SplitText position:absolute, lineThreshold, gsap-trial", "immediateRender у from()"]
-    alive: {last_release: 2026-04-13, releases_12m: 4, stars: 28610, pushed: 2026-04-13}
-    refs: ["01-stack-choice.md §3.2, §9", "S1, S2, S22"]
+    alive: {last_release: 2026-04-13, releases_12m: 4, stars: 28610, pushed: 2026-04-13}   # 3.15.0 — последняя на 2026-10-28; счётчики — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §3.2, §9", "S1, S2, S22, S38"]
 
   - id: gsap-scrolltrigger
     name: "GSAP ScrollTrigger (pin, scrub, batch, containerAnimation, matchMedia)"
@@ -218,7 +245,7 @@ entries:
     use_for: [effect:pin-scrub-story, effect:horizontal-scroll, effect:parallax-layers, effect:scroll-reveal-system, effect:image-sequence, effect:video-scrub, effect:3d-scene, effect:sticky-stack]
     levels: [L1, L2]
     status: conditional
-    when: "L1 — одна закреплённая сцена или сюжет, который должен работать в Firefox; L2 — сцены прокрутки"
+    when: "то, чего CSS не делает: L1 — одна закреплённая сцена со сложным сюжетом; L2 — сцены прокрутки, синхрон с canvas и WebGL"
     alternatives: [css-scroll-driven, motion]
     risks: ["ScrollTrigger.refresh() после смены раскладки, шрифтов, VT", "ScrollTrigger у 23 из 49 наградных"]
     alive: {last_release: 2026-04-13, releases_12m: 4}
@@ -235,9 +262,9 @@ entries:
     support: {browsers: "все современные"}
     use_for: [effect:split-text-reveal, effect:kinetic-headline]
     levels: [L1, L2]
-    status: default
-    when: "split-заголовок; сплит после document.fonts.ready; autoSplit + onSplit"
-    alternatives: ["свой split на span + CSS --i (с aria-label)", "Motion+ splitText — платно, недоступно"]
+    status: conditional
+    when: "в коде сайта, когда строки должны следовать переносу по ширине: autoSplit + onSplit, сплит после document.fonts.ready; куски в разметке (слова, строки, буквы) — примитив split набора движения"
+    alternatives: [motion-kit, "Motion+ splitText — платно, недоступно"]
     risks: ["не на LCP-заголовке с opacity 0", "+≈ 27 мс TBT к ScrollTrigger"]
     alive: {last_release: 2026-04-13}
     refs: ["01-stack-choice.md §3.2", "S2"]
@@ -300,10 +327,10 @@ entries:
     name: "Lenis — плавная прокрутка поверх родной"
     kind: library
     package: lenis
-    version: "1.3.26"
-    released: 2026-08-05
+    version: "1.3.27"
+    released: 2026-10-15
     license: MIT
-    size_br: 4.8
+    size_br: 4.8          # замер G/01 на 1.3.26
     init_tbt_ms: {median: 0, range: [0, 0], with_gsap_st: {median: 13, range: [0, 56]}}
     support: {browsers: "все современные; Safari ≤ 60 fps (30 в энергосбережении); iOS < 16 — сбои syncTouch"}
     use_for: [effect:smooth-scroll]
@@ -312,18 +339,19 @@ entries:
     when: "только L2; anchors: true; один цикл с gsap.ticker; respectReducedMotion (по умолчанию true)"
     alternatives: [gsap-scrollsmoother, locomotive-scroll]
     risks: ["не сочетать с CSS scroll-snap (есть lenis/snap), ScrollSmoother, Locomotive", "iframe не прокручивается колесом", "@studio-freight/lenis — старое имя", "на телефоне не отключается у наградных"]
-    alive: {last_release: 2026-08-05, releases_12m: 15, stars: 16000, pushed: 2026-09-22, dist_tags: {dev: "2.0.0-dev.5", framer: "1.3.25-framer"}}
-    refs: ["01-stack-choice.md §4", "S6"]
+    alive: {last_release: 2026-10-15, releases_12m: 15, stars: 16000, pushed: 2026-09-22, dist_tags: {dev: "2.0.0-dev.5", framer: "1.3.25-framer"}}   # releases_12m, stars, pushed, framer — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §4", "S6, S38"]
 
   - id: motion
     name: "Motion (motion.dev) — animate (hybrid), scroll, inView, stagger"
     kind: library
     package: motion
-    version: "13.4.3"
-    released: 2026-09-24
+    version: "14.7.1"
+    released: null        # дата выпуска 14.7.1 не сверена; 14.0.0 — 2026-10-02, ломает только внутренние API
     license: MIT
-    license_caveats: ["splitText, motion/three, motion/vgpu, премиум-компоненты — Motion+ (платно: разовая оплата, lifetime; установка по токену; по motion.dev на 2026-09-25)"]
-    size_br: {animate: 18.3, "animate+scroll+inView": 20.6}
+    license_caveats: ["Motion+ — $399 разово за разработчика, установка по токену (motion.dev, 2026-10-28): splitText, Cursor, Ticker, AnimateNumber, Typewriter, ScrambleText, Carousel, Motion Studio, AI Kit; motion/three, motion/vgpu — early access"]
+    size_br: {animate: 18.3, "animate+scroll+inView": 20.6}   # замер G/01 на 13.4.3; вендор для 14: animate mini 3,2 КБ, hybrid 22 КБ, scroll() 3,8 КБ
     init_tbt_ms: {median: 0, range: [0, 0]}
     support: {browsers: "все современные; scroll() использует ScrollTimeline, где он есть"}
     use_for: [effect:hero-entrance-once, effect:scroll-reveal-system, effect:scroll-driven-progress, effect:parallax-layers, effect:magnetic-cta, effect:cursor-accent]
@@ -331,17 +359,18 @@ entries:
     status: conditional
     when: "сайт на React/Next или точечные JS-анимации без таймлайнов; для pin — position: sticky"
     alternatives: [gsap, css-scroll-driven, waapi]
-    risks: ["частые релизы (75 за 12 мес.) — фиксировать версию", "framer-motion = тот же код под старым именем"]
-    alive: {last_release: 2026-09-24, releases_12m: 75, stars: 33717, pushed: 2026-09-24}
-    refs: ["01-stack-choice.md §3.3", "S5"]
+    risks: ["частые релизы (75 за 12 мес. на 2026-09-24; 14.0.0 — 2026-10-02, 14.7.1 — к 2026-10-28) — фиксировать версию", "framer-motion = тот же код под старым именем"]
+    alive: {last_release: "14.7.1, не позже 2026-10-28", releases_12m: 75, stars: 33717, pushed: 2026-09-24}   # releases_12m, stars, pushed — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §3.3", "S5, S38"]
 
   - id: motion-mini
     name: "Motion mini (motion/mini) — animate на WAAPI"
     kind: library
     package: "motion/mini"
-    version: "13.4.3"
+    version: "14.7.1"
     license: MIT
-    size_br: 3.5
+    size_br: 3.5          # замер G/01 на 13.4.3; вендор для 14 — 3,2 КБ
     init_tbt_ms: {median: 0, range: [0, 0]}
     support: {browsers: "все с WAAPI"}
     use_for: [effect:hero-entrance-once, effect:magnetic-cta, effect:counter-up]
@@ -350,16 +379,17 @@ entries:
     when: "нужна пружина или последовательность без библиотеки таймлайнов; L0 — в пределах 20 КБ"
     alternatives: [waapi, css-animations]
     risks: []
-    alive: {last_release: 2026-09-24}
+    alive: {last_release: "14.7.1, не позже 2026-10-28"}
+    checked_at: 2026-10-28
     refs: ["01-stack-choice.md §3.3"]
 
   - id: motion-react
     name: "Motion for React (motion/react)"
     kind: library
     package: "motion/react"
-    version: "13.4.3"
+    version: "14.7.1"
     license: MIT
-    size_br: 93.8          # с React 19.3 + ReactDOM (React база — 57,9)
+    size_br: 93.8          # с React 19.3 + ReactDOM (React база — 57,9); замер G/01 на 13.4.3
     init_tbt_ms: {median: 74, range: [64, 119], react_baseline: {median: 32, range: [27, 37]}}
     support: {react: "19"}
     use_for: [effect:hero-entrance-once, effect:scroll-reveal-system, effect:view-transition]
@@ -368,7 +398,8 @@ entries:
     when: "только если сайт уже на React/Next (продуктовые главные Stripe, Linear, Vercel, Apple)"
     alternatives: [gsap]
     risks: ["React ради анимации не помещается в слой «подача» L1"]
-    alive: {last_release: 2026-09-24}
+    alive: {last_release: "14.7.1, не позже 2026-10-28"}
+    checked_at: 2026-10-28
     refs: ["01-stack-choice.md §3.3, §8"]
 
   - id: animejs
@@ -387,8 +418,9 @@ entries:
     when: "альтернатива GSAP-ядру, если лицензия GSAP неприемлема (продукт-конструктор)"
     alternatives: [gsap, motion]
     risks: ["ветка 5.0 в бете (dist-tag beta 5.0.0-beta.2)", "аналогов ScrollTrigger/SplitText с aria в стеке базы не проверяли"]
-    alive: {last_release: 2026-06-22, releases_12m: 13, stars: 73093, pushed: 2026-08-21}
-    refs: ["01-stack-choice.md §3.3"]
+    alive: {last_release: 2026-06-22, releases_12m: 13, stars: 73093, pushed: 2026-08-21}   # 4.5.0 — последняя стабильная на 2026-10-28; счётчики — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §3.3", "S38"]
 
   - id: locomotive-scroll
     name: "Locomotive Scroll 5 (на Lenis)"
@@ -396,18 +428,19 @@ entries:
     package: locomotive-scroll
     version: "5.0.1"
     released: 2026-01-15
-    license: MIT
+    license: "MIT (файла лицензии в пакете нет)"
     size_br: 7.8
     init_tbt_ms: {median: 0, range: [0, 0]}
     support: {browsers: "как Lenis"}
     use_for: [effect:smooth-scroll, effect:parallax-layers]
     levels: [L2]
     status: legacy-only
-    when: "сайт уже на Locomotive"
+    when: "сайт уже на Locomotive; новый сайт — Lenis напрямую"
     alternatives: [lenis]
-    risks: ["v4 и ниже — другой API (transform-прокрутка)"]
+    risks: ["внутри — Lenis, зафиксированный на 1.3.17", "reduce в коде нет (README обещает «proper ARIA support»)", "вход CommonJS в package.json ведёт на файл, которого нет в пакете (запуском не проверено)", "v4 и ниже — другой API (transform-прокрутка)"]
     alive: {last_release: 2026-01-15, releases_12m: 2, stars: 8864, pushed: 2026-06-30}
-    refs: ["01-stack-choice.md §4"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §4", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.3"]
 
   - id: swup
     name: "Swup 4 — переходы страниц для серверных сайтов (native: true — поверх View Transitions)"
@@ -418,15 +451,16 @@ entries:
     license: MIT
     size_br: 6.6
     init_tbt_ms: {median: 0, range: [0, 0]}
-    support: {browsers: "все современные; native — где есть VT"}
+    support: {browsers: "все современные; native: true (с 4.5.0, 2023-12-01) — анимация средствами View Transitions, где они есть"}
     use_for: [effect:page-transition]
     levels: [L2]
     status: conditional
-    when: "между страницами живёт состояние (видео, WebGL, аудио) или нужен переход в Firefox; плагины head и a11y обязательны"
+    when: "между страницами живёт состояние (видео, WebGL, аудио) или нужен переход в Firefox; native: true; плагины head и a11y обязательны — @swup/a11y-plugin 5.2.1 (respectReducedMotion: true по умолчанию)"
     alternatives: [view-transitions-cross-document, astro-client-router]
     risks: ["скрипты страниц переинициализировать по хукам", "ScrollTrigger kill/refresh при смене контента"]
-    alive: {last_release: 2026-09-03, releases_12m: 5, stars: 5234, pushed: 2026-09-24}
-    refs: ["01-stack-choice.md §5", "S12"]
+    alive: {last_release: 2026-09-03, releases_12m: 5, stars: 5234, pushed: 2026-10-27}   # releases_12m, stars — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §5", "S12", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.3"]
 
   - id: barba
     name: "Barba.js 2"
@@ -502,6 +536,26 @@ entries:
     risks: ["автопрокрутка > 5 с — пауза (WCAG 2.2.2)"]
     alive: {last_release: 2026-08-26, releases_12m: 15}
     refs: ["../03-live-sites-measured/01-effects-sites-measured.md: swiper у 4 из 49"]
+
+  - id: tw-animate-css
+    name: "tw-animate-css — анимации shadcn/ui на Tailwind v4 (код кабинета)"
+    kind: library
+    package: tw-animate-css
+    version: "1.4.0"
+    released: 2025-09-24
+    license: MIT
+    size_br: null          # не замерено; dist/tw-animate.css 1.4.0 — 14,9 КБ до сборки (jsDelivr)
+    init_tbt_ms: null
+    support: {tailwind: "4"}
+    use_for: []
+    levels: []
+    status: conditional
+    when: "только код кабинета на Tailwind v4 и shadcn/ui: длительности и кривые — токены ДС, reduce — варианты motion-safe: и motion-reduce:; в подаче страницы — не брать"
+    alternatives: [css-animations]
+    risks: ["числа утилит по умолчанию вместо токенов ДС", "только Tailwind v4: на v3 — tailwindcss-animate, он устарел"]
+    alive: {last_release: 2025-09-24}
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §7, §9", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.6", "../../ui/08-motion/03-reduced-motion-and-motion-tokens.md (токены движения ДС)"]
 
   # ---------------------------------------------------------------- рантаймы графики и анимации
   - id: three
@@ -635,47 +689,50 @@ entries:
     status: conditional
     when: "1–2 небольшие анимации без wasm; лицензия ассета — своя у каждого"
     alternatives: [dotlottie-web, html-media]
-    risks: ["0 релизов за 12 мес., 857 открытых issues", "петля > 5 с — пауза"]
+    risks: ["новых выпусков нет: последний — 2025-05-21 (сверено 2026-10-28); 857 открытых issues", "петля > 5 с — пауза"]
     alive: {last_release: 2025-05-21, releases_12m: 0, stars: 32125, pushed: 2025-09-01}
-    refs: ["01-stack-choice.md §6.2"]
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §6.2", "S38"]
 
   - id: dotlottie-web
-    name: "dotLottie-web (ThorVG wasm; .lottie и JSON; DotLottieWorker)"
+    name: "dotLottie-web (ThorVG wasm; рендер Canvas2D / WebGL2 / WebGPU эксп.; .lottie и JSON; DotLottieWorker)"
     kind: runtime
     package: "@lottiefiles/dotlottie-web"
-    version: "0.80.0"
-    released: 2026-08-28
+    version: "0.81.0"
+    released: null        # дата выпуска 0.81.0 не сверена
     license: MIT
-    size_br: {js: 12.2, wasm: 379.1}
+    size_br: {js: 12.2, wasm: 379.1}   # замер G/01 на 0.80.0
     init_tbt_ms: {median: 20, range: [13, 41], playback_script_s: "0,95 с за ≈ 3,2 с (главный поток, CPU ×4)"}
     support: {wasm: true, worker: "OffscreenCanvas — опционально"}
     use_for: [effect:cinemagraph]
     levels: [L1, L2]
     status: conditional
-    when: "много анимаций или .lottie с темами; длинные петли — DotLottieWorker; wasm — setWasmUrl на свой домен"
+    when: "много анимаций или .lottie с темами; длинные петли — DotLottieWorker; wasm — setWasmUrl, Worker под CSP — setWorkerUrl на свой домен"
     alternatives: [lottie-web, html-media]
-    risks: ["wasm по умолчанию с jsDelivr (запас unpkg)", "вендор: «~500 KB compressed»"]
-    alive: {last_release: 2026-08-28, releases_12m: 40, stars: 884, pushed: 2026-09-16}
-    refs: ["01-stack-choice.md §6.2", "S15"]
+    risks: ["wasm по умолчанию с jsDelivr (запас unpkg)", "вендор: «~500 KB compressed»", "рендер WebGPU — экспериментальный"]
+    alive: {last_release: "0.81.0, не позже 2026-10-28", releases_12m: 40, stars: 884, pushed: 2026-09-16}   # releases_12m, stars, pushed — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §6.2", "S15, S38"]
 
   - id: rive
     name: "Rive web runtime (@rive-app/canvas, canvas-lite, webgl2)"
     kind: runtime
     package: "@rive-app/canvas-lite | @rive-app/canvas | @rive-app/webgl2"
-    version: "2.43.1"
-    released: 2026-09-23
+    version: "2.48.0"
+    released: null        # дата выпуска 2.48.0 не сверена
     license: MIT
-    size_br: {canvas_lite: {js: 42.5, wasm: 272.4}, canvas: {js: 49.0, wasm: 613.0}, webgl2: null}
+    size_br: {canvas_lite: {js: 42.5, wasm: 272.4}, canvas: {js: 49.0, wasm: 613.0}, webgl2: null}   # замер G/01 на 2.43.1; webgl2 2.48.0: rive.wasm 2 323 803 Б без сжатия
     init_tbt_ms: {canvas_lite: {median: 38, range: [34, 63]}, canvas: {median: 71, range: [33, 108]}, scenario: "загрузка и компиляция wasm без .riv"}
     support: {wasm: true}
     use_for: [effect:cursor-accent, effect:hero-entrance-once]
     levels: [L1, L2]
     status: conditional
-    when: "интерактивная анимация (state machine) из Rive; без Text/Layouts/Scripting/Audio — canvas-lite; вендор советует webgl2"
+    when: "интерактивная анимация (state machine) из Rive; Rive Renderer — только webgl2 (вендор советует его); без текста, раскладок, аудио и скриптов — canvas-lite"
     alternatives: [dotlottie-web, lottie-web]
-    risks: ["wasm по умолчанию с jsDelivr/unpkg — RuntimeLoader.setWasmUrl", "документация — <script> с unpkg @latest"]
-    alive: {last_release: 2026-09-23, releases_12m: 45, stars: 968, pushed: 2026-09-24}
-    refs: ["01-stack-choice.md §6.2", "S14"]
+    risks: ["wasm по умолчанию с jsDelivr/unpkg — RuntimeLoader.setWasmUrl", "документация — <script> с unpkg @latest", "@rive-app/webgl устарел после 2.37.0 — не брать"]
+    alive: {last_release: "2.48.0, не позже 2026-10-28", releases_12m: 45, stars: 968, pushed: 2026-09-24}   # releases_12m, stars, pushed — на 2026-09-24
+    checked_at: 2026-10-28
+    refs: ["01-stack-choice.md §6.2", "S14, S38"]
 
   - id: spline-runtime
     name: "Spline runtime (@splinetool/runtime)"
@@ -770,16 +827,31 @@ entries:
     refs: ["01-stack-choice.md §8"]
 
   # ---------------------------------------------------------------- не брать
-  - {id: theatre-js, name: "Theatre.js (@theatre/core, @theatre/studio)", kind: avoid, package: "@theatre/core", version: "0.7.2", released: 2024-05-19, license: "core Apache-2.0; studio AGPL-3.0-only", size_br: 30.1, init_tbt_ms: {median: 20, range: [14, 39], note: "без экспорта state из studio — ошибка «config.state … is empty»"}, levels: [], status: avoid, alternatives: [gsap], risks: ["заморожен: push 2024-08-14"], alive: {last_release: 2024-05-19, releases_12m: 0, stars: 12698}, refs: ["01-stack-choice.md §7"]}
+  - {id: theatre-js, name: "Theatre.js (@theatre/core, @theatre/studio)", kind: avoid, package: "@theatre/core", version: "0.7.2", released: 2024-05-19, license: "core Apache-2.0; studio AGPL-3.0-only", size_br: 30.1, init_tbt_ms: {median: 20, range: [14, 39], note: "без экспорта state из studio — ошибка «config.state … is empty»"}, levels: [], status: avoid, alternatives: [gsap], risks: ["заморожен: последний публичный коммит 2024-04-11"], alive: {last_release: 2024-05-19, releases_12m: 0, stars: 12698}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "S38"]}
   - {id: framer-motion-3d, name: "framer-motion-3d", kind: avoid, package: framer-motion-3d, version: "12.4.13", released: 2025-03-11, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [three, gsap], risks: ["npm: «Package no longer supported»"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
-  - {id: aos, name: "AOS (Animate On Scroll)", kind: avoid, package: aos, version: "2.3.4", released: 2018-10-03, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [css-scroll-driven, intersection-observer], risks: ["мёртв; fade-up на каждом блоке — почерк генераторов"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
+  - {id: aos, name: "AOS (Animate On Scroll)", kind: avoid, package: aos, version: "2.3.4", released: 2018-10-03, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [css-scroll-driven, intersection-observer, "примитивы rise, unmask, sweep, scale-in набора движения — система появления по ролям"], risks: ["мёртв: 2.3.4 и next 3.0.0-beta.6 — оба 2018-10-03", "reduce нет — только отключение по типу устройства", "кривые cubic и quart в исходнике равны quad", "одно появление на каждый блок по атрибуту — почерк генераторов (cliche:section-fade-up)"], alive: {releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.2"]}
   - {id: studio-freight-lenis, name: "@studio-freight/lenis", kind: avoid, package: "@studio-freight/lenis", version: "1.0.42", released: 2024-03-17, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [lenis], risks: ["deprecated: переименован в lenis"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
-  - {id: split-type, name: "split-type / splitting", kind: avoid, package: "split-type | splitting", version: "0.3.4 | 1.1.0", released: 2023-10-22, license: "ISC | MIT", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [gsap-splittext], risks: ["без релизов, без aria"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
-  - {id: typed-js, name: "typed.js 3", kind: avoid, package: typed.js, version: "3.0.0", released: 2026-01-24, license: GPL-3.0, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: ["свой печатающийся текст ≈ 1 КБ с aria-label"], risks: ["копилефт GPL-3.0 в коммерческом бандле (2.1.0 была MIT)"], alive: {releases_12m: 1}, refs: ["01-stack-choice.md §7"]}
+  - {id: split-type, name: "split-type / splitting", kind: avoid, package: "split-type | splitting", version: "0.3.4 | 1.1.0", released: 2023-10-22, license: "split-type — ISC только в поле package.json, файла лицензии нет | splitting — MIT", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [gsap-splittext, "примитив split набора движения: куски в разметке заранее, aria-label на заголовке, шаг --i"], risks: ["без релизов (split-type 2023-10-22, splitting 2024-05-31), без aria", "строят разметку скриптом: split-type — div строк, слов и букв с инлайн-стилями, splitting — span с --word-index и --char-index", "идея splitting — индекс как CSS-переменная для каскада через calc()"], alive: {releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.1"]}
+  - {id: typed-js, name: "typed.js 3", kind: avoid, package: typed.js, version: "3.0.0", released: 2026-01-24, license: "GPL-3.0-or-later; платные Limited и Unlimited (LIMITED_COMMERCIAL_LICENSE.md, UNLIMITED_COMMERCIAL_LICENSE.md); 2.1.0 (2023-11-08) — последняя под MIT", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: ["свой печатающийся текст ≈ 1 КБ: фраза целиком в HTML и aria-label, момент custom набора движения; печать — только «терминальный» мир"], risks: ["копилефт в коммерческом бандле без покупки лицензии", "курсор span, свой <style>, текст через innerHTML; aria-hidden только у курсора, reduce нет"], alive: {releases_12m: 1}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7, §9", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.1"]}
   - {id: vanta, name: "Vanta.js", kind: avoid, package: vanta, version: "0.5.24", released: 2022-09-16, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [paper-shaders, shader-code], risks: ["мёртв, тянет three"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
   - {id: scroll-timeline-polyfill, name: "scroll-timeline polyfill", kind: avoid, package: null, version: null, license: null, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [intersection-observer], risks: ["Chrome: «not feature complete and has a lot of known issues»"], alive: {}, refs: ["S10"]}
   - {id: bsmnt-scrollytelling, name: "@bsmnt/scrollytelling (basement.studio)", kind: avoid, package: "@bsmnt/scrollytelling", version: "0.3.3", released: 2024-02-22, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [gsap-scrolltrigger], risks: ["застой: релиз и push 2024-02-22; docs — заглушки; peer gsap >=3, react >=18"], alive: {releases_12m: 0, stars: 1662}, refs: ["01-stack-choice.md §7", "[V:ufHQG7fDLQc]"]}
   - {id: motionone, name: "@motionone/dom", kind: avoid, package: "@motionone/dom", version: "10.18.0", released: 2024-06-02, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [motion], risks: ["влился в motion"], alive: {releases_12m: 0}, refs: ["01-stack-choice.md §7"]}
+  # библиотеки и наборы движения, разобранные 2026-10-28 (../02-references-moodboards/04-motion-libraries-and-rules.md §2): вес — min + gzip
+  # чужого замера (bundlephobia) в risks, свой замер brotli не делался
+  - {id: typeit, name: "TypeIt", kind: avoid, package: typeit, version: "8.8.7", released: 2024-10-25, license: "GPL-3.0; коммерческие $9 (один проект) и $29 (без ограничения)", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: ["свой печатающийся текст ≈ 1 КБ, как у typed-js: момент custom набора движения"], risks: ["копилефт в коммерческом бандле без покупки лицензии", "вставляет узлы текста, курсор и <style>; aria и reduce нет", "последний коммит 2025-01-07"], alive: {last_release: 2024-10-25, last_commit: 2025-01-07}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7, §9", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.1"]}
+  - {id: scrollreveal, name: "ScrollReveal", kind: avoid, package: scrollreveal, version: "4.0.9", released: 2021-03-05, license: "GPL-3.0 (README сужает её до открытых и некоммерческих проектов, файла лицензии нет); коммерческие $30, $100, $400", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [intersection-observer, css-scroll-driven, "примитив rise и соседи по ролям в наборе движения"], risks: ["копилефт и платная коммерческая лицензия", "инлайн-стили, слушатель scroll без IntersectionObserver; reduce нет", "одно появление на каждый блок — cliche:section-fade-up"], alive: {last_release: 2021-03-05, last_commit: 2023-03-18}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7, §9", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.2"]}
+  - {id: sal-js, name: "sal.js", kind: avoid, package: sal.js, version: "0.8.5", released: 2021-05-01, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [intersection-observer, "примитив rise набора движения: опции --mk-dur и --mk-wait"], risks: ["без релизов с 2021", "reduce нет; одно появление на каждый блок по атрибуту — cliche:section-fade-up", "идея — атрибуты и переменные --sal-duration, --sal-delay"], alive: {last_release: 2021-05-01, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.2"]}
+  - {id: popmotion, name: "Popmotion", kind: avoid, package: popmotion, version: "11.0.5", released: 2022-08-15, license: "MIT (© Framer BV)", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [waapi, motion-mini, "пружина в CSS — строка linear() (ui 08/03 §7.2)"], risks: ["заморожен: релизов нет с 2022-08-15, README о преемнике молчит", "твин произвольного свойства на холсте — момент custom"], alive: {last_release: 2022-08-15, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.4"]}
+  - {id: velocity, name: "Velocity (velocity-animate)", kind: avoid, package: velocity-animate, version: "1.5.2", released: 2018-07-31, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [waapi, motion-mini], risks: ["эпоха jQuery; бета 2.0.6 (2020-04-10) не вышла из беты", "16,0 КБ min + gzip (бета — 17,3)"], alive: {last_release: 2018-07-31, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.4"]}
+  - {id: react-spring, name: "react-spring (@react-spring/web)", kind: avoid, package: "@react-spring/web", version: "10.1.2", released: 2026-06-24, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [motion-react, "пружина в CSS — строка linear() (ui 08/03 §7.2)"], risks: ["только React, варианта на чистом JS нет", "20,3 КБ min + gzip без React", "reduce — хук, выключать вручную", "11.0.0-beta.1 (2026-10-01) — только ESM"], alive: {last_release: 2026-06-24}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.4"]}
+  - {id: auto-animate, name: "AutoAnimate (@formkit/auto-animate)", kind: avoid, package: "@formkit/auto-animate", version: "0.10.0", released: 2026-07-10, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [view-transitions-same-document, gsap-flip, "примитив state набора движения (effect:view-transition)"], risks: ["зависимость ради идеи: появление, удаление и перестановка детей одной строкой (FLIP) — на сайте это View Transitions", "reduce учитывает сам; только ESM без импортов", "в кабинете выбор библиотеки — за код-репо, числа — токены ДС"], alive: {last_release: 2026-07-10}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.4"]}
+  - {id: vivus, name: "Vivus", kind: avoid, package: vivus, version: "0.4.6", released: 2021-04-17, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [css-animations, "примитивы draw и scroll-draw набора движения: pathLength=1, stroke-dashoffset (effect:svg-line-draw)"], risks: ["без релизов 5 лет", "заменяет фигуры на <path>; с опцией file грузит SVG и вставляет через innerHTML", "текст не рисует, reduce нет"], alive: {last_release: 2021-04-17, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.5"]}
+  - {id: mojs, name: "mo.js (@mojs/core)", kind: avoid, package: "@mojs/core", version: "1.7.1", released: 2023-10-06, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [waapi, css-animations, "свой движок WebGL2 для частиц (3d 16)"], risks: ["30,4 КБ min + gzip", "создаёт <svg> в body — разметка скриптом", "релизов нет 3 года", "вспышки в наборе движения нет — момент custom (CSS или WAAPI), только по концепции"], alive: {last_release: 2023-10-06, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.5"]}
+  - {id: zdog, name: "Zdog", kind: avoid, package: zdog, version: "1.1.3", released: 2022-01-22, license: "MIT — только README и поле package.json, файла лицензии нет", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: ["свой движок WebGL2 для объёма (3d 16)", "canvas 2D кодом артборда для плоского рисунка"], risks: ["v1 — «бета», релизов нет почти 5 лет", "режим SVG строит <path> скриптом; чужой файл на холст не кладут", "идея — «круглые» плоские фигуры с поворотом"], alive: {last_release: 2022-01-22, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.5"]}
+  - {id: open-props, name: "Open Props (easings, animations)", kind: avoid, package: open-props, version: "1.7.23", released: 2026-01-31, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: ["токены motion.marketing (--motion-marketing-*): кривые как переменные; пружины и отскоки — строки linear() (ui 08/03 §7.2)"], risks: ["второй словарь имён рядом с motion.marketing — у страницы одна система", "у анимаций reduce нет", "ping, blink, pulse и bounce с infinite, --ease-elastic-* и --ease-bounce-* — приметы (cliche:pulsing-cta); --animation-float 3 с infinite — полоса укачивания 2,5–6 с (cliche:floating-bob-loop)", "файл с CDN — сеть; 2.0 в бете"], alive: {last_release: 2026-01-31}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.6"]}
+  - {id: tailwindcss-animate, name: "tailwindcss-animate", kind: avoid, package: tailwindcss-animate, version: "1.0.7", released: 2023-08-28, license: MIT, size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [tw-animate-css], risks: ["устарел: shadcn/ui ставит вместо него tw-animate-css (страница «Tailwind v4», 2025-03-19)", "плагин сборки Tailwind ≥ 3"], alive: {last_release: 2023-08-28, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.6"]}
+  - {id: animate-css, name: "Animate.css", kind: avoid, package: animate.css, version: "4.1.1", released: 2020-09-07, license: "MIT у пакета npm 4.1.1; ветка main с 2021-09-13 — Hippocratic-2.1 при той же версии", size_br: null, init_tbt_ms: null, levels: [], status: avoid, alternatives: [css-animations, "свои ключевые кадры с токенами motion.marketing: примитивы entrance, rise, scale-in, dialog набора движения"], risks: ["animate.min.css 71,7 КБ без сжатия ради 1–2 входов; длительность по умолчанию 1 с", "reduce — длительность 1 мс: обнуление вместо замены (ui 08/03 §3.3)", "attention seekers (bounce, flash, pulse, rubberBand, shakeX, shakeY, headShake, swing, tada, wobble, jello, heartBeat) — бесконечные «сигналы внимания»: cliche:pulsing-cta", "ключевые кадры брать из пакета npm, не из ветки main"], alive: {last_release: 2020-09-07, releases_12m: 0}, checked_at: 2026-10-28, refs: ["01-stack-choice.md §7, §9", "../02-references-moodboards/04-motion-libraries-and-rules.md §2.6"]}
 
 # ---------------------------------------------------------------- платформы заказчика (site-brief constraints.cms)
 platforms:

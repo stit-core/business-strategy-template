@@ -356,7 +356,7 @@ function isSoftware() {                          // examples/stage-runtime.js
 ## Открытые вопросы и противоречия
 
 - **Длина шага и сцены.** creative 05/02 §4.1 («шаг сцены 100–150vh; L2 — ≤ 400vh и ≤ 5 шагов на секцию»), creative
-  05/01 §7.1 (сцена прокрутки 100–150vh на шаг, токен `scroll.step` 120) и `motion_hints.scroll_scene_length_vh` уровня L2
+  05/01 §7.1 (сцена прокрутки 100–150vh на шаг, токен `scroll.step-vh` 120) и `motion_hints.scroll_scene_length_vh` уровня L2
   в `../../creative/01-creative-direction/ambition-levels.yaml` описывают скраб с закреплением. Норма этой папки — отдельный
   класс «шаги с доигрышем» (`beats`): шаг 0,5–0,6 экрана (480 / 420 px), 5–7 точек покоя, поле до 4,2 тыс. px (≈ 460vh при
   окне 900 px); скраб с закреплением — 100–150vh на шаг.

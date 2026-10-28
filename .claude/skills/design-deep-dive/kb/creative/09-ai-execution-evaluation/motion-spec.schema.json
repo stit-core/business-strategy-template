@@ -133,7 +133,7 @@
       "properties": {
         "property": {
           "type": "string",
-          "pattern": "^(transform|translate|scale|rotate|opacity|clip-path|mask|filter|color|background-color|stroke-dashoffset|font-variation-settings|currentTime|block-size|uniform:[a-zA-Z0-9_]+|--[a-z0-9-]+|view-transition)$",
+          "pattern": "^(transform|translate|scale|rotate|opacity|clip-path|mask|filter|color|background-color|stroke-dashoffset|startOffset|font-variation-settings|currentTime|block-size|uniform:[a-zA-Z0-9_]+|--[a-z0-9-]+|view-transition)$",
           "description": "Разрешённое свойство; набор по уровню страницы — 01-creative-direction/ambition-levels.yaml#levels.motion_hints.properties_allowed и blur_max_px (сверяет spec_check.py). Свойства раскладки (width, height, top, left, margin, padding) — никогда: генераторы анимируют раскладку по умолчанию. Свойство вне списка уровня — только у приёма каталога, названного таблицей property_exceptions файла уровней (ambition-levels.yaml): clip-path, filter и пользовательские свойства (маска --*) — у приёмов уровня L0, собранных на них; block-size — только ::details-content аккордеона <details> (effect:details-accordion, семейство micro каталога, класс transition) через interpolate-size: allow-keywords, ≤ 300 мс, reduce — мгновенно; без поддержки interpolate-size (Safari, Firefox на 2026-09-24) — мгновенное открытие. Это UI-отклик по клику, не сцена подачи."
         },
         "from": {"type": ["string", "number"]},
@@ -148,7 +148,10 @@
             "properties": {"at": {"type": "number", "minimum": 0, "maximum": 1}, "value": {"type": ["string", "number"]}}
           }
         },
-        "unit_note": {"type": "string"}
+        "unit_note": {"type": "string"},
+        "duration": {"$ref": "#/$defs/duration", "description": "Своя длительность свойства, когда она отличается от длительности момента (прозрачность короче сдвига); без поля — длительность момента."},
+        "easing": {"$ref": "#/$defs/easing", "description": "Своя кривая свойства; без поля — кривая момента."},
+        "delay_ms": {"type": "number", "minimum": 0, "maximum": 2000, "description": "Задержка свойства от начала момента (сдвиг стартует раньше проявления)."}
       },
       "oneOf": [{"required": ["from", "to"]}, {"required": ["keyframes"]}]
     },
@@ -232,6 +235,20 @@
           "description": "Cassie Evans [V:v5oxrZWAq78 18:41]: entrance — из transform к конечному месту; exit — удалить узел после анимации; persistent — FLIP или View Transitions."
         },
         "effect": {"type": "string", "pattern": "^effect:[a-z0-9]+(-[a-z0-9]+)*$"},
+        "primitive": {"type": "string", "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$", "description": "Примитив набора движения, которым момент собирается (../11-motion-code/primitives.yaml; id = значение data-mk): готовый проверенный код вместо кода по памяти. Опции примитива — в params."},
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref"],
+          "properties": {
+            "ref": {"type": "string", "minLength": 1, "description": "id референса слоя дизайна, движение которого снято замером (паспорт движения — ../03-live-sites-measured/03-reference-motion-probe.md)."},
+            "moment": {"type": "string", "description": "id момента в паспорте движения референса."},
+            "passport": {"type": "string", "minLength": 3, "description": "Паспорт движения, из которого взяты числа (id или путь выхода motion_probe.py): у референса бывают замеры десктопа и телефона."},
+            "take": {"type": "array", "uniqueItems": true, "minItems": 1, "items": {"enum": ["duration", "easing", "stagger", "tracks", "range", "pin", "loop"]}, "description": "Какие числа момента взяты с референса; остальные — токены."}
+          },
+          "description": "Откуда числа момента: замер референса. Без поля числа момента — токены motion.marketing."
+        },
+        "custom": {"type": "string", "minLength": 10, "description": "Момент без примитива набора и без эффекта каталога: что делает свой код и почему набора мало. Такой момент исполнитель пишет сам — его смотрят судья и заказчик."},
         "target": {"$ref": "#/$defs/target"},
         "stagger_targets": {
           "type": "array",
@@ -264,6 +281,7 @@
           "additionalProperties": false,
           "properties": {
             "each": {"$ref": "#/$defs/duration"},
+            "each_share": {"type": "number", "exclusiveMinimum": 0, "maximum": 0.5, "description": "Стаггер по прокрутке у scroll-linked: диапазон каждого следующего элемента сдвинут на эту долю диапазона момента."},
             "order": {"enum": ["dom", "reverse", "center", "edges"]},
             "max_items": {"type": "integer", "minimum": 2, "maximum": 12},
             "total_ms_max": {"type": "number", "maximum": 1200}
@@ -682,7 +700,7 @@
             "no_js": {"type": "string"},
             "unsupported": {
               "type": "string",
-              "description": "Что видно, если механизм не поддержан (CSS scroll-driven в Firefox — только TP на 2026-09-24): обычно конечное состояние reduce."
+              "description": "Что видно, если механизм не поддержан (CSS scroll-driven: Safari < 26, Firefox < 159): обычно конечное состояние reduce."
             }
           },
           "description": "Состояния без JS и без поддержки механизма — отдельно от reduce."
@@ -705,7 +723,7 @@
         "primitives": {
           "type": "array",
           "maxItems": 3,
-          "items": {"enum": ["fade-up", "type-unmask", "sweep", "number-tick", "line-draw", "none"]}
+          "items": {"enum": ["fade-up", "type-unmask", "sweep", "number-tick", "line-draw", "scale-in", "none"]}
         },
         "lcp": {
           "type": "object",

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru" class="lenis lenis-smooth">
+<head>
+<meta charset="utf-8">
+<title>motion_probe: подложные GSAP, ScrollTrigger и Lenis</title>
+<!-- Тестовая страница motion_probe.py --selftest: глобалы с формой настоящих (gsap.globalTimeline.getChildren,
+     ScrollTrigger.getAll, экземпляр Lenis) отдают известные числа; сами элементы не двигаются. -->
+<style>
+  html, body { margin: 0; background: #fff; color: #111; font: 16px/1.4 system-ui, sans-serif; }
+  .sp { height: 1000px; padding: 40px; box-sizing: border-box; }
+  .t { margin: 0 0 16px; font-size: 40px; }
+  #pin { height: 900px; background: #eee; }
+  .tail { height: 3000px; }
+</style>
+</head>
+<body>
+<div class="sp"><p class="t">Строка один</p><p class="t">Строка два</p><p class="t">Строка три</p></div>
+<div id="pin"><div class="track" id="track">дорожка</div></div>
+<div class="tail"></div>
+<script>
+  const lines = Array.from(document.querySelectorAll('.t'));
+  const pin = document.getElementById('pin');
+  const tween = (o) => ({vars: o.vars, parent: null, scrollTrigger: o.st || null,
+    duration: () => o.duration, delay: () => o.delay || 0, startTime: () => o.start || 0, repeat: () => o.repeat || 0,
+    yoyo: () => false, globalTime: (t) => (o.start || 0) + t, progress: () => 0, isActive: () => false, targets: () => o.targets});
+  // появление: gsap.from(lines, {opacity: 0, y: 40, duration: 1.2, delay: 0.3, ease: 'power3.out', stagger: 0.08});
+  // у твина со стаггером duration() — сумма с шагами (1,2 + 0,08 × 2)
+  const reveal = tween({targets: lines, duration: 1.36, delay: 0.3, start: 0.3,
+    vars: {opacity: 0, y: 40, duration: 1.2, delay: 0.3, ease: 'power3.out', stagger: 0.08, runBackwards: true, immediateRender: true}});
+  // скраб в закреплении: ScrollTrigger {trigger: '#pin', start: 'top top', end: '+=1800', scrub: 1, pin: true, snap: 1/3}
+  const st = {trigger: pin, start: 1000, end: 2800, pin: pin, progress: 0, direction: 1, isActive: false,
+    vars: {trigger: pin, start: 'top top', end: '+=1800', scrub: 1, pin: true, snap: 1 / 3}};
+  const scrub = tween({targets: [document.getElementById('track')], duration: 1, st, vars: {x: -600, ease: 'none', duration: 1}});
+  st.animation = scrub;
+  window.gsapVersions = ['3.12.5'];
+  window.gsap = {version: '3.12.5', defaults: () => ({}),
+    globalTimeline: {time: () => performance.now() / 1000, getChildren: () => [reveal, scrub]}};
+  window.ScrollTrigger = {version: '3.12.5', getAll: () => [st]};
+  // Lenis 1.3 ставит window.lenisVersion; экземпляр сайт хранит где угодно — здесь app.smooth
+  window.lenisVersion = '1.3.27';
+  window.app = {smooth: {animatedScroll: 0, targetScroll: 0, velocity: 0,
+    options: {lerp: 0.1, duration: 1.2, smoothWheel: true, wheelMultiplier: 1, easing: (t) => t}}};
+</script>
+</body>
+</html>

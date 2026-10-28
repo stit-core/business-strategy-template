@@ -528,7 +528,7 @@ gates:
     limits: {band_s: [2.5, 6], period_min_s: 10, small_period_min_s: 6, large_min_side_share: 0.25}   # крупный — меньшая сторона ≥ 25 % меньшей стороны окна; период короче band_s[0] — пульсация (EG-A11Y-20, -22)
     severity: S
     where: loops.oscillation
-    source: "creative 05/01 §6.3 (крупный объект и фон — период ≥ 10 с или шум; 2,5–6 с — около 0,2 Гц — не делать; мелкий — ≥ 6 с); мера «крупного» — одна, поле large_min_side_share; токен motion.marketing.loop.breathe-period — значение по умолчанию в пределах нормы"
+    source: "creative 05/01 §6.3 (крупный объект и фон — период ≥ 10 с или шум; 2,5–6 с — около 0,2 Гц — не делать; мелкий — ≥ 6 с); мера «крупного» — одна, поле large_min_side_share; токен motion.marketing.duration.breathe-period — значение по умолчанию в пределах нормы"
     label: "[исследование] + [гипотеза: период]"
     site: "—"
   - id: EG-A11Y-19

@@ -311,8 +311,8 @@ const glow = new THREE.AnimationClip('Glow', 1.5, [
 ]);
 const mixer = new THREE.AnimationMixer(gltf.scene);
 const pulse = THREE.AnimationClip.findByName(gltf.animations, 'Pulse');   // клип из Blender (масштаб) + JS-клип (материал)
-mixer.clipAction(pulse).play();
-mixer.clipAction(glow).play();
+mixer.clipAction(pulse).setLoop(THREE.LoopRepeat, 2).play();               // импульс по событию, не петля: 2 повтора,
+mixer.clipAction(glow).setLoop(THREE.LoopRepeat, 2).play();                 // серия < 5 с (creative 05/01 §6.4)
 mixer.update(0.75);
 const c = dot.material.color, e = dot.material.emissiveIntensity;
 if (Math.abs(c.g - 0.9) > 1e-3 || Math.abs(e - 6) > 1e-3) throw new Error(`цвет ${c.getHexString()}, свечение ${e}`);

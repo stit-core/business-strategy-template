@@ -13,7 +13,9 @@
   • адрес вида артефакта слоя `<слой>/<вид>[.поле]` (`business/profile`, `hypothesis-map/metric.current`,
     `interface/block`) — верен, когда у слоя есть файл вида; слой есть, вида нет — битый адрес;
   • не ссылки, когда файла по пути нет: расширение файла (`.glb`); домен с путём (`cdn.example.net/npm/`); тип
-    содержимого (`text/plain`, `model/gltf-binary`); часовой пояс (`Europe/Moscow`); синтаксис вызова — первое слово
+    содержимого (`text/plain`, `model/gltf-binary`); часовой пояс (`Europe/Moscow`); пакет npm со скоупом
+    (`@rive-app/canvas-lite`, `@scope/name@1.2`, `@theatre/*`); формула — в спане греческая буква или знак −, ×, √, ≤,
+    ≥ (`2π/ω_n`, `1/ζ − 1`); синтаксис вызова — первое слово
     спана заглавными от трёх знаков, за которым идут ещё слова или «/» (`ФАЙЛ.md … [--json ОТЧЁТ]`, `OUT_DIR/_source/`);
     путь с `../`, который поднимается к корню репозитория или выше и входит в папку, которой там нет, или из текста
     вне папки скилла входит в соседний чекаут орги (`../backend/…`), которого нет на месте; путь через имя из
@@ -187,13 +189,18 @@ MEDIA_SUBTYPE = re.compile(r"(?!\d{2}-)[a-z0-9][a-z0-9.+-]*", re.I)   # «NN-и�
 TIME_ZONE = re.compile(r"(?:Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific|Etc)"
                        r"(?:/[A-Z][A-Za-z0-9_+-]*)+")
 ARG = re.compile(r"[A-ZА-ЯЁ][A-ZА-ЯЁ0-9_]+[A-ZА-ЯЁ0-9]")   # имя аргумента заглавными от трёх знаков: ФАЙЛ, OUT_DIR
+NPM_SCOPED = re.compile(r"@[a-z0-9][\w.-]*/(?:[a-z0-9][\w.-]*|\*)(?:@[\w.^~*-]+)?", re.I)   # @scope/name[@версия]
+FORMULA = re.compile(r"[\u0370-\u03ff−×√≤≥]")                # греческая буква или знак формулы: файлом не бывает
 
 
 def not_a_file(tok: str) -> bool:
     """Спан с «/», который называет не файл скилла: домен с путём без схемы (`cdn.example.net/npm/`), тип содержимого
-    из двух слов без расширения файла (`text/plain`, `model/gltf-binary`) или часовой пояс (`Europe/Moscow`).
-    Спрашивается, когда файла по такому пути нет: существующий путь остаётся ссылкой."""
+    из двух слов без расширения файла (`text/plain`, `model/gltf-binary`), часовой пояс (`Europe/Moscow`), пакет npm
+    со скоупом (`@rive-app/canvas-lite`, `@scope/name@1.2`) или формула (`2π/ω_n`). Спрашивается, когда файла по
+    такому пути нет: существующий путь остаётся ссылкой."""
     tok = tok.rstrip(".,;")
+    if NPM_SCOPED.fullmatch(tok) or FORMULA.search(tok):
+        return True
     head, sep, rest = tok.partition("/")
     if not sep:
         return False
@@ -457,6 +464,8 @@ def selftest() -> int:
             "битые: `docs/nope-dir/x.md`, `kb/common/state/x.md`, `kit-nope.json`.",
             "Корень: `docs/`, `CLAUDE.md`; образец [ссылки](...) — не ссылка.",
             "Упоминание: без «было/стало»; ни на что больше не завязанные; следы: было/стало, больше не.",
+            "Пакеты `@rive-app/canvas-lite`, `@paper-design/shaders@0.0.81`, `@theatre/*`; формулы `2π/ω_n`, "
+            "`1/ζ − 1`; битые: `rive-app/nope.md`, `@nope.md`.",
         ]) + "\n", encoding="utf-8")
         broken2, fwd2, _ = check_file(probe2)
         text2 = "\n".join(broken2)
@@ -480,7 +489,9 @@ def selftest() -> int:
         check("папка и файл корня — ссылки, образец ссылки markdown — не ссылка", not line_of(7))
         check("слово сравнения в ёлочках и «больше не» после «ни на что» — не след, без них — след",
               [f.split(": ", 2)[2] for f in fwd2 if f.startswith("8:")] == ["«было/стало»", "«больше не»"])
-        check("битых ссылок в пробе правил — 9", len(broken2) == 9)
+        check("пакет npm со скоупом и формула — не ссылки, путь без «@» и имя файла с «@» — битые",
+              line_of(9) == ["9: путь `rive-app/nope.md`", "9: путь `@nope.md`"])
+        check("битых ссылок в пробе правил — 11", len(broken2) == 11)
 
         # путь с `../`: дерево-образец репозитория
         root = d / "repo"

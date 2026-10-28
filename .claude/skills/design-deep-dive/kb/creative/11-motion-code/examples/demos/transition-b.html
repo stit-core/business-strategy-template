@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Переходы: страница Б — набор движения</title>
+<meta name="description" content="Вторая страница пары перехода между документами набора движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+<style>@view-transition { navigation: auto; types: mk-page; }</style>
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html">Текст</a>
+      <a href="scroll.html">Прокрутка</a>
+      <a href="pin.html">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html">Петли</a>
+      <a href="transition-a.html">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec dark" id="page-transition" data-section="page" style="min-height: 100vh">
+  <div class="wrap" style="display: grid; gap: 32px">
+    <p class="label">Семейство transition · страница Б · <code>page-transition</code></p>
+    <div class="plate plate--dune" data-mk="page-transition" style="view-transition-name: kit-cover; aspect-ratio: 21 / 9"><div class="fill"></div></div>
+    <h1 class="display">Кадр переехал вместе со страницей</h1>
+    <p class="lead">Корень — общая ось: старая страница уходит влево и гаснет за 120 мс, новая приходит справа; общий кадр — 400 мс in-out.</p>
+    <a class="btn" href="transition-a.html#page-transition" style="justify-self: start">← Назад на страницу А</a>
+  </div>
+</section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

@@ -117,7 +117,7 @@ html:has(#lab-pause:checked) video[data-loop] { visibility: hidden; } /* «ск�
 - Три состояния на `<html data-motion>`: нет атрибута — как в системе; `reduced`; `full` (вопреки ОС). Выбор — `localStorage`,
   ставится строкой в `<head>` до стилей; нативные радио в `fieldset` с `legend` «Движение», сегменты 44 px, подпись состояния —
   `aria-live` с зарезервированной шириной (иначе сдвиг шапки при загрузке).
-- CSS-движение объявлять «от статики» и только когда оно разрешено; токены `--mm-*` E уже дают 0 мс и 0 px в reduce и `reduced`.
+- CSS-движение объявлять «от статики» и только когда оно разрешено; токены `--motion-marketing-*` E уже дают 0 мс и 0 px в reduce и `reduced`.
 - JS-движение подписано на `Motion.on()`: WebGL — один статичный кадр и `cancelAnimationFrame`; видео — `pause()` + `hidden`
   (постер, 0 новых байт); GSAP — `gsap.context().revert()`; Lenis — `destroy()` и `new Lenis({ respectReducedMotion: false })`.
 - Замер `lab/motion-toggle/` (F2/12): «Меньше» на лету — движение 3,9 → 0 %/с, 0 бесконечных анимаций, 0 вызовов WebGL; системный
@@ -219,7 +219,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 ```css
 /* Chrome 153 · WebKit 26.6 · 2026-09-24 · [проверено: lab/scroll-text-highlight] 0 КБ JS */
 .hl { view-timeline: --hl block; font-size: clamp(28px, 3.6vw, 56px); }
-@media (prefers-reduced-motion: no-preference) { @supports (animation-timeline: view()) {
+@media (prefers-reduced-motion: no-preference) { @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   .hl span { color: #7b8086; animation: lit linear both; animation-timeline: --hl;
     animation-range: cover calc(22% + var(--i) / var(--n) * 38%) cover calc(24% + var(--i) / var(--n) * 38%); } } }
 @keyframes lit { to { color: var(--ink); } }
@@ -227,7 +227,8 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 
 ### 2.6. Честный счётчик (`counter-up`)
 - Итог — в HTML (без JS, при reduce, для поисковиков и GEO); число — `fact:<id>` из `facts.yaml` text, без «+» и округления
-  вверх; анимируется видимая копия `aria-hidden`, итог для скринридера — `sr-only`; один раз при 60 % видимости, 1,2 с,
+  вверх; итог читается всегда, цифры счёта рисует `::after` поверх итога (CSS-счётчик примитива `count` набора движения,
+  `../11-motion-code/02-primitives.md` §1.7), копий числа нет; один раз при 60 % видимости, 1,2 с,
   ease-out, `tabular-nums`; не в тарифах, ценах и формах.
 
 ## 3. Бегущая строка
@@ -292,7 +293,8 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 - Скрытое состояние — только при `html.js` и `no-preference`: без JS и при reduce всё видно `[проверено: nojs, rm]`.
 - У низа страницы: зона IO без обрезки снизу (`rootMargin: 0 0 -4% 0`, `threshold: 0.01`) + «добор» при достижении конца;
   с обрезкой −12 % и порогом 0,12 в Chromium 1 из 6 последних элементов не появился никогда `[проверено]`.
-- Вариант `?v=sda` — те же примитивы на `view()`, 0 КБ JS, но обратимый (элемент «уходит» при прокрутке вверх) и без Firefox.
+- Вариант `?v=sda` — те же примитивы на `view()`, 0 КБ JS, но обратимый (элемент «уходит» при прокрутке вверх); в браузере без
+  SDA (Safari до 26, Firefox до 159) — сразу конечное состояние.
 - Клише `cliche:section-fade-up` (dated, high) — одинаковое появление на всех секциях; у C «система ≥ 5 элементов» — 10 из 49.
 
 ### 4.3. Полоса прогресса (`scroll-driven-progress`)
@@ -341,7 +343,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 /* Chrome 153 · WebKit 26.6 · 2026-09-24 · [проверено: lab/sticky-stack] */
 .stack { timeline-scope: --c0, --c1, --c2, --c3; display: grid; gap: 36vh; }
 .card { position: sticky; top: calc(72px + var(--i) * 24px); view-timeline-name: var(--self); transform-origin: 50% 0; }
-@media (prefers-reduced-motion: no-preference) { @supports (animation-timeline: view()) {
+@media (prefers-reduced-motion: no-preference) { @supports ((animation-timeline: scroll()) and (animation-range: 0% 100%)) {
   .card { animation: sink linear both; animation-timeline: var(--next); animation-range: entry 0% entry 100%; } } }
 @keyframes sink { to { transform: scale(.94); filter: brightness(.82); } }
 ```
@@ -363,7 +365,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
   `cliche:smooth-scroll-default` (saturated, high).
 - **Умолчание `lerp: 0.15`** (S1 2026-09-25, X-10): хвост по `motion_check.py` 0.1.3 (десктоп, Chromium 153) — 0,1 → 1,28 с,
   0,12 → 1,09–1,13 с (провал EG-PERF-03), 0,15 → 0,90 с, 0,2 → 0,72 с; расчёт по формуле 99 % (0,6 с при 0,12) занижает — хвост
-  мерить; токен `motion.marketing.scroll.lenis-lerp` = 0,15. Таблица выше — замер F при прежнем 0,1. На L2-странице Lenis живёт
+  мерить; токен `motion.marketing.scroll.lenis-lerp` = 0,15. Таблица выше — замер F при `lerp` 0,1. На L2-странице Lenis живёт
   только вместе с переключателем движения (`motion-toggle`, EG-A11Y-12, §1.5); демо `lab/smooth-scroll` — страница эффекта без
   переключателя: S EG-A11Y-12 при `--level L2` ожидаем (`lab.json` `gate_note`). `[проверено]`
 
@@ -415,11 +417,12 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
   `pointermove` (rAF по требованию), не в каждом событии и не в вечном цикле.
 - `custom-cursor` (L2): точка без задержки, кольцо догоняет с λ ≈ 18 (≈ 120 мс), `mix-blend-mode: difference`; `cursor: none`
   только на `html.has-cursor`, на полях ввода — системный курсор; клише `cliche:custom-cursor-follower` (C: 10 из 49).
-- `cursor-accent` (L1): пятно цвета акцента только внутри hero и под текстом (`z-index: -1`); при reduce и на тач — закреплено в
-  70 %/30 %, акцент остаётся (Hallmark HP3); вариант `border` — подсветка рамок карточек маской на псевдоэлементе. Hallmark
+- `cursor-accent` (L1): пятно цвета акцента только внутри hero и под текстом (`z-index: -1`); при reduce свет идёт за курсором
+  без хвоста и инерции — прямое управление остаётся (`../05-motion/03-micro-motion-and-performance.md` §1.5), на тач —
+  закреплено в 70 %/30 %, акцент остаётся (Hallmark HP3); вариант `border` — подсветка рамок карточек маской на псевдоэлементе. Hallmark
   запрещает mouse-follow градиенты на SaaS-лендингах и разрешает в портфолио `[мнение]`; близкий приём J — прожектор маской
   `ai-media:10-03#4.1` (две петли, клавиатура — кнопкой `aria-pressed`).
-- `magnetic-cta` (L1): смещение ≤ 8 px (норма E `05-motion/03` §1.4, токен `--mm-magnet-max`; до S1 2026-09-25 — 10 px, X-09) в
+- `magnetic-cta` (L1): смещение ≤ 8 px (норма E `../05-motion/03-micro-motion-and-performance.md` §1.4, токен `--motion-marketing-distance-magnet-max`, X-09) в
   радиусе 1,6 размера, подпись +40 %, возврат CSS-пружиной 450 мс; зона клика не уходит дальше 8 px (WCAG 2.5.8); одна кнопка на
   экран; клише `cliche:magnetic-button`.
 - `tilt-card` (L1): ≤ 7°, `perspective: 900px`, блик `soft-light`; один ключевой ряд, не все карточки; higgsfield считает
@@ -591,8 +594,9 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
   копятся за сессию `[проверено]`. Скрытая часть не ловит наведение (попадание учитывает `clip-path`); тач — подписи видны всегда.
 
 ### 12.4. Переворот карточки (`card-flip-3d`)
-- Громкое — только в `no-preference`: `rotateY(180deg)` 500 мс; по умолчанию и в reduce — оборот проявляется 180 мс (Una Kravets
-  [V:_ZdZh-ESOHY 04:05]). Паритет `:hover` / `:focus-within`, на тач — кнопка «Подробнее» (`aria-expanded`), фокус — на ссылку оборота.
+- Громкое — только в `no-preference`: `rotateY(180deg)` 500 мс; по умолчанию и в reduce — без поворота: оборот стоит под
+  лицом, обе стороны видны сразу (примитив `flip` набора движения, `../11-motion-code/02-primitives.md` §6; приём проявления —
+  Una Kravets [V:_ZdZh-ESOHY 04:05]). Паритет `:hover` / `:focus-within`, на тач — кнопка «Подробнее» (`aria-expanded`), фокус — на ссылку оборота.
 - Оборот скрывать `opacity` + `pointer-events`, не `visibility`: иначе ссылка оборота выпадает из порядка Tab (ошибка исправлена F2).
 - Грани `position: absolute`, лицу `transform: rotateY(0)` и `z-index: 2`, обеим `-webkit-backface-visibility: hidden`. В WebKit
   Playwright на Linux переворот не проверяется (нет 3D-композитинга, эталон тоже «ломается») — Safari только на iPhone.
@@ -600,7 +604,7 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 ### 12.5. Шапка сжимается при прокрутке (`header-shrink-on-scroll`)
 - `animation-timeline: scroll(root)` + `animation-range: 0 160px`; шапка `fixed` постоянной высоты, «сжатие» — только
   `transform`/`opacity` (плашка `scaleY` от верха, строка −18 px, логотип `scale .78`, подпись гаснет, тень — отдельный слой
-  с `opacity`, не `box-shadow`); без SDA (Firefox) — класс по порогу 40 px из rAF + переходы 240 мс (`?v=class`).
+  с `opacity`, не `box-shadow`); без SDA (Safari до 26, Firefox до 159) — класс по порогу 40 px из rAF + переходы 240 мс (`?v=class`).
 - Антипример `?v=height` (высота шапки в потоке по прокрутке) — CLS 0,0004 и раскладка на кадре при 0 у варианта `transform`: мало, но
   не ноль, и растёт с высотой шапки `[проверено]`; reduce — сразу компактная шапка.
 
@@ -638,7 +642,7 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 
 ## Частые ошибки
 - Библиотека грузится всегда, даже когда эффект выключен (reduce, телефон, CSS-вариант): +30–46 КБ br зря — грузить по `matchMedia`.
-- Скрытое состояние без `html.js` (без JS контент невидим) и `scaleX(0)`/`opacity: 0` вне `@supports` (в Firefox — начальное состояние).
+- Скрытое состояние без класса `js` у `html` (без JS контент невидим) и `scaleX(0)`/`opacity: 0` вне `@supports` (в браузере без SDA — начальное состояние навсегда).
 - Вращение, масштаб и фильтры на самом `<svg>` вместо обёртки: перерисовка каждый кадр (127 мс/с на телефоне).
 - Текстовые эффекты без запертой ширины: scramble — CLS 0,16, оси по буквам — CLS 0,03 и провалы в WebKit.
 - Split на LCP-заголовке; побуквенный split длинных кириллических слов; одинаковое появление на каждой секции.
@@ -669,7 +673,8 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 
 ## Открытые вопросы и противоречия
 - Реальные телефоны, Safari и Firefox не проверены: эмуляция CPU ×4 без мобильного GPU; WebKit Playwright ≠ Safari; Firefox
-  не ставился — поведение SDA-фолбэков в Firefox выведено из `@supports`, а не замерено `[не проверено]`.
+  не ставился — SDA в Firefox 159 и фолбэки браузеров без SDA выведены из `@supports` и заметок к выпуску, а не замерены
+  `[не проверено]`.
 - Порог главного потока «контроль + 25 мс/с» — предложение F для ворот K по нашей выборке; нужна калибровка на страницах C.
 - `reduce.strategy: stations` и уровень `page-transition` — закрыто S1 2026-09-25: `stations` в схеме (перечисление treatment v1,
   `pin-scrub-story`, X-05); нативный кросс-документный VT — L1, библиотеки переходов — L2 (X-21).

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Текст и числа — набор движения</title>
+<meta name="description" content="Разбиение, подсветка слов, текст по кривой и честный счётчик набора движения.">
+<link rel="icon" href="data:,">
+<script>try { var m = localStorage.getItem('motion'); if (m === 'reduced' || m === 'full') { document.documentElement.setAttribute('data-motion', m); } } catch (e) {}</script>
+<link rel="stylesheet" href="../look.css">
+<link rel="stylesheet" href="../motion-kit.css">
+</head>
+<body>
+<header class="top" data-mk="header" data-section="chrome">
+  <div data-mk-plate></div><div data-mk-shadow></div>
+  <div class="wrap" data-mk-row>
+    <a href="../demo.html" data-mk-logo><i class="mark" aria-hidden="true"></i><span>Движение кодом</span></a>
+    <nav class="nav nav--demos" aria-label="Страницы-демо">
+      <a href="text.html" aria-current="page">Текст</a>
+      <a href="scroll.html">Прокрутка</a>
+      <a href="pin.html">Сцены</a>
+      <a href="pointer.html">Указатель</a>
+      <a href="micro.html">Отклик</a>
+      <a href="marquee.html">Петли</a>
+      <a href="transition-a.html">Переходы</a>
+    </nav>
+    <fieldset class="motion" data-mk="toggle" id="motion-toggle">
+      <legend>Движение</legend>
+      <button type="button" data-motion-set="" aria-pressed="false"><span class="l">Как в системе</span><span class="s">Система</span></button>
+      <button type="button" data-motion-set="reduced" aria-pressed="false">Меньше</button>
+      <button type="button" data-motion-set="full" aria-pressed="false">Полное</button>
+    </fieldset>
+    <button type="button" class="pause" data-mk="pause" aria-pressed="false">
+      <svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1" width="3" height="10" fill="currentColor"/><rect x="7" y="1" width="3" height="10" fill="currentColor"/></svg>
+      <span data-mk-when="run">Остановить движение</span><span data-mk-when="paused">Запустить движение</span>
+    </button>
+  </div>
+  <i class="bar" data-mk="progress" aria-hidden="true"></i>
+</header>
+<main>
+<section class="sec" data-section="intro" style="padding-bottom: clamp(48px, 7vw, 96px)">
+  <div class="wrap head" style="margin-bottom: 0">
+    <p class="label">Семейства text и number</p>
+    <h1 class="display" data-mk="entrance" data-mk-lcp style="--i: 0">Текст движется там, где его читают</h1>
+    <p class="lead" data-mk="entrance" style="--i: 1">Разбиение — разметкой заранее, подсветка — по прокрутке, счёт — CSS-счётчиком поверх итога в HTML. Доступный текст цел во всех режимах.</p>
+  </div>
+</section>
+
+<section class="sec dark" id="split-text-reveal" data-section="split">
+  <div class="wrap" style="display: grid; gap: clamp(48px, 7vw, 96px)">
+    <div class="head"><p class="label"><b>01</b> — Разбиение · <code>split-text-reveal</code></p><p class="muted" style="margin: 0; max-width: 40rem">Куски — строки, слова или буквы — размечены заранее; вся сцена вместе со стаггером ≤ 1000 мс. Не на LCP-заголовке.</p></div>
+    <h2 class="h2" data-mk="split" data-mk-split="words"><span>Слова</span> <span>поднимаются</span> <span>из</span> <span>своих</span> <span>коробок</span></h2>
+    <p class="big" style="color: var(--ivory-2)" data-mk="split" data-mk-split="lines"><span>По строкам — для длинной фразы:</span><span>каждая строка — своя маска,</span><span>шаг 60 мс, кривая out-expo.</span></p>
+    <h2 class="display" aria-label="Кадр" data-mk="split" data-mk-split="chars"><span aria-hidden="true">К</span><span aria-hidden="true">а</span><span aria-hidden="true">д</span><span aria-hidden="true">р</span></h2>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">По буквам — только короткие слова до 12 знаков: длинное кириллическое слово растягивает каскад.</p></div></section>
+
+<section class="sec" id="scroll-text-highlight" data-section="highlight" style="padding-top: 0">
+  <div class="wrap" style="display: grid; gap: 40px">
+    <div class="head"><p class="label"><b>02</b> — Подсветка слов · <code>scroll-text-highlight</code></p><p class="muted" style="margin: 0; max-width: 40rem">Одна шкала на абзац, диапазон слова — по его месту: sibling-index() или --i. Непрочитанное — цвет с контрастом ≥ 3 : 1, а не прозрачность.</p></div>
+    <p class="big" data-mk="highlight"><span>Читатель</span> <span>видит,</span> <span>где</span> <span>он</span> <span>сейчас:</span> <span>слова</span> <span>загораются</span> <span>по</span> <span>мере</span> <span>чтения,</span> <span>а</span> <span>весь</span> <span>текст</span> <span>остаётся</span> <span>в</span> <span>HTML</span> <span>и</span> <span>находится</span> <span>поиском.</span></p>
+  </div>
+</section>
+<section class="sec" id="counter-up" data-section="counter">
+  <div class="wrap">
+    <div class="head"><p class="label"><b>03</b> — Честный счётчик · <code>counter-up</code></p><p class="muted" style="margin: 0; max-width: 40rem">Итог — текст в HTML (без JS, при reduce, для поисковиков); при счёте цифры рисует CSS-счётчик поверх прозрачного текста. Один раз, 1200 мс.</p></div>
+    <div class="proof" data-mk-stagger>
+      <div data-mk="rise"><span class="num" data-mk="count">1 280</span><span class="unit">разделитель групп</span></div>
+      <div data-mk="rise"><span class="num" data-mk="count">98</span><span class="unit">целое</span></div>
+      <div data-mk="rise"><span class="num" data-mk="count">4,8</span><span class="unit">одна цифра после запятой</span></div>
+    </div>
+  </div>
+</section>
+<section class="sec dark" id="text-path" data-section="curve">
+  <div class="wrap" style="display: grid; gap: 24px">
+    <div class="head"><p class="label"><b>04</b> — Текст по кривой · <code>text-path</code></p><p class="muted" style="margin: 0; max-width: 40rem">startOffset ставит набор в кадре прокрутки, только пока SVG видна; SVG — aria-hidden, тот же текст — в скрытом заголовке.</p></div>
+    <h2 class="sr-only">Подпись едет по кривой вместе с прокруткой</h2>
+    <svg class="curve" viewBox="0 0 1200 260" aria-hidden="true" style="--ink: var(--ivory)">
+      <path id="tp" d="M0 60 C 260 240 520 240 640 140 S 960 20 1200 200" style="stroke: var(--line-d)"/>
+      <text style="fill: var(--ivory)"><textPath href="#tp" data-mk="text-path" data-mk-from="-4%" data-mk-to="42%" startOffset="20%">Подпись едет по кривой вместе с прокруткой</textPath></text>
+    </svg>
+  </div>
+</section>
+<section class="sec"><div class="wrap"><p class="big muted">Конец страницы: дальше — прокрутка и маски.</p></div></section>
+</main>
+<footer class="foot" data-section="foot">
+  <div class="wrap">
+    <p class="label">Демо набора · <a href="../demo.html">вся страница</a></p>
+    <ul>
+      <li><a href="text.html">Текст</a></li>
+      <li><a href="scroll.html">Прокрутка</a></li>
+      <li><a href="pin.html">Сцены</a></li>
+      <li><a href="pointer.html">Указатель</a></li>
+      <li><a href="micro.html">Отклик</a></li>
+      <li><a href="marquee.html">Петли</a></li>
+      <li><a href="transition-a.html">Переходы</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="../motion-kit.js" data-motion-toggle></script>
+<script>window.__mk = MotionKit.mount(document, { remember: 'local', level: 'L1' });</script>
+</body>
+</html>

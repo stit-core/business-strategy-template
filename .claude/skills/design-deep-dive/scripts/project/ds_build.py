@@ -12,10 +12,12 @@
                                              ссылкой на переменную семейства со стеком в запасе; режимы — блоки темы
                                              (`[data-theme]` и `prefers-color-scheme`), сокращённого движения
                                              (`[data-motion]` и `prefers-reduced-motion`), плотности (`[data-density]`),
-                                             в блок режима идут все токены, чьё значение в режиме другое (ui 09/04 §5)
+                                             в блок режима идут все токены, чьё значение в режиме другое (ui 09/04 §5);
+                                             пружина — `<время успокоения>ms linear(…)`, её параметры — комментарием
   design/DESIGN.md — передняя часть          YAML между метками `---` в начале файла (формат DESIGN.md, ui 12/04 §2.3):
-                                             colors, typography, rounded, spacing, прочие токены `x-tokens`, режимы
-                                             `x-modes`, узкая ширина `x-narrow`; проза после меток не трогается
+                                             colors, typography, rounded, spacing, прочие токены `x-tokens`, параметры
+                                             пружин для кода `x-springs`, режимы `x-modes`, узкая ширина `x-narrow`;
+                                             проза после меток не трогается
   design/_design-system/project/tokens.json  токены артефакта Design System списками по семействам (cd 05/01 §3.2):
                                              color с темами, type (families → `--font-<ключ>`, groups со стилями),
                                              spacing, radius, shadow и свои семейства по первому сегменту пути
@@ -40,6 +42,16 @@
 Блок по системе — `@media (prefers-reduced-motion: reduce)` на `:root:not([data-motion="full"])`: выбор «полное
 движение» оставляет значения `$value` и при системном «уменьшить движение»; блок `:root[data-motion="reduced"]` —
 сокращённое движение при любой системе; без атрибута решает система. У ДС без режима `reduced` блока нет.
+
+Пружина — расширение `$extensions["org.design-deep-dive.spring"]` токена transition: `dampingRatio` (ζ) и `stiffness`
+(k при массе 1, ω = √k) — форма Compose и Material 3 (ui 08/04 §1). В CSS токен даёт `<время успокоения>ms linear(…)` и
+задержку `$value`: время успокоения — последний выход кривой из полосы 1 % пути вокруг цели, вверх до 10 ms; точки
+`linear()` ставятся там, где кривая гнётся, пока ломаная отходит от неё больше чем на 0,25 % пути вместе с округлением
+записи; остаток до цели (не больше 1 % пути) кривая выбирает плавно на последней четверти времени. Параметры пружины —
+комментарием над переменной; алиас на пружину целиком даёт ту же кривую. `$value` — переход-запас для инструментов без
+расширения: его длительность равна времени успокоения, кривую сборка не читает. Значение режима `reduced` — переход без
+пружины: кривая без перелёта и своё время. Для кода параметры идут в `x-springs` передней части (`dampingRatio`,
+`stiffness`, `response` и `bounce` SwiftUI, перелёт, время успокоения) и в `show --json`; в артефакт движение не идёт.
 
 Темы, которых ждут брифы — бриф сайта каждой поверхности слоя страницы и бриф на вид кабинета, блок `themes` (две темы
 — `dark.needed` или `default: system`, иначе одна — `default`), — есть у токенов темой значений или режимом; иначе
@@ -84,11 +96,11 @@ Text` → `--font-golos-text`, значение —
 `$description`
 токена DTCG. `example: true` в корне токенов — пометка иллюстрации (фикстуры), она переходит в производный tokens.json.
 
-Расширения токенов — ключи `$extensions` пространства `org.design-deep-dive.`: `modes`, `reduce`, `fluid`, `css` и
-`artifact` читает сборка; `llm` (правила применения), `meta` и `limits` — пометки, в производные они не идут. Ключ вне
-этого списка сборка не читает и называет предупреждением: опечатка в имени и расширение под именем другого
-инструмента иначе теряют значение молча. Режим токена с именем темы значений — тоже предупреждение: тема значений
-живёт в `$value`.
+Расширения токенов — ключи `$extensions` пространства `org.design-deep-dive.`: `modes`, `reduce`, `fluid`, `css`,
+`spring` и `artifact` читает сборка; `llm` (правила применения), `meta` и `limits` — пометки, в производные они не
+идут. Ключ вне этого списка сборка не читает и называет предупреждением: опечатка в имени и расширение под именем
+другого инструмента иначе теряют значение молча. Режим токена с именем темы значений — тоже предупреждение: тема
+значений живёт в `$value`.
 
     ds_build build <slug> [--repo DIR] [--out DIR] [--json]    собрать производные; --out DIR → DIR/docs/projects/…
     ds_build check <slug> [--repo DIR] [--json]                формат DTCG и свежесть производных; ничего не пишет
@@ -110,11 +122,14 @@ projects/<slug>/design/_design-system/project/`: ссылка `src`, `href`, `po
 
 Правила (`.claude/skills/design-audit/references/rules.md`):
   R-STRUCT-006  формат DTCG схемой (группы, `$type`, форма `$value` по типу, алиасы `{…}` ведут в токен того же типа,
-                без циклов; значения режимов; тема значений `base`; одна шкала space.*)                    error;
+                без циклов; значения режимов; тема значений `base`; одна шкала space.*; пружина — у токена
+                transition, `dampingRatio` и `stiffness` больше нуля и других ключей нет)                   error;
                 warning — вторая шкала, лимит семейств, px типографики из CSS расходится с px значения DTCG,
                 ключ `$extensions` вне известных сборке, режим токена с именем темы значений, гарнитура, которую
                 загрузчик шрифтов не подменит: имя переменной семейства `--font-<ключ>` занято переменной токена, у
-                имени семейства нет ключа, у двух семейств один ключ
+                имени семейства нет ключа, у двух семейств один ключ; пружина: перелёт больше 10 %, успокоение
+                дольше 600 ms, точек `linear()` больше 64, длительность `$value` не равна времени успокоения, нет
+                значения сокращённого движения или в нём перелёт, расширение `css` рядом с пружиной
   R-COV-010     тема брифа сайта или кабинета есть у токенов (тема значений `modes.base` или режим)           warning
   R-FRESH-001   system.tokens.css, передняя часть DESIGN.md, tokens.json и README артефакта равны сборке байт в байт
                 (README сверяется по началу файла: хвост, который дописывает страница артефакта, — не расхождение)
@@ -126,7 +141,9 @@ projects/<slug>/design/_design-system/project/`: ссылка `src`, `href`, `po
 """
 from __future__ import annotations
 
+import functools
 import json
+import math
 import os
 import re
 import sys
@@ -147,16 +164,29 @@ EXT_LLM = "org.design-deep-dive.llm"
 EXT_REDUCE = "org.design-deep-dive.reduce"                 # сокращённое движение расширения страниц сайта
 EXT_FLUID = "org.design-deep-dive.fluid"                   # fluid-значение clamp() расширения страниц
 EXT_CSS = "org.design-deep-dive.css"                       # готовое CSS-значение расширения страниц
+EXT_SPRING = "org.design-deep-dive.spring"                 # пружина токена transition: dampingRatio и stiffness
 EXT_ART = "org.design-deep-dive.artifact"                   # поля артефакта Design System, которых нет в DTCG
 EXT_SPACE = "org.design-deep-dive."                         # пространство ключей `$extensions`, которые знает сборка
 EXT_NOTES = (EXT_SPACE + "meta", EXT_SPACE + "limits")      # пометки токенов страниц: в производные не идут
-EXT_KNOWN = (EXT_MODES, EXT_LLM, EXT_REDUCE, EXT_FLUID, EXT_CSS, EXT_ART) + EXT_NOTES
+EXT_KNOWN = (EXT_MODES, EXT_LLM, EXT_REDUCE, EXT_FLUID, EXT_CSS, EXT_SPRING, EXT_ART) + EXT_NOTES
 
 NARROW_BODY_MIN_PX = 16     # ux/09-mobile/03-mobile-content-tables-forms-dashboards.md §7.1 (canon.tsv, NU-15)
 REM_PX = 16
 LAYOUT_STEP = 64            # браузер считает высоту строки шагами 1/64 px и усекает её до шага
 RATIO_DIGITS = 6            # знаков после запятой у отношения интерлиньяжа и у трекинга в em (ui 09/04 §2.5)
 TRACKING_TOL_PX = 0.005     # трекинг em × кегль против px значения: расхождение больше половины сотой px
+
+# Пружина в CSS (ui 08/04 §1.2): кривая единичного скачка при массе 1, время — до успокоения, точки — по допуску.
+SPRING_KEYS = ("dampingRatio", "stiffness")   # масса 1: при заданном ζ движение задаёт только stiffness / mass
+SPRING_SETTLE = 0.01        # успокоение: после него кривая навсегда в полосе 1 % пути вокруг цели
+SPRING_FIT = 0.0025         # допуск linear(): ломаная точек отходит от кривой не больше чем на 0,25 % пути
+SPRING_THIN = 0.002         # допуск прореживания точек; остаток допуска — на округление записи
+SPRING_STEP_MS = 10         # время успокоения в CSS — вверх до 10 ms
+SPRING_TAIL = 0.25          # остаток до цели выбирается плавно на последней четверти времени: конец без скачка
+SPRING_SAMPLES = 2000       # выборка кривой перед прореживанием (шаг 0,05 % времени)
+SPRING_POINTS_MAX = 64      # больше точек — пружина слишком колебательная для linear()
+SPRING_OVERSHOOT_MAX = 0.10  # перелёт выше 10 % — вне нормы интерфейса (ui 08/01 §4.6)
+SPRING_SETTLE_MAX_MS = 600  # успокоение дольше — выше потолка движения интерфейса (ui 08/01 §1.3)
 
 TYPES = ("color", "dimension", "fontFamily", "fontWeight", "duration", "cubicBezier", "number", "strokeStyle", "border",
          "transition", "shadow", "gradient", "typography")
@@ -586,7 +616,7 @@ def validate(data):
         if second in tops and "space" in tops:
             issues.append(Issue(pointer((second,)), f"вторая шкала отступов `{second}.*` рядом с `space.*`: шкала одна",
                                 "warning"))
-    issues += _extension_issues(data) + _base_mode_issues(toks) + _family_var_issues(toks)
+    issues += _extension_issues(data) + _base_mode_issues(toks) + _family_var_issues(toks) + _spring_issues(toks)
     return issues
 
 
@@ -663,6 +693,73 @@ def _family_var_issues(toks):
                              f"у гарнитур {', '.join(f'«{n}»' for n in names)} один ключ семейства: их стеки "
                              f"ссылаются на одну переменную `--font-{key}`, загрузчик шрифтов кода объявит её одной "
                              "гарнитурой", "warning", "одно семейство — одно написание имени во всех токенах"))
+    return out
+
+
+def _ms(v):
+    """Длительность DTCG → ms, до шести знаков: 0.34 s — ровно 340 (или None)."""
+    if isinstance(v, dict) and isinstance(v.get("value"), (int, float)) and v.get("unit") in ("ms", "s"):
+        return round(v["value"] * (1000 if v["unit"] == "s" else 1), 6)
+    return None
+
+
+def _spring_issues(toks):
+    """Пружины (`org.design-deep-dive.spring`, ui 08/04 §1): форма — ошибка; нормы движения — предупреждения."""
+    out = []
+    for t in toks.list:
+        sp = t.ext(EXT_SPRING)
+        if sp is None:
+            continue
+        name, where = ".".join(t.path), t.pointer + f"/$extensions/{EXT_SPRING}"
+        if t.type != "transition":
+            out.append(Issue(where, f"`{name}` ({t.type}) — пружина читается только у токена transition: её кривая и "
+                                    "время успокоения — одно значение",
+                             fix="пружина — токеном transition: `$value` — переход-запас, параметры — в расширении"))
+            continue
+        if not isinstance(sp, dict):
+            out.append(Issue(where, f"`{name}` — пружина: объект {{dampingRatio, stiffness}}"))
+            continue
+        bad = [k for k in SPRING_KEYS if not (isinstance(sp.get(k), (int, float)) and not isinstance(sp.get(k), bool)
+                                              and math.isfinite(sp[k]) and sp[k] > 0)]
+        extra = [k for k in sp if k not in SPRING_KEYS]
+        if bad or extra:
+            why = [f"{', '.join(bad)} — число больше нуля"] if bad else []
+            why += [f"{', '.join(extra)} — вне формы пружины"] if extra else []
+            out.append(Issue(where, f"`{name}` — пружина: {'; '.join(why)}",
+                             fix="пружина — dampingRatio (ζ) и stiffness при массе 1; масса не пишется: при заданном ζ "
+                                 "движение задаёт stiffness / mass (ui 08/04 §1.1, §2.1)"))
+            continue
+        c = spring_curve(*spring_of(t))
+        warn = []
+        if c.overshoot > SPRING_OVERSHOOT_MAX:
+            warn.append((f"перелёт {num(round(c.overshoot * 100, 1))} % — больше {num(SPRING_OVERSHOOT_MAX * 100)} %: "
+                         "так прыгает только приём подачи", "dampingRatio не меньше 0.6 (ui 08/01 §4.6)"))
+        if c.settle_ms > SPRING_SETTLE_MAX_MS:
+            warn.append((f"успокоение {c.settle_ms} ms — дольше {SPRING_SETTLE_MAX_MS} ms, потолка движения "
+                         "интерфейса", "stiffness выше или dampingRatio ближе к 1 (ui 08/01 §1.3)"))
+        if len(c.points) > SPRING_POINTS_MAX:
+            warn.append((f"точек linear() {len(c.points)} — больше {SPRING_POINTS_MAX}: пружина слишком колебательная "
+                         "для CSS", "dampingRatio ближе к 1"))
+        try:
+            have = _ms(toks.value(t).get("duration"))
+            reduced = toks.value(t, REDUCED) if REDUCED in t.modes() else None
+        except (ValueError, AttributeError):
+            have, reduced = c.settle_ms, None                # значение не разрешается — замечание формата уже есть
+        if have != c.settle_ms:
+            warn.append((f"длительность `$value` {num(have)} ms, время успокоения пружины {c.settle_ms} ms: "
+                         "инструменты без расширения покажут другое время",
+                         f"`$value.duration` — {{\"value\": {c.settle_ms}, \"unit\": \"ms\"}}"))
+        if REDUCED not in t.modes():
+            warn.append(("нет значения сокращённого движения: при «уменьшить движение» пружина перелетит и закачается",
+                         "режим reduced — переход без пружины: кривая входа, 150 ms (ui 08/03 §3.2)"))
+        elif isinstance(reduced, dict) and isinstance(reduced.get("timingFunction"), list) and \
+                any(not 0 <= y <= 1 for y in reduced["timingFunction"][1::2]):
+            warn.append(("в значении сокращённого движения кривая с перелётом",
+                         "кривая без перелёта: y обеих точек от 0 до 1 (ui 08/03 §3.2)"))
+        if t.ext(EXT_CSS) is not None:
+            warn.append((f"расширение `{EXT_CSS}` рядом с пружиной не читается: CSS токена даёт пружина",
+                         f"снять `{EXT_CSS}`"))
+        out += [Issue(where, f"`{name}` — пружина: {msg}", "warning", fix) for msg, fix in warn]
     return out
 
 
@@ -851,6 +948,174 @@ def _ext_css(t):
     return None
 
 
+# ------------------------------------------------------------------ пружина (ui 08/04 §1)
+
+@dataclass(frozen=True)
+class SpringCurve:
+    """Пружина в CSS: параметры, время успокоения и точки `linear()` — (доля времени 0…1, прогресс)."""
+    ratio: float                                             # ζ, dampingRatio
+    stiffness: float                                         # k при массе 1
+    settle_ms: int                                           # время успокоения, вверх до SPRING_STEP_MS
+    points: tuple
+
+    @property
+    def omega(self):
+        """Собственная частота ω = √k, рад/с."""
+        return math.sqrt(self.stiffness)
+
+    @property
+    def response(self):
+        """Период колебания без трения 2π/ω, с: `response` и `duration` пружины SwiftUI."""
+        return 2 * math.pi / self.omega
+
+    @property
+    def bounce(self):
+        """`bounce` пружины SwiftUI: 1 − ζ у пружины с отскоком и без, 1/ζ − 1 у передемпфированной (меньше нуля)."""
+        return 1 - self.ratio if self.ratio <= 1 else 1 / self.ratio - 1
+
+    @property
+    def overshoot(self):
+        """Перелёт кривой физики: exp(−πζ/√(1−ζ²)) доли пути; при ζ ≥ 1 перелёта нет."""
+        z = self.ratio
+        return math.exp(-math.pi * z / math.sqrt(1 - z * z)) if z < 1 else 0.0
+
+    @property
+    def css(self):
+        """`linear(0, p₁ t₁%, …, 1)`: у промежуточных точек — доля времени в процентах."""
+        last = len(self.points) - 1
+        return "linear(" + ", ".join("0" if i == 0 else "1" if i == last else f"{num(v)} {num(round(u * 100, 2))}%"
+                                     for i, (u, v) in enumerate(self.points)) + ")"
+
+
+def spring_step(ratio, omega):
+    """Кривая пружины x(t), с: старт в покое в 0, цель 1, масса 1 — решение x″ + 2ζωx′ + ω²(x − 1) = 0."""
+    z, w = ratio, omega
+    if abs(z - 1) < 1e-6:
+        return lambda t: 1 - (1 + w * t) * math.exp(-w * t)
+    if z < 1:
+        wd = w * math.sqrt(1 - z * z)
+        return lambda t: 1 - math.exp(-z * w * t) * (math.cos(wd * t) + z * w / wd * math.sin(wd * t))
+    s = math.sqrt(z * z - 1)
+    r1, r2 = -w * (z - s), -w * (z + s)
+    return lambda t: 1 + (r1 * math.exp(r2 * t) - r2 * math.exp(r1 * t)) / (r2 - r1)
+
+
+def spring_settle(ratio, omega, band=SPRING_SETTLE):
+    """Время успокоения, с: последний выход кривой из полосы ±band вокруг цели — дальше она в полосе навсегда."""
+    x = spring_step(ratio, omega)
+    if ratio < 1:                                            # огибающая отклонения колебательной пружины
+        bound = lambda t: math.exp(-ratio * omega * t) / math.sqrt(1 - ratio * ratio)  # noqa: E731
+    else:                                                    # без колебаний отклонение убывает само
+        bound = lambda t: abs(1 - x(t))  # noqa: E731
+    hi = 1 / omega
+    while bound(hi) > band:
+        hi *= 1.5
+    n = 4000
+    out = next((i for i in range(n, -1, -1) if abs(x(hi * i / n) - 1) > band), None)
+    if out is None:
+        return 0.0
+    lo, up = hi * out / n, hi * (out + 1) / n
+    for _ in range(50):
+        mid = (lo + up) / 2
+        lo, up = (mid, up) if abs(x(mid) - 1) > band else (lo, mid)
+    return up
+
+
+def spring_target(ratio, omega, duration):
+    """Кривая для `linear()` на [0, duration]: пружина, у которой остаток до цели в конце (не больше SPRING_SETTLE)
+    выбран плавно на последней четверти времени — конец без скачка и с нулевым остатком."""
+    x = spring_step(ratio, omega)
+    rest, start = 1 - x(duration), duration * (1 - SPRING_TAIL)
+
+    def f(t):
+        v = x(t)
+        if t > start:
+            s = (t - start) / (duration - start)
+            v += rest * s * s * (3 - 2 * s)
+        return v
+    return f
+
+
+def _thin(us, xs, eps):
+    """Индексы точек ломаной, которая отходит от выборки не больше eps по вертикали (Рамер — Дуглас — Пекер)."""
+    keep, stack = {0, len(us) - 1}, [(0, len(us) - 1)]
+    while stack:
+        a, b = stack.pop()
+        if b - a < 2:
+            continue
+        k = (xs[b] - xs[a]) / (us[b] - us[a])
+        worst, at = max((abs(xs[i] - xs[a] - k * (us[i] - us[a])), i) for i in range(a + 1, b))
+        if worst > eps:
+            keep.add(at)
+            stack += [(a, at), (at, b)]
+    return sorted(keep)
+
+
+@functools.lru_cache(maxsize=None)
+def spring_curve(ratio, stiffness):
+    """Пружина в CSS: время успокоения до SPRING_SETTLE (вверх до SPRING_STEP_MS) и точки `linear()`, прореженные до
+    SPRING_THIN; запись — прогресс тремя знаками, доля времени четырьмя (проценты двумя)."""
+    omega = math.sqrt(stiffness)
+    settle = spring_settle(ratio, omega)
+    ms = max(SPRING_STEP_MS, math.ceil(round(settle * 1000, 6) / SPRING_STEP_MS) * SPRING_STEP_MS)
+    f = spring_target(ratio, omega, ms / 1000)
+    us = [i / SPRING_SAMPLES for i in range(SPRING_SAMPLES + 1)]
+    xs = [f(u * ms / 1000) for u in us]
+    xs[0], xs[-1] = 0.0, 1.0
+    pts = [(round(us[i], 4), round(xs[i], 3)) for i in _thin(us, xs, SPRING_THIN)]
+    pts[0], pts[-1] = (0.0, 0.0), (1.0, 1.0)
+    return SpringCurve(float(ratio), float(stiffness), ms, tuple(pts))
+
+
+def spring_of(t):
+    """(ζ, k) пружины токена transition — `$extensions["org.design-deep-dive.spring"]` с `dampingRatio` и
+    `stiffness` больше нуля; иначе None (форму расширения называет validate)."""
+    sp = t.ext(EXT_SPRING)
+    if t.type != "transition" or not isinstance(sp, dict):
+        return None
+    vals = [sp.get(k) for k in SPRING_KEYS]
+    if all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) and v > 0 for v in vals):
+        return float(vals[0]), float(vals[1])
+    return None
+
+
+def spring_source(toks, t, mode=None):
+    """Токен, чья пружина задаёт значение t в режиме mode: сам t или цель его алиаса целиком; значение режима по пути
+    — переход без пружины (None)."""
+    seen = set()
+    while t is not None and t.path not in seen:
+        seen.add(t.path)
+        if mode and mode in t.modes():
+            return None
+        if t.ext(EXT_SPRING) is not None:
+            return t if spring_of(t) else None
+        m = ALIAS.match(t.value) if isinstance(t.value, str) else None
+        t = toks.get(m.group(1)) if m else None
+    return None
+
+
+def spring_css(toks, src):
+    """CSS пружины токена src: `<время успокоения>ms linear(…)` и задержка `$value`."""
+    curve = spring_curve(*spring_of(src))
+    delay = toks.value(src)["delay"]
+    return f"{curve.settle_ms}ms {curve.css}" + ("" if not delay["value"] else " " + dim(delay))
+
+
+def spring_fields(curve):
+    """Параметры пружины для кода (`x-springs` передней части, `show`): форма токена, SwiftUI, перелёт, время CSS."""
+    return {"dampingRatio": curve.ratio, "stiffness": curve.stiffness, "response": round(curve.response, 4),
+            "bounce": round(curve.bounce, 4), "overshoot": round(curve.overshoot, 4), "settle": f"{curve.settle_ms}ms"}
+
+
+def spring_note(toks, t, src):
+    """Комментарий CSS над переменной пружины: параметры, по которым её пересобирают."""
+    c = spring_curve(*spring_of(src))
+    whose = "" if src is t else f" токена {'.'.join(src.path)}"
+    return (f"пружина{whose}: dampingRatio {num(c.ratio)}, stiffness {num(c.stiffness)} (масса 1, ω "
+            f"{c.omega:.2f} рад/с), перелёт {num(round(c.overshoot * 100, 1))} %, успокоение до 1 % пути — "
+            f"{c.settle_ms} ms")
+
+
 def _dec(x):
     return Decimal(str(x))
 
@@ -941,6 +1206,9 @@ def token_vars(toks, t, mode=None, taken=None):
                 val = css_value(sub[key], v[key])
             out.append((f"{t.name}-{suffix}", val))
         return out
+    src = spring_source(toks, t, mode) if t.type == "transition" else None
+    if src is not None:
+        return [(t.name, spring_css(toks, src))]
     if mode is None or mode not in t.modes():
         ext = _ext_css(t)
         if ext is not None and (mode is None or toks.in_mode(t, mode) == t.value):
@@ -1007,9 +1275,12 @@ CSS_HEAD = ("/* Производный файл: собирает scripts/projec
 
 def build_css(toks):
     taken = {n for t in toks.list for n in var_names(t)}
-    base = []
+    base, notes = [], {}
     for t in toks.list:
         base += token_vars(toks, t, taken=taken)
+        src = spring_source(toks, t) if t.type == "transition" else None
+        if src is not None:
+            notes[t.name] = spring_note(toks, t, src)
     base_map = dict(base)
     modes = toks.mode_names()
     themes = [m for m in modes if m not in DENSITY and m != REDUCED]
@@ -1017,7 +1288,8 @@ def build_css(toks):
     pair = THEME_PAIR[first]
     two = pair in themes
     lines = [CSS_HEAD, ":root {", f"  color-scheme: {f'{first} {pair}' if two else first};"]
-    lines += [f"  {_var(n)}: {v};" for n, v in base]
+    for n, v in base:
+        lines += ([f"  /* {notes[n]} */"] if n in notes else []) + [f"  {_var(n)}: {v};"]
     lines.append("}")
 
     def block(mode):
@@ -1095,10 +1367,13 @@ def in_artifact(t):
 
 
 def front_matter(toks, name, description):
-    colors, typo, rounded, spacing, other = {}, {}, {}, {}, {}
+    colors, typo, rounded, spacing, other, springs = {}, {}, {}, {}, {}, {}
     for t in toks.list:
         if not in_artifact(t):
             continue
+        src = spring_source(toks, t) if t.type == "transition" else None
+        if src is not None:
+            springs[t.name] = spring_fields(spring_curve(*spring_of(src)))
         if t.type == "color":
             colors[t.name] = token_vars(toks, t)[0][1]
         elif t.type == "typography":
@@ -1144,6 +1419,7 @@ def front_matter(toks, name, description):
     section("rounded", rounded)
     section("spacing", spacing)
     section("x-tokens", other)
+    section("x-springs", springs)
     section("x-modes", modes)
     nar = narrow(toks)
     if nar:
@@ -1702,8 +1978,12 @@ def show(prj, as_json=False, out=None):
             modes = {m: token_vars(toks, t, m) for m in t.modes()}
         except (ValueError, KeyError, TypeError) as e:
             base, modes = [(t.name, f"не разрешается: {e}")], {}
-        rows.append({"path": ".".join(t.path), "var": "--" + t.name, "type": t.type, "family": family_of(t),
-                     "value": dict(base), "modes": {m: dict(v) for m, v in modes.items()}})
+        row = {"path": ".".join(t.path), "var": "--" + t.name, "type": t.type, "family": family_of(t),
+               "value": dict(base), "modes": {m: dict(v) for m, v in modes.items()}}
+        src = spring_source(toks, t) if t.type == "transition" else None
+        if src is not None:
+            row["spring"] = dict(spring_fields(spring_curve(*spring_of(src))), source=".".join(src.path))
+        rows.append(row)
     if as_json:
         print(json.dumps({"project": prj.slug, "tokens": rows, "narrow": narrow(toks)}, ensure_ascii=False, indent=1),
               file=out)
@@ -1713,6 +1993,9 @@ def show(prj, as_json=False, out=None):
         print(f"{r['path']:<34} {r['type'] or '?':<11} {(r['family'] or '—'):<10} {vals}", file=out)
         for m, v in r["modes"].items():
             print(f"{'':<34} {'':<11} {'':<10} [{m}] " + "; ".join(f"{k}: {x}" for k, x in v.items()), file=out)
+        if "spring" in r:
+            print(f"{'':<34} {'':<11} {'':<10} [пружина] " + "; ".join(
+                f"{k}: {num(x) if isinstance(x, float) else x}" for k, x in r["spring"].items()), file=out)
 
 
 # ------------------------------------------------------------------ самопроверка
@@ -1760,6 +2043,167 @@ def _selftest_themes(check_):
         check_("две темы брифа сайта на токенах одной тёмной темы и светлый бриф на вид кабинета → по находке, у "
                "кабинета без поверхности", sorted((g[0] or "", g[1]) for g in got) == [("", "warning"),
                                                                                     ("promo", "warning")])
+
+
+def _spring_errors(c, grid=8000):
+    """(отклонение ломаной точек от кривой spring_target, от физики spring_step) на мелкой сетке времени."""
+    dur = c.settle_ms / 1000
+    f, x, pts = spring_target(c.ratio, c.omega, dur), spring_step(c.ratio, c.omega), c.points
+    fit = phys = 0.0
+    j = 0
+    for i in range(grid + 1):
+        u = i / grid
+        while j < len(pts) - 2 and pts[j + 1][0] < u:
+            j += 1
+        (u0, v0), (u1, v1) = pts[j], pts[j + 1]
+        line = v0 + (v1 - v0) * (u - u0) / (u1 - u0)
+        fit, phys = max(fit, abs(line - f(u * dur))), max(phys, abs(line - x(u * dur)))
+    return fit, phys
+
+
+def _selftest_springs(check_, doc):
+    """Пружина: кривая, время успокоения, точки linear(), формы вывода и замечания (ui 08/04 §1)."""
+    import copy
+    import io
+    import tempfile
+    crit, snap = spring_curve(1.0, 700), spring_curve(0.7, 380)
+    vals = [v for _, v in crit.points]
+    check_("пружина ζ = 1: linear() монотонная без перелёта, конец — цель 1; время — успокоение до 1 % пути, вверх до "
+           "10 ms",
+           all(b >= a for a, b in zip(vals, vals[1:])) and max(vals) == 1 and crit.overshoot == 0
+           and crit.css.startswith("linear(0, ") and crit.css.endswith(", 1)") and crit.settle_ms % SPRING_STEP_MS == 0
+           and crit.settle_ms - SPRING_STEP_MS < spring_settle(1.0, crit.omega) * 1000 <= crit.settle_ms
+           and abs(spring_step(1.0, crit.omega)(spring_settle(1.0, crit.omega)) - (1 - SPRING_SETTLE)) < 1e-9)
+    ts, x = spring_settle(0.7, snap.omega), spring_step(0.7, snap.omega)
+    check_("пружина ζ = 0.7, stiffness 380: перелёт точек — перелёт физики 4,6 % в пределах допуска; после времени "
+           "успокоения кривая не выходит из полосы 1 %, перед ним — выходит; CSS — 340 ms",
+           abs(max(v for _, v in snap.points) - 1 - snap.overshoot) <= SPRING_FIT and round(snap.overshoot, 3) == 0.046
+           and snap.settle_ms == 340 and all(abs(x(ts + i / 1000) - 1) <= SPRING_SETTLE + 1e-12 for i in range(2000))
+           and abs(x(ts - 1e-6) - 1) > SPRING_SETTLE - 1e-6)
+    springs = [(0.9, 700), (0.9, 1400), (0.9, 300), (1.0, 1600), (1.0, 3800), (1.0, 800), (0.8, 380), (0.6, 800),
+               (0.8, 200), (0.7, 380), (1.0, 157.9137), (0.85, 157.9137), (1.3, 700), (0.5, 400)]
+    worst = []
+    for z, k in springs:
+        c = spring_curve(z, k)
+        fit, phys = _spring_errors(c)
+        us = [u for u, _ in c.points]
+        worst.append((fit, phys, len(c.points), all(b > a for a, b in zip(us, us[1:])) and c.points[-1] == (1.0, 1.0)))
+    check_(f"точки linear() у {len(springs)} пружин (M3, SwiftUI, передемпфированная, с отскоком): ломаная отходит "
+           f"от кривой не больше {num(SPRING_FIT * 100)} % пути с округлением записи, от физики — не больше "
+           f"{num((SPRING_SETTLE + SPRING_FIT) * 100)} % (плавный остаток в конце); точек не больше "
+           f"{SPRING_POINTS_MAX}, время растёт строго (наибольшее: {num(round(max(w[0] for w in worst) * 100, 3))} %, "
+           f"{max(w[2] for w in worst)} точек)",
+           all(f <= SPRING_FIT and p <= SPRING_SETTLE + SPRING_FIT and n <= SPRING_POINTS_MAX and inc
+               for f, p, n, inc in worst))
+    check_("перевод параметров: ω = √k, response SwiftUI = 2π/ω, bounce = 1 − ζ (с отскоком), 1/ζ − 1 "
+           "(передемпфированная)",
+           abs(snap.omega - 19.4936) < 1e-4 and abs(snap.response - 0.3223) < 1e-4 and abs(snap.bounce - 0.3) < 1e-9
+           and abs(spring_curve(1.3, 700).bounce - (1 / 1.3 - 1)) < 1e-9 and crit.bounce == 0)
+
+    zero = {"value": 0, "unit": "ms"}
+
+    def tr(ms, curve="{motion.easing.entrance}", delay=zero):
+        return {"duration": {"value": ms, "unit": "ms"}, "delay": delay, "timingFunction": curve}
+
+    sd = copy.deepcopy(doc)
+    sd["motion"].update({
+        "easing": {"$type": "cubicBezier", "entrance": {"$value": [0, 0, 0.2, 1]}},
+        "spring": {"$type": "transition",
+                   "snap": {"$value": tr(340), "$extensions": {
+                       EXT_SPRING: {"dampingRatio": 0.7, "stiffness": 380}, EXT_MODES: {"reduced": tr(150)}}},
+                   "late": {"$value": tr(260, delay={"value": 50, "unit": "ms"}), "$extensions": {
+                       EXT_SPRING: {"dampingRatio": 1, "stiffness": 700}, EXT_MODES: {"reduced": tr(150)}}}},
+        "switch": {"$type": "transition", "thumb": {"$value": "{motion.spring.snap}"}}})
+    st = Tokens(sd)
+    scss, sfm = build_css(st), front_matter(st, "Проба", "описание")
+    root = scss.split("\n}\n")[0]
+    check_("CSS пружины: `<успокоение>ms linear(…)` и задержка значения, над переменной — комментарий с параметрами; "
+           "алиас на пружину — та же кривая; в блоке сокращённого движения — переход без пружины",
+           f"  --motion-spring-snap: 340ms {snap.css};" in root
+           and f"  --motion-spring-late: 260ms {crit.css} 50ms;" in root
+           and f"  --motion-switch-thumb: 340ms {snap.css};" in root
+           and "  /* пружина: dampingRatio 0.7, stiffness 380 (масса 1, ω 19.49 рад/с), перелёт 4.6 %, успокоение до "
+               "1 % пути — 340 ms */\n  --motion-spring-snap:" in root
+           and "/* пружина токена motion.spring.snap: " in root
+           and '  :root:not([data-motion="full"]) {\n    --motion-fast: 0ms;\n    --motion-spring-snap: 150ms '
+               'cubic-bezier(0, 0, 0.2, 1);\n    --motion-spring-late: 150ms cubic-bezier(0, 0, 0.2, 1);\n'
+               '    --motion-switch-thumb: 150ms cubic-bezier(0, 0, 0.2, 1);\n' in scss
+           and validate(sd) == [])
+    check_("передняя часть: x-springs — параметры для кода (форма токена, response и bounce SwiftUI, перелёт, время "
+           "CSS), у алиаса — параметры цели; в x-modes.reduced — переход без пружины; в артефакт движение не идёт",
+           "x-springs:\n  motion-spring-snap:\n    dampingRatio: 0.7\n    stiffness: 380\n    response: 0.3223\n"
+           "    bounce: 0.3\n    overshoot: 0.046\n    settle: \"340ms\"\n" in sfm
+           and "  motion-switch-thumb:\n    dampingRatio: 0.7\n" in sfm.split("x-springs:")[1].split("x-modes:")[0]
+           and '    motion-spring-snap: "150ms cubic-bezier(0, 0, 0.2, 1)"' in sfm.split("x-modes:")[1]
+           and "motion" not in artifact_tokens(st, "Проба"))
+    with tempfile.TemporaryDirectory(prefix="ddd-ds-spring-") as td:
+        path = Path(td) / "system.tokens.json"
+        path.write_text(json.dumps(sd, ensure_ascii=False), encoding="utf-8")
+        buf = io.StringIO()
+        show(Project("demo", Path(td), path, Path(td) / "x.css", Path(td) / "DESIGN.md", Path(td) / "art",
+                     Path(td) / "brand.yaml"), as_json=True, out=buf)
+        rows = {r["path"]: r for r in json.loads(buf.getvalue())["tokens"]}
+    check_("show --json: у пружины и у алиаса на неё — параметры и токен-источник",
+           rows["motion.spring.snap"]["spring"] == dict(spring_fields(snap), source="motion.spring.snap")
+           and rows["motion.switch.thumb"]["spring"]["source"] == "motion.spring.snap"
+           and "spring" not in rows["motion.fast"])
+
+    def issues(mutate):
+        d = copy.deepcopy(sd)
+        mutate(d["motion"]["spring"])
+        return [(i.severity, i.message, i.fix) for i in validate(d) if "/spring/" in i.pointer]
+
+    def put(key, **kw):
+        return lambda s: s["snap"]["$extensions"][EXT_SPRING].update(kw) if key is None else \
+            s["snap"]["$extensions"][EXT_SPRING].pop(key)
+
+    def on_duration(s):
+        s["wrong"] = {"$type": "duration", "$value": zero, "$extensions": {EXT_SPRING: {"dampingRatio": 1,
+                                                                                       "stiffness": 700}}}
+
+    errs = [issues(on_duration), issues(put("stiffness")), issues(put(None, dampingRatio=0)),
+            issues(put(None, mass=1.75)), issues(put(None, stiffness=True))]
+    check_("форма пружины — ошибка: у токена не transition, без stiffness, ζ = 0, лишний ключ (mass) с подсказкой "
+           "«масса не пишется», логическое вместо числа",
+           all(len(e) == 1 and e[0][0] == "error" for e in errs) and "только у токена transition" in errs[0][0][1]
+           and "stiffness — число больше нуля" in errs[1][0][1] and "mass — вне формы пружины" in errs[3][0][1]
+           and "масса не пишется" in errs[3][0][2])
+
+    def soft(s):
+        s["snap"]["$extensions"][EXT_SPRING]["dampingRatio"] = 0.5
+
+    def slow(s):
+        s["snap"]["$extensions"][EXT_SPRING].update(dampingRatio=1, stiffness=50)
+
+    def stale(s):
+        s["snap"]["$value"]["duration"]["value"] = 300
+
+    def bare(s):
+        del s["snap"]["$extensions"][EXT_MODES]
+
+    def bouncy_reduced(s):
+        s["snap"]["$extensions"][EXT_MODES]["reduced"]["timingFunction"] = [0.12, 0.4, 0.29, 1.46]
+
+    def css_too(s):
+        s["snap"]["$extensions"][EXT_CSS] = "200ms ease"
+
+    def seconds(s):
+        s["snap"]["$value"]["duration"] = {"value": 0.34, "unit": "s"}
+
+    warns = {n: issues(m) for n, m in (("soft", soft), ("slow", slow), ("stale", stale), ("bare", bare),
+                                       ("bouncy", bouncy_reduced), ("css", css_too), ("seconds", seconds))}
+
+    def has(n, text, fix=""):
+        return any(s == "warning" and text in m and fix in f for s, m, f in warns[n])
+
+    check_("нормы пружины — предупреждения: перелёт больше 10 % (ζ 0.5 — 16.3 %), успокоение дольше 600 ms, "
+           "длительность $value не равна времени успокоения (подсказка — число; 0.34 s — то же, что 340 ms), нет "
+           "значения сокращённого движения, в нём перелёт, расширение css рядом с пружиной; ошибок нет",
+           has("soft", "перелёт 16.3 %") and has("slow", "дольше 600 ms")
+           and has("stale", "длительность `$value` 300 ms, время успокоения пружины 340 ms", '"value": 340')
+           and warns["seconds"] == []
+           and has("bare", "нет значения сокращённого движения") and has("bouncy", "кривая с перелётом")
+           and has("css", "не читается") and not any(s == "error" for w in warns.values() for s, _, _ in w))
 
 
 def _selftest():
@@ -1989,6 +2433,7 @@ def _selftest():
            and "lineHeight: 1.04" in lfm and grow not in lfm
            and [s["lineHeight"] for g in lart["type"]["groups"] for s in g["styles"] if s["name"] == "poster"] == [1.04]
            and clean == [] and len(got) == 1 and "трекинг" in got[0].message and "poster" in got[0].message)
+    _selftest_springs(check_, doc)
     # 2. дефекты формата
     bad = copy.deepcopy(doc)
     bad["color"]["bg"]["$value"] = "#fff"
@@ -2039,8 +2484,14 @@ def _selftest():
     known["color"]["text"]["$extensions"][EXT_LLM] = {"usage": ["body"]}
     known["motion"]["fast"]["$extensions"][EXT_NOTES[1]] = "motion.yaml#fast"
     known["type"]["body"]["$extensions"] = {EXT_FLUID: {"css": clamp}, EXT_ART: {"sample": "Аа"}}
-    check_("известные ключи расширений (modes, llm, reduce, fluid, css, artifact, meta, limits) — 0 замечаний",
-           validate(known) == [] and set(EXT_KNOWN) >= {EXT_MODES, EXT_REDUCE, EXT_CSS})
+    known["motion"]["press"] = {"$type": "transition", "$value": {
+        "duration": {"value": 140, "unit": "ms"}, "delay": {"value": 0, "unit": "ms"},
+        "timingFunction": [0, 0, 0.2, 1]},
+        "$extensions": {EXT_SPRING: {"dampingRatio": 0.9, "stiffness": 1400}, EXT_REDUCE: {
+            "duration": {"value": 100, "unit": "ms"}, "delay": {"value": 0, "unit": "ms"},
+            "timingFunction": [0, 0, 0.2, 1]}}}
+    check_("известные ключи расширений (modes, llm, reduce, fluid, css, spring, artifact, meta, limits) — 0 замечаний",
+           validate(known) == [] and set(EXT_KNOWN) >= {EXT_MODES, EXT_REDUCE, EXT_CSS, EXT_SPRING})
     bad = copy.deepcopy(doc)
     bad["color"]["bg"]["$extensions"][EXT_MODES]["light"] = "{primitive.color.ink}"
     bad["color"]["text"]["$extensions"][EXT_MODES]["light"] = "{primitive.color.paper}"
