@@ -45,10 +45,10 @@
         --promote — draft и assumed → checked у текстов без error проверки (claims, lint, validate — и на статусе
         checked тоже), страница — checked, когда проверены все её выбранные тексты и error нет; --all-variants —
         альтернативы «как выбранные», только отчёт: записи --update — у выбранных текстов
-  export DECK --page ID --stage directions|wireframe|mockup [--out DIR] [--facts F] [--facts-scope all|used]
+  export DECK --page ID --stage directions|mockup [--out DIR] [--facts F] [--facts-scope all|used]
         выгрузка во вход холста: DIR/pages/<page-id>/copy.md (тексты статуса этапа) и DIR/facts.md («Факты», «Нет»,
-        «Нельзя утверждать»); слот без текста статуса этапа — находка COPY-D-STAGE (макет — error, вайрфрейм и
-        направления — warning); по умолчанию DIR — $DDD_HOME/out/text/export
+        «Нельзя утверждать»); слот без текста статуса этапа — находка COPY-D-STAGE (макет — error, направления —
+        warning); по умолчанию DIR — $DDD_HOME/out/text/export
   import-copy COPY.md --deck DECK --page ID -o OUT [--choose] [--date ГГГГ-ММ-ДД]
         приём правок текста с холста: изменённый текст слота — новый вариант source: customer (draft); --choose — сразу
         выбран, страница возвращается в draft; тексты холста без слота плана — вопрос «перенести в план?»
@@ -3045,8 +3045,8 @@ def export_copy_md(deck, page, stage, schema=None):
     """Тексты страницы для этапа холста. → (copy.md, строки [(секция, слот, статус)], пробелы [находка]). В copy.md —
     выбранный текст, если его статус разрешён этапом (x-canvas-map copy_md.stage_statuses); на этапе directions — только
     заголовок и кнопка первого экрана; alt, подписи и строки в картинках не выгружаются. Слот без текста статуса этапа в
-    файл не пишется: пробел — находка COPY-D-STAGE (строка пробелов INPUT.md; на макете — error, на вайрфрейме и
-    направлениях — warning)."""
+    файл не пишется: пробел — находка COPY-D-STAGE (строка пробелов INPUT.md; на макете — error, на направлениях —
+    warning)."""
     rules = copy_md_rules(schema)
     allowed = rules['stage_statuses'].get(stage)
     if allowed is None:
@@ -3167,7 +3167,7 @@ def never_rows(facts, today, lang):
     return rows
 
 
-def export_facts_md(facts, today, lang, page=None, used=None, stage='wireframe', product_name=''):
+def export_facts_md(facts, today, lang, page=None, used=None, stage='mockup', product_name=''):
     """facts.md входа холста: «Факты» (публикуемые по publish_filter; демо-данные — с пометкой), «Нет» (пробелы и
     непубликуемые факты заглушкой), «Нельзя утверждать». → (текст, сводка {published, hidden, missing, never_rows,
     demo, status})."""
@@ -3232,9 +3232,8 @@ def section_job(section, deck, page, facts, with_facts=True):
 def export_canvas(data, ctx, out_dir, page_id, stage, facts_scope='all'):
     """Выгрузка страницы во вход холста: out_dir/pages/<page-id>/copy.md и out_dir/facts.md. → (Report, сводка).
     Находки: validate deck (формат, статусы, стык), пробелы текстов этапа (COPY-D-STAGE: макет берёт литералы
-    утверждённого copy deck — error; на вайрфрейме и направлениях — warning, пробел уходит строкой в INPUT.md), статус
-    файла фактов (COPY-D-FACTS-STATUS: вход берёт факты confirmed — на вайрфрейме warning, на макете error), демо-данные
-    (info)."""
+    утверждённого copy deck — error; на направлениях — warning, пробел уходит строкой в INPUT.md), статус файла фактов
+    (COPY-D-FACTS-STATUS: вход берёт факты confirmed — на направлениях warning, на макете error), демо-данные (info)."""
     rep = Report()
     deck = deck_root(data)
     validate(data, ctx, rep, final=False)
@@ -3248,7 +3247,7 @@ def export_canvas(data, ctx, out_dir, page_id, stage, facts_scope='all'):
     copy_md, rows, gaps = export_copy_md(deck, page, stage, ctx.schema)
     for g in gaps:
         rep.add('export', 'error' if stage == 'mockup' else 'warning', 'COPY-D-STAGE', g['path'], g['why'],
-                'Текст этапа: вайрфрейм — assumed · checked, макет — approved (x-canvas-map copy_md).')
+                'Текст этапа: направления — assumed · checked · approved, макет — approved (x-canvas-map copy_md).')
     facts = ctx.facts
     used = used_fact_ids(deck, page, facts) if (facts and facts_scope == 'used') else None
     facts_md, fsumm = export_facts_md(facts, ctx.today, lang, page, used, stage, deck.get('product_name') or '')
@@ -4253,7 +4252,7 @@ def main(argv=None):
     p = sp.add_parser('export', help='выгрузка во вход холста: pages/<page-id>/copy.md и facts.md')
     common(p)
     p.add_argument('--page', help='id страницы (у copy deck с одной страницей — необязательно)')
-    p.add_argument('--stage', required=True, choices=['directions', 'wireframe', 'mockup'], help='этап холста: статусы текстов — x-canvas-map copy_md')
+    p.add_argument('--stage', required=True, choices=['directions', 'mockup'], help='этап холста: статусы текстов — x-canvas-map copy_md')
     p.add_argument('--out', help='папка входа (по умолчанию — $DDD_HOME/out/text/export)')
     p.add_argument('--facts-scope', choices=['all', 'used'], default='all', help='all — все публикуемые факты; used — только из текстов страницы')
     p = sp.add_parser('import-copy', help='правки текста с холста: copy.md → варианты source: customer')
@@ -4427,8 +4426,10 @@ def selftest():
               all('claims_allow' in defs[k]['properties'] for k in ('slot', 'meta', 'page'))
               and {'rule', 'reason', 'by', 'value', 'fragment'} <= set(defs['claims-allow']['items']['properties']))
         cmr = copy_md_rules(schema)
-        check('схема: x-canvas-map copy_md — статусы этапов (вайрфрейм — assumed и checked, макет — approved)',
-              {'assumed', 'checked'} <= set(cmr['stage_statuses']['wireframe']) and cmr['stage_statuses']['mockup'] == ['approved'], cmr)
+        check('схема: x-canvas-map copy_md — статусы этапов (направления и подача — assumed и checked, макет — approved)',
+              set(cmr['stage_statuses']) == {'directions', 'treatment', 'mockup'}
+              and all({'assumed', 'checked'} <= set(cmr['stage_statuses'][s]) for s in ('directions', 'treatment'))
+              and cmr['stage_statuses']['mockup'] == ['approved'], cmr)
         check('схема: прежней карты проекции нет', not any(k.startswith('x-k' + 'imi') for k in schema), [k for k in schema if k.startswith('x-')])
         # --- схема: пример и отрицательные случаи; паритет с jsonschema
         sv = SubsetValidator(schema)
@@ -4867,15 +4868,16 @@ def selftest():
         _st_checked(pg['sections'][0]['slots'][0], 'Ремонт квартир под ключ', 'approved')
         pg['sections'][0]['slots'][1]['variants'][0]['status'] = 'assumed'
         pg['sections'][0]['slots'][2]['variants'][0]['status'] = 'checked'
-        c_md, rows, gaps = export_copy_md(deck_root(d), pg, 'wireframe', schema)
-        check('выгрузка wireframe: approved, assumed и checked — в copy.md, draft — пробел этапа',
-              ('hero', 'h1', 'approved') in rows and ('hero', 'lead', 'assumed') in rows and ('hero', 'cta', 'checked') in rows
-              and any(g['path'] == 'home/faq/q1' for g in gaps), (rows, [g['path'] for g in gaps]))
-        check('выгрузка: alt и строки в картинке не идут в copy.md', 'alt-hero' not in c_md and '[h1] approved: Ремонт квартир под ключ' in c_md, c_md[:300])
-        c_md2, rows2, gaps2 = export_copy_md(deck_root(d), pg, 'mockup', schema)
-        check('выгрузка mockup: только approved', rows2 == [('hero', 'h1', 'approved')] and any(g['path'] == 'home/hero/lead' for g in gaps2), (rows2, gaps2[:2]))
+        _st_checked(pg['sections'][0]['slots'][3], 'Прораб с рулеткой в пустой комнате', 'approved')
+        c_md, rows, gaps = export_copy_md(deck_root(d), pg, 'mockup', schema)
+        check('выгрузка mockup: в copy.md — только approved; assumed, checked и draft — пробел этапа',
+              rows == [('hero', 'h1', 'approved')] and {'home/hero/lead', 'home/hero/cta', 'home/faq/q1'} <= {g['path'] for g in gaps},
+              (rows, [g['path'] for g in gaps]))
+        check('выгрузка: alt и строки в картинке не идут в copy.md, и утверждённые тоже',
+              'alt-hero' not in c_md and 'Прораб с рулеткой' not in c_md and '[h1] approved: Ремонт квартир под ключ' in c_md, c_md[:300])
         c_md3, rows3, _g3 = export_copy_md(deck_root(d), pg, 'directions', schema)
-        check('выгрузка directions: заголовок и кнопка первого экрана', {r[1] for r in rows3} == {'h1', 'cta'}, rows3)
+        check('выгрузка directions: заголовок и кнопка первого экрана, статусы assumed · checked · approved',
+              rows3 == [('hero', 'h1', 'approved'), ('hero', 'cta', 'checked')], rows3)
         secs_p, notes_p = parse_copy_md(c_md)
         check('copy.md: разбор выгрузки — те же секции, слоты, статусы и тексты', [(s['section_id'], sl['slot_id'], sl['status']) for s in secs_p for sl in s['slots']] == rows and not notes_p, (secs_p, notes_p))
         rt = render_copy_md([{'section_id': 'hero', 'slots': [{'slot_id': 'body', 'status': 'assumed', 'text': 'Абзац один.\nАбзац два.'}]}, {'section_id': None, 'slots': [{'slot_id': None, 'label': 'плашка', 'text': 'Новинка'}]}])
@@ -4898,8 +4900,9 @@ def selftest():
         check('facts.md: «Нельзя утверждать» — строка проекта и умолчания без снимающего факта', 'здоровье и зрение' in fmd and 'Рейтинги и звёзды' not in fmd and 'Отзывы, цитаты' in fmd, fmd.split('## Нельзя утверждать')[1][:300])
         check('facts.md: нет остатков шаблона', not re.search(r'\{\{|\{#|<UNSET', fmd + c_md))
         out_dir = os.path.join(td, 'input')
-        rep_e, summ_e = export_canvas(d, ctx, out_dir, 'home', 'wireframe')
-        check('export: файлы pages/<page-id>/copy.md и facts.md, пробел этапа — COPY-D-STAGE warning, факты не confirmed — warning',
+        rep_e, summ_e = export_canvas(_st_deck(), ctx, out_dir, 'home', 'directions')
+        check('export directions: файлы pages/<page-id>/copy.md и facts.md, пробел этапа (черновик заголовка) — COPY-D-STAGE warning, '
+              'факты не confirmed — warning',
               summ_e and os.path.exists(os.path.join(out_dir, 'pages', 'home', 'copy.md')) and os.path.exists(os.path.join(out_dir, 'facts.md'))
               and any(f['rule'] == 'COPY-D-STAGE' and f['level'] == 'warning' for f in rep_e.findings)
               and any(f['rule'] == 'COPY-D-FACTS-STATUS' and f['level'] == 'warning' for f in rep_e.findings), (summ_e, [(f['rule'], f['level']) for f in rep_e.findings if f['tool'] == 'export']))

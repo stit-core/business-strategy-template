@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Все проверки примеров copy deck базы (kb/text/10-templates-recipes/examples/*.yaml) по порядку аудита текстов:
 claims_check.py --legal-category → copy_lint.py → copydeck.py check → copydeck.py validate (+ validate на Python
-окружения скилла с jsonschema) → copydeck.py export (вход холста этапа wireframe: pages/<page-id>/copy.md и facts.md).
+окружения скилла с jsonschema) → copydeck.py export (вход холста этапа directions: pages/<page-id>/copy.md и facts.md).
 JSON и выгрузки — в $DDD_HOME/out/text/run_checks/, сводка — таблицей Markdown (для 02-examples-ru.md и
 03-examples-en.md) и summary.json. Код выхода: 0 — ни одной ошибки; 1 — есть ошибки (error в выводе проверок); 2 —
 ошибка вызова (нет файла примера, он не copy deck, ключ --md без файла) или проверка не отработала (утилита завершилась
@@ -15,7 +15,8 @@ EX = os.path.join(ROOT, '10-templates-recipes', 'examples')
 OUT = str(kbpaths.out('text', 'run_checks'))
 T = str(kbpaths.scripts('text'))
 TODAY = '2026-09-24'   # дата сверки примеров: сроки и «по состоянию на» демо-фактов считаются от неё
-STAGE = 'wireframe'    # этап выгрузки во вход холста: тексты assumed · checked · approved
+STAGE = 'directions'   # этап выгрузки во вход холста: тексты первого экрана assumed · checked · approved — примеры
+                       # базы черновики агента (assumed), макет берёт только approved
 VENV = kbpaths.python()
 
 
@@ -92,7 +93,7 @@ def main(argv):
                     f"{cell(r['jsonschema']) if 'jsonschema' in r else '—'} | {cell(r['export'])} |")
         print(name, {k: (v[0], v[2]) for k, v in r.items()}, flush=True)
     head = ['| Пример | claims_check (error / warning / info) | copy_lint | copydeck check | copydeck validate | validate + jsonschema | '
-            'copydeck export (wireframe) |',
+            'copydeck export (directions) |',
             '|---|---|---|---|---|---|---|']
     table = '\n'.join(head + rows) + '\n'
     print(table)

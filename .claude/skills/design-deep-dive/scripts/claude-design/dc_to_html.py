@@ -69,10 +69,9 @@ DC_HREF = re.compile(r"^([^#?]*?)\.dc\.html((?:[?#].*)?)$")
 EVENT_ATTR = re.compile(r"^on[a-z]+$", re.I)
 TIMEOUT_NODE = 60
 
-# Этап страницы холста по её id и имени (протокол § Артефакты проекта: «Направления», «Вайрфрейм», «Макет и прототип»,
-# у кабинета — «Состояния»); неизвестное имя — макет.
-STAGE_RX = (("directions", re.compile(r"направл|direction|moodboard|мудборд|style[- ]?tile|карточк", re.I)),
-            ("wireframe", re.compile(r"вайрфрейм|wireframe|wire|каркас", re.I)))
+# Этап страницы холста по её id и имени (протокол § Артефакты проекта: «Направления», «Макет и прототип», у кабинета —
+# «Состояния»); неизвестное имя — макет.
+STAGE_RX = (("directions", re.compile(r"направл|direction|moodboard|мудборд|style[- ]?tile|карточк", re.I)),)
 
 NODE_HARNESS = r"""
 const vm = require('vm');
@@ -600,7 +599,7 @@ def artboard_files(folder, canvas=None):
 
 
 def stage_of(board, canvas):
-    """Этап страницы холста, на которой лежит артборд: directions · wireframe · mockup."""
+    """Этап страницы холста, на которой лежит артборд: directions · mockup."""
     if not board or not canvas:
         return "mockup"
     pid = str(board.get("page") or "")
@@ -797,7 +796,7 @@ def selftest():
         print("FAIL нет Node: renderVals() артбордов не посчитать")
         return 1
     copies = {name: text for _ab, name, text, _b, _n in build_copies(src)}
-    check("восемь артбордов → восемь копий", sorted(copies), sorted(copy_name(p) for p in src.glob("*.dc.html")))
+    check("шесть артбордов → шесть копий", sorted(copies), sorted(copy_name(p) for p in src.glob("*.dc.html")))
     main = copies["Main.html"]
     for bad in ("{{", "<x-dc", "<helmet", "data-dc-script", "support.js", "DCLogic"):
         check(f"Main.html: нет «{bad}»", bad in main, False)
@@ -851,7 +850,7 @@ def selftest():
         argv = [fx.slug, "promo", "--repo", str(fx.root)]
         rc_b = _run(["build"] + argv + ["--json"])
         check("фикстура canvas: build — код 0", rc_b[0], 0)
-        check("фикстура canvas: build — восемь копий", len(json.loads(rc_b[1])["written"]), 8)
+        check("фикстура canvas: build — шесть копий", len(json.loads(rc_b[1])["written"]), 6)
         check("фикстура canvas: check после build — 0 находок", _run(["check"] + argv + ["--json"]), (0, ""))
         html_dir = docpaths.design(fx.slug, "canvas-html", surface="promo", repo=fx.root)
         (html_dir / "Main.html").write_text((html_dir / "Main.html").read_text(encoding="utf-8").replace(

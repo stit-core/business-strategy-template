@@ -1,6 +1,6 @@
 # Фикстура canvas — иллюстрация для самопроверок утилит холста scripts/claude-design/ (dc_to_html, kit_manifest,
 # literal_tokens, dc_texts): лендинг promo фикстуры minimal и свои файлы — исходники холста и артефакт ДС (демо
-# «Спица»: восемь артбордов на трёх страницах холста, canvas.json, tokens.json артефакта с темами). Статичных копий и
+# «Спица»: шесть артбордов на двух страницах холста, canvas.json, tokens.json артефакта с темами). Статичных копий и
 # kit.json нет. Формат манифеста — докстринг fixture_project.py.
 example: true
 description: лендинг promo с исходниками холста и артефактом ДС демо «Спица»; копий и kit.json нет

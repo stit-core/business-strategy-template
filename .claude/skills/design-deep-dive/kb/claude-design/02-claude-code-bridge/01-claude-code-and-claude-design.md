@@ -45,7 +45,7 @@
     `allow_design_sync`; без `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC`; `/design` canvas — Claude Code ≥ 2.1.265 (док.); в CI и
     hosted-сеансах — только с сохранённым `/design login`. `[документация]` `[исходник]` → §9.6
 16. **Знай: лимиты общие** — Claude Design, Claude Code и артефакты едят один пул подписки. `[документация]` → §9.6
-17. **Делай сейчас (схема А)**: вайрфреймы и прототипы — Claude Code + `frontend-design` + наши базы с локальными кадрами; Claude
+17. **Делай сейчас (схема А)**: направления, макеты и прототипы — Claude Code + `frontend-design` + наши базы с локальными кадрами; Claude
     Design — руками заказчика для холста и вариантов; результат — zip-бандлом в репозиторий. `[мнение базы]` → §10
 18. **Делай, когда включат types или hub (схема Б)**: Claude Code создаёт дизайн в Claude Design сам (`/design` или `ClaudeDesign`),
     заказчик правит на холсте, Claude Code читает обратно (`read_file`, `render_preview`). `[исходник]` `[не проверено]` → §10
@@ -412,12 +412,12 @@ canvas (редактор Claude Design в артефакте). Исполнит�
 | Локальные выключатели | `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC` (гасит всё), `CLAUDE_CODE_DISABLE_BUNDLED_SKILLS` / `disableBundledSkills` (→ только consent), `enableArtifact:false` / `CLAUDE_CODE_DISABLE_ARTIFACT`, `CLAUDE_CODE_ARTIFACT_AUTO_OPEN=0`, `disableDeepLinkRegistration` | `[документация]` `[исходник]` |
 | Лимиты и данные | общий пул с чатом и Claude Code; Claude Design без data residency; standalone без audit logs | `[документация]` |
 
-## 10. Схемы связки для конвейера «бриф → вайрфрейм → макет → прототип → код»
+## 10. Схемы связки для конвейера «бриф → направления → макет → прототип → код»
 
 | | А. Без Claude Design (работает сейчас) | Б. Claude Code пишет в Claude Design (после включения types/hub) | В. Заказчик в Claude Design, Claude Code — ДС и приёмка (сейчас) |
 |---|---|---|---|
 | Бриф | Claude Code (cd 06/01, ui 14/09) | Claude Code | Claude Code: промт goal/layout/content/audience |
-| Вайрфрейм | Claude Code: 3–5 low-fi направлений HTML, публикация артефактом для выбора | `/design <бриф>` (человек) или `ClaudeDesign` (модель): 2–4 low-fi артборда | заказчик вставляет промт в claude.ai/design, «2–3 alternative layouts» |
+| Направления | Claude Code: 3–5 low-fi направлений HTML, публикация артефактом для выбора | `/design <бриф>` (человек) или `ClaudeDesign` (модель): 2–4 low-fi артборда | заказчик вставляет промт в claude.ai/design, «2–3 alternative layouts» |
 | Макет | Claude Code + `frontend-design` + наши нормы; глаза — `shot.py`, `ui_audit` | Claude Code на ДС проекта; глаза — `render_preview` (hub) | агент приложения на ДС из `/design-sync`; правки заказчика — чат, комментарии, холст |
 | Прототип | код в репо (React/HTML) | заказчик правит на холсте; Claude Code читает (`import`, `read_file`, `Artifact read`) | handoff: «Download zip instead» → репо |
 | Код | Claude Code, проверки | Claude Code, проверки | Claude Code: реализация в стеке, свои кадры, приёмка |

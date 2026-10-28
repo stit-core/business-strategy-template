@@ -921,7 +921,7 @@ x-canvas-map:
   # Проекция facts.yaml во вход холста (references/claude-design.md § 6): файл facts.md поверхности — «Факты» (публикуемые),
   # «Нет» (пробелы и непубликуемые факты заглушками), «Нельзя утверждать». Выгрузка — copydeck.py export (facts.md).
   source: facts
-  stages: [wireframe, mockup]
+  stages: [mockup]
   files:
     facts.md:
       "Факты":

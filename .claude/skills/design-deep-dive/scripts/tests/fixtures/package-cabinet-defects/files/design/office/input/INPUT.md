@@ -24,13 +24,13 @@ check:
   warning: 1
   hint: 0
 files:
-  ACCEPTANCE.md: sha256:2ef8fa87fa9e91c57bcebcf02ec12c8d1d6ba9b00468c60ed7d6bcbecef9e141
+  ACCEPTANCE.md: sha256:880a03ce158f437a70d9302996a8a8752c1387f3db29299853f6626368582121
   assets.md: sha256:a639c884bedb7f5b4700e4bd3596e31300b46c0c2907362cd7c79aaf88149206
   brief.yaml: sha256:9c293891fdc9e7dcf6b31005ab98f8f7e53cb5cf225539b6d02c42ee52d8ee46
   contract.md: sha256:0dbacd12e0d58c123db1d6fb714556763b9374dd870947d9b0bbc6a9ee582fb7
   copy.md: sha256:456134aab65cafd47882c90ebe6414b6e9284975c2257a982e503b0a4e5f637c
   demo-data.json: sha256:8ad5dbea9e6ed789b5dac16dea5b10a576c3f9e175371612108095d6c7042315
-manifest: sha256:07aed09f7feb30a8fa52348de78dedc38473686de1f1b7321937f00c606888e6
+manifest: sha256:a2fed8e9f56e04f0d774f07769aafa2f610094e9598f8bd9b3313a5b54c93779
 ---
 # Вход холста — `office` (web · app), этап `mockup`
 
@@ -71,7 +71,7 @@ manifest: sha256:07aed09f7feb30a8fa52348de78dedc38473686de1f1b7321937f00c606888e
 | screens | `docs/projects/otves-office/screens/office/texts.md` | — | `sha256:3d3c2bd1084e1cfa0faa333734834fdb497e558ced21b457e43b66859e0d3ef2` |
 | user | `docs/projects/otves-office/user.md` | — | `sha256:f6a3d8a78c812a87cb1f62e4673ec8329d5cee88c9a0a5ec97aefc1827958e84` |
 | vision | `docs/projects/otves-office/vision.md` | draft | `sha256:fe81774f1e9ad71dfff632bd52ef7afab2f2b37a1cf93d00e0b42c56ee930a5d` |
-| acceptance-criteria | `kb/common/acceptance-criteria.yaml` | база | `sha256:a40390c326670dacd5ae598a4f84860e53c0028cd4429f05c4f2ef11f8dcc0d5` |
+| acceptance-criteria | `kb/common/acceptance-criteria.yaml` | база | `sha256:a889792f43d90332f785af1511f323b6f32b99918173cf342717aac4162346fd` |
 | acceptance-widths | `kb/common/acceptance-widths.yaml` | база | `sha256:d4526b119a7da5391670c82cbd16e7458455c5fd7b84cf72c11bb0add78a2d7c` |
 | components | `kb/common/components.yaml` | база | `sha256:f343a9a53a00a0c05bea833c9b90d4ab4e582a08a6d80ecbfc3e4a710cac6e66` |
 | tells | `kb/common/tells.yaml` | база | `sha256:d91a66d002b618398844833bc6d1eeae835cb2e4e0b54261219db83458ca5a8e` |
@@ -102,7 +102,7 @@ manifest: sha256:07aed09f7feb30a8fa52348de78dedc38473686de1f1b7321937f00c606888e
 
 ## Итог проверки
 
-0 error · 1 warning · 0 hint — вход без ошибок: этап можно публиковать, когда готов его вход по phases.md (принятый вайрфрейм или его пропуск, ДС в холсте); предупреждения — доклад заказчику, решает он.
+0 error · 1 warning · 0 hint — вход без ошибок: этап можно публиковать, когда готов его вход по phases.md (ДС в холсте); предупреждения — доклад заказчику, решает он.
 
 Блок PRE ux 12/02 §2: без незаполненных пунктов.
 

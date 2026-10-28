@@ -2,7 +2,7 @@
 # Производный файл: собирает `scripts/project/ready.py build otves-remont-nn promo` из файлов стратегии; руками не правится.
 # Форма — docs/projects/_template/design/_template/ready.yaml.
 
-skill_version: 0.2.2
+skill_version: 0.3.0
 example: true   # пометка иллюстрации фикстуры: манифест собран на чистой основе package-landing
 surface: promo
 type: web

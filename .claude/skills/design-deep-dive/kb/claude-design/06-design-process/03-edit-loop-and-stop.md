@@ -135,7 +135,7 @@ Keep: что проверено и хорошо. Ничего сверх спи�
 ## 7. Паспорт итерации (`review/iter-NN/NOTES.md`)
 
 ```yaml
-iteration: 3                           # kind: directions | wireframe | mockup | fix | mobile | motion | audit | stop
+iteration: 3                           # kind: directions | mockup | fix | mobile | motion | audit | stop
 model: {id: claude-opus-5-5, effort: xhigh}
 artifacts: {design: {url, version, release}, design_system: {url, version, release}, contract: 0.2.47}
 synced: {read_at: "…", merged_customer_edits: 4, force: false}

@@ -341,9 +341,9 @@ def selftest():
         check("манифест — заголовок, источник, ширины артбордов и кадры; полей кадров вылета и классов нет",
               sorted(man), ["artboards", "source", "title", "widths"])
         check("ширины манифеста — артборды файла ширин (ряды canvas.html)", man["widths"], aw["artboards"])
-        check("кадры — восемь статичных копий в порядке canvas.json, на ширине рамки",
+        check("кадры — шесть статичных копий в порядке canvas.json, на ширине рамки",
               (len(fr), [(f["file"], f["w"]) for f in fr][:3]),
-              (8, [("Main.html", 1440), ("Landing-Phone.html", 390), ("Booking.html", 1440)]))
+              (6, [("Main.html", 1440), ("Landing-Phone.html", 390), ("Booking.html", 1440)]))
         check("HTML без строки происхождения — не кадр", any(f["file"] == "home.html" for f in fr), False)
         check("вылета на 320 нет: ширины кадров — ширины рамок копий", sorted({f["w"] for f in fr}), [390, 880, 1440])
         check("статичная Booking — тёмная по твику", next(f["theme"] for f in fr if f["file"] == "Booking.html"), "dark")

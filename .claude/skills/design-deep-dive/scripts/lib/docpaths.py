@@ -27,7 +27,7 @@
 Разбор — `parser()` и `parse()`: ошибка вызова или окружения (нет корня, проекта, поверхности) — код выхода 2.
 
     ap = docpaths.parser("canvas_input", "Вход холста …", surface="required", accept=lambda s: s.design,
-                         stages=("directions", "treatment", "wireframe", "mockup", "motion"))
+                         stages=("directions", "treatment", "mockup", "motion"))
     ap.add_argument("--width", type=int)          # свои ключи утилиты
     call = docpaths.parse(ap)                     # call.command, call.slug, call.surf, call.repo, call.out, call.json …
 
@@ -604,7 +604,7 @@ def _selftest():
                 check("status(): copy deck — общий статус страниц", status(deck) == "approved")
                 check("корень без docs/projects — DocPathError", _raises(lambda: root(td)))
             check("rel(): путь от корня", rel(facts(slug, repo=r), r) == f"docs/projects/{slug}/facts.yaml")
-            ap = parser("t", "проверка", surface="required", stages=("wireframe", "mockup"), accept=lambda s: s.design)
+            ap = parser("t", "проверка", surface="required", stages=("directions", "mockup"), accept=lambda s: s.design)
             call = parse(ap, ["build", slug, "promo", "--repo", str(r), "--stage", "mockup", "--json"])
             check("parse(): build <slug> <surface> --stage --json",
                   (call.command, call.slug, call.surf.slug, call.stage, call.json, call.repo) ==

@@ -2,7 +2,7 @@
 # Стенд — 06-design-process/06-test-stand.md §2; поля брифа — 06-design-process/01-brief-and-questions.md §7.
 # Что убрать или заменить при адаптации:
 #   1. Блок `run` (harness, model, effort, timeout_s, prompt_variant B1) и `build.skill` — параметры другого исполнителя: убрать
-#      (модель — Opus 5.5; «план и вопросы до сборки» — страницы «Направления» и «Вайрфрейм» холста).
+#      (модель — Opus 5.5; «план и вопросы до сборки» — страница «Направления» холста).
 #   2. `app.fixtures_source: src/fixtures.json` → `fixtures.json` рядом с этим файлом (скопирован без правок).
 #   3. `references[].source` ведут на синтетические заглушки src/refs (не копировались): заменить реальными кадрами (плотность
 #      таблицы, master-detail) с `measured` из `measure_ui.py`.

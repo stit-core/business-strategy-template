@@ -56,8 +56,9 @@ anthropic.com — анонс Claude Design (17.04), 9 анонсов модел�
     шаблон артефактов в любом чате, отдельные Claude Slides. `[документация]` → §11
 21. Не делай: не проси логотипы и фотореалистичные картинки — «Claude Design doesn't have an image model and isn't built for image
     generation»; приноси свои ассеты. `[мнение вендора]` → §3, §9
-22. Делай: левая часть процесса — вайрфреймы и много вариантов («Ask for ten options, then remix»), правая — Claude Code: «if you're
-    shipping production software, stick with Claude Code». `[мнение вендора]` → §9
+22. Знай: вендор отдаёт Claude Design раннюю разведку — вайрфреймы и много вариантов («Ask for ten options, then remix»), а продакшн —
+    Claude Code: «if you're shipping production software, stick with Claude Code». Порядок этапов скилла — `../../../references/phases.md`.
+    `[мнение вендора]` → §3, §9
 
 ## 1. Что это, статус, тарифы, где живёт
 

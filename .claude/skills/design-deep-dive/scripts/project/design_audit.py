@@ -43,8 +43,8 @@ ad_check: warning, error у закрытой арт-дирекции); шкал�
 макета: разрешены» в ARTIFACTS.md): копии нужны скриптам проверок, а оригинал макета — холст в claude.ai; без строки
 копий может не быть, и это не находка и не заметка; манифест кадров kit.json в git не хранится и не сверяется.
 R-COV-002 — error под гейтом 2: у страницы строка «Приёмка» в REVIEW.md или она в партии действующего входа холста
-(поле units INPUT.md или папка pages/<id>/) этапа mockup или motion; в партии входа вайрфрейма или направлений —
-warning (тексты — до макета); закрытый copy deck без текста в слоте — error; слот без текста у образца шаблона
+(поле units INPUT.md или папка pages/<id>/) этапа mockup или motion; в партии входа направлений или подачи — warning
+(тексты — до макета); закрытый copy deck без текста в слоте — error; слот без текста у образца шаблона
 коллекции (страница copy deck с site_page_id = id плана) — warning: запись коллекции может слот не вести. Одобрение
 единицы (R-MAT-004) сверяется с отпечатком `ready`: артборды и источники единицы. Непройденный пункт S и исключение
 ворот (R-MAT-005) — по единице: исключение `x-gate-exception` плана снимает пункт только у своей страницы.
@@ -447,7 +447,7 @@ class Audit:
     def page_has_input(self, s, pid):
         """Страница передана в дизайн — (причина, гейт 2) или None. Гейт 2 (чистовой макет — только на утверждённых
         текстах) — у страницы строка «Приёмка» в REVIEW.md или она в партии действующего входа холста (units INPUT.md
-        или папка pages/<id>/) этапа mockup или motion; партия входа вайрфрейма или направлений — передача до гейта."""
+        или папка pages/<id>/) этапа mockup или motion; партия входа направлений или подачи — передача до гейта."""
         if pid in self.review(s)[1]:
             return "строка «Приёмка» в REVIEW.md", True
         if (self.dsurf(s, "input") / "pages" / pid).is_dir() or pid in self.input_units(s):
@@ -3117,7 +3117,7 @@ def _selftest():
             return [(f.rule, f.severity, f.ref, f.message)
                     for f in Audit(slug, root, today=today, run_tools=False).run().rep.items]
 
-        ci("--stage", "wireframe")
+        ci("--stage", "mockup")
         cp = docpaths.design(slug, "canvas-project", surface="promo", repo=root)
         cp.mkdir(parents=True)
         boards = {"home": "Home.dc.html", "spasibo": "Spasibo.dc.html"}
@@ -3132,7 +3132,7 @@ def _selftest():
                             f"{b.fingerprint(u, [a])} | — |\n" for u, a in boards.items()))
         (rv / "REVIEW.md").write_text(accept, encoding="utf-8")
         art.write_text(at.replace("| 2026-09-29 | аналитик |", "| 2026-10-02 | аналитик |"), encoding="utf-8")
-        ci("--stage", "wireframe")
+        ci("--stage", "mockup")
         got0 = found()
         dk = docpaths.site(slug, "promo", "copy", "spasibo.yaml", repo=root)
         dkt = dk.read_text(encoding="utf-8")
@@ -3195,7 +3195,7 @@ def _selftest():
               asked[0] == {"error"} and asked[1] == {"claude-design/dc_to_html.py"}
               and not_asked == (set(), set(), []) and asked_read and not not_asked_read)
         # R-COV-002 по этапу: error под гейтом 2 — партия входа mockup или motion (units, pages/<id>/) или строка
-        # «Приёмка»; партия входа вайрфрейма — warning
+        # «Приёмка»; партия входа направлений — warning
         (rv / "REVIEW.md").unlink()
         shutil.rmtree(cp.parent)
         hp = docpaths.site(slug, "promo", "plans", "home.yaml", repo=root)
@@ -3208,7 +3208,7 @@ def _selftest():
                                                                                  run_tools=False).run().rep.items
                     if f.rule == "R-COV-002"}
 
-        ci("--stage", "wireframe", "--page", "home")
+        ci("--stage", "directions", "--page", "home")
         a1 = cov2()
         ci("--stage", "mockup", "--page", "home")
         a4 = cov2()
@@ -3221,11 +3221,11 @@ def _selftest():
         dk.write_text(dkt, encoding="utf-8")
         shutil.rmtree(docpaths.design(slug, "input", surface="promo", repo=root))
         sev = {k: {u: v[0] for u, v in a.items()} for k, a in (("a1", a1), ("a2", a2), ("a3", a3), ("a4", a4))}
-        check("R-COV-002 по этапу: партия входа вайрфрейма (--page home) — warning «тексты — до макета (гейт 2)», "
-              "партия макета (mockup --page home) — error, вне партии (spasibo) — warning; строка «Приёмка» — error; "
-              "вход без папок pages/ (motion --page spasibo) — error только у страницы из units",
+        check("R-COV-002 по этапу: партия входа направлений (directions --page home) — warning «тексты — до макета "
+              "(гейт 2)», партия макета (mockup --page home) — error, вне партии (spasibo) — warning; строка «Приёмка» "
+              "— error; вход без папок pages/ (motion --page spasibo) — error только у страницы из units",
               sev["a1"] == {"home": "warning", "spasibo": "warning"}
-              and "этапа wireframe: тексты — до макета (гейт 2)" in a1["home"][1]
+              and "этапа directions: тексты — до макета (гейт 2)" in a1["home"][1]
               and sev["a4"] == {"home": "error", "spasibo": "warning"}
               and "передана в дизайн: в партии входа холста этапа mockup" in a4["home"][1]
               and sev["a2"] == {"home": "error", "spasibo": "error"}

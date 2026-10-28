@@ -72,7 +72,6 @@ generators:
     ok: [0, 1]
     steps:
       - scripts/project/canvas_input.py build {slug} promo --stage directions --repo {root} --out {out}/directions --today {today}
-      - scripts/project/canvas_input.py build {slug} promo --stage wireframe --repo {root} --out {out}/wireframe --today {today}
       - scripts/project/canvas_input.py build {slug} promo --stage mockup --repo {root} --out {out}/mockup --today {today}
       - scripts/project/canvas_input.py build {slug} promo --stage motion --repo {root} --out {out}/motion --today {today}
   - id: canvas-input-site
@@ -81,16 +80,14 @@ generators:
     ok: [0, 1]
     steps:
       - scripts/project/canvas_input.py build {slug} corp --stage directions --repo {root} --out {out}/directions --today {today}
-      - scripts/project/canvas_input.py build {slug} corp --stage wireframe --repo {root} --out {out}/wireframe --today {today}
       - scripts/project/canvas_input.py build {slug} corp --stage mockup --repo {root} --out {out}/mockup --today {today}
       - scripts/project/canvas_input.py build {slug} corp --stage motion --repo {root} --out {out}/motion --today {today}
   - id: canvas-input-cabinet
-    what: вход холста кабинета этапов directions, wireframe, mockup (у кабинета этапа движения нет)
+    what: вход холста кабинета этапов directions и mockup (у кабинета этапа движения нет)
     fixture: input-cabinet
     ok: [0, 1]
     steps:
       - scripts/project/canvas_input.py build {slug} office --stage directions --repo {root} --out {out}/directions --today {today}
-      - scripts/project/canvas_input.py build {slug} office --stage wireframe --repo {root} --out {out}/wireframe --today {today}
       - scripts/project/canvas_input.py build {slug} office --stage mockup --repo {root} --out {out}/mockup --today {today}
   - id: fixtures
     what: фикстуры с собранными файлами против их рецептов (scripts/maint/data/fixtures.yaml)

@@ -1481,7 +1481,7 @@ def _selftest():
         check("фикстура: плана ассетов нет до арт-дирекции → R-COV-004 hint", [(f.rule, f.severity) for f in got] == [("R-COV-004", "hint")])
         inp = fx.project / "design" / "promo" / "input"
         inp.mkdir(parents=True)
-        (inp / "INPUT.md").write_text("stage: wireframe\n", encoding="utf-8")
+        (inp / "INPUT.md").write_text("stage: mockup\n", encoding="utf-8")
         r = subprocess.run(tool + ["check", fx.slug, "promo", "--repo", str(fx.root), "--json"], capture_output=True, text=True)
         check("фикстура: плана ассетов нет при входе холста → R-COV-004 error", r.returncode == 1
               and [(f.rule, f.severity) for f in F.parse_lines(r.stdout)] == [("R-COV-004", "error")])
@@ -1492,14 +1492,14 @@ def _selftest():
             return r_.returncode, [(f.rule, f.severity) for f in F.parse_lines(r_.stdout)]
 
         check("фикстура: страница вне партии входа (units) → R-COV-004 hint, код 0",
-              cov("---\nstage: wireframe\nunits:\n- spasibo\n---\n") == (0, [("R-COV-004", "hint")]))
+              cov("---\nstage: mockup\nunits:\n- spasibo\n---\n") == (0, [("R-COV-004", "hint")]))
         check("фикстура: страница в партии входа (units) → R-COV-004 error, код 1",
-              cov("---\nstage: wireframe\nunits:\n- home\n- spasibo\n---\n") == (1, [("R-COV-004", "error")]))
+              cov("---\nstage: mockup\nunits:\n- home\n- spasibo\n---\n") == (1, [("R-COV-004", "error")]))
         (inp / "pages" / "spasibo").mkdir(parents=True)
         check("фикстура: вход без units — партия по папкам pages/: страницы там нет → hint",
-              cov("---\nstage: wireframe\n---\n") == (0, [("R-COV-004", "hint")]))
+              cov("---\nstage: mockup\n---\n") == (0, [("R-COV-004", "hint")]))
         (inp / "pages" / "home").mkdir()
-        check("фикстура: … страница среди папок pages/ → error", cov("---\nstage: wireframe\n---\n")[0] == 1)
+        check("фикстура: … страница среди папок pages/ → error", cov("---\nstage: mockup\n---\n")[0] == 1)
         r = subprocess.run(tool + ["build", fx.slug, "promo", "--repo", str(fx.root), "--write"], capture_output=True, text=True)
         check("фикстура: build --write пишет каркас на пустое место", r.returncode == 0 and proj_ap.is_file()
               and "каркас записан" in r.stdout)

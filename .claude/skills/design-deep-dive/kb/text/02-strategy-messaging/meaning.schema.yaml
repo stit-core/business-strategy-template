@@ -665,7 +665,7 @@ $defs:
 # картой voice.schema.yaml, факты и запреты — facts.md.
 x-canvas-map:
   source: meaning
-  stages: [directions, treatment, wireframe, mockup, motion]
+  stages: [directions, treatment, mockup, motion]
   files:
     brief.yaml:
       product.description:

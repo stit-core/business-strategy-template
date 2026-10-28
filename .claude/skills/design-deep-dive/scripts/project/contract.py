@@ -27,8 +27,8 @@ README.md`, «Что слой отдаёт макету»; раскладка в
 ключи `states` экрана ∪ обязательный набор (states), покрытие — дельта или «не применимо: причина»; блоки со своим
 источником — свой набор; работа без сети и живые данные — по решению поверхности, чтением.
 
-Тексты по этапу (`--stage`, по умолчанию wireframe): wireframe — строки assumed, checked, approved; mockup — только
-approved, остальные — пробел, на артборде — заглушка.
+Тексты — строки реестра статуса этапа: этап холста контракта — mockup (`--stage`), он берёт только approved;
+остальные строки — пробел, на артборде — заглушка.
 
 Партия экранов (Python: `build(…, screens=[slug …])`; её задаёт вход холста `canvas_input --screen`): разделы экранов —
 только экранов партии, раздел «Тексты» и находка о статусе строк — только ключи, которые называют экраны партии, блоки
@@ -36,8 +36,8 @@ approved, остальные — пробел, на артборде — заг�
 находки демо-набора — только их. Десять разделов шаблона — вся поверхность. Экран вне партии, в том числе не stable,
 находок не даёт: вход называет его строкой пробелов. Без партии — все экраны и весь реестр текстов.
 
-    contract build <slug> <surface> [--repo DIR] [--stage wireframe|mockup] [--out DIR] [--json]
-    contract check <slug> [<surface>] [--repo DIR] [--stage wireframe|mockup] [--json]
+    contract build <slug> <surface> [--repo DIR] [--stage mockup] [--out DIR] [--json]
+    contract check <slug> [<surface>] [--repo DIR] [--stage mockup] [--json]
     contract --selftest
 
 `build` печатает contract.md (`--json` — структуру: разделы, источники, пробелы, наборы экранов); `--out DIR` пишет
@@ -86,8 +86,8 @@ TEMPLATE = kbpaths.kb("ux", "11-ai-generated-ui", "04-constraints-prompts-and-ch
 ETHICS = kbpaths.kb("ux", "06-feedback-states-motion", "04-dark-patterns-and-ethics.md")
 BANNED = kbpaths.kb("ux", "07-ux-writing", "06-banned-words-and-patterns.md")
 COMPONENTS = kbpaths.kb(None, "common", "components.yaml")
-STAGES = ("wireframe", "mockup")
-STAGE_STATUSES = {"wireframe": ("assumed", "checked", "approved"), "mockup": ("approved",)}
+STAGES = ("mockup",)
+STAGE_STATUSES = {"mockup": ("approved",)}
 DEMO_FILE = "demo-data.json"
 TEXT_PLACEHOLDER = "[PLACEHOLDER: текст на утверждении]"
 NBSP = " "
@@ -707,12 +707,10 @@ def sec_design(c, part):
     s.sources.append(c.src(COMPONENTS, "types"))
     if c.system is None:
         s.gaps.append("нет карты решений `design/system.yaml` — сопоставление «тип → компонент ДС» собирает этап "
-                      "ds-components" + ("; макет без неё не собирается" if c.stage == "mockup" else
-                                         "; на вайрфрейме облика нет"))
-        if c.stage == "mockup":
-            c.finding("R-COV-005", "error", "system", "system", d["system"],
-                      "этап mockup: нет карты решений design/system.yaml — типам экранов не сопоставить компоненты ДС",
-                      f"/design-deep-dive {lay.slug} — этап ds-components")
+                      "ds-components; макет без неё не собирается")
+        c.finding("R-COV-005", "error", "system", "system", d["system"],
+                  "этап mockup: нет карты решений design/system.yaml — типам экранов не сопоставить компоненты ДС",
+                  f"/design-deep-dive {lay.slug} — этап ds-components")
     comps = _dict((c.system or {}).get("components"))
     exts = {e.get("id"): e for e in (c.system or {}).get("extensions") or [] if isinstance(e, dict)}
     uses = {}
@@ -878,11 +876,10 @@ def sec_texts(c, part):
         detail = "; ".join(f"`{st}` — {len(v)}" for st, v in by.items())
         s.gaps.append(f"строки не того статуса ({detail}): на артборде — заглушка {TEXT_PLACEHOLDER}; ключи — "
                       + ", ".join(f"`{r.key}`" for r in bad))
-        if c.stage == "mockup":
-            c.finding("R-MAT-003", "warning", "texts", "texts", lay.texts_path,
-                      f"этап mockup берёт только approved: строк не того статуса {len(bad)} ({detail}) — "
-                      + ", ".join(r.key for r in bad[:5]) + (f" и ещё {len(bad) - 5}" if len(bad) > 5 else ""),
-                      c.fix_screens("texts") + " — утверждает владелец продукта")
+        c.finding("R-MAT-003", "warning", "texts", "texts", lay.texts_path,
+                  f"этап mockup берёт только approved: строк не того статуса {len(bad)} ({detail}) — "
+                  + ", ".join(r.key for r in bad[:5]) + (f" и ещё {len(bad) - 5}" if len(bad) > 5 else ""),
+                  c.fix_screens("texts") + " — утверждает владелец продукта")
     banned_words = []
     for k, t, ph in part.entries:
         if not ph:
@@ -1130,7 +1127,7 @@ def screen_part(c, slug):
 
 # ------------------------------------------------------------------ сборка и проверка
 
-def build(lay, stage="wireframe", demo=None, demo_ref=DEMO_FILE, screens=None):
+def build(lay, stage="mockup", demo=None, demo_ref=DEMO_FILE, screens=None):
     """Контракт поверхности → Contract (разделы шаблона по порядку и раздел на экран); screens — партия экранов:
     разделы, строки текстов, демо-набор и находки — только её."""
     c = Ctx(lay, stage, demo, demo_ref, screens)
@@ -1153,11 +1150,11 @@ def build(lay, stage="wireframe", demo=None, demo_ref=DEMO_FILE, screens=None):
     return con
 
 
-def render(lay, stage="wireframe", demo=None, demo_ref=DEMO_FILE):
+def render(lay, stage="mockup", demo=None, demo_ref=DEMO_FILE):
     return build(lay, stage, demo, demo_ref).render()
 
 
-def check(lay, stage="wireframe"):
+def check(lay, stage="mockup"):
     """Пробелы источников контракта и демо-набора — находки."""
     return build(lay, stage).findings
 
@@ -1171,7 +1168,7 @@ def main(argv=None):
     ap = docpaths.parser("contract", __doc__, commands=("build", "check"), surface="optional", stages=STAGES,
                          accept=lambda s: s.app)
     call = docpaths.parse(ap, argv)
-    stage = call.stage or "wireframe"
+    stage = call.stage or "mockup"
     try:
         lays = T.layers_of(call)
         if not lays:
@@ -1237,7 +1234,7 @@ def _selftest():
     import fixture_project
     with fixture_project.built("cabinet-demo") as fx:
         lay = L.Layer(fx.slug, "office", fx.root)
-        con = build(lay, "wireframe")
+        con = build(lay, "mockup")
         text = con.render()
         h2 = _h2(text)
         check_("contract build: десять разделов в порядке §7.3, затем раздел на каждый экран",
@@ -1258,25 +1255,17 @@ def _selftest():
         check_("«не применимо» — с причиной; карточка: not-found и offline", any(
             x["covered"] == "na" and x["na"] for p in con.screens for x in p.states) and
             {"not-found", "offline"} <= {x["key"] for x in card.states})
-        check_("чистая фикстура, wireframe: 0 error и 0 warning",
-               not [f for f in con.findings if f.severity in ("error", "warning")])
-        check_("пробел ДС на вайрфрейме — пометка раздела, без находки",
-               any("design/system.yaml" in g for g in con.sections[3].gaps) and
-               not [f for f in con.findings if f.rule == "R-COV-005"])
+        rules = {(f.rule, f.severity) for f in con.findings}
+        check_("чистая фикстура без ДС: находки — только R-MAT-003 warning (одна на реестр) и R-COV-005 error без "
+               "карты решений ДС; пробел ДС — и пометкой раздела",
+               rules == {("R-MAT-003", "warning"), ("R-COV-005", "error")}
+               and len([f for f in con.findings if f.rule == "R-MAT-003"]) == 1
+               and any("design/system.yaml" in g for g in con.sections[3].gaps))
         check_("повторная сборка — тот же текст байт в байт", render(L.Layer(fx.slug, "office", fx.root)) == text)
-        texts = con.sections[6]
-        ok_rows = [line for line in texts.lines if line.startswith("| `")]
-        check_("тексты вайрфрейма — все строки реестра (assumed, checked, approved)",
-               len(ok_rows) == len(lay.texts.rows) and not texts.gaps)
-        mock = build(L.Layer(fx.slug, "office", fx.root), "mockup")
-        mt = mock.sections[6]
+        mt = con.sections[6]
         check_("тексты макета — только approved (8 строк), прочие — пробел",
                len([line for line in mt.lines if line.startswith("| `")]) == 8 and mt.gaps)
-        rules = {(f.rule, f.severity) for f in mock.findings}
-        check_("mockup: R-MAT-003 warning (одна на реестр) и R-COV-005 error без карты решений ДС",
-               ("R-MAT-003", "warning") in rules and ("R-COV-005", "error") in rules and
-               len([f for f in mock.findings if f.rule == "R-MAT-003"]) == 1)
-        m3 = next((f for f in mock.findings if f.rule == "R-MAT-003"), None)
+        m3 = next((f for f in con.findings if f.rule == "R-MAT-003"), None)
         check_("R-MAT-003: 45 строк не того статуса — пять ключей и хвост «и ещё 40»",
                m3 is not None and "строк не того статуса 45" in m3.message and m3.message.endswith(" и ещё 40"))
         d = con.as_dict()
@@ -1297,11 +1286,12 @@ def _selftest():
                                 "--stage", "mockup", "--out", str(Path(td) / "in")], cwd=td, capture_output=True,
                                text=True)
             check_("build --stage mockup --out: DIR/contract.md", r.returncode == 0 and
-                   (Path(td) / "in" / "contract.md").read_text(encoding="utf-8") == mock.render())
+                   (Path(td) / "in" / "contract.md").read_text(encoding="utf-8") == text)
             r = subprocess.run([sys.executable, str(script), "check", fx.slug, "--repo", str(fx.root), "--json"],
                                cwd=td, capture_output=True, text=True)
-            check_("check --json без поверхности — код 0, строки находок", r.returncode == 0 and
-                   not [f for f in F.parse_lines(r.stdout) if f.severity == "error"])
+            check_("check --json без поверхности — строки находок; error — только R-COV-005 (карты решений ДС нет), "
+                   "код 1", r.returncode == 1 and
+                   {f.rule for f in F.parse_lines(r.stdout) if f.severity == "error"} == {"R-COV-005"})
             r = subprocess.run([sys.executable, str(script), "check", fx.slug, "office", "--repo", str(fx.root),
                                 "--stage", "mockup"], cwd=td, capture_output=True, text=True)
             check_("check --stage mockup без ДС — код 1", r.returncode == 1 and "R-COV-005" in r.stdout)
@@ -1322,10 +1312,10 @@ def _selftest():
             items = check(L.Layer(fx.slug, "office", root))
             got = {f.message.split(":")[0] for f in items if f.rule == "R-MAT-011"}
             check_("пробелы PRE: экран draft, состояние не покрыто, постура, объём коллекции — R-MAT-011 warning "
-                   "(доклад), код 0",
+                   "(доклад): error — только R-COV-005 (карты решений ДС нет)",
                    {"второй вход", "PRE-08", "PRE-01, PRE-04", "PRE-14"} <= got and all(
                        f.severity == "warning" for f in items if f.rule == "R-MAT-011")
-                   and F.exit_code(items) == F.EXIT_OK)
+                   and {f.rule for f in items if f.severity == "error"} == {"R-COV-005"})
             check_("у находки — путь файла проекта", all(f.path.startswith("docs/projects/") for f in items))
             card = proj / "screens" / "office" / "screens" / "request-card" / "index.md"
             card.write_text(re.sub(r"(?m)^name: .*$", "name: Карточка: заявка", card.read_text(encoding="utf-8"),

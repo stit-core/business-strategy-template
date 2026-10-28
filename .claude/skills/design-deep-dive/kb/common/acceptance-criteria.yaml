@@ -21,7 +21,7 @@
 #             сверяет сборщик): это тяжесть непроверенного пункта, исход проверенного решают строки ворот (check)
 #   method    скрипт · глаза · судья · заказчик · протокол
 #   where     макет · после сборки
-#   stage     этап холста, с которого пункт проверяется: wireframe · mockup · motion; «—» — у пунктов «после сборки»
+#   stage     этап холста, с которого пункт проверяется: mockup · motion; «—» — у пунктов «после сборки»
 #   source    источник нормы
 #   check     у пунктов «после сборки» — способ проверки в репозитории кода; манифест готовности несёт пункт как
 #             {id, severity, check}:
@@ -104,7 +104,7 @@ criteria:
   severity: S
   method: скрипт, глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: site/<s>/plans/*.yaml
 - id: A1
   for: [app]
@@ -112,7 +112,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: ux 13/04 §29; map.md
 - id: A2
   for: [site]
@@ -121,7 +121,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: планы; copy deck; text 04/03 §3.5
 - id: A2
   for: [app]
@@ -129,7 +129,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: экраны; contract.md
 - id: A3
   for: [site]
@@ -140,7 +140,7 @@ criteria:
   severity: S
   method: скрипт, глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: site 03/03 §2; first_screen_policy планов
 - id: B1
   for: [site]
@@ -149,7 +149,7 @@ criteria:
   severity: B
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: cd 06/04 §3; copy.md
 - id: B1
   for: [app]
@@ -157,7 +157,7 @@ criteria:
   severity: B
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: copy.md; texts.md
 - id: B2
   for: [site]
@@ -165,7 +165,7 @@ criteria:
   severity: B
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: facts.md; claims_check.py
 - id: B2
   for: [app]
@@ -173,7 +173,7 @@ criteria:
   severity: B
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: demo-data.json
 - id: B3
   for: [site]
@@ -235,7 +235,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: kb/common/acceptance-widths.yaml
 - id: D1
   for: [app]
@@ -244,7 +244,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: kb/common/acceptance-widths.yaml#by_viewport
 - id: D2
   question: На 390 навигация видна (меню ≥ 44×44 или две видимые ссылки), тело ≥ 16 px, основные цели касания
@@ -369,7 +369,7 @@ criteria:
   severity: S
   method: протокол
   where: макет
-  stage: wireframe
+  stage: mockup
   source: claude-design.md § Создание и публикация
 - id: G2
   question: Изменены только свои файлы; правки заказчика слиты по «прочитать → слить → опубликовать», чужие
@@ -377,7 +377,7 @@ criteria:
   severity: S
   method: протокол
   where: макет
-  stage: wireframe
+  stage: mockup
   source: claude-design.md § Синхронизация
 - id: H1
   for: [site]
@@ -444,7 +444,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: page.yaml seo.h1; site 09/01 §6.2
 - id: I2
   for: [site]
@@ -497,7 +497,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: legal-requirements.yaml; план
 - id: J2
   for: [site]
@@ -505,7 +505,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: legal-requirements.yaml; план
 - id: J3
   for: [site]
@@ -513,7 +513,7 @@ criteria:
   severity: B
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: facts.md; legal.requisites плана
 - id: J4
   for: [site]
@@ -521,7 +521,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: legal-requirements.yaml; overlays плана
 - id: J4b
   for: [site]
@@ -547,7 +547,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: lead-forms.yaml#defaults.consent
 - id: K1
   for: [site]
@@ -564,7 +564,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: page.yaml forms[]; mockup_checks.py FORM-FIELDS
 - id: K3
   for: [site]
@@ -572,7 +572,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: page.yaml forms[].forbidden; FORM-FORBIDDEN
 - id: K4
   for: [site]
@@ -580,7 +580,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: page.yaml forms[].set.success_must_show
 - id: K5
   for: [site]
@@ -645,7 +645,7 @@ criteria:
   severity: S
   method: скрипт
   where: макет
-  stage: wireframe
+  stage: mockup
   source: screens/README.md § Доступность и узкий экран
 - id: N2
   for: [app]
@@ -661,7 +661,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: экраны
 - id: N4
   for: [app]
@@ -669,7 +669,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: экраны
 - id: N5
   for: [app]
@@ -677,7 +677,7 @@ criteria:
   severity: S
   method: глаза
   where: макет
-  stage: wireframe
+  stage: mockup
   source: экраны
 - id: ST-{screen}-{state_id}
   for: [app]

@@ -297,7 +297,7 @@ x-hero-first-optional:
 # доказательства» по секциям плана; остальное воплощено в текстах copy deck.
 x-canvas-map:
   source: hierarchy
-  stages: [wireframe, mockup]
+  stages: [mockup]
   files:
     brief.yaml:
       site.sections[].job:

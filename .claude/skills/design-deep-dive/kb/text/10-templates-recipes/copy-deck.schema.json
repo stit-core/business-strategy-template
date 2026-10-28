@@ -41,7 +41,7 @@
     },
     "status": {
       "enum": ["draft", "assumed", "checked", "approved", "rejected"],
-      "description": "draft — каркас или текст в работе: владельцу ещё не предложен; assumed — черновик агента «допущением» из утверждённых смысла, фактов и голоса: предложен владельцу, идёт на вайрфрейм, ждёт проверки и утверждения; checked — прошёл claims_check.py и copy_lint.py с 0 error (запись lint и claims с text_hash); approved — утверждён человеком (review.by/at варианта или approval страницы); rejected — отклонён с причиной (reason), выбранным быть не может."
+      "description": "draft — каркас или текст в работе: владельцу ещё не предложен; assumed — черновик агента «допущением» из утверждённых смысла, фактов и голоса: предложен владельцу, идёт на страницы холста «Направления» и «Подача» (тексты первого экрана), ждёт проверки и утверждения; checked — прошёл claims_check.py и copy_lint.py с 0 error (запись lint и claims с text_hash); approved — утверждён человеком (review.by/at варианта или approval страницы); rejected — отклонён с причиной (reason), выбранным быть не может."
     },
     "copy-path": {
       "type": "string",
@@ -512,7 +512,7 @@
 
   "x-canvas-map": {
     "source": "copy-deck",
-    "stages": ["directions", "treatment", "wireframe", "mockup"],
+    "stages": ["directions", "treatment", "mockup"],
     "files": {
       "pages/<page-id>/copy.md": {
         "## <section_id>": {"rule": "copy", "from": ["/copy_deck/pages/*/page_id", "/copy_deck/pages/*/sections/*/section_id"], "note": "страница — папка pages/<page-id>/, секции — в порядке copy deck (он же порядок плана)"},
@@ -549,7 +549,7 @@
         "«[?]: <текст>» или «[? <подпись>]: <текст>» — текст холста без слота плана (разбор агентом: вопрос «перенести в план?»)",
         "текст — всё после первого «: » до конца строки, дословно; абзацы — строками продолжения, начатыми двумя пробелами; пустая строка между строками продолжения — граница абзаца внутри значения; значение тянется до следующей строки слота или секции"
       ],
-      "stage_statuses": {"directions": ["assumed", "checked", "approved"], "treatment": ["assumed", "checked", "approved"], "wireframe": ["assumed", "checked", "approved"], "mockup": ["approved"]},
+      "stage_statuses": {"directions": ["assumed", "checked", "approved"], "treatment": ["assumed", "checked", "approved"], "mockup": ["approved"]},
       "directions_slot_types": ["headline", "cta-label"],
       "not_exported": ["image-alt", "image-caption", "in-image-text"],
       "gap": "слот без текста статуса этапа в copy.md не пишется: находка COPY-D-STAGE и строка пробелов INPUT.md; [PLACEHOLDER] в тексте — только из missing фактов"

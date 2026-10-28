@@ -27,8 +27,7 @@ page.treatment.art_direction_ref, спецификация — план по ref
                                                  и свойств приёмов каталога с их минимальным уровнем (LV-03)
   canvas-map [ФАЙЛ …]                            форма ключа x-canvas-map и покрытие полей источника правилами (без
                                                  файлов — все файлы kb с этим ключом); этапы входа холста в stages
-                                                 карт — directions, treatment (страница «Подача»), wireframe,
-                                                 mockup, motion
+                                                 карт — directions, treatment (страница «Подача»), mockup, motion
   --levels FILE                                  файл уровней той же формы, что ambition-levels.yaml
   --selftest                                     самопроверка на файлах базы, фикстуре проекта и подброшенных ошибках
 Тяжесть находок plan: error — схема плана (TR-S), ссылка в пустоту (TR-09, TR-10, TR-13, TR-15), уровень эффекта
@@ -95,7 +94,7 @@ PLAN_LIFTABLE = ('TR-01', 'TR-02', 'TR-03', 'TR-04', 'TR-05', 'TR-06', 'TR-12', 
 LCP_PROPS = ('transform', 'translate', 'clip-path', 'opacity')
 LCP_OPACITY_MIN = 0.01
 LCP_MIN_RU = f'{LCP_OPACITY_MIN:g}'.replace('.', ',')
-STAGES = ('directions', 'treatment', 'wireframe', 'mockup', 'motion')         # этапы входа холста
+STAGES = ('directions', 'treatment', 'mockup', 'motion')                      # этапы входа холста
 RULES = ('copy', 'map', 'derive', 'drop', 'claude_fills')                      # правила проекции x-canvas-map
 POINTER = re.compile(r'^(?:[a-z][a-z0-9-]*#)?(?:/[^/]*)*$')                     # [<документ>#]<JSON Pointer>; * — любой элемент
 CANVAS_TOP = {'source', 'stages', 'files', 'drop', 'base'}

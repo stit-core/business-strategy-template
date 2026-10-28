@@ -709,7 +709,7 @@ x-canvas-map:
   # текст голоса во входе не пишется. Профиль — тот, чей канал scope.surfaces отвечает роду поверхности: сайт и лендинг —
   # voice (voice.yaml), кабинет и приложение — voice-product (voice.product.yaml, та же схема и та же карта).
   source: voice
-  stages: [directions, treatment, wireframe, mockup, motion]
+  stages: [directions, treatment, mockup, motion]
   files:
     brief.yaml:
       design_system.tone_of_voice: {rule: copy, from: [/projections/tone_of_voice], note: "одна строка ≤ 240 знаков: обращение, 2–3 принципа, чего нет"}

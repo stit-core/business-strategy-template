@@ -12,7 +12,6 @@
     "stages": [
       "directions",
       "treatment",
-      "wireframe",
       "mockup",
       "motion"
     ],

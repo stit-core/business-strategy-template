@@ -289,7 +289,7 @@
   },
   "x-canvas-map": {
     "source": "asset-plan",
-    "stages": ["wireframe", "mockup"],
+    "stages": ["mockup"],
     "files": {
       "pages/<page-id>/assets.md": {
         "слот": {"rule": "copy", "from": ["/slots/*/id", "/slots/*/section", "/slots/*/slot"], "note": "id строки = <секция>-<id> слота плана страницы; секция и вид слота словаря site"},

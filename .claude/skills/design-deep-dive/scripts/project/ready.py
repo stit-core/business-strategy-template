@@ -1412,7 +1412,7 @@ def _selftest():
                                    stage, "--repo", str(root), "--today", today.isoformat()], capture_output=True, text=True,
                                   cwd=cwd)
 
-        ci("wireframe")
+        ci("mockup")
         proj = docpaths.design(slug, "canvas-project", surface="promo", repo=root)
         proj.mkdir(parents=True, exist_ok=True)
         (proj / "Spasibo.dc.html").write_text("<section id='confirmation'>Заявка на замер принята</section>\n",
@@ -1474,7 +1474,7 @@ def _selftest():
         art = docpaths.design(slug, "artifacts", repo=root)
         at = art.read_text(encoding="utf-8")
         art.write_text(at.replace("| 2026-09-29 | аналитик |", "| 2026-10-02 | аналитик |"), encoding="utf-8")
-        re_wire = ci("wireframe")
+        rebuilt = ci("mockup")
         sysp = docpaths.design(slug, "system", repo=root)
         st = sysp.read_text(encoding="utf-8")
         sysp.write_text(st.replace("status: approved", "status: proposed", 1).replace("starter: []",
@@ -1484,7 +1484,7 @@ def _selftest():
         units = {u["id"]: u for u in d["units"]}
         check("дата «последнего чтения» в ARTIFACTS.md, пересборка входа, starter и статус system.yaml — одобрение то "
               "же; ДС не утверждена — строка open «решение заказчика», не блокер",
-              at.count("| 2026-09-29 | аналитик |") == 2 and re_wire.returncode in (0, 1)
+              at.count("| 2026-09-29 | аналитик |") == 2 and rebuilt.returncode in (0, 1)
               and "starter: [spasibo]" in sysp.read_text(encoding="utf-8")
               and units["spasibo"]["mockup"] == "accepted_with_notes" and units["home"]["mockup"] == "accepted"
               and f"{DECIDE}ДС не утверждена (system.yaml proposed)" in units["spasibo"]["open"]
@@ -1644,14 +1644,14 @@ def _selftest():
         root, slug = fx.root, fx.slug
         surf = docpaths.surface(slug, "promo", root)
         ci = subprocess.run([sys.executable, str(HERE / "canvas_input.py"), "build", slug, "promo", "--stage",
-                             "wireframe", "--repo", str(root), "--today", today.isoformat()], capture_output=True, text=True,
+                             "directions", "--repo", str(root), "--today", today.isoformat()], capture_output=True, text=True,
                             cwd=cwd)
         r = cli("build", slug, "promo", "--repo", root, "--today", today.isoformat(), cwd=cwd)
         data = yaml_mod().safe_load(docpaths.design(slug, "ready", surface="promo", repo=root).read_text(
             encoding="utf-8"))
         ab = data["units"][0]["after_build"]
         by_id = {a["id"]: a for a in ab}
-        check("лендинг input-landing со входом wireframe: after_build — пункты списка базы места «после сборки» "
+        check("лендинг input-landing со входом directions: after_build — пункты списка базы места «после сборки» "
               "(I2, K1, L2 …), единица home, профиль landing-lead-services@L1",
               ci.returncode == 0 and r.returncode == 0 and {"I2", "K1", "L2"} <= set(by_id) and "A1" not in by_id
               and data["units"][0]["id"] == "home" and data["units"][0]["budget_profile"] == "landing-lead-services@L1")
@@ -1681,7 +1681,7 @@ def _selftest():
         mp.write_text(mtext, encoding="utf-8")
         check("манифест без skill_version при входе холста — совет называет порядок: вход холста (canvas_input build с "
               "этапом входа), затем ready build",
-              len(items) == 1 and f"canvas_input build {slug} promo --stage wireframe, затем ready build {slug} promo"
+              len(items) == 1 and f"canvas_input build {slug} promo --stage directions, затем ready build {slug} promo"
               in items[0].fix)
     with fixture_project.built("input-site") as fx:
         root, slug = fx.root, fx.slug
