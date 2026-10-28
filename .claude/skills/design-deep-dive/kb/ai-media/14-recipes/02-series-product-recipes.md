@@ -312,7 +312,7 @@ Constraints: No text.
 
 ```bash
 # Blender 5.2.2 Cycles 48 сэмплов 768² · только под blender.lock — [проверено: M/01 render_forms.py, 3 прогона по 40–45 с]
-flock -w 1800 99-raw/tools/.locks/blender.lock python3 ../../scripts/blender/blender_run.py \
+flock -w 1800 99-raw/tools/.locks/blender.lock python3 ../../scripts/3d/blender_run.py \
       99-raw/experiments/M/01-icon3d-forms/render_forms.py --log <папка>/render.log -- <out>
 python3 99-raw/experiments/M/01-icon3d-forms/make_icons.py      # α < 0,06 → 0, общий кроп (поле 8 %), AVIF/WebP ≥ 70
 ```

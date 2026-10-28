@@ -93,7 +93,7 @@ esbuild 0.25.12, vite 8.3.1. Выбор библиотек — `01-stack-choice.
   по элементам, **кроме LCP-элемента** (LCP не из `opacity: 0`, `ai-media 10/01` §4.3) [документация].
 - Никаких библиотек в критическом пути: `<script type="module">` откладывается сам, эффекты hero стартуют после `load` или по
   `requestIdleCallback`; шейдер/видео hero — постер в HTML (`fetchpriority="high"` у постера-LCP), живой слой — поверх после LCP
-  (`blender 01/02` §4.1) [документация: соседи].
+  (`3d 01/02` §4.1) [документация: соседи].
 
 ## 2. Reduce и «меньше движения»
 
@@ -156,7 +156,7 @@ document.readyState === 'complete' ? start() : addEventListener('load', start, {
 |---|---|---|---|
 | CSS-петля (бегущая строка, градиент) | `el.style.setProperty('--play','paused')` при `animation-play-state: var(--play, running)` | `running`, если пользователь не нажал паузу | модуль marquee G/03 |
 | шейдер paper-shaders | `mount.setSpeed(0)` | `setSpeed(v)` | G/03: вне экрана `speed = 0`, в экране 0,6 |
-| свой WebGL-цикл | не вызывать `render`, `setAnimationLoop(null)` | вернуть цикл | `blender 09/03` §2.2 |
+| свой WebGL-цикл | не вызывать `render`, `setAnimationLoop(null)` | вернуть цикл | `3d 09/03` §2.2 |
 | видео | `video.pause()` | `play()` при видимости и без reduce | ai-media 10/* |
 | lottie-web / dotLottie / Rive | `anim.pause()` / `dotLottie.pause()` / `rive.pause()` | `play()` | документация рантаймов |
 | GSAP-таймлайн петли | `tl.pause()` | `tl.resume()` | — |
@@ -307,7 +307,7 @@ const split = SplitText.create(el, { type: 'lines,words', mask: 'lines', autoSpl
 - Astro `<ClientRouter />`: модульный скрипт исполняется один раз → `document.addEventListener('astro:page-load', mountAll)` и
   `astro:before-swap` → `destroyAll`; ClientRouter сам выключает VT-анимации при reduce [документация: S8].
 - React/Next: `useGSAP()` из `@gsap/react` (очистка по размонтированию) или `gsap.context()` в `useLayoutEffect`; прокрутка → ref,
-  не состояние React (`blender 09/03` §2) [документация: S4].
+  не состояние React (`3d 09/03` §2) [документация: S4].
 
 ## 8. Самохостинг и лицензии в сборке
 
@@ -436,6 +436,6 @@ Asset::getInstance()->addString('<script type="module" src="' . SITE_TEMPLATE_PA
 - [S12] Webflow Updates: «Webflow makes GSAP 100% free» (2025-04-30), «Increased custom code character limit» (2024-05-07). Вендор.
 - [S13] Framer Academy «Add Custom Code…», Framer Developers «Custom Code». Вендор.
 - [S14] Lenis README (main, 2026-09-24): anchors, prevent, reduced motion, ограничения. Документация.
-- [S15] Соседи: `blender 09/03` §2 (цикл кадра, рендер по требованию), `blender 01/02` §4.1 (порядок загрузки hero),
+- [S15] Соседи: `3d 09/03` §2 (цикл кадра, рендер по требованию), `3d 01/02` §4.1 (порядок загрузки hero),
   `ai-media 10/01` §4.3 (LCP не из opacity 0), `kimi 07/02` §8.1 (CDN запрещены); D — `../04-visual-language/` (метрический фолбэк).
 - [S16] Опыты G/01, G/02, G/03 — `99-raw/experiments/G/` (README в каждой папке).

@@ -1,13 +1,13 @@
 # Слоты блоков и план страницы (page-plan): модель, поля, сборка из брифа, проекции для сестёр и соседей
 
 Волна 2 · агент E · 2026-09-24 · входы: контракт тройки §3, словарь B, C `01`–`03`, бриф A, copy-deck и copy-slots text,
-план ассетов ai-media `01/01` §8, blender `01/02` §7 и `12-recipes/`, пакет kimi `07-brief-handoff/` · опыты
+план ассетов ai-media `01/01` §8, 3d `01/02` §7 и `12-recipes/`, пакет kimi `07-brief-handoff/` · опыты
 `99-raw/experiments/E/01-validate`, `02-text-slot-defaults`, `03-saas-demo-brief`
 
 Схемы v1 — `../10-playbooks-contracts/schemas/page-plan.schema.json` и `../10-playbooks-contracts/schemas/blocks.schema.json`; примеры — `../10-playbooks-contracts/examples/lead-services-otves/plans/home.yaml`
 (лидогенерация услуг РФ), `../10-playbooks-contracts/examples/saas-okoshko/plans/home.yaml` (SaaS).
 Проверка — `../../../scripts/site/site_validate.py` (схема + связи) и `../../../scripts/site/vocab_lint.py`. План — точка S1
-тройки: по нему text пишет copy-deck, creative — подачу секций, ai-media — план ассетов, blender — 3D, kimi получает секции.
+тройки: по нему text пишет copy-deck, creative — подачу секций, ai-media — план ассетов, 3d — 3D, kimi получает секции.
 
 ## Выжимка для агента
 
@@ -54,7 +54,7 @@
 |---|---|---|---|
 | `text` (79 id) | заголовки, лиды, подписи, ответы, мета, письма | text (правила по id слота) | `id`, `slot`, `anatomy`, `group`, `heading`, `intent`, `length`, `variants` |
 | `media` (17) | главный визуал, фото, скриншоты, иконки, логотипы, видео, карты, OG | ai-media (план ассетов), I (подлинность) | `media_role`, `goal`, `source`, `authenticity`, `task`, `ratio`, `text_zone`, `lcp_candidate`, `loading`, `alt`, `caption`, `motion` |
-| `3d` (2) | 3D-объект, 3D-сцена | blender (рецепты) | `recipe`, `poster`, `load`, `cta_before_3d` |
+| `3d` (2) | 3D-объект, 3D-сцена | 3d (рецепты) | `recipe`, `poster`, `load`, `cta_before_3d` |
 | `data` (8) | ссылки на факты | text (`facts.yaml`), заказчик | `fact`, `binds`, `on_missing` |
 | `action` (9) | призывы, формы, ссылки, телефон, мессенджер, магазины, скачивание | site: F (формы), P (события) | `action`, `target`, `style`, `label`, `form`, `event` |
 | `treatment` (3) | роль в ритме, эффект, уровень движения | creative | в плане — контейнер `treatment{}` (не слоты) |
@@ -107,13 +107,13 @@
 - Генератор каркаса плана ассетов из медиа-слотов — `plan_to_assets.py` (J, волна 3); бюджеты ассетов — ai-media, профиль
   страницы — P. [практика] (контракт §3 п. 9)
 
-### 1.5. 3D-слоты → blender
+### 1.5. 3D-слоты → 3d
 
-- `recipe: recipe:<id>` — рецепт `../../blender/12-recipes/` (`01-hero-product`, `05-scroll-showcase`,
+- `recipe: recipe:<id>` — рецепт `../../3d/12-recipes/` (`01-hero-product`, `05-scroll-showcase`,
   `12-model-viewer-ar` …); `poster` — id медиа-слота того же ракурса (запасной кадр и кандидат LCP); `load: after-lcp`
   (по умолчанию), `on-visible`, `on-interaction`; `cta_before_3d: true`.
 - Когда 3D помогает — товар с неочевидной формой, объяснение устройства, варианты комплектации, кампания и портфолио;
-  вредит — там, где задача быстро прочитать и купить (`../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md`
+  вредит — там, где задача быстро прочитать и купить (`../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md`
   §1.3, §7). Поправка к этому правилу для сайта — `01-blocks-catalog.md` §3.2 (PLAN, поправка 22).
 
 ### 1.6. data-слоты: факты, пробелы, связи
@@ -277,9 +277,9 @@
 - Медиа-слоты плана → слоты плана ассетов по таблице §1.4; `page.page_type` → `page_type` плана ассетов по строкам
   `broader` crosswalk (например, `landing-lead-services` → `corporate`); формат плана ассетов не меняется.
 
-### 6.4. blender — 3D
+### 6.4. 3d — 3D
 
-- 3d-слоты → рецепты по `recipe:`; постер — медиа-слот плана ассетов; бюджет доли 3D — blender, вся страница — P.
+- 3d-слоты → рецепты по `recipe:`; постер — медиа-слот плана ассетов; бюджет доли 3D — 3d, вся страница — P.
 
 ### 6.5. kimi — пакет исполнителя
 
@@ -359,7 +359,7 @@
 - [S5] text `../../text/10-templates-recipes/copy-deck.schema.json` (v1), `04-copy-by-block/copy-slots.yaml`,
   `02-strategy-messaging/facts.schema.yaml`, примеры фактов «Отвес» и демо «Окошко» (`99-raw/experiments/E/`). Сестра.
 - [S6] ai-media `../../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §2.1, §8. Сосед.
-- [S7] blender `../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3, §5, §7; `12-recipes/`. Сосед.
+- [S7] 3d `../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3, §5, §7; `12-recipes/`. Сосед.
 - [S8] kimi `../../kimi-research/07-brief-handoff/templates/brief.yaml`, `build_package.py` (`site.sections`, `REQ_LANDING`,
   A3). Сосед.
 - [S9] Опыты E/01 (валидатор), E/02 (классы длины), E/03 (демо-бриф SaaS). [проверено]

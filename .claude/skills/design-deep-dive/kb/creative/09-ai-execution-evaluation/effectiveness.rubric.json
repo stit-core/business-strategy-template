@@ -9,7 +9,7 @@
   "applies_to": {
     "pages": "маркетинговые страницы site: landing-*, home-multipage, feature-page, about-page, case-page, landing-campaign, portfolio-page и др. (словарь ../site/02-site-types/vocabulary.yaml)",
     "levels": ["L0", "L1", "L2"],
-    "not_for": "сервисы и рабочие экраны — рубрика ../ui/13-evaluation-checklists/02-rubrics-and-vlm-critic.md; ассеты — рубрики ../ai-media/11-evaluation-qa/rubrics/*.rubric.json; 3D — ../blender/11-*"
+    "not_for": "сервисы и рабочие экраны — рубрика ../ui/13-evaluation-checklists/02-rubrics-and-vlm-critic.md; ассеты — рубрики ../ai-media/11-evaluation-qa/rubrics/*.rubric.json; 3D — ../3d/11-*"
   },
   "principles": [
     "Профиль из пяти критериев, а не единый балл; единый балл — только чтобы выбрать один из N вариантов (ui 13/02 §2.2–2.3).",
@@ -18,7 +18,7 @@
     "VLM движения не видит: движение оценивается по метрикам motion_check.py, по motion-spec и человеком по записи; судья видит только кадры (первый экран 1440 и 390, контактный лист прокрутки).",
     "Каждая пара — два вызова со сменой порядка A/B; победа только если одинакова в обоих, иначе ничья (Zheng и др. 2023: согласованность GPT-4 при смене порядка 65 %, Claude-v1 23,8 %).",
     "«Нравится» без признака — не критерий: у каждого ответа судьи — признак и «где» (номер кадра, секция).",
-    "Награда жюри — [награда], не доказательство конверсии или удобства; потолок L2 (Unseen) — ориентир по концепции, ремеслу и движению, но не по исполнению: наградные сайты проваливают reduce и паузу (C, blender 01/04).",
+    "Награда жюри — [награда], не доказательство конверсии или удобства; потолок L2 (Unseen) — ориентир по концепции, ремеслу и движению, но не по исполнению: наградные сайты проваливают reduce и паузу (C, 3d 01/04).",
     "Любое эстетическое правило с меткой и датой; тренды стареют за 12–18 месяцев — якоря пересматриваются раз в 6 месяцев вместе с реестром клише."
   ],
   "gates_before_scoring": {
@@ -27,7 +27,7 @@
       {"what": "ворота страницы (выше всех)", "file": "../site/07-seo-geo-performance-analytics/page-gates.yaml", "tool": "../../scripts/site/page_gates.py"},
       {"what": "ворота эффектов (движение, петли, reduce, фолбэки, цена эффектов)", "file": "09-ai-execution-evaluation/effect-gates.yaml", "tool": "../../scripts/creative/motion_check.py"},
       {"what": "визуальный профиль marketing (типографика, цвет, приметы клише)", "tool": "../../scripts/creative/marketing_audit.py"},
-      {"what": "ассеты и 3D (не блокируют страницу за чужие байты)", "tool": "../../scripts/ai-media/page_accept.py; blender 09/05 §7.2"}
+      {"what": "ассеты и 3D (не блокируют страницу за чужие байты)", "tool": "../../scripts/ai-media/page_accept.py; 3d 09/05 §7.2"}
     ]
   },
   "scale": {
@@ -167,9 +167,9 @@
       ],
       "anchors_by_level": {
         "L2": [
-          {"url": "https://unseen.co/", "class": "студия, портфолио", "why": "концепция-мир (комната с арками и водой, переливчатая сфера), запечённый свет KTX2; заказчик называет Unseen потолком L2", "gates_note": "reduce не уважает (35 % движения в reduce), первый 3D-кадр 5 с, 7,3 МБ (blender 01/04 №8)", "label": "[награда] [данные: blender 01/04]"},
+          {"url": "https://unseen.co/", "class": "студия, портфолио", "why": "концепция-мир (комната с арками и водой, переливчатая сфера), запечённый свет KTX2; заказчик называет Unseen потолком L2", "gates_note": "reduce не уважает (35 % движения в reduce), первый 3D-кадр 5 с, 7,3 МБ (3d 01/04 №8)", "label": "[награда] [данные: 3d 01/04]"},
           {"url": "https://illoca.unseen.co/", "class": "студия, продукт-кампания", "why": "сцена three r183 + theatre + ScrollTrigger; H1 111 px; движение в покое 0,13 % — спокойная роскошь", "gates_note": "первый экран 8,36 МБ, TBT 1 026 мс (creative 03/01)", "label": "[награда] [данные: creative 03]"},
-          {"url": "https://hubtown.co.in/", "class": "недвижимость, кампания", "why": "SOTD 06.2026 (Unseen): монолит над водой, световые трассы", "gates_note": "21,7 МБ, первый 3D-кадр 33,7 с, LCP 20,1 с — провал ворот страницы (blender 01/04 №9)", "label": "[награда] [данные: blender 01/04]"},
+          {"url": "https://hubtown.co.in/", "class": "недвижимость, кампания", "why": "SOTD 06.2026 (Unseen): монолит над водой, световые трассы", "gates_note": "21,7 МБ, первый 3D-кадр 33,7 с, LCP 20,1 с — провал ворот страницы (3d 01/04 №9)", "label": "[награда] [данные: 3d 01/04]"},
           {"url": "https://lisa.locomotive.ca/en", "class": "студия, продукт", "why": "SOTD; сквозная сцена, split-типографика", "gates_note": "reduce не уважает, TBT 1 007 мс (creative 03/01)", "label": "[награда] [данные: creative 03]"}
         ],
         "L1": [
@@ -293,6 +293,6 @@
     "../ai-media/11-evaluation-qa/02-vlm-critic-and-rubrics.md и rubrics/*.rubric.json — формат рубрики, попарный режим, калибровка",
     "../ui/13-evaluation-checklists/02-rubrics-and-vlm-critic.md — шкала, профиль, исследования, слепые зоны VLM",
     "08-uniqueness-anti-slop/cliche-registry.yaml — приметы и кластеры (JDG — судья по этой рубрике)",
-    "03-live-sites-measured/sites.csv, ../blender/01-web-3d-landscape/04-reference-sites-measured.md — якоря и их ворота"
+    "03-live-sites-measured/sites.csv, ../3d/01-web-3d-landscape/04-reference-sites-measured.md — якоря и их ворота"
   ]
 }

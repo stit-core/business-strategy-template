@@ -18,8 +18,8 @@ families:
 - {id: surface, name_ru: 'Поверхности: стекло, свечение', doc: 01-effects-catalog.md §9}
 - {id: mask, name_ru: Маски и clip-path, doc: 01-effects-catalog.md §10}
 - {id: video, name_ru: Видео и секвенции, doc: 02-hero-video-background.md}
-- {id: image, name_ru: Эффекты над картинками (WebGL — blender), doc: '01-effects-catalog.md §7, §11'}
-- {id: 3d, name_ru: 3D (ссылки на blender), doc: 01-effects-catalog.md §11}
+- {id: image, name_ru: Эффекты над картинками (WebGL — 3d), doc: '01-effects-catalog.md §7, §11'}
+- {id: 3d, name_ru: 3D (ссылки на 3d), doc: 01-effects-catalog.md §11}
 - {id: number, name_ru: Числа, doc: 01-effects-catalog.md §2}
 - {id: page, name_ru: 'Страничные: плавная прокрутка, прелоадер, переключатель движения', doc: '01-effects-catalog.md §1.5, §5, §11'}
 - {id: micro, name_ru: 'Микровзаимодействия: диалог, аккордеон, кнопки, карточки, шапка', doc: 01-effects-catalog.md §12}
@@ -199,7 +199,7 @@ effects:
     libs: []
     demo: lab/kinetic-headline/
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §2.3
   fallback:
@@ -465,7 +465,7 @@ effects:
     libs: []
     demo: lab/scroll-text-highlight/
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §2.5
   fallback:
@@ -821,7 +821,7 @@ effects:
     variants:
     - {id: sda, type: css, demo: 'lab/scroll-reveal-system/?v=sda', note: 'animation-timeline: view(), 0 КБ JS, обратимо'}
     stack_ref: 07-stack-implementation/stack.yaml#intersection-observer
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.2
   fallback:
@@ -894,7 +894,7 @@ effects:
     libs: []
     demo: lab/scroll-driven-progress/
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.3
   fallback:
@@ -914,7 +914,7 @@ effects:
     note: декоративный, aria-hidden
   cliche: {risk: low, status: н/д, registry_id: null}
   rules: ['анимировать transform: scaleX(), не width', 'вне @supports (animation-timeline: scroll()) полосу не показывать']
-  evidence: ['[проверено]', '[проверено у blender: 09/03 §3.1 — антипример .bar scaleX(0) без поддержки]']
+  evidence: ['[проверено]', '[проверено у 3d: 09/03 §3.1 — антипример .bar scaleX(0) без поддержки]']
   checked_at: '2026-09-25'
   cost:
     bytes_br: 2096
@@ -963,9 +963,9 @@ effects:
     type: css
     libs: []
     demo: lab/parallax-layers/
-    external_ref: ['ai-media:10-03#4.4', 'blender:01-01#9.5', 'blender:09-03#7.2']
+    external_ref: ['ai-media:10-03#4.4', '3d:01-01#9.5', '3d:09-03#7.2']
     stack_ref: 07-stack-implementation/stack.yaml#css-scroll-driven
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.4
   fallback:
@@ -1037,7 +1037,7 @@ effects:
     type: css
     libs: []
     demo: lab/svg-line-draw/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §4.5
   fallback:
@@ -1114,7 +1114,7 @@ effects:
     variants:
     - {id: css, type: css, demo: 'lab/pin-scrub-story/?v=css', note: 'sticky + view-timeline, 0 КБ JS'}
     stack_ref: 07-stack-implementation/stack.yaml#gsap-scrolltrigger
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §5.1
   fallback:
@@ -1183,7 +1183,7 @@ effects:
     type: css
     libs: []
     demo: lab/sticky-stack/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]', timeline-scope: 'Chrome 116+, Safari 26+ (сверить по 07-stack-implementation/stack.yaml)'}
     code_ref: 01-effects-catalog.md §5.2
   fallback:
@@ -1419,7 +1419,7 @@ effects:
     type: css
     libs: []
     demo: lab/scroll-mask-expand/
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
     code_ref: 01-effects-catalog.md §10.2
   fallback:
@@ -1752,7 +1752,7 @@ effects:
     type: js
     libs: []
     demo: lab/magnetic-cta/
-    external_ref: ['blender:01-01#10.1']
+    external_ref: ['3d:01-01#10.1']
     code_ref: 01-effects-catalog.md §7.3
   fallback:
     no_js:
@@ -1817,7 +1817,7 @@ effects:
     type: js
     libs: []
     demo: lab/tilt-card/
-    external_ref: ['blender:01-01#10.1']
+    external_ref: ['3d:01-01#10.1']
     code_ref: 01-effects-catalog.md §7.4
   fallback:
     no_js:
@@ -1881,7 +1881,7 @@ effects:
     type: svg
     libs: []
     demo: lab/hover-distort-dom/
-    external_ref: ['blender:01-01#9.1']
+    external_ref: ['3d:01-01#9.1']
     code_ref: 01-effects-catalog.md §7.5
   fallback:
     no_js:
@@ -1946,7 +1946,7 @@ effects:
     type: webgl
     libs: []
     demo: lab/shader-bg/
-    external_ref: ['blender:01-01#5.1', 'blender:09-04#2.1']
+    external_ref: ['3d:01-01#5.1', '3d:09-04#2.1']
     stack_ref: 07-stack-implementation/stack.yaml#shader-code
     code_ref: 01-effects-catalog.md §8.1
   fallback:
@@ -1971,7 +1971,7 @@ effects:
       — токены марки из CSS, свет уходит от текста, без периодического качания'}
   rules: ['1 полноэкранный треугольник, 1 вызов; DPR ≤ 1 (телефон 0,75)', 'цикл только при видимости, без паузы и reduce; скрытая вкладка — стоп', 'дрейф
       непериодический (шум с деформацией домена); доля движения ≤ 2,5 %/с («дыхание»)']
-  evidence: ['[проверено]', '[проверено у blender: 09/04 §1 — 1 вызов, 1,45 мс/кадр]', '[данные: creative 03/01 §5, §13 — шейдерный
+  evidence: ['[проверено]', '[проверено у 3d: 09/04 §1 — 1 вызов, 1,45 мс/кадр]', '[данные: creative 03/01 §5, §13 — шейдерный
       фон у 20 из 49]']
   checked_at: '2026-09-24'
   cost:
@@ -2097,7 +2097,7 @@ effects:
     demo: lab/aurora-css/
     variants:
     - {id: drive-js, type: js, demo: 'lab/aurora-css/?drive=js', note: та же траектория из rAF — для замера без vsync}
-    external_ref: ['blender:01-01#5.7']
+    external_ref: ['3d:01-01#5.7']
     code_ref: 01-effects-catalog.md §8.3
   fallback:
     no_js:
@@ -2116,7 +2116,7 @@ effects:
       сияние — буквальный сюжет; цвета марки; сравнить цену с shader-bg}
   rules: ['размытие 48 px + screen на 3 слоях — 9,6 мс на кадр без vsync (drive=js, Iris Xe 1440×900) против 0,45 мс у shader-bg: в 21 раз дороже шейдера',
     движение в покое ≈ 0 %/с (периоды 31–53 с) — «дыхание»]
-  evidence: ['[проверено]', '[проверено у blender: 01/01 §5.7 — Unicorn Studio TBT 254–1158 мс]']
+  evidence: ['[проверено]', '[проверено у 3d: 01/01 §5.7 — Unicorn Studio TBT 254–1158 мс]']
   checked_at: '2026-09-25'
   cost:
     bytes_br: 2271
@@ -2152,7 +2152,7 @@ effects:
   name_ru: Иридесцентный (голографический) фон на шейдере
   name_en: iridescent / holographic shader background
   family: background
-  purpose: Перелив как материал продукта (голограмма, плёнка, упаковка) — закрывает висячую ссылку blender 06/01 §3.5.
+  purpose: Перелив как материал продукта (голограмма, плёнка, упаковка) — закрывает висячую ссылку 3d 06/01 §3.5.
   effect_role: [signature]
   level_min: L1
   limits: {webgl_contexts: 1}
@@ -2171,7 +2171,7 @@ effects:
         по умолчанию для маркетинга)'}
     - {id: css-foil, type: css, demo: 'lab/holo-shader-bg/?v=css', note: 'полоса перелива тонов марки на @property --p от курсора + штрихи, 0 WebGL — фолбэк
         и L0–L1'}
-    external_ref: ['blender:01-01#7.4', 'blender:06-01#3.5']
+    external_ref: ['3d:01-01#7.4', '3d:06-01#3.5']
     stack_ref: 07-stack-implementation/stack.yaml#shader-code
     code_ref: 01-effects-catalog.md §8.4
   fallback:
@@ -2192,7 +2192,7 @@ effects:
     loop_control: [pause-button]
     flashes: none
   cliche: {risk: mid, status: saturated, registry_id: 'cliche:iridescent-holo', turn: 'перелив = продукт (голограмма, плёнка); окно тонов марки вместо радуги;
-      веб-вид, а не рендер (MAT-07 blender)'}
+      веб-вид, а не рендер (MAT-07 3d)'}
   rules: ['модель — дифракционная решётка: яркая полоса блика идёт за углом зрения (курсор, сглаживание λ = 6; тач — прокрутка), в ней спектр по порядку
       и второй порядок 0,35, ориентация решётки меняется пятнами («мозаика» защитной голограммы), штрихи ≈ 5 px (±10 % яркости), белое ядро, тёмная «металлическая»
       основа; 2 шума на пиксель', 'первая модель (тонкая плёнка + френель) глазами — тусклые размытые пятна, «радуга ИИ», а не материал (пары «до
@@ -2201,7 +2201,7 @@ effects:
     'текст — на скриме ≥ 0,84 под всей текстовой колонкой (десктоп) или сверху вниз (телефон); полоса в покое — вне колонки (uOff: десктоп 0,18, телефон
       0,36 — над текстом); худший контраст из 7 положений полосы по границам текста ≥ 4,5 : 1', 'ориентация решётки неподвижна во времени:
       штрихи считаются от абсолютных координат, и дрейф ориентации сдвигал их — 3,8 %/с в покое; неподвижная — 0–0,02 %/с, полоса движется только от указателя
-      или прокрутки; бюджет ≤ 2 мс GPU на эффект (blender 09/04 §10)', 'без WebGL — CSS-фольга той же конструкции: полоса тонов марки на @property --p от
+      или прокрутки; бюджет ≤ 2 мс GPU на эффект (3d 09/04 §10)', 'без WebGL — CSS-фольга той же конструкции: полоса тонов марки на @property --p от
       курсора, штрихи repeating-linear-gradient']
   evidence: ['[проверено]', '[проверено: оценка глазами до → после, контраст, перемер]',
     '[гипотеза: «материал продукта» — оценка глазами; показ людям — живая фаза]']
@@ -2257,7 +2257,7 @@ effects:
     variants:
     - {id: animated, type: css, demo: 'lab/grain-overlay/?v=animated', note: '8 шагов/с — петля, пауза обязательна'}
     - {id: canvas, type: js, demo: 'lab/grain-overlay/?v=canvas', note: 'антипример: новый шум каждый кадр'}
-    external_ref: ['ai-media:10-03#4.3', 'blender:09-04#9']
+    external_ref: ['ai-media:10-03#4.3', '3d:09-04#9']
     code_ref: 01-effects-catalog.md §8.5
   fallback:
     no_js:
@@ -2652,7 +2652,7 @@ effects:
     variants:
     - {id: h264, type: video, demo: 'lab/video-loop-hero/?codec=h264'}
     - {id: naive, type: video, demo: 'lab/video-loop-hero/?v=naive', note: 'как у практики: без постера и паузы'}
-    external_ref: ['ai-media:10-02#4', 'blender:01-01#15.1']
+    external_ref: ['ai-media:10-02#4', '3d:01-01#15.1']
     stack_ref: 07-stack-implementation/stack.yaml#html-media
     code_ref: 02-hero-video-background.md
   fallback:
@@ -2671,7 +2671,7 @@ effects:
     flashes: none
   assets:
     ai_media: [VID-HERO-LOOP]
-    blender: ['blender:01-01#15.1', 'blender:12-08']
+    3d: ['3d:01-01#15.1', '3d:12-08']
   cliche: {risk: mid, status: saturated (hero-media-veil; eternal-slowmo), registry_id: 'cliche:hero-media-veil'}
   rules: [рецепт — 02-hero-video-background.md, 'демо lab/video-loop-hero — «громкая» петля 56–63 %/с: образец L2 (первый экран, пауза видна сразу,
       текст на подложке); для L1 — антипример ворот EG-A11Y-22 (громких окон L1 — 0; motion_check 0.1.3: 3 окна, S) — на L1 петля ≤ 5 %/с или effect:cinemagraph
@@ -2789,7 +2789,7 @@ effects:
     type: video
     libs: []
     demo: null
-    external_ref: ['blender:01-01#15.3', 'ai-media:10-02#9']
+    external_ref: ['3d:01-01#15.3', 'ai-media:10-02#9']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2802,9 +2802,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#15.3']
+    3d: ['3d:01-01#15.3']
   cliche: {risk: mid, status: н/д, registry_id: null}
-  evidence: ['[ссылка: blender:01-01#15.3, ai-media:10-02#9]']
+  evidence: ['[ссылка: 3d:01-01#15.3, ai-media:10-02#9]']
   checked_at: '2026-09-24'
 - id: image-sequence
   name_ru: Секвенция кадров на прокрутке
@@ -2820,8 +2820,8 @@ effects:
     type: video
     libs: []
     demo: null
-    external_ref: ['blender:01-01#14.1', 'ai-media:10-02#9']
-  cost: {bytes_br: null, note: 100–300 кадров × 10–40 КБ = 2–10 МБ (blender)}
+    external_ref: ['3d:01-01#14.1', 'ai-media:10-02#9']
+  cost: {bytes_br: null, note: 100–300 кадров × 10–40 КБ = 2–10 МБ (3d)}
   fallback:
     no_js: постер или статичный кадр
     no_webgl: постер
@@ -2833,9 +2833,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#14.1']
+    3d: ['3d:01-01#14.1']
   cliche: {risk: mid, status: н/д, registry_id: null}
-  evidence: ['[ссылка: blender:01-01#14.1, ai-media:10-02#9]']
+  evidence: ['[ссылка: 3d:01-01#14.1, ai-media:10-02#9]']
   checked_at: '2026-09-24'
 - id: alpha-video-object
   name_ru: Прозрачное видео поверх вёрстки
@@ -2851,7 +2851,7 @@ effects:
     type: video
     libs: []
     demo: null
-    external_ref: ['blender:01-01#15.2', 'ai-media:10-03#4.5']
+    external_ref: ['3d:01-01#15.2', 'ai-media:10-03#4.5']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2864,9 +2864,9 @@ effects:
     flashes: none
   assets:
     ai_media: [VID-ALPHA]
-    blender: ['blender:01-01#15.2']
+    3d: ['3d:01-01#15.2']
   cliche: {risk: mid, status: н/д, registry_id: null}
-  evidence: ['[ссылка: blender:01-01#15.2, ai-media:10-03#4.5]']
+  evidence: ['[ссылка: 3d:01-01#15.2, ai-media:10-03#4.5]']
   checked_at: '2026-09-24'
 - id: 3d-object
   name_ru: 3D-объект товара
@@ -2882,7 +2882,7 @@ effects:
     type: webgl
     libs: []
     demo: null
-    external_ref: ['blender:01-01#2.1', 'blender:01-01#2.2', 'blender:09-05#7.2']
+    external_ref: ['3d:01-01#2.1', '3d:01-01#2.2', '3d:09-05#7.2']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2895,9 +2895,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#2.1', 'blender:01-01#2.2', 'blender:09-05#7.2']
+    3d: ['3d:01-01#2.1', '3d:01-01#2.2', '3d:09-05#7.2']
   cliche: {risk: mid, status: н/д, registry_id: null}
-  evidence: ['[ссылка: blender:01-01#2.1, blender:01-01#2.2, blender:09-05#7.2]']
+  evidence: ['[ссылка: 3d:01-01#2.1, 3d:01-01#2.2, 3d:09-05#7.2]']
   checked_at: '2026-09-24'
 - id: 3d-scene
   name_ru: 3D-сцена или мир
@@ -2913,7 +2913,7 @@ effects:
     type: webgl
     libs: []
     demo: null
-    external_ref: ['blender:01-01#4.1', 'blender:09-03#2', 'blender:09-05#7.2']
+    external_ref: ['3d:01-01#4.1', '3d:09-03#2', '3d:09-05#7.2']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2926,9 +2926,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#4.1', 'blender:09-03#2', 'blender:09-05#7.2']
+    3d: ['3d:01-01#4.1', '3d:09-03#2', '3d:09-05#7.2']
   cliche: {risk: high, status: saturated без задачи, registry_id: 'cliche:webgl-centerpiece'}
-  evidence: ['[ссылка: blender:01-01#4.1, blender:09-03#2, blender:09-05#7.2]']
+  evidence: ['[ссылка: 3d:01-01#4.1, 3d:09-03#2, 3d:09-05#7.2]']
   checked_at: '2026-09-24'
 - id: particles-webgl
   name_ru: Частицы (WebGL)
@@ -2944,7 +2944,7 @@ effects:
     type: webgl
     libs: []
     demo: null
-    external_ref: ['blender:01-01#6.1', 'blender:01-01#6.2']
+    external_ref: ['3d:01-01#6.1', '3d:01-01#6.2']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2957,9 +2957,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#6.1', 'blender:01-01#6.2']
+    3d: ['3d:01-01#6.1', '3d:01-01#6.2']
   cliche: {risk: mid, status: saturated, registry_id: 'cliche:particle-swarm'}
-  evidence: ['[ссылка: blender:01-01#6.1, blender:01-01#6.2]']
+  evidence: ['[ссылка: 3d:01-01#6.1, 3d:01-01#6.2]']
   checked_at: '2026-09-24'
 - id: webgl-image-distortion
   name_ru: Искажения картинок на WebGL
@@ -2975,7 +2975,7 @@ effects:
     type: webgl
     libs: []
     demo: null
-    external_ref: ['blender:01-01#9.1', 'blender:01-01#9.2', 'blender:01-01#9.4']
+    external_ref: ['3d:01-01#9.1', '3d:01-01#9.2', '3d:01-01#9.4']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -2988,9 +2988,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#9.1', 'blender:01-01#9.2', 'blender:01-01#9.4']
+    3d: ['3d:01-01#9.1', '3d:01-01#9.2', '3d:01-01#9.4']
   cliche: {risk: mid, status: dated на каждой карточке, registry_id: 'cliche:liquid-hover-distortion'}
-  evidence: ['[ссылка: blender:01-01#9.1, blender:01-01#9.2, blender:01-01#9.4]']
+  evidence: ['[ссылка: 3d:01-01#9.1, 3d:01-01#9.2, 3d:01-01#9.4]']
   checked_at: '2026-09-24'
 - id: depth-parallax-25d
   name_ru: Картинка с глубиной (2.5D)
@@ -3006,7 +3006,7 @@ effects:
     type: webgl
     libs: []
     demo: null
-    external_ref: ['ai-media:10-03#4.5', 'blender:01-01#9.5']
+    external_ref: ['ai-media:10-03#4.5', '3d:01-01#9.5']
   cost: {bytes_br: null, note: цена и ворота — у соседа по ссылке}
   fallback:
     no_js: постер или статичный кадр
@@ -3019,9 +3019,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-01#9.5']
+    3d: ['3d:01-01#9.5']
   cliche: {risk: mid, status: н/д, registry_id: null}
-  evidence: ['[ссылка: ai-media:10-03#4.5, blender:01-01#9.5]']
+  evidence: ['[ссылка: ai-media:10-03#4.5, 3d:01-01#9.5]']
   checked_at: '2026-09-24'
 - id: preloader
   name_ru: Прелоадер
@@ -3037,8 +3037,8 @@ effects:
     type: js
     libs: []
     demo: null
-    external_ref: ['blender:01-02#26']
-  cost: {bytes_br: null, note: правила — 05-motion/02; запрещён на продуктовых страницах (blender 01/02 п.26)}
+    external_ref: ['3d:01-02#26']
+  cost: {bytes_br: null, note: правила — 05-motion/02; запрещён на продуктовых страницах (3d 01/02 п.26)}
   fallback:
     no_js: постер или статичный кадр
     no_webgl: постер
@@ -3050,9 +3050,9 @@ effects:
     flashes: none
   assets:
     ai_media: []
-    blender: ['blender:01-02#26']
+    3d: ['3d:01-02#26']
   cliche: {risk: mid, status: dated, registry_id: 'cliche:preloader'}
-  evidence: ['[ссылка: blender:01-02#26]']
+  evidence: ['[ссылка: 3d:01-02#26]']
   checked_at: '2026-09-24'
 - id: motion-toggle
   name_ru: Переключатель «меньше движения» и общая пауза
@@ -3465,7 +3465,7 @@ effects:
     variants:
     - {id: class, type: js, demo: 'lab/header-shrink-on-scroll/?v=class', note: класс по порогу 40 px (rAF) + переходы 240 мс — Firefox без SDA}
     - {id: height, type: css, demo: 'lab/header-shrink-on-scroll/?v=height', note: 'антипример: анимация height шапки в потоке'}
-    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по blender 09/03, 2026-09-23); работает
+    support: {animation-timeline: 'animation-timeline: Chrome 115+, Safari 26+, Firefox — только за флагом (BCD по 3d 09/03, 2026-09-23); работает
         в Chromium 153 и WebKit 26.6 Playwright [проверено 2026-09-24]'}
   fallback:
     no_js:

@@ -615,8 +615,8 @@ waitlist), многостраничники (главная и 2 шаблона)
 - [S8] ai-media-research, агент A, «Замер живых сайтов 2025–2026»,
   `../../ai-media/01-web-assets-landscape/02-live-sites-measured.md` и `sites.csv`, 2026-09-23 — метод замера
   (CDP, LCP до прокрутки), 43 главные страницы брендов; [проверено: ai-media A].
-- [S9] blender-research, агент A, `../../blender/01-web-3d-landscape/04-reference-sites-measured.md` §1 — метод
-  замера 33 наградных 3D-сайтов (мобильный с CPU×4); [проверено: blender A].
+- [S9] 3d-research, агент A, `../../3d/01-web-3d-landscape/04-reference-sites-measured.md` §1 — метод
+  замера 33 наградных 3D-сайтов (мобильный с CPU×4); [проверено: 3d A].
 - [S10] text-research, агент D, корпус `../../text-research/03-corpus-measured/corpus.tsv`, `01-corpus-method.md` §2–§3,
   2026-09-24 — источник 44 адресов выборки (колонка `text_id`); [проверено: text D].
 - [S11] Наши опыты: `99-raw/experiments/M/00-selftest/`, `01-net-route/`, `02-pilot/`, `03-sample/` (JSON, листы,

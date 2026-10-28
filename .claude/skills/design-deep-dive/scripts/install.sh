@@ -36,7 +36,7 @@
 # расширений Blender Lab, фоновый Blender с --online-mode --command blender_mcp в песочнице bwrap, сервер — закреплённым
 # тегом:
 #   uvx --from "git+https://projects.blender.org/lab/blender_mcp.git@v1.0.3#subdirectory=mcp" blender-mcp
-# Рецепт — kb/blender/04-ai-agents-mcp/06-headless-operations.md §6.1 и 07-security.md §8; к Claude Code сервер подключает
+# Рецепт — kb/3d/04-ai-agents-mcp/06-headless-operations.md §6.1 и 07-security.md §8; к Claude Code сервер подключает
 # владелец машины.
 set -euo pipefail
 
@@ -305,12 +305,12 @@ if [ "$DO_NPM" = 1 ]; then
       if [ "$DRY" = 0 ]; then printf '%s\n' "$want" > "$NODE_HOME/.package.sha256"; fi
     fi
     if grep -q '^    "esbuild":' "$NPM_TMP"; then
-      # esbuild (группа 3d) нужен только эталонным 3D-сборкам базы (сборки и постеры примеров kb/blender), утилитам
+      # esbuild (группа 3d) нужен только эталонным 3D-сборкам базы (сборки и постеры примеров kb/3d), утилитам
       # скилла — нет: его сбой — предупреждение, установка идёт дальше. Скрипт установки esbuild разрешён полем
       # allowScripts в package.json (npm ≥ 12 без разрешения его пропускает); на дереве, поставленном без разрешения,
       # его запускает npm rebuild
       ESB="$NODE_HOME/node_modules/esbuild/bin/esbuild"
-      ESB_WHY="эталонные 3D-сборки базы (примеры kb/blender) без него не соберутся, утилитам скилла он не нужен"
+      ESB_WHY="эталонные 3D-сборки базы (примеры kb/3d) без него не соберутся, утилитам скилла он не нужен"
       if [ -f "$ESB" ] && [ "$(head -c 2 "$ESB")" = '#!' ]; then
         if ! run "$NPM" rebuild esbuild --prefix "$NODE_HOME"; then warn "npm rebuild esbuild не прошёл — $ESB_WHY"; fi
       fi
@@ -322,8 +322,8 @@ if [ "$DO_NPM" = 1 ]; then
     if grep -q '^    "gltf-validator":' "$NPM_TMP"; then
       # validate.mjs (gltf_check.py, группа 3d) ищет gltf-validator рядом с собой: копия в $DDD_HOME/node, не симлинк
       # (ESM идёт по realpath)
-      if cmp -s "$SCRIPTS/blender/node/validate.mjs" "$NODE_HOME/validate.mjs"; then say "  validate.mjs на месте";
-      else run cp "$SCRIPTS/blender/node/validate.mjs" "$NODE_HOME/validate.mjs"; fi
+      if cmp -s "$SCRIPTS/3d/node/validate.mjs" "$NODE_HOME/validate.mjs"; then say "  validate.mjs на месте";
+      else run cp "$SCRIPTS/3d/node/validate.mjs" "$NODE_HOME/validate.mjs"; fi
     fi
   fi
 fi

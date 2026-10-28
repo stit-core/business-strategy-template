@@ -52,10 +52,10 @@ CUDA) командами `--version` и метаданными пакетов (`
 | `provenance_check.py` | 0.1 | C2PA, XMP/IPTC, AIGC, подпись Recraft, углы кадра; `stamp` производной | selftest 11/11, корпус 70 файлов | L |
 | `page_accept.py` | — | приёмка страницы: байты первого экрана, LCP, CLS, TBT, пауза, reduce, F83 по буквам и кадрам | 9 страниц, 27 прогонов | J |
 | `asset_inventory.py` | — | инвентарь ассетов живого сайта (LCP, видео, SVG, Lottie, сеть) | 52 URL десктоп, 10 телефон | A |
-| `site_probe.py`, `color.py`, `fetch.py`, `render_fetch.py`, `yt_transcript.py`, `vtt2md.py`, `yt_dl.py` | — | замер сайта; WCAG/APCA/OKLCH; чтение веба; субтитры YouTube | — | blender-research, ui-research, V |
+| `site_probe.py`, `color.py`, `fetch.py`, `render_fetch.py`, `yt_transcript.py`, `vtt2md.py`, `yt_dl.py` | — | замер сайта; WCAG/APCA/OKLCH; чтение веба; субтитры YouTube | — | 3d-research, ui-research, V |
 | **`routing_check.py`** | 1.0 | валидатор `routing.yaml`: модели, провайдеры, параметры, цены (± 1 %), диалекты, рубрики, флаги `legal`, тесты фазы 5 | 0 ошибок; отрицательный тест 9/9 | **N** |
 | **`channel_diff.py`** (`99-raw/experiments/N/04-update-dryrun/`) | — | разница снимков RouterAI и Gen-API: новые, удалённые, сдвиг цен, параметры | прогон 23→24.09 | **N** |
-| скрипты опытов | — | J `05-assets/{make_images,make_video,sweep_crf,finalize_video,make_alpha,make_og}.py`; G `check_icons.py`, `sheet.py`, `grid.py`, `02-…/process.py`, `slice.py`, `retrace.py`; H `00-reference-renders/make_refs.py`, `03-edit-check/ghost_zone.py`, `06-depth/depth_eval.py`; blender `blender_run.py` | в README опытов | J, G, H, blender |
+| скрипты опытов | — | J `05-assets/{make_images,make_video,sweep_crf,finalize_video,make_alpha,make_og}.py`; G `check_icons.py`, `sheet.py`, `grid.py`, `02-…/process.py`, `slice.py`, `retrace.py`; H `00-reference-renders/make_refs.py`, `03-edit-check/ghost_zone.py`, `06-depth/depth_eval.py`; 3d `blender_run.py` | в README опытов | J, G, H, 3d |
 
 ## 2. Бинарники и CLI
 

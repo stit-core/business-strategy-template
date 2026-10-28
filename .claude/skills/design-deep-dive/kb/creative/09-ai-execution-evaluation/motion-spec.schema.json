@@ -565,7 +565,13 @@
         "scene": {
           "type": "object",
           "additionalProperties": false,
+          "if": {"not": {"required": ["scroll_mode"], "properties": {"scroll_mode": {"const": "beats"}}}},
+          "then": {"properties": {"stations": {"maxItems": 6}}},
           "properties": {
+            "scroll_mode": {
+              "enum": ["scrub", "beats", "glide", "play"],
+              "description": "Класс прокрутки сцены: scrub — прогресс ведёт прокрутка (умолчание); beats — шаги с доигрышем: текст карточками поверх закреплённого окна, сцена доигрывает такт до точки покоя, 5–7 точек покоя, поле до pin-beats-max-vh (creative 05/02 §4.1.1); glide — путь с инерцией; play — играет сама, когда полоса на экране. Реализация — рантайм сцен 3d 16/02."
+            },
             "pin": {
               "enum": ["none", "sticky", "pin-transform", "pin-padding"],
               "description": "sticky или pinType transform — без CLS (замер: 0 против 1,6–2,0 у pin-padding)."
@@ -585,9 +591,9 @@
             "stations": {
               "type": "array",
               "minItems": 2,
-              "maxItems": 6,
+              "maxItems": 7,
               "items": {"$ref": "#/$defs/station"},
-              "description": "2–6 станций; допуск и система отсчёта — $defs.station (X-57)."
+              "description": "2–6 станций, у шагов с доигрышем (scroll_mode: beats) — до 7 точек покоя; допуск и система отсчёта — $defs.station (X-57)."
             },
             "camera": {
               "enum": ["none", "walkthrough", "fly-through", "locked-iso", "orbit", "track"],

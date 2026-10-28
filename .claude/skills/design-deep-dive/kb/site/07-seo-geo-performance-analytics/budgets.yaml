@@ -19,7 +19,7 @@ sources:
   S-M: "замер M (02-site-types/pages.csv 15:23, valid=1: 40 десктоп + 42 телефон; лаборатория без замедления сети, телефон CPU×4)"
   S-creative-C1: "../creative/01-creative-direction/ambition-levels.yaml v0 (2026-09-24): budgets.page — предложение для P"
   S-aimedia: "../ai-media/10-web-integration/04-budgets-and-acceptance.md §1.1 (нормы ассетов первого экрана)"
-  S-blender: "../blender/09-web-runtime/05-performance-a11y-fallbacks.md §1.1, §7.2 (доля 3D)"
+  S-blender: "../3d/09-web-runtime/05-performance-a11y-fallbacks.md §1.1, §7.2 (доля 3D)"
   S-everts: "[V:cnr3CJwpaps 32:32] Tammy Everts: бюджет = худшее значение за 2–4 недели; цель отдельно"
   S-googlebot: "[V:kype1JQbrks 08:18] + документация Googlebot (2026-02-03): первые 2 МБ несжатого файла"
 
@@ -57,7 +57,7 @@ conditions:
   quiet:
     what: "TBT, LCP и мс кадра — только на тихой машине: утилиты замера времени (page_accept.py, motion_check.py, site_probe.py, web_view.py) сначала берут общий тяжёлый замок (тот же, что slot_run.py --heavy), потом замок браузера; пара «с 3D / без 3D» и пара с эталоном — подряд в одном прогоне"
     lock: render
-    basis: "blender 15-showcase: под нагрузкой соседних прогонов TBT 634–827 мс против 76–137 мс в тишине"
+    basis: "3d 15-showcase: под нагрузкой соседних прогонов TBT 634–827 мс против 76–137 мс в тишине"
   inp_scenario:
     what: "лабораторный INP по сценарию (как page_anatomy.py --inp): меню, CTA, аккордеон, фокус в поле; + одно нажатие во время загрузки (DCL + 500 мс)"
     note: "сценарий после загрузки занижает INP: M — 0 из 111 прогонов > 200 мс при TBT телефона > 200 мс у 55 %"
@@ -98,7 +98,7 @@ levels:
     weight:
       first_screen_kb: {mobile: 1500, desktop: 2500, basis: "S-creative-C1 = ai-media Q1 лидеров; M все страницы телефон медиана 2 056"}
       session_kb: {mobile: 3000, desktop: 5000, basis: "S-creative-C1; M телефон медиана 3 497"}
-      js_first_screen_kb: {mobile: 300, desktop: 300, basis: "WA 2025 JS p25 270 КБ; M многостраничники медиана 283; Russell 2024 ≈ 365 КБ JS на p75-телефоне [мнение эксперта через blender 01/02 §3.2]"}
+      js_first_screen_kb: {mobile: 300, desktop: 300, basis: "WA 2025 JS p25 270 КБ; M многостраничники медиана 283; Russell 2024 ≈ 365 КБ JS на p75-телефоне [мнение эксперта через 3d 01/02 §3.2]"}
       fonts_kb: {mobile: 150, desktop: 150, basis: "S-creative-C1; WA 2025 медиана шрифтов 122 / 139 КБ"}
       third_party_origins_before_input: {max: 1, basis: "до ввода — только CMP (0, если свой); счётчики и пиксели — после согласия (SG-LEGAL-01, позиция site 08 по умолчанию [спорно]); карты, чат, видео, запись — по видимости или нажатию (03 §5); M медиана 7"}
       third_party_first_screen_kb: {max: 200, basis: "Метрика ≈ 120 КБ за сессию (замер M; пересчёт — 124 КБ; ориентир) + CMP 16–84 КБ"}
@@ -123,7 +123,7 @@ levels:
   L2:
     name: "Иммерсивно, «вау»"
     effects_ref: "../creative/01-creative-direction/ambition-levels.yaml#levels.L2.budgets.effects"
-    three_d_ref: "../blender/09-web-runtime/05-performance-a11y-fallbacks.md §7.2 (WEB-01…16: доля 3D ≤ 820/1536 КБ, TBT 3D ≤ 300/150)"
+    three_d_ref: "../3d/09-web-runtime/05-performance-a11y-fallbacks.md §7.2 (WEB-01…16: доля 3D ≤ 820/1536 КБ, TBT 3D ≤ 300/150)"
     outcome:
       lcp_ms_field_p75: {goal: 2500, poor: 4000, basis: "S-vitals: «вау» после LCP — порог тот же"}
       inp_ms_field_p75: {goal: 200, poor: 500, basis: S-vitals}
@@ -131,11 +131,11 @@ levels:
       lcp_ms_lab: {mobile: {goal: 3000, poor: 4000}, desktop: {goal: 2500, poor: 4000}, basis: "S-creative-C1 (телефон 3,0 с — постер после прелоадера запрещён: прелоадер только по решению)"}
       cls_lab: {goal: 0.1, poor: 0.25, basis: S-thresholds}
       inp_ms_lab_scenario: {goal: 200, poor: 500, basis: S-vitals}
-      tbt_ms_lab: {mobile: {goal: 600}, desktop: {goal: 300}, basis: "blender 01/02 §8 (страница CPU×4 ≤ 600); S-creative-C1"}
+      tbt_ms_lab: {mobile: {goal: 600}, desktop: {goal: 300}, basis: "3d 01/02 §8 (страница CPU×4 ≤ 600); S-creative-C1"}
     weight:
       first_screen_kb: {mobile: 2500, desktop: 4000, basis: "S-creative-C1; ai-media Awwwards до прокрутки медиана 3,8 МБ"}
       session_kb: {mobile: 8000, desktop: 15000, basis: "S-creative-C1; Awwwards сессия медиана 20,9 МБ — L2 строже жанра"}
-      js_first_screen_kb: {mobile: 750, desktop: 900, basis: "L1 + JS 3D 250/350 КБ br (creative, blender); WA p75 1 233 КБ"}
+      js_first_screen_kb: {mobile: 750, desktop: 900, basis: "L1 + JS 3D 250/350 КБ br (creative, 3d); WA p75 1 233 КБ"}
       fonts_kb: {mobile: 300, desktop: 300, basis: S-creative-C1}
       third_party_origins_before_input: {max: 2, basis: "как L1"}
       third_party_first_screen_kb: {max: 300, basis: "как L1: «вау» делает свой код, а не сторонние виджеты"}
@@ -182,7 +182,7 @@ resolve:
   - "2. Взять levels[L<n>] (outcome, weight) + all_levels."
   - "3. Наложить overrides['<page_type>@L<n>'] (поле за полем)."
   - "4. Проверить: L<n> ≤ уровня сайта; для lead-services — правило горячего мобильного трафика."
-  - "5. Секции с 3D — дополнительно ворота blender (доля 3D) по three_d_ref; эффекты — ворота creative по effects_ref."
+  - "5. Секции с 3D — дополнительно ворота 3d (доля 3D) по three_d_ref; эффекты — ворота creative по effects_ref."
   - "Реализация — page_gates.py resolve_profile(); самопроверка — page_gates.py --selftest."
 
 # ---------------------------------------------------------------- бюджеты регрессии живой страницы (Everts)

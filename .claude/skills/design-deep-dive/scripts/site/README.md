@@ -76,7 +76,7 @@ referencing: в системном python без них утилита пере�
 - **План.** Умолчания уровня по типу страницы (PL-P02) — `defaults_by_page_type` того же файла вместе с разделом
   `proposed`. Уровни эффектов секций и переходов страниц (PL-C02) — `x-effect-levels` подсхемы `treatment` и
   `limits.library_level_min` эффекта `page-transition` (`kb/creative/06-effects-catalog/effects.yaml`). 3D-слот: рецепт
-  `recipe:<id>` есть в `kb/blender/12-recipes/` (PL-D02); ниже первого экрана загрузка по намерению `on-interaction`,
+  `recipe:<id>` есть в `kb/3d/12-recipes/` (PL-D02); ниже первого экрана загрузка по намерению `on-interaction`,
   `on-visible` и `after-lcp` — предупреждение (PL-D03).
 - **Ограничения.** Длины текстов проверяет text; порядок ролей из осведомлённости — человек и судья.
 

@@ -1,7 +1,7 @@
 # Каталог блоков: шапка, первый экран, доказательства, ценность, оффер, финальный призыв, подвал
 
 Волна 2 · агент E · 2026-09-24 · прочитано целиком 8 внешних источников (NN/g ×5, GOV.UK ×2, Google ×1) и входы B, C, A,
-text, Hallmark, ai-media, blender, kimi, ux · опыты `99-raw/experiments/E/01-validate`, `02-text-slot-defaults`,
+text, Hallmark, ai-media, 3d, kimi, ux · опыты `99-raw/experiments/E/01-validate`, `02-text-slot-defaults`,
 `03-saas-demo-brief`, `04-blocks-vs-live-pages`
 
 Машиночитаемый каталог — `blocks.yaml` (v1.0 — 84 блока; схема `../10-playbooks-contracts/schemas/blocks.schema.json`): анатомия, варианты, телефон, разметка и
@@ -72,7 +72,7 @@ creative по id блока; тексты слотов — text по id слот
 | Вариант (`variants[].id`) | раскладка или состав той же анатомии (split, фон, плакат; сетка, лента) | E | `blocks.yaml` |
 | Подача (`treatment`) | композиция, типографика, цвет, движение, эффекты | creative | `block-treatments.yaml` (после C1) |
 | Текст слота | формулы, длины, запреты | text | `../../text/04-copy-by-block/copy-slots.yaml` |
-| Медиа и 3D слота | код задачи, формат, генерация, доставка | ai-media, blender | `../../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §8, `../../blender/12-recipes/` |
+| Медиа и 3D слота | код задачи, формат, генерация, доставка | ai-media, 3d | `../../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §8, `../../3d/12-recipes/` |
 
 - Одна роль — разные блоки: `testimonials` → `testimonial-cards`, `testimonial-single`, `review-aggregate`; один блок —
   разные роли: `stat-strip` → `proof-stats`, `feature-grid` → `benefits`, `audience`, `solution` (поле `serves`).
@@ -194,7 +194,7 @@ creative по id блока; тексты слотов — text по id слот
 - **LCP**: у `split` и `product-frame` кандидат — картинка (eager, `fetchpriority=high`, `width`/`height`); у `background`
   под прозрачной шапкой и у шейдера — H1 (быстрый шрифт — P). 3D и видео — после LCP, с постером того же ракурса.
   [документация: web.dev; данные: ai-media 01/01 §2.2]
-- Поправка к `../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3 («прайсинг и лиды — 3D вредит»)
+- Поправка к `../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3 («прайсинг и лиды — 3D вредит»)
   для сайта: 3D в первом экране лидогенерации допустим, если LCP — H1 или постер, а призыв и форма работают до загрузки 3D;
   в блоках тарифов и форм 3D не ставится, потому что правило уровня страницы отсекает законный приём (PLAN, поправка 22).
 
@@ -443,7 +443,7 @@ creative по id блока; тексты слотов — text по id слот
   различения, crosswalk Hallmark → блоки. Свой агент волны 1.
 - [S10] ai-media `../../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §2.1, §2.2, §8 — слоты
   ассетов, LCP по типу hero, план ассетов. [данные: замер ai-media]
-- [S11] blender `../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3, §5, §7 — когда 3D. [практика] [данные]
+- [S11] 3d `../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md` §1.3, §5, §7 — когда 3D. [практика] [данные]
 - [S12] text: `../../text/04-copy-by-block/copy-slots.yaml` (2026-09-24, draft), `02-strategy-messaging/facts.schema.yaml`,
   примеры фактов «Отвес» и демо «Окошко». Сестра.
 - [S13] ux: `../../ux/02-ia-navigation/02-navigation-patterns.md` §4, §7, §8; `04-components-patterns/01-data-tables.md`

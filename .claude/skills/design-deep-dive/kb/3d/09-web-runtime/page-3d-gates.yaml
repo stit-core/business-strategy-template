@@ -1,0 +1,97 @@
+# Ворота страницы с 3D — пороги gate_check.py по отчёту зонда site_probe.py (probe*.json).
+#
+# Описание и основания — 05-performance-a11y-fallbacks.md §1.1 (числа) и §7.2 (прогоны и поля зонда); строки WEB-* —
+# мастер-чек-лист 11-evaluation-qa/05-master-checklist.md §9. Числа ворот 3D живут здесь, код gate_check.py их читает.
+#
+# Иерархия ворот (site 07-seo-geo-performance-analytics/03-performance-budgets-gates.md §4): ворота 3D владеют долей 3D и
+# поведением 3D на странице — LCP-элемент не canvas, байты 3D-ассетов, вызовы отрисовки, DPR холста, reduce, ошибки консоли,
+# вклад 3D в TBT, первый кадр 3D. Метрики страницы целиком — LCP, CLS, TBT и вес страницы — у ворот страницы site: в отчёте
+# gate_check.py они зеркало (D) строки-владельца page-gates.yaml с порогом профиля страницы (--profile). Ворота 3D страницу за
+# чужие байты не блокируют; их провал на странице — SG-WEIGHT-08 (D).
+#
+# Серьёзность — шкала B/S/D (мастер-чек-лист: Б = B, В = S, Ж = D). Поле limit — число или {mobile, desktop}; reduced: true —
+# строка прогона с prefers-reduced-motion (site_probe.py --reduced-motion, gate_check.py --reduced).
+version: 1
+owner: "3d · 09-web-runtime"
+probe: "../../scripts/3d/site_probe.py URL OUT --quick [--mobile --throttle] [--reduced-motion] [--no-3d]"
+gates:
+  - key: lcp_not_canvas
+    id: WEB-01
+    check: "LCP-элемент не canvas (постер или текст)"
+    field: vitals_pre_scroll.lcp.tag
+    severity: B
+  - key: tbt3d
+    id: WEB-03
+    check: "вклад 3D в TBT до прокрутки, мс — разность с прогоном «постер без 3D» (site_probe.py --no-3d)"
+    field: vitals_pre_scroll.tbt_ms
+    limit: {mobile: 300, desktop: 150}
+    limit_ktx2: {desktop: 200}   # десктоп, если на странице были 3D-текстуры (транскодер KTX2 разжимает их на CPU)
+    severity: S
+    note: "[спорно] порог десктопа 150 / 200 мс — калибровка на пилоте"
+  - key: kb3d
+    id: WEB-04
+    check: "3D-ассеты, КБ (model3d + texture3d + bin)"
+    field: network.by_category
+    limit: {mobile: 820, desktop: 1536}
+    severity: B
+  - key: dc
+    id: WEB-05
+    check: "вызовов отрисовки в кадре в покое"
+    field: idle.dc_median
+    limit: {mobile: 30, desktop: 60}
+    severity: S
+  - key: dpr
+    id: WEB-05
+    check: "DPR холста; чёткость держит бюджет пикселей (canvas_mpx)"
+    field: detected.canvases[].w / css[0]
+    limit: {mobile: 2.0, desktop: 2.0}
+    severity: S
+  - key: canvas_mpx
+    id: WEB-05
+    check: "пиксели самого большого видимого холста, Мпикс — бюджет плотности (16-js-scenes/01-engine.md)"
+    field: detected.canvases[].w × h / 1e6
+    limit: {mobile: 1.9, desktop: 4.6}
+    severity: S
+  - key: first_frame
+    id: WEB-10
+    check: "первый кадр 3D, мс (первый кадр rAF с вызовом отрисовки)"
+    field: vitals_pre_scroll.first_draw_ms
+    limit: {mobile: 5000, desktop: 2000}
+    severity: S
+  - key: reduce_dc
+    id: WEB-06
+    check: "reduce: вызовов отрисовки в покое"
+    field: idle.dc_median
+    limit: 0
+    severity: B
+    reduced: true
+  - key: reduce_idle
+    id: WEB-06
+    check: "reduce: движение в покое, %"
+    field: idle_motion_pct
+    limit: 0.05
+    severity: B
+    reduced: true
+  - key: console
+    id: WEB-07
+    check: "ошибки консоли"
+    field: console_errors
+    limit: 0
+    severity: B
+mirrors:   # метрика страницы → строка-владелец page-gates.yaml; порог — профиль страницы (gate_check.py --profile)
+  - key: lcp
+    check: "LCP страницы, мс"
+    field: vitals_pre_scroll.lcp.t
+    owner: {mobile: SG-PERF-01, desktop: SG-PERF-02}
+  - key: cls
+    check: "CLS страницы до прокрутки"
+    field: vitals_pre_scroll.cls
+    owner: SG-PERF-03
+  - key: tbt
+    check: "TBT страницы до прокрутки, мс"
+    field: vitals_pre_scroll.tbt_ms
+    owner: SG-PERF-05
+  - key: transfer
+    check: "передано за прогон зонда, КБ"
+    field: network.transfer_kb
+    owner: SG-WEIGHT-02

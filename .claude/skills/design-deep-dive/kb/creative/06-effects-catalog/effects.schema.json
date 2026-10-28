@@ -70,7 +70,7 @@
             "variants": { "type": "array", "items": { "type": "object", "required": ["id", "type"], "additionalProperties": false,
               "properties": { "id": { "type": "string" }, "type": { "enum": ["css", "js", "webgl", "video", "lottie", "rive", "svg"] },
                 "demo": { "type": "string" }, "libs": { "type": "array", "items": { "type": "string" } }, "note": { "type": "string" } } } },
-            "external_ref": { "type": "array", "items": { "type": "string", "pattern": "^(blender|ai-media|ui|ux|site|text):[0-9a-z]{2}-[0-9a-z]{2}#[0-9.]+|^(blender|ai-media|ui|ux|site|text):" } },
+            "external_ref": { "type": "array", "items": { "type": "string", "pattern": "^(3d|ai-media|ui|ux|site|text):[0-9a-z]{2}-[0-9a-z]{2}#[0-9.]+|^(3d|ai-media|ui|ux|site|text):" } },
             "code_ref": { "type": "string" },
             "stack_ref": { "type": "string", "description": "Строка stack.yaml (выбор библиотеки)." },
             "support": { "type": "object", "additionalProperties": { "type": "string" },
@@ -133,7 +133,7 @@
           }
         },
         "assets": { "type": "object", "additionalProperties": false,
-          "properties": { "ai_media": { "type": "array", "items": { "type": "string" } }, "blender": { "type": "array", "items": { "type": "string" } }, "note": { "type": "string" } } },
+          "properties": { "ai_media": { "type": "array", "items": { "type": "string" } }, "3d": { "type": "array", "items": { "type": "string" } }, "note": { "type": "string" } } },
         "cliche": {
           "type": "object", "additionalProperties": false, "required": ["risk", "registry_id"],
           "properties": {

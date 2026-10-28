@@ -13,7 +13,7 @@
 #   заменить, когда приём законен. Здесь — только кто владелец и где та же примета записана у соседей. Пороги не
 #   пересказываются, чтобы правка нормы оставалась правкой одного места.
 # - Поверхность решает, чья норма действует. Экран приложения — ui; страница сайта — creative (визуал и движение),
-#   site (структура и честность страницы), text (тексты); картинка и видео — ai-media; 3D-ассет — blender. Где у
+#   site (структура и честность страницы), text (тексты); картинка и видео — ai-media; 3D-ассет — 3d. Где у
 #   приметы разные пороги на экране приложения и на странице сайта, `owner` называет место для каждой поверхности.
 # - Одна примета — вопрос «было ли это решением», а не дефект. Вердикт ставит кластер: несколько примет в одной
 #   единице счёта владельца — экране, сцене страницы, ассете, текстовом блоке (`domains[].unit`, `clusters`). Счета
@@ -109,7 +109,7 @@ domains:
     lift: паспорт визуала
   asset-3d:
     name: 3D-ассеты и сцены
-    owner: blender/11-evaluation-qa/05-master-checklist.md
+    owner: 3d/11-evaluation-qa/05-master-checklist.md
     ids: BR-*, MAT-*, CAM-* и другие пункты мастер-чек-листа
     unit: 3D-ассет и сцена
     diagnosis: >-
@@ -217,7 +217,7 @@ tells:
     surface: [page, asset]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#aurora-blobs
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22 («фиолетовая аврора в тёмном герое»)
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22 («фиолетовая аврора в тёмном герое»)
       - ai-media/11-evaluation-qa/03-checklists-by-asset.md §3.2
       - site/09-ai-generation-evaluation/ai-landing-markers.yaml#AIL-47 (смежно — перехват нажатия декоративным слоем)
 
@@ -317,10 +317,10 @@ tells:
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#iridescent-holo
     also:
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §5.2 (IMG-M06)
-      - blender/11-evaluation-qa/05-master-checklist.md §4 (MAT-07)
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/11-evaluation-qa/05-master-checklist.md §4 (MAT-07)
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
     note: >-
-      MAT-07 blender — правило совпадения вида рендера и веба, а не запрет вкуса; уместен ли перелив на странице, решает
+      MAT-07 3d — правило совпадения вида рендера и веба, а не запрет вкуса; уместен ли перелив на странице, решает
       арт-дирекция по записи реестра клише.
 
   - id: chrome-liquid-metal
@@ -329,14 +329,14 @@ tells:
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#chrome-liquid-metal
     also:
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §5.2 (IMG-M06)
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
 
   - id: glass-object-pastel
     name: стеклянный тор, капля или кубик на пастельном градиенте
     surface: [page, asset]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#glass-object-pastel
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §5.2 (IMG-M06)
       - ai-media/11-evaluation-qa/03-checklists-by-asset.md §3.2
 
@@ -345,7 +345,7 @@ tells:
     surface: [page, asset]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#particle-swarm
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §5.4
       - ai-media/11-evaluation-qa/03-checklists-by-asset.md §3.2
 
@@ -354,8 +354,8 @@ tells:
     surface: [page]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#webgl-centerpiece
     also:
-      - blender/11-evaluation-qa/05-master-checklist.md §1 (BR-02)
-      - blender/01-web-3d-landscape/02-when-3d-budgets-loading.md §7
+      - 3d/11-evaluation-qa/05-master-checklist.md §1 (BR-02)
+      - 3d/01-web-3d-landscape/02-when-3d-budgets-loading.md §7
       - claude-design/06-design-process/05-default-look.md §3
 
   - id: glossy-3d-icons
@@ -363,9 +363,9 @@ tells:
     surface: [page, asset]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#glossy-3d-icons
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §13, §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §13, §22
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §7.2
-    note: Серия 3D-иконок в собственном стиле держится паспортом 3D-серии (blender/06-materials-lighting-render/02-lighting-camera-composition.md §6).
+    note: Серия 3D-иконок в собственном стиле держится паспортом 3D-серии (3d/06-materials-lighting-render/02-lighting-camera-composition.md §6).
 
   - id: floating-orbs
     name: парящие сферы и размытые кружки без роли
@@ -387,7 +387,7 @@ tells:
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#floating-bob-loop
     also:
       - creative/05-motion/01-motion-principles-and-access.md §6.3 (период колебаний)
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
 
   # ── Типографика ─────────────────────────────────────────────────────────────────────────────────────────────────
 
@@ -613,7 +613,7 @@ tells:
     also:
       - site/09-ai-generation-evaluation/ai-landing-markers.yaml#AIL-49
       - ai-media/01-web-assets-landscape/03-ai-fit-trust-and-slop.md §5.2 (IMG-M07, IMG-M08, IMG-M22), §5.4
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22 (глобус с дугами, изометрическая комната)
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22 (глобус с дугами, изометрическая комната)
 
   - id: one-radius
     name: один радиус на всех контейнерах
@@ -681,7 +681,7 @@ tells:
       app: ui/11-styles-trends/04-anti-slop-ui.md §2.8 (маркер 28)
     also:
       - creative/05-motion/02-choreography-scroll-transitions.md §2 (система появления)
-      - blender/09-web-runtime/03-scroll-interaction-animation.md §3.1
+      - 3d/09-web-runtime/03-scroll-interaction-animation.md §3.1
       - claude-design/06-design-process/05-default-look.md §3
 
   - id: hover-lift-all
@@ -742,7 +742,7 @@ tells:
     surface: [page]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#preloader
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
       - ai-media/10-web-integration/02-video-delivery.md
 
   - id: liquid-hover-distortion
@@ -750,7 +750,7 @@ tells:
     surface: [page]
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#liquid-hover-distortion
     also:
-      - blender/01-web-3d-landscape/01-effects-catalog.md §22
+      - 3d/01-web-3d-landscape/01-effects-catalog.md §22
 
   - id: pulsing-cta
     name: пульсирующий или мигающий призыв
@@ -758,7 +758,7 @@ tells:
     owner: creative/08-uniqueness-anti-slop/cliche-registry.yaml#pulsing-cta
     also:
       - creative/05-motion/03-micro-motion-and-performance.md §1.2
-      - blender/07-animation/04-js-vs-blender-vs-prerender.md
+      - 3d/07-animation/04-js-vs-blender-vs-prerender.md
 
   - id: parallax-everything
     name: параллакс слоёв на каждом экране

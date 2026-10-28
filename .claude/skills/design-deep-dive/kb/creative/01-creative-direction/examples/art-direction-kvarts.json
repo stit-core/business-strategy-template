@@ -104,7 +104,7 @@
       "type": {"display": "Literata", "text": "Golos Text", "cyrillic_checked": false, "license": "OFL"},
       "signature_move": {"what": "Характеристики — сносками на полях разворота; фото страницы под светом лампы на всю ширину", "where": "section-role:specs", "effects": [], "min_level": "L0", "concept_link": "лампа нужна странице — страница и есть сайт"},
       "first_viewport": "Разворот: слева заголовок антиквой и кнопка, справа фото раскрытой книги под светом лампы; поле с одной сноской-ценой",
-      "imagery": "съёмка страницы книги под лампой (заказчик или рендер blender)",
+      "imagery": "съёмка страницы книги под лампой (заказчик или рендер 3d)",
       "motion": "без движения, кроме отклика",
       "risk": "Книжная тема тянет к «кремовой бумаге и антикве» — кластер ИИ 2025–26 (ui 11/04 §4.1) и примета overused-display-font",
       "cost": "дёшево, но нужна своя съёмка",
@@ -151,7 +151,7 @@
     "type": {"display": "Unbounded", "text": "Golos Text", "cyrillic_checked": true, "license": "OFL"},
     "composition": ["12 колонок; предмет справа на светлом поле, текст слева", "характеристики — таблица на всю ширину", "выноски у деталей предмета текстовым шрифтом 13–14 px"],
     "surfaces": ["светлое холодное поле без фактур; глубина только у 3D-лампы"],
-    "imagery": {"kinds": ["photo", "3d"], "subject": "прототип лампы на светлом поле; страница книги под 5000 K и 2700 K", "source_policy": "фото прототипа и GLB — от заказчика; страница книги — съёмка заказчика или рендер blender; текст в кадре не генерировать", "people_policy": "none", "product_policy": "real-photo-only"},
+    "imagery": {"kinds": ["photo", "3d"], "subject": "прототип лампы на светлом поле; страница книги под 5000 K и 2700 K", "source_policy": "фото прототипа и GLB — от заказчика; страница книги — съёмка заказчика или рендер 3d; текст в кадре не генерировать", "people_policy": "none", "product_policy": "real-photo-only"},
     "theme": "light",
     "d_refs": ["04-visual-language/01 (дисплейные роли)", "04-visual-language/03 (подача продукта)"]
   },
@@ -206,7 +206,7 @@
       {"what": "model-viewer (бандл с three, br)", "kb": 240, "device": "both", "load": "on-interaction"}
     ],
     "overrides": [
-      {"metric": "effects.js_3d_kb_br.mobile", "value": 240, "why": "model-viewer 4 весит 240 КБ br (blender 01/03) при потолке 200; грузится только по нажатию «Рассмотреть» и не входит в первый экран", "approved_by": "арт-директор (Claude), пример"}
+      {"metric": "effects.js_3d_kb_br.mobile", "value": 240, "why": "model-viewer 4 весит 240 КБ br (3d 01/03) при потолке 200; грузится только по нажатию «Рассмотреть» и не входит в первый экран", "approved_by": "арт-директор (Claude), пример"}
     ]
   },
   "handoff": {
@@ -223,14 +223,14 @@
       "subject_matter": {"domain_props": ["prototype reading lamp", "open paperback book", "bedside table", "USB-C cable"], "motifs": ["the same book page under cool and warm light"], "people_policy": "none", "product_policy": "real-photo-only"},
       "materials": ["uncoated book paper", "lamp body exactly as in the prototype photos"]
     },
-    "blender": {
+    "3d": {
       "role_in_story": "секция object3d: рассмотреть и повернуть лампу; постер из того же GLB",
       "series_style": "предметная съёмка на светлом холодном поле, без сцены",
       "page_background": "#F5F7FA",
       "materials": ["по GLB дизайнера, без переосмысления"],
       "light_mood": "ровный дневной свет около 5000 K, мягкая контактная тень",
       "motion": "вращение пальцем (model-viewer), без автоповорота",
-      "budget": "GLB ≤ 0,8 МБ телефон / 1,5 МБ десктоп, ≤ 50 тыс. треугольников (blender 01/02 §3.1)"
+      "budget": "GLB ≤ 0,8 МБ телефон / 1,5 МБ десктоп, ≤ 50 тыс. треугольников (3d 01/02 §3.1)"
     }
   },
   "lifecycle": {

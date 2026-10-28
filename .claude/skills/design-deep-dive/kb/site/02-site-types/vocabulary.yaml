@@ -46,7 +46,7 @@ foreign_prefixes:
   copy-rule: "text — copy-slots.yaml, линтер"
   fact: "text — facts.yaml (инвентарь доказательств заказчика)"
   task: "ai-media — коды задач routing.yaml (IMG-HERO-PHOTO …)"
-  recipe: "blender — 12-recipes"
+  recipe: "3d — 12-recipes"
   event: "site — events.yaml (07-seo-geo-performance-analytics)"
   req: "site — legal-requirements.yaml (08-legal-trust-a11y)"
   site-pre: "site — входной контракт SITE-PRE-01…26 (09-ai-generation-evaluation)"
@@ -322,7 +322,7 @@ namespaces:
     values:
       - {id: text, name: "Текст", def: "Назначение, длина, уровень заголовка; правила текста — text (copy-slots.yaml) по id слота"}
       - {id: media, name: "Медиа", def: "Картинка, видео, иконка, карта; коды задач и план ассетов — ai-media 01/01 §8"}
-      - {id: 3d, name: "3D", def: "3D-объект или сцена; рецепты — blender 12-recipes"}
+      - {id: 3d, name: "3D", def: "3D-объект или сцена; рецепты — 3d 12-recipes"}
       - {id: data, name: "Данные", def: "Ссылка на факт заказчика (fact:<id>) нужного вида; нет факта — нет слота"}
       - {id: action, name: "Действие", def: "Призыв, форма, ссылка, телефон, мессенджер; id действия (action) и событие аналитики"}
       - {id: treatment, name: "Подача", def: "Визуальная роль, эффект, уровень движения — значения задаёт creative"}
@@ -443,8 +443,8 @@ namespaces:
       - {id: og-image, kind: media, scope: page, name: "Картинка превью ссылки", def: "Open Graph 1200×630 (ai-media 10/01 §7)"}
       - {id: favicon, kind: media, scope: page, name: "Фавиконы", def: "Набор иконок сайта"}
       # --- 3d
-      - {id: model-3d, kind: 3d, name: "3D-объект", def: "Товар, логотип, предмет в 3D (рецепты blender)"}
-      - {id: scene-3d, kind: 3d, name: "3D-сцена", def: "Сцена или мир на фоне секции (blender 01/02 §7)"}
+      - {id: model-3d, kind: 3d, name: "3D-объект", def: "Товар, логотип, предмет в 3D (рецепты 3d)"}
+      - {id: scene-3d, kind: 3d, name: "3D-сцена", def: "Сцена или мир на фоне секции (3d 01/02 §7)"}
       # --- data (ссылки на факты text facts.yaml)
       - {id: fact-ref, kind: data, name: "Ссылка на факт", def: "Любой факт инвентаря доказательств (fact:<id>)", fact_kinds: []}
       - {id: testimonial-ref, kind: data, name: "Ссылка на отзыв", def: "Отзыв или цитата эксперта с разрешением", fact_kinds: [testimonial, expert-quote]}
@@ -642,7 +642,7 @@ namespaces:
       - {id: site-type, order: 3, name: "Тип сайта и плейбук", def: "Тип сайта и главной страницы по дереву site 02/01 §6; плейбук site 10/02, 10/03", artifact: "site_type, primary_page_type, строка плейбука", check: "SITE-PRE-02"}
       - {id: site-map, order: 4, name: "Карта сайта", def: "Страницы, шаблоны, общая шапка и подвал, перелинковка, языки, порядок сборки (многостраничник; лендинг — карта из 1 страницы и служебных)", artifact: "site-map.yaml", check: "SITE-PRE-10; site_validate.py map"}
       - {id: page-plan, order: 5, name: "Планы страниц", def: "page-plan на каждую страницу и шаблон: цель, трафик, форма, секции, слоты, события", artifact: "plans/*.yaml", check: "SITE-PRE-11…24; site_validate.py plan"}
-      - {id: sister-sync, order: 6, name: "Синхронизация с сёстрами", def: "copy-deck (text), art-direction и treatment (creative), план ассетов (ai-media), 3D (blender)", artifact: "copy-deck, treatment, asset-plan, рецепты 3D", check: "SITE-PRE-25; plan_to_assets.py"}
+      - {id: sister-sync, order: 6, name: "Синхронизация с сёстрами", def: "copy-deck (text), art-direction и treatment (creative), план ассетов (ai-media), 3D (3d)", artifact: "copy-deck, treatment, asset-plan, рецепты 3D", check: "SITE-PRE-25; plan_to_assets.py"}
       - {id: plan-check, order: 7, name: "Проверка до сборки", def: "Входной контракт SITE-PRE: незакрытый блокер — не собирать", artifact: "отчёт site_validate.py + SITE-PRE", check: "SITE-PRE-01…26"}
       - {id: package, order: 8, name: "Пакет для кода", def: "Манифест готовности поверхности после приёмки макета на холсте (этап package слоя дизайна): единицы, открытое, пункты после сборки с блоками приёмки site", artifact: "design/<surface>/ready.yaml", check: "SITE-PRE-26; ready.py check"}
       - {id: build-loop, order: 9, name: "Сборка", def: "Страницы <org>/site из снимка стратегии с локом отпечатков: план, тексты, факты, токены ДС, принятый макет", artifact: "сборка <org>/site, лок снимка", check: "проверки <org>/site: снимок равен локу"}

@@ -1,0 +1,43 @@
+path	kind	smoke	xfail
+scripts/3d/README.md	data	data	
+scripts/3d/agent_scene.py	module	compile	
+scripts/3d/anim_diff.py	utility	help	
+scripts/3d/animx.py	module	compile	
+scripts/3d/blender_run.py	utility	help	
+scripts/3d/blender_supervisor.py	utility	help	
+scripts/3d/bpy_probe.py	utility	help	
+scripts/3d/bpyx.py	module	compile	
+scripts/3d/d1exp.py	module	compile	
+scripts/3d/d1lib.py	module	compile	
+scripts/3d/d2lib.py	module	compile	
+scripts/3d/fx_probe.py	utility	help	
+scripts/3d/gate_check.py	utility	help; run: --selftest	
+scripts/3d/glb_lint_block.py	module	import-only	
+scripts/3d/gltf_check.py	utility	help	
+scripts/3d/gltf_diff.py	utility	help	
+scripts/3d/gltf_load_bench.py	utility	help	
+scripts/3d/gltf_web_inspect.py	utility	help	
+scripts/3d/hygiene.py	module	compile	
+scripts/3d/img_metrics.py	utility	help	
+scripts/3d/lint_agent_code.py	utility	import-only	
+scripts/3d/node/validate.mjs	utility	compile	
+scripts/3d/passport_asserts.py	module	compile	
+scripts/3d/preflight_block.py	module	compile	
+scripts/3d/presets.py	module	compile	
+scripts/3d/qa_pipeline.py	utility	help; run: --selftest	
+scripts/3d/render_views.py	utility	compile	
+scripts/3d/rk.py	module	compile	
+scripts/3d/run_doc_blocks.py	utility	help; run: --selftest	
+scripts/3d/run_recipes.py	step	help; run: --selftest	
+scripts/3d/scene_audit.py	module	compile	
+scripts/3d/scene_check.py	utility	compile	
+scripts/3d/serve_br.py	module	import-only	
+scripts/3d/sheet.py	utility	import-only	
+scripts/3d/site_probe.py	utility	help; run: --selftest	
+scripts/3d/slot_run.py	utility	import-only	
+scripts/3d/stage_smoke.py	utility	help; run: --selftest	
+scripts/3d/stage_stand.py	utility	help; run: --selftest	
+scripts/3d/test_agent_helpers.py	test	compile	
+scripts/3d/test_bpyx.py	test	compile	
+scripts/3d/three_probe.py	utility	import-only	
+scripts/3d/web_view.py	utility	help; run: --selftest	

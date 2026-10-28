@@ -107,7 +107,7 @@
 | заказ `redesign` | 1, 13 | обязательны `intake.baseline` и `rollout: by-parts` или `full-with-holdout` (§11.3) | провал редизайнов целиком `[V:hEzpiDuYFoE 35:44]` |
 | заказ `audit` | 5–9 | пропускаются; шаг 10 по живой странице (`page_anatomy.py`, `page_gates.py`, чек-лист), выход — список дефектов по DEF | аудит не строит страницу |
 | нет медиа-слотов с `source: generate` или `edit-real` | 6, ai-media | план ассетов пишется (кодовые и реальные слоты тоже), генерация не заказывается | план — вход приёмки ассетов |
-| нет 3D-слотов | 6, blender | пропуск | — |
+| нет 3D-слотов | 6, 3d | пропуск | — |
 | уровень страницы L0 | 6, creative | treatment = наследование art-direction сайта (`status: default`), без эффектов и пиков | ambition-levels L0: `peaks_max: 0` |
 | `analytics.ab_testing: none` или `ab_plan.py` → `infeasible` | 13, A/B | только цели и события; вместо A/B — исследование (тест с людьми, 5-секундный тест) | мощности нет — ложные победы |
 | любые | 1, 2, 5, 7, 10 | **не пропускаются** | закрывают выдуманные факты, шаблон, нарушение закона, самоотчёт |
@@ -290,7 +290,7 @@
 | text | план: `section_id`, `section_role`, `block`, `question`, `slot_id`, `slot_type`, `site_slot_id` (= `anatomy`), `group`, `fact_ids` из `binds` | `copy-deck` (`../../text/10-templates-recipes/copy-deck.schema.json`) | E 03 §6.1; S1 README | `claims_check.py` text: тексты ↔ факты (COPY-C-01…04) |
 | creative | план, уровень, роли секций, `references[].applies_to` | art-direction, `treatment` страницы и секций, `block-treatments.yaml` | C1: `page.treatment` → `treatment:0#/$defs/page`, `section.treatment` → `treatment:0` | PL-C01; ворота эффектов creative |
 | ai-media | медиа-слоты плана | план ассетов (`01-web-assets-landscape/01…` §8), ассеты | `plan_to_assets.py`: `<секция>-<id>` → `slots[].id`, `section` = id секции, `media_role` → `role`, соотношения → `variants[]`, LCP → `delivery` | приёмка ассетов ai-media 11 |
-| blender | 3D-слоты (`recipe:`, постер, `load`) | GLB, постер, доля бюджета 3D | E 03 §1.5 | ворота 3D blender 11 (доля 3D, не вся страница) |
+| 3d | 3D-слоты (`recipe:`, постер, `load`) | GLB, постер, доля бюджета 3D | E 03 §1.5 | ворота 3D 3d 11 (доля 3D, не вся страница) |
 
 - Порядок: copy-deck и план ассетов — параллельно после `approved` плана; treatment — после выбора направления art-direction;
   генерация ассетов — после приёмки плана ассетов заказчиком (платная фаза — живая).
@@ -398,7 +398,7 @@ title, description, canonical на себя, `lang`; H1, цены, призыв 
 
 - Нет заглушек: поиск `[PLACEHOLDER`, lorem, «Feature 1», «fictional» по `src/` — ноль вхождений; блокирующие пробелы
   `missing[].blocking` закрыты фактами или страница не публикуется (DEF-48). `[практика]`
-- Тексты сверены с фактами (`claims_check.py` text); ассеты приняты ai-media и blender; право — пункты J блока приёмки и
+- Тексты сверены с фактами (`claims_check.py` text); ассеты приняты ai-media и 3d; право — пункты J блока приёмки и
   подпись заказчика о реестре РКН и хранении заявок (I).
 - Акт приёмки: страница, версия плана, дата, кто принял, открытые S-пункты с планом.
 

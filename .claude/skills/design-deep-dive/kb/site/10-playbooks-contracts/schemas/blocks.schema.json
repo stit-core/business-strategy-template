@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:app-design:site:blocks:1",
   "title": "blocks.yaml v1 — каталог блоков сайта: анатомия, слоты, варианты, телефон, разметка, ссылки на правила",
-  "description": "Владелец — site (04-blocks). Id блоков, слотов, ролей — словарь 02-site-types/vocabulary.yaml (проверка — ../../scripts/site/vocab_lint.py --keys-as-ids blocks=block). Визуальные варианты и эффекты блока — creative (block-treatments.yaml) по id блока; правила текста слотов — text (copy-slots.yaml) по id слота; медиа — ai-media (план ассетов 01/01 §8); 3D — blender (12-recipes). Схема проверяет форму; что слот разрешён блоку и что факт существует — site_validate.py.",
+  "description": "Владелец — site (04-blocks). Id блоков, слотов, ролей — словарь 02-site-types/vocabulary.yaml (проверка — ../../scripts/site/vocab_lint.py --keys-as-ids blocks=block). Визуальные варианты и эффекты блока — creative (block-treatments.yaml) по id блока; правила текста слотов — text (copy-slots.yaml) по id слота; медиа — ai-media (план ассетов 01/01 §8); 3D — 3d (12-recipes). Схема проверяет форму; что слот разрешён блоку и что факт существует — site_validate.py.",
   "type": "object",
   "additionalProperties": false,
   "patternProperties": {
@@ -557,7 +557,7 @@
     "refs": {
       "type": "object",
       "additionalProperties": false,
-      "description": "Ссылки на правила владельцев по id блока. site: conversion — 05, seo — 07, a11y — 08 (и ux), events — 07, legal — 08, ia — 06, budget — 07; соседи и сёстры: ux, creative, text, assets (ai-media), blender.",
+      "description": "Ссылки на правила владельцев по id блока. site: conversion — 05, seo — 07, a11y — 08 (и ux), events — 07, legal — 08, ia — 06, budget — 07; соседи и сёстры: ux, creative, text, assets (ai-media), 3d.",
       "properties": {
         "structure": {
           "$ref": "#/$defs/ref-list"
@@ -595,7 +595,7 @@
         "assets": {
           "$ref": "#/$defs/ref-list"
         },
-        "blender": {
+        "3d": {
           "$ref": "#/$defs/ref-list"
         }
       }

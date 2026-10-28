@@ -4,7 +4,7 @@
 #   1. Блок `run` (harness, model, effort, timeout_s, prompt_variant) и `build.skill` — параметры другого исполнителя: убрать
 #      (модель — Opus 5.5, effort — в журнал прогона).
 #   2. `references[].source` и `assets[].source` ведут на синтетические заглушки src/refs, src/assets (не копировались): заменить
-#      реальными кадрами референсов и ассетами ai-media / blender, одними на все условия; id загрузок — в ARTIFACTS.md.
+#      реальными кадрами референсов и ассетами ai-media / 3d, одними на все условия; id загрузок — в ARTIFACTS.md.
 #   3. `references[].measured`: оценки `estimated` → замер `measure_ui.py` (`measured`).
 #   4. Две строки происхождения ниже (опыт старой базы, «входы синтетические») — убрать.
 #   5. Английские строки в `decisions` можно перевести: довода за английский для Claude нет.
@@ -197,8 +197,8 @@ assets:
   - {file: assets/img/lamp-detail.jpg, source: src/assets/img/lamp-detail.jpg, slot: how, role: informational, caption: "Кольцо яркости", alt: "Крупный план кольца регулировки яркости лампы Кварц", focal: "50% 50%", variants: "1200x1200", licence: "фото заказчика, 2026"}
   - {file: assets/img/lamp-usb.jpg, source: src/assets/img/lamp-usb.jpg, slot: specs, role: informational, caption: "Порт USB-C в основании", alt: "Порт USB-C в основании лампы Кварц", focal: "40% 70%", variants: "1200x900", licence: "фото заказчика, 2026"}
   - {file: assets/brand/logo.svg, source: src/assets/brand/logo.svg, slot: header and footer, role: informational, caption: "Логотип Кварц", alt: "Кварц", licence: "логотип заказчика"}
-  - {file: assets/3d/kvarts.glb, source: src/assets/3d/kvarts.glb, slot: object3d, role: informational, caption: "3D-модель лампы Кварц", alt: "Трёхмерная модель лампы Кварц, её можно повернуть", licence: "модель дизайнера заказчика; экспорт — пресет E базы blender"}
-  - {file: assets/3d/kvarts-poster.jpg, source: src/assets/3d/kvarts-poster.jpg, slot: object3d, role: informational, caption: "Постер 3D-модели", alt: "Лампа Кварц, вид три четверти", focal: "50% 50%", variants: "1024x1024", licence: "рендер из той же модели (blender)"}
+  - {file: assets/3d/kvarts.glb, source: src/assets/3d/kvarts.glb, slot: object3d, role: informational, caption: "3D-модель лампы Кварц", alt: "Трёхмерная модель лампы Кварц, её можно повернуть", licence: "модель дизайнера заказчика; экспорт — пресет E базы 3d"}
+  - {file: assets/3d/kvarts-poster.jpg, source: src/assets/3d/kvarts-poster.jpg, slot: object3d, role: informational, caption: "Постер 3D-модели", alt: "Лампа Кварц, вид три четверти", focal: "50% 50%", variants: "1024x1024", licence: "рендер из той же модели (3d)"}
 missing_slots: []
 
 decisions:

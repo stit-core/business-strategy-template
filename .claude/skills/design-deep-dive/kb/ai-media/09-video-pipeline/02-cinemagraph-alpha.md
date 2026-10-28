@@ -2,12 +2,12 @@
 
 Волна 2 · агенты I и I2 · 23.09.2026 · опыты `99-raw/experiments/I/03-chroma-key` (эталонная альфа Blender, 2 ключа × 2
 условия × 78 прогонов, матирование u2netp, кодирование альфы) и `I/02-loop-seam` §I/02b (синемаграф `maskedmerge`) ·
-плиты `I/01-blender-plates` · ffmpeg 7.1.5 · новых веб-источников 0 (база, дайджесты W5/W6, blender A/06, H/01).
+плиты `I/01-blender-plates` · ffmpeg 7.1.5 · новых веб-источников 0 (база, дайджесты W5/W6, 3d A/06, H/01).
 
 Что где: вырез картинок и «какой фон просить» — `../08-image-post-processing/01-background-removal-matting.md` §2.2,
 §3.3 (агент H); генерация объекта на ключе и цены — `04-i2v-protocols.md` §6; петля зоны движения — `01-seamless-loops.md`
 §3; вес видео без альфы — `03-encoding-and-budgets.md` §2, альфа — §4 этого файла; воспроизведение на странице (WebGL для stacked, `<source>` HEVC-alpha)
-— `../../blender/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15 и агент J.
+— `../../3d/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15 и агент J.
 
 ## Выжимка для агента
 
@@ -41,7 +41,7 @@
     по маске с дилатацией → i2v объекта с `fixed_lens` → кеинг → альфа-видео → параллакс слоёв (≈ 40 %) → §5
     `[V:BVMuRw8BgJg 00:33–08:33]` `[не проверено]`.
 15. **GIF и PNG-секвенция — не запас для альфы**: Safari — HEVC-alpha (кодируется только на macOS) или stacked alpha + WebGL
-    → §4 `[практика]` (blender A/06).
+    → §4 `[практика]` (3d A/06).
 16. **Приёмка ключа по выходу модели**: фон ≥ 95 % пикселей в ΔE00 ≤ 5 от ключа во всех кадрах, дрейф центра ≤ 2 % ширины
     (`chroma`); после кеинга — съедено ≤ 1 %, ореол ≤ 1 % края (`alpha_check.py` H) → §1.5 `[мнение]`.
 
@@ -176,7 +176,7 @@ ffmpeg -i in.mp4 -i in.mp4 -loop 1 -i motion_mask.png -filter_complex \
 | H.264 на цвете фона страницы (без альфы) | 12,2 КБ | везде | если фон страницы однотонный — альфа не нужна |
 
 ```bash
-# ffmpeg 7.1.5 · из PNG-секвенции с альфой — [проверено: I/03; команды blender A/06, 05 §3.15]
+# ffmpeg 7.1.5 · из PNG-секвенции с альфой — [проверено: I/03; команды 3d A/06, 05 §3.15]
 ffmpeg -framerate 24 -i keyed_%04d.png -pix_fmt yuva420p -c:v libvpx-vp9 -crf 30 -b:v 0 -row-mt 1 -an obj_alpha.webm
 ffmpeg -framerate 24 -i keyed_%04d.png -filter_complex \
   "[0:v]format=pix_fmts=yuva444p[main];[main]split[main][alpha];[alpha]alphaextract[alpha];[main][alpha]vstack" \
@@ -184,7 +184,7 @@ ffmpeg -framerate 24 -i keyed_%04d.png -filter_complex \
 ```
 
 - Однотонный фон страницы → альфа не нужна: композит на цвете фона и обычный H.264/AV1 (12 КБ) `[проверено]`.
-- Шейдер stacked-alpha (RGB — верхняя половина, альфа — нижняя, фильтрация NEAREST) и порядок `<source>` — blender `05`
+- Шейдер stacked-alpha (RGB — верхняя половина, альфа — нижняя, фильтрация NEAREST) и порядок `<source>` — 3d `05`
   §3.15 и агент J.
 
 ## 5. Hero с парящим объектом (рецепт W5 с числами I)
@@ -242,7 +242,7 @@ ffmpeg -framerate 24 -i keyed_%04d.png -filter_complex \
   синемаграф и `fixed_lens`.
 - [S4] Агент H, волна 2: `../08-image-post-processing/01-background-removal-matting.md` §1–§3, §5 и опыт H/01 — вырез картинок,
   кеер CbCr, rembg (время, память), `alpha_check.py`.
-- [S5] blender-research A/06: `../../blender-research/99-raw/experiments/A/06-deliverable-sizes/README.md`,
+- [S5] 3d-research A/06: `../../3d-research/99-raw/experiments/A/06-deliverable-sizes/README.md`,
   `01-web-3d-landscape/05-blender-deliverables-map.md` §3.15 — VP9-alpha и stacked alpha проверены в Chromium 153 (альфа 0/255).
 - [S6] Дайджесты трека W: `BVMuRw8BgJg` (hero с парящим объектом, запреты движения), `_Bc4g6fFMp0` (цвет ключа по объекту,
   блестящее — на цвете сцены), `SLnGJ9iezYo` (один очаг движения), `OA4xB5EY02g` (перечень движения) — через отчёты W5,

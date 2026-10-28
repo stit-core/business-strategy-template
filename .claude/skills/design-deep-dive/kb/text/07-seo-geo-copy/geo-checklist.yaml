@@ -201,7 +201,7 @@ checks:
     how: [{method: site, ref: "site 07: HTML без JS; ai-media 10/01 (текст не в картинке)"}]
     level: gate
     evidence: "[документация] + [исследование]"
-    source: "Google ai-features (2025-12-10): «Making sure that important content is available in textual form»; blender 01/02 §6.1 (ИИ-краулеры не исполняют JS — Web Almanac 2025); Tian 2026 (JS-рендеринг — причина провала 10,1 % пар вместе с блокировками); Яндекс: «мало текстового контента» — причина «нет данных» в «Видимости в Алисе AI»"
+    source: "Google ai-features (2025-12-10): «Making sure that important content is available in textual form»; 3d 01/02 §6.1 (ИИ-краулеры не исполняют JS — Web Almanac 2025); Tian 2026 (JS-рендеринг — причина провала 10,1 % пар вместе с блокировками); Яндекс: «мало текстового контента» — причина «нет данных» в «Видимости в Алисе AI»"
     date: 2026-09-24
 
   # ============ C. Содержание: отличие, опыт, автор ============

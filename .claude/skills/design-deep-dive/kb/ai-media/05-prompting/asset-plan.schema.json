@@ -185,7 +185,7 @@
         "instance": {"$ref": "#/$defs/id", "description": "id экземпляра шаблона коллекции (instances[].id), чей кадр стоит в слоте."},
         "x-demo": {"$ref": "#/$defs/demo"},
         "task_codes": {"type": "array", "items": {"type": "string", "pattern": "^[A-Z0-9]+(-[A-Z0-9]+)*$"}, "description": "Коды задач ../13-routing-matrix/routing.yaml (IMG-HERO-PHOTO …) — маршрут генерации и правки; у real и code — пусто."},
-        "recipe": {"type": "string", "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*$", "description": "Рецепт blender 12-recipes (blender 12/00 §1) — вместо кодов задач у рендера и 3D."},
+        "recipe": {"type": "string", "pattern": "^recipe:[a-z0-9]+(-[a-z0-9]+)*$", "description": "Рецепт 3d 12-recipes (3d 12/00 §1) — вместо кодов задач у рендера и 3D."},
         "three_d": {"$ref": "#/$defs/three-d"},
         "poster": {"$ref": "#/$defs/id", "description": "id строки этого плана с постером 3D- или видео-слота: запасной вариант и кандидат LCP."},
         "poster_for": {"$ref": "#/$defs/id", "description": "Эта строка — постер для 3D- или видео-слота с этим id."},
@@ -211,9 +211,9 @@
       "type": "object",
       "additionalProperties": false,
       "patternProperties": {"^x-": {}},
-      "description": "Решение по 3D-слоту — ../../blender/15-showcase/VERDICT.md §3; 3D — только Blender и код.",
+      "description": "Решение по 3D-слоту — ../../3d/15-showcase/VERDICT.md §3; 3D — только Blender и код.",
       "properties": {
-        "road": {"enum": ["code", "blender-frame", "blender-sequence", "hybrid"], "description": "code — страница рисует 3D кодом (ввод, свет, правило, параметрическая модель); blender-frame — неподвижный кадр Cycles (постер, станции, стоп-кадр); blender-sequence — предрендер секвенции Cycles на Canvas 2D (сюжет по прокрутке без ввода); hybrid — живое кодом на модели и материале Blender."},
+        "road": {"enum": ["code", "blender-frame", "blender-sequence", "hybrid"], "description": "code — страница рисует 3D кодом: свой движок на WebGL2 или three.js (объект в блоке, сцена-мир на прокрутке, ввод, свет, правило, параметрическая модель); blender-frame — неподвижный кадр Cycles (постер, станции, стоп-кадр); blender-sequence — предрендер секвенции Cycles на Canvas 2D (сюжет по прокрутке без ввода); hybrid — живое кодом на модели и материале Blender."},
         "why": {"type": "string", "description": "Строка VERDICT §3, по которой выбрана дорога; развилка «кадр Blender / гибрид» — вывод одного голосующего, метка «один судья»."},
         "cta_before_3d": {"type": "boolean", "description": "Призыв и форма работают до загрузки 3D (slot-3d плана страницы)."}
       }

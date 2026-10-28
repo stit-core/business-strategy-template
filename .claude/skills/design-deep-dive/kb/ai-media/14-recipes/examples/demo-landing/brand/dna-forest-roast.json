@@ -245,7 +245,7 @@
     "material": "matte glazed ceramic in warm off-white with one deep forest-green part",
     "camera": "3/4 view from 30 degrees above, 50mm",
     "accent_share_max": 0.15,
-    "series_passport": "blender/06-materials-lighting-render/02-lighting-camera-composition.md §6"
+    "series_passport": "3d/06-materials-lighting-render/02-lighting-camera-composition.md §6"
   },
   "abstract": {
     "policy": "code-first"

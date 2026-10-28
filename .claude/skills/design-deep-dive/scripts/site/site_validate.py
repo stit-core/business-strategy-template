@@ -34,7 +34,7 @@
          (x-effect-levels подсхемы treatment, library_level_min каталога эффектов); PL-K01…K03 бриф ↔ план; PL-W01
          виджеты фасадом; PL-X01 x-gate-exception: id ворот страницы (page-gates.yaml) или ворот эффектов
          (effect-gates.yaml); PL-U01 план approved без записи утверждения approval — warning;
-         PL-D01 3D: постер, призыв до 3D; PL-D02 recipe: — рецепт blender 12-recipes есть; PL-D03 загрузка 3D по месту
+         PL-D01 3D: постер, призыв до 3D; PL-D02 recipe: — рецепт 3d 12-recipes есть; PL-D03 загрузка 3D по месту
          секции (ниже первого экрана — on-interaction); PL-T01…T02 формы lead-forms.yaml (PL-T02 — у формы без JS,
          то есть без success: inline, есть адрес «спасибо» thank_you_page); PL-SEO01 разметка по head-kit:
          типы страницы и подтипы её structured_data_subtypes.
@@ -129,7 +129,7 @@ P = {
     'meaning_schema': kbpaths.kb('text') / '02-strategy-messaging' / 'meaning.schema.yaml',
     'treatment': kbpaths.kb('creative') / '09-ai-execution-evaluation' / 'treatment.schema.json',  # подсхема treatment плана
     'brand_schema': kbpaths.kb() / 'common' / 'brand.schema.yaml',
-    'recipes': kbpaths.kb('blender') / '12-recipes',
+    'recipes': kbpaths.kb('3d') / '12-recipes',
 }
 SCHEMA = {
     ('brief', '1'): ROOT / '10-playbooks-contracts' / 'schemas' / 'site-brief.schema.json',
@@ -1041,7 +1041,7 @@ def check_plan(path, ctx, brief=None, facts_pack=None, sitemap=None):
                     R.add('error', 'PL-D01', w, f'{lid}: призыв ждёт 3D (CTA и форма работают до загрузки 3D)')
                 rec = sl.get('recipe')
                 if rec and ctx.recipes and rec.partition(':')[2] not in ctx.recipes:
-                    R.add('error', 'PL-D02', w, f'{lid}: {rec} — такого рецепта нет в blender 12-recipes')
+                    R.add('error', 'PL-D02', w, f'{lid}: {rec} — такого рецепта нет в 3d 12-recipes')
                 load = sl.get('load')
                 if sid not in first_screen:
                     if load == 'on-visible':
@@ -1049,7 +1049,7 @@ def check_plan(path, ctx, brief=None, facts_pack=None, sitemap=None):
                                                       '(ворота EG-PERF-01); по умолчанию — on-interaction')
                     elif load == 'after-lcp':
                         R.add('warning', 'PL-D03', w, f'{lid}: 3D ниже первого экрана грузится сразу после LCP — по намерению: '
-                                                      'on-interaction (blender 12/15)')
+                                                      'on-interaction (3d 12/15)')
                 elif load is None:
                     R.add('info', 'PL-D03', w, f'{lid}: 3D первого экрана без load — умолчание on-interaction; после LCP и load — '
                                                'after-lcp')

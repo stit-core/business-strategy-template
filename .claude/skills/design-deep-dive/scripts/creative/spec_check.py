@@ -746,6 +746,8 @@ def cmd_spec(ctx, R, spec_path, plan_path=None, overlay_path=None):
         L = scene.get('length_vh')
         if L is not None:
             cap = ctx.token_ms('motion.marketing.scroll.pin-l1-max-vh') if slvl == 'L1' else ctx.token_ms('motion.marketing.scroll.pin-l2-max-vh')
+            if scene.get('scroll_mode') == 'beats' and slvl != 'L1':      # шаги с доигрышем — свой потолок поля (05/02 §4.1.1)
+                cap = ctx.token_ms('motion.marketing.scroll.pin-beats-max-vh') or cap
             if ctx.forbids(slvl, 'pin-scrub') and scene.get('pin') not in (None, 'none', 'sticky'):
                 R.add('error', 'MS-13', w, f'закрепление со скрабом запрещено уровнем {slvl} (только sticky)')
             elif cap and scene.get('pin') not in (None, 'none') and L > cap:
@@ -1322,6 +1324,15 @@ def selftest(ctx):
     m_bad = {'id': 'x', 'class': 'one-shot', 'purpose': 'guide', 'target': 'hero.headline', 'lcp': 'is-lcp', 'trigger': {'type': 'load'},
              'tracks': [{'property': 'opacity', 'from': 0, 'to': 1}], 'duration': {'ms': 600}, 'reduce': {'strategy': 'final-state'}}
     expect('motion-spec «LCP из opacity»: схема ловит', list(mom.iter_errors(m_bad)))
+    m_defs = load(P['m_schema'])['$defs']
+    scene_v = Draft202012Validator({'$defs': m_defs, **m_defs['section']['properties']['scene']})
+    st7 = [{'id': f'beat-{i}', 'at': round(i / 6, 3), 'describe': f'точка покоя {i}'} for i in range(7)]
+    expect('motion-spec: 7 точек покоя у шагов с доигрышем (scroll_mode: beats) — схема пропускает',
+           not list(scene_v.iter_errors({'scroll_mode': 'beats', 'pin': 'sticky', 'length_vh': 450, 'stations': st7})))
+    expect('motion-spec: 7 станций у скраба — схема ловит (2–6)',
+           list(scene_v.iter_errors({'pin': 'sticky', 'length_vh': 450, 'stations': st7})))
+    expect('токен потолка шагов с доигрышем pin-beats-max-vh — 450vh',
+           ctx.token_ms('motion.marketing.scroll.pin-beats-max-vh') == 450)
     for tracks, name, clean in (([{'property': 'clip-path', 'from': 'inset(0 0 100% 0)', 'to': 'inset(0 0 0 0)'}], 'clip-path', True),
                                 ([{'property': 'opacity', 'from': 0.01, 'to': 1}], 'opacity от 0,01', True),
                                 ([{'property': 'opacity', 'keyframes': [{'at': 0, 'value': 0}, {'at': 1, 'value': 1}]}], 'opacity из 0 первым кадром', False),

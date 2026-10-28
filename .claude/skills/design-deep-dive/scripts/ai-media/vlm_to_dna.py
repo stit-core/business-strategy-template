@@ -53,7 +53,7 @@ SPEC_SCHEMA_PATH = ROOT / "05-prompting" / "asset-spec.schema.json"
 EXAMPLES = ROOT / "06-art-direction-consistency" / "examples"
 JUDGE_AGENT = kbpaths.repo(".claude", "agents", "design-judge.md")
 JUDGE_PROTOCOL = ".claude/skills/design-deep-dive/kb/common/judge.md"
-SERIES_PASSPORT = "blender/06-materials-lighting-render/02-lighting-camera-composition.md §6"
+SERIES_PASSPORT = "3d/06-materials-lighting-render/02-lighting-camera-composition.md §6"
 sys.path.insert(0, str(TOOLS))
 
 # ---------------------------------------------------------------- рубрика разбора сетки (задание сессии, текст запроса)

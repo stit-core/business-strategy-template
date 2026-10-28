@@ -3,7 +3,7 @@
 Волна 3 · агент J · 23.09.2026 · опыты: J/06 (приёмка 9 тестовых страниц `pages/` утилитой `page_accept.py`: 27 прогонов —
 десктоп 1440×900, Pixel 7, CPU×4 + 1,6 Мбит/с, тёмная тема, второе состояние; итог `99-raw/experiments/J/06-pages-measure/summary.md`),
 J/01 (LCP), J/04 (видео), J/08 (эффекты) · источников: 5 целиком (web.dev LCP и Optimize LCP, W3C LCP, журнал Chromium, WCAG
-2.2.2) + через A: Web Almanac 2025 Page Weight, CrUX (справочно) + файлы базы A, blender, I, K-заготовки (утилиты H, I, F, L) ·
+2.2.2) + через A: Web Almanac 2025 Page Weight, CrUX (справочно) + файлы базы A, 3d, I, K-заготовки (утилиты H, I, F, L) ·
 Chromium 153. Бюджеты-нормы по слотам — A (`../01-web-assets-landscape/01-asset-slots-by-page-type.md` §7); здесь — как
 держать и проверять их на собранной странице.
 
@@ -39,12 +39,12 @@ Chromium 153. Бюджеты-нормы по слотам — A (`../01-web-asse
     исправлен случай 25 КБ (`<source src>` + `preload="auto"` у альфа-видео) → §3.2 `[проверено]`.
 14. **Типовые провалы → типовые исправления**: таблица §6 (lazy на LCP, CSS-фон без preload, всё из opacity 0, скрим по H1 при
     мелком кикере, горизонтальный скрим на телефоне, видео с `src` при reduce, петля без паузы) `[проверено]`.
-15. **Живой сайт (конкурент, клиент) — `asset_inventory.py` (A) и `site_probe.py` (blender)**, файл видео — `video_loop_check.py`
+15. **Живой сайт (конкурент, клиент) — `asset_inventory.py` (A) и `site_probe.py` (3d)**, файл видео — `video_loop_check.py`
     (I), картинка — `avif_pick.sh` (H), провенанс — `provenance_check.py` (L) → §4 `[документация: README утилит]`.
 
 ## 1. Бюджеты
 
-### 1.1 Нормы (A, `01/01` §7; согласовано с blender `02` §3.1) и что получилось на шаблонах J
+### 1.1 Нормы (A, `01/01` §7; согласовано с 3d `02` §3.1) и что получилось на шаблонах J
 
 | Бюджет | Десктоп | Телефон | Шаблоны J (J/06) |
 |---|---|---|---|
@@ -146,7 +146,7 @@ python3 99-raw/experiments/J/06-pages-measure/run_all.py && python3 99-raw/exper
 |---|---|---|
 | приёмка своей страницы (эта) | `../../scripts/ai-media/page_accept.py` | J |
 | инвентарь ассетов живого сайта: форматы, `srcset`, LCP до прокрутки, видео-атрибуты, OG, фавиконы, контактный лист | `../../scripts/ai-media/asset_inventory.py URL OUT [--mobile] [--reduced-motion] [--throttle]` | A |
-| живой сайт с 3D: TBT, WebGL-контексты, байты по категориям | `../../scripts/blender/site_probe.py URL OUT [--mobile] [--throttle]` | blender A |
+| живой сайт с 3D: TBT, WebGL-контексты, байты по категориям | `../../scripts/3d/site_probe.py URL OUT [--mobile] [--throttle]` | 3d A |
 | шов, «живость», пульс, хромакей петли (на мезонине!) | `../../scripts/ai-media/video_loop_check.py loop|trim|drift|chroma` | I |
 | минимальный AVIF под порог SSIMULACRA2 | `99-raw/tools/avif_pick.sh in.png out.avif 80` | H |
 | контраст до вёрстки (зона, p99,9 → F83) | `99-raw/experiments/F/02-text-zone/{text_zone,f83_check}.py` | F |
@@ -225,8 +225,8 @@ python3 99-raw/experiments/J/06-pages-measure/run_all.py && python3 99-raw/exper
 - [S5] HTTP Archive Web Almanac 2025 Page Weight, 2024 Media (через A `01-web-assets-landscape/02` [S1][S2]) — медианы веса.
 - [S6] Chrome DevTools Protocol, домены Network и Emulation (`emulateNetworkConditions`, `setCPUThrottlingRate`, `dataReceived`,
   `loadingFinished`) — поведение проверено опытом J/01b и J/06.
-- [S7] README утилит `../../scripts/ai-media/README.md` (A, blender, H, I, L) — инструменты §4.
-- База: A `../01-web-assets-landscape/01` §7, `02` §1, §4–§5, §9; blender `../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md`
+- [S7] README утилит `../../scripts/ai-media/README.md` (A, 3d, H, I, L) — инструменты §4.
+- База: A `../01-web-assets-landscape/01` §7, `02` §1, §4–§5, §9; 3d `../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md`
   §2–§3, §8; ux-research `../../ux/06-feedback-states-motion/03-motion-and-microinteractions.md` §7.
 - Опыты: `99-raw/experiments/J/06-pages-measure` (run_all.py, summarize.py, summary.md/json, `*/accept_*.json`, снимки),
   `J/01-lcp-hero`, `J/04-video-page`, `J/08-effects`.

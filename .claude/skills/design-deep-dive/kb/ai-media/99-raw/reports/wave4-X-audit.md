@@ -285,7 +285,7 @@ X2 нет (запущенный в 07:13 `render_fetch.py` под `browser.lock`
 | 61 | `14-recipes/recipes/format-family.yaml` + `make_recipes.py` | Flare 2K 21:9 7 ₽ + NB2 2K 7,2 ₽ (v0) | NB2 1K 9:16 4,8 + Sunburst 1K 21:9 4,0 | `routing.yaml` v1, H-08, `14/02` §5.2 (X43) |
 | 62 | `validate_recipes.py`, `validate_report.json`, README M/10 и M | код маршрута по `routing.v0`; «28 цен» | по `routing.yaml` v1; 27 | прогон 17/17, 27 цен |
 | 63 | README `M/07-texture` | окно выреза не записано | окно (512, 512)–(1536, 1536), числа X2 | воспроизведено побайтно |
-| 64 | 14 строк: `03/03`:186, `05/01`:1415, 1724, `05/02`:540, 542, `05/03`:633, 662, дайджесты bH2nP-aCFjk ×2, BVMuRw8BgJg, oDok8FcX6rM, RIS8ckTfKAg ×3 | `../ui/`, `../blender/` | `../../…`; из дайджестов — `../../../…` | оркестратор п. 2; путь от файла |
+| 64 | 14 строк: `03/03`:186, `05/01`:1415, 1724, `05/02`:540, 542, `05/03`:633, 662, дайджесты bH2nP-aCFjk ×2, BVMuRw8BgJg, oDok8FcX6rM, RIS8ckTfKAg ×3 | `../ui/`, `../3d/` | `../../…`; из дайджестов — `../../../…` | оркестратор п. 2; путь от файла |
 | 65 | `13-routing-matrix/routing.yaml` | H3 Max без флага; `people-consent` только у `VID-CHARACTER` | H3 Max — флаг + ворота метки; `people-consent` у 3 маршрутов; описание флага; шапка | `12/01` §2 (ToS MiniMax); `12/04` §2 стр. 12–13, 23 |
 | 66 | `../../scripts/ai-media/routing_check.py` | MiniMax и людей не проверял | `minimax/*` → `visible-vendor-mark`; стр. 12–14 → `people-consent` | X42; отрицательный тест 2/2 |
 | 67 | `13/03` строка `legal.flags`; README утилит (`routing_check.py`) | — | MiniMax, маршруты с `people-consent`, новые правила | X35, X42 |

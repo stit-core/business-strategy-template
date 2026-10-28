@@ -265,5 +265,5 @@ Hobro — «Just a moment…»). Строка ритма — 13 пауз: пер
 - [S3] Записи C: `03-live-sites-measured/recordings/<slug>/record*.json`, листы `sheet*_NN.jpg` (2026-09-24) [проверено].
 - [S4] Проверка метода: `99-raw/experiments/C/05-scroll-record/` (reduce → 0 %, синхровспышка, совместимость с `yt_frames.py`) [проверено].
 - [S5] Файл `01-effects-sites-measured.md` — библиотеки, движение первого экрана по скриншотам, reduce по зонду [проверено].
-- [S6] blender-research `01-web-3d-landscape/04-reference-sites-measured.md` §6 — пары reduce и непрерывный рендер 3D-сайтов [данные; сосед].
+- [S6] 3d-research `01-web-3d-landscape/04-reference-sites-measured.md` §6 — пары reduce и непрерывный рендер 3D-сайтов [данные; сосед].
 - [S7] creative-research `PLAN.md` «Стартовые позиции» §3 — гипотеза бюджета внимания L0 1, L1 2, L2 3 непрерывных движения (стартовая позиция архитектора, не правило).

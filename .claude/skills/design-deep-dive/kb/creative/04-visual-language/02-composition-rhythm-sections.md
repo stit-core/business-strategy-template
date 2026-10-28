@@ -115,7 +115,7 @@ eyebrow, H1, лид, CTA и край следующей секции; `padding-b
 
 - Кадр hero: зона текста 35–45 %, плотность краёв ≤ 0,06, объект в правой трети (shift_x ±0,15–0,2 у 3D), насыщенный цвет —
   только на главном; 80 % фиксаций — левая половина экрана 1920 → текст слева (NN/g) — `../../ai-media/06-art-direction-consistency/03-composition-for-web.md`
-  §1, §3; `../../blender/06-materials-lighting-render/02-lighting-camera-composition.md` §5.3 (ссылкой) `[данные: у соседей]`.
+  §1, §3; `../../3d/06-materials-lighting-render/02-lighting-camera-composition.md` §5.3 (ссылкой) `[данные: у соседей]`.
 - `composition.text_media` → `text_zone` плана ассетов ai-media: text-left ⇒ зона слева 0–0,40; text-over ⇒ зона + скрим;
   text-under ⇒ кадр без зоны.
 - Фокус в боксе `cover` — формула `object-position` ai-media 06/03 §3.2 (ссылкой); из 16:9 в 9:16 остаётся 31,6 % ширины —
@@ -240,7 +240,7 @@ Color Block Story. Позиция базы `[спорно]`: чередован�
 - [S1] ui-research `05-layout-grid/01-grids-breakpoints-containers.md` §2, §4, §6–8; `04-alignment-whitespace-composition.md` §1–10.
 - [S2] ui-research дайджесты 01 (Schoger CSS Day 2019), 04 (Schoger), 14 (Бирман, эстетика UI), 17, 20 (Purdila) — таймкоды в тексте.
 - [S3] ai-media-research `06-art-direction-consistency/03-composition-for-web.md` §1–4; `10-web-integration/03-text-over-media-and-effects.md` §1–4.3.
-- [S4] blender-research `06-materials-lighting-render/02-lighting-camera-composition.md` §5.3.
+- [S4] 3d-research `06-materials-lighting-render/02-lighting-camera-composition.md` §5.3.
 - [S5] site-research `03-page-structure/03-first-screen-and-mobile.md` §1–5; `04-blocks/blocks.yaml` v0.9; `02-site-types/pages.csv` (site M).
 - [S6] Hallmark `references/layout-and-space.md`, `hero-enrichment.md` (hero space discipline, E1–E8), `slop-test.md` gates 6, 34, 44 — `[мнение вендора]`.
 - [S7] taste-skill `SKILL.md` §4.3, §4.7, §4.11 — `[мнение вендора]`.

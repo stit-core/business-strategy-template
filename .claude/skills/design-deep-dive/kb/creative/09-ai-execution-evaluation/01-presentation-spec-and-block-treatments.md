@@ -35,7 +35,7 @@
 
 | Слой | Формат | Кто пишет | Что несёт | Кто читает и проверяет |
 |---|---|---|---|---|
-| концепция и решения | `art-direction` v1 (`01-creative-direction/art-direction.schema.json` v0 A + дельта §5) | Claude-арт-директор | тезис, главный приём, направление, палитра, гарнитуры, система движения словами, решения о клише | ai-media (паспорт визуала), blender, `spec_check.py` (ссылки) |
+| концепция и решения | `art-direction` v1 (`01-creative-direction/art-direction.schema.json` v0 A + дельта §5) | Claude-арт-директор | тезис, главный приём, направление, палитра, гарнитуры, система движения словами, решения о клише | ai-media (паспорт визуала), 3d, `spec_check.py` (ссылки) |
 | подача секций | `treatment` v1 в `page-plan` (этот файл §2) | Claude по art-direction и `block-treatments.yaml` | уровень, роль в ритме, эффекты с целями, фон, композиция, display-роль, reduce, телефон, петли, бюджет | site (`site_validate.py` PL-C01), `spec_check.py plan`, K |
 | движение | `motion-spec` v1 (`02-motion-spec-storyboard-handoff.md`) | Claude | таймлайн моментов, станции, раскадровка, видео-референсы, acceptance | `spec_check.py spec`, K (`motion_check.py`) |
 | пакет исполнителя | `DESIGN.md`, `MOTION.md`, `TASK.md`, `ACCEPTANCE.md`, `refs/` (kimi 07/02) | сборщик kimi + проекции `spec_check.py` | то же, в каналах, которые исполнитель читает | K3 или Claude-исполнитель; `k3_checks.py`, K |

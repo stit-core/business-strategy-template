@@ -3,18 +3,18 @@
 Волна 2 · агенты I и I2 · 23.09.2026 · опыт `99-raw/experiments/I/04-encoding` (26 кодирований лестницы 720p/1080p,
 10 вариантов пульса, 5 GOP прокрутки, 10 вариантов бандинга, нормализация выхода модели) · ffmpeg 7.1.5 (libx264,
 libx265, libvpx-vp9, libsvtav1 2.3.0), Pillow 11.3 · libvmaf нет → SSIM и PSNR · новых веб-источников 0 (база A, C2,
-blender A/06, H).
+3d A/06, H).
 
 Что где: бюджеты страницы и что у лидеров — `../01-web-assets-landscape/01-asset-slots-by-page-type.md` (петля 6–10 с,
 1080p ≤ 1,5 МБ, телефон 720p ≤ 600 КБ, постер ≤ 120 КБ); разметка `<video>`, `<source>`, `preload`, reduced motion,
-пауза — агент J (`../10-web-integration/`) и `../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md`;
+пауза — агент J (`../10-web-integration/`) и `../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md`;
 кодирование картинок (AVIF, JPEG XL, C2PA) — `../08-image-post-processing/04-encoding-metadata.md` (H); альфа — `02` §4.
 
 ## Выжимка для агента
 
 1. **Набор файлов петли**: AV1 MP4 первым `<source>`, H.264 MP4 всегда (у лидеров 12 из 13 hero-видео — H.264), постер
    AVIF — кадр 0; HEVC в Chrome зависит от платформы — основным форматом не делать → §1 `[практика: A]`
-   `[проверено]` `[спорно: A §4 против blender A/06]`.
+   `[проверено]` `[спорно: A §4 против 3d A/06]`.
 2. **Тихая петля 6 с укладывается в бюджет с запасом ×2–5**: 720p — AV1 CRF 36–42 140–195 КБ, H.264 CRF 23–26 280–440 КБ;
    1080p — AV1 230–310 КБ, H.264 490–690 КБ (бюджет 1080p ≤ 1,5 МБ, телефон 720p ≤ 600 КБ) → §2 `[проверено]`.
 3. **AV1 ≈ 0,32× H.264 при равном SSIM** (0,985 на 720p: 141 против 443 КБ); HEVC ≈ 0,5×, VP9 ≈ 0,7× → §2 `[проверено]`.
@@ -68,7 +68,7 @@ blender A/06, H).
 | `hero-poster.avif` (+ `.webp`) | кадр 0 финального файла, AVIF q45–55 | LCP до старта видео, reduced motion, экономия трафика |
 | телефонная версия | 720p (или вертикаль 720×1280) тем же набором | бюджет ≤ 600 КБ |
 
-- HEVC: в базе A §4 — «в Chromium не играет», в blender A/06 — `canPlayType` «probably» у Chromium 153 на этой машине
+- HEVC: в базе A §4 — «в Chromium не играет», в 3d A/06 — `canPlayType` «probably» у Chromium 153 на этой машине
   (поддержка HEVC в Chrome зависит от платформы и аппаратного декодера `[не проверено]`) `[спорно]` → HEVC не основной формат, только запас для Safari в
   альфе (stacked); уточнить J на тестовой странице.
 - Порядок `<source>`, `preload="none"` + постер, `playsinline muted loop`, пауза для петли > 5 с (WCAG 2.2.2) — J.
@@ -210,10 +210,10 @@ ffmpeg -i model_out.mp4 -map 0:v:0 -an -vf "crop=1920:1072" -c:v libx264 -preset
 | WebP q80 | 3,56 МБ | 49 КБ |
 | JPEG q80 | 6,66 МБ | 93 КБ |
 
-- All-intra для фото-движения — ×9,3 (у простой 3D-сцены blender A/06 — ×3–4): для ИИ-видео не использовать; GOP 8 даёт
+- All-intra для фото-движения — ×9,3 (у простой 3D-сцены 3d A/06 — ×3–4): для ИИ-видео не использовать; GOP 8 даёт
   перемотку почти без задержки при ×3 `[проверено]`.
 - Секвенция AVIF — точный кадр без декодера видео, но 1,9 МБ на 72 кадра 720p; для телефона — меньше кадров и размер
-  (blender `05` §3.14) `[проверено]`.
+  (3d `05` §3.14) `[проверено]`.
 - Перемотку по прокрутке, `currentTime` и подгрузку кадров проверяет J на тестовой странице.
 - [поправка фазы 5, 25.09.2026: облёт 720p 121 кадр — AV1 GOP 1/4/8: 2 065 / 998 / 664 КБ, H.264 GOP 1/4/8: 3 172 / 1 660 / 1 264 КБ;
   секвенция 61 кадр AVIF 1280 — 1 250 КБ; рябь воды — 47 КБ на кадр AVIF 1280 (облёт — 20, крупная форма — 15–22); для мыши
@@ -287,7 +287,7 @@ ffmpeg -i scroll_mezz.mp4 -map 0:v:0 -an -c:v libx264 -preset slow -crf 23 -g 8 
   лидеров), `99-raw/experiments/A/02-hero-video-loops/loops.json` (13 hero-видео: кодек, битрейт, GOP).
 - [S3] База, волна 1 (C2): `99-raw/experiments/C2/02-vendor-output-ffprobe/README.md`, `metadata_survival.json` —
   форматы выходов моделей, `moov`, размеры, выживание C2PA и `AIGC` при ffmpeg.
-- [S4] blender-research A/06: `../../blender-research/99-raw/experiments/A/06-deliverable-sizes/README.md`,
+- [S4] 3d-research A/06: `../../3d-research/99-raw/experiments/A/06-deliverable-sizes/README.md`,
   `01-web-3d-landscape/05-blender-deliverables-map.md` §3.14–3.15 — all-intra ×3–4 на простой сцене, секвенции, альфа.
 - [S5] Агент H, волна 2: `../08-image-post-processing/03-color-tiling-depth-layers.md` §3 и `04-encoding-metadata.md`,
   опыт H/05b — дизеринг не переживает кодеки, зерно поверх, AVIF у картинок.

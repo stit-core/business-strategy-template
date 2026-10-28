@@ -8,7 +8,7 @@ Blender, 12 случаев, 4 приёма), `I/04-encoding` (пульс клю�
 Что где: генерация петли моделями и цены — `04-i2v-protocols.md` §2; альфа и синемаграф — `02-cinemagraph-alpha.md`;
 кодирование и вес — `03-encoding-and-budgets.md`; какие модели принимают первый и последний кадр —
 `../04-video-models/03-capabilities-by-task.md` §2.2; доставка (`<video>`, постер, reduced motion) — агент J
-(`../10-web-integration/`) и `../../blender/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15.
+(`../10-web-integration/`) и `../../3d/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15.
 
 ## Выжимка для агента
 

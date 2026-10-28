@@ -20,7 +20,7 @@ inputs:
 concept:
   thesis: "Движется только сам продукт и только по вашей прокрутке: рука разбирается на модули, собирается поворотом колец и открывает сустав; текст стоит."
   story: {hero: "инженер цеха", conflict: "классический робот требует интегратора и месяцев", resolution: "модули собирает сам инженер за 30 минут и программирует рукой"}
-  signature_move: "сборка из модулей по прокрутке + скан-проявление начинки шейдером (blender 01-01 §3.5)"
+  signature_move: "сборка из модулей по прокрутке + скан-проявление начинки шейдером (3d 01-01 §3.5)"
   directions: ["A «Сборочный чертёж» — тёмная студия, белые модули, оранжевый замок (выбран)", "B «Цех ночью» — световые трассы", "C «Паспорт изделия» — светлая изометрия"]
 ledger:
   paper: dark
@@ -32,7 +32,7 @@ ledger:
   motion_signature: {entrances: "scrub-сцены со станциями; одно пробуждение", tempo: measured, curve: time-damped-scrub}
   corner_language: sharp
 moodboard:
-  - {role: motion, ref: "../blender/01-web-3d-landscape/04-reference-sites-measured.md#9", take: "целое → детали → целое, станции", dont_take: "ворота Enter, прелоадер, 20 МБ"}
+  - {role: motion, ref: "../3d/01-web-3d-landscape/04-reference-sites-measured.md#9", take: "целое → детали → целое, станции", dont_take: "ворота Enter, прелоадер, 20 МБ"}
   - {role: material, query: "студийный предметный рендер, анодированный алюминий", take: "тёмный фон, контровой свет, контактная тень", dont_take: "хром и жидкий металл"}
   - {role: antiref, query: "робот будущего лендинг", take: "—", dont_take: "частицы, неон, пурпур"}
 page_plan:
@@ -66,7 +66,7 @@ stack:
   notes: "three грузится после load + простоя и только при WebGL2 и не-reduce; один fixed-холст; рендер по требованию"
   platforms: {static: "как пример 10-recipes/examples/l2-zveno", tilda: "сцену выносить на static-страницу (creative 07/01 §10)"}
 assets:
-  - {slot: scene-3d, ladder: 3d, source: code, blender_recipe: "../blender/12-recipes/01-hero-product.md; 05-scroll-showcase.md; 08-sequence-video-alpha.md (телефон)", budget_kb: 125, note: "в проекте — CAD заказчика и запечённый свет"}
+  - {slot: scene-3d, ladder: 3d, source: code, recipe_3d: "../3d/12-recipes/01-hero-product.md; 05-scroll-showcase.md; 08-sequence-video-alpha.md (телефон)", budget_kb: 125, note: "в проекте — CAD заказчика и запечённый свет"}
   - {slot: hero-visual, ladder: image, source: render, budget_kb: 15, note: "постер — рендер той же сцены 1600×1000 и 600×1300; v2 — 17,5 / 14,5 КБ: десктоп выше бюджета примера на 2,5 КБ после светового прохода (предел hero-изображения уровня — ambition-levels.yaml)"}
   - {slot: stations, ladder: image, source: render, budget_kb: 16, note: "5 станций 1200×750 для reduce, без JS и без WebGL; v2 — 7,4–16,2 КБ"}
   - {slot: og-image, ladder: image, source: template, task_codes: [IMG-TEXT-CYR], budget_kb: 300}
@@ -84,7 +84,7 @@ budget:
   fonts_kb: {mobile: 300, desktop: 300, example: 186.8}
   source: "ambition-levels.yaml L2; пример — прогон motion_check 0.1.3 (сцена v2)"
 gates:
-  tools: ["motion_check.py --level L2 --spec", "marketing_audit.py --level L2", "site_probe.py + gate_check (blender 09/05 §7.2)"]
+  tools: ["motion_check.py --level L2 --spec", "marketing_audit.py --level L2", "site_probe.py + gate_check (3d 09/05 §7.2)"]
   must_pass: [EG-PERF-08, EG-PERF-02, EG-WEIGHT-02, EG-WEIGHT-03, EG-A11Y-03, EG-A11Y-09, EG-A11Y-12, EG-FB-04, EG-FB-05]
   watch: ["EG-A11Y-27: текст первого экрана над 3D на телефоне — --contrast \"h1\" \".hero__lead\" (без затемнения под текстом H1 1,0:1)", "EG-PERF-05: загрузка сцены задачами (PMREM, compileAsync), не одной длинной", "хвост кадров ≤ 0,45 с после ввода (motion_check 0.1.2+ снимает на +0,5 с)"]
   manual: ["попарно с якорями L2 (рубрика 09-ai-execution-evaluation/effectiveness.rubric.json)", "реальный телефон: плавность и нагрев (EG-LIVE-01)"]

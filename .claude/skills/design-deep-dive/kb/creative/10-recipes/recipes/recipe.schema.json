@@ -98,7 +98,7 @@
           "slot": {"type": "string"}, "ladder": {"enum": ["text", "svg", "css", "shader", "image", "video", "3d"]},
           "source": {"enum": ["generate", "edit-real", "real", "code", "template", "render"]},
           "task_codes": {"type": "array", "items": {"type": "string", "pattern": "^(IMG|VID|VEC)-[A-Z0-9-]+$"}},
-          "blender_recipe": {"type": "string"}, "budget_kb": {"type": "number"}, "note": {"type": "string"}}}
+          "recipe_3d": {"type": "string"}, "budget_kb": {"type": "number"}, "note": {"type": "string"}}}
     },
     "copy": {
       "type": "object", "additionalProperties": false,

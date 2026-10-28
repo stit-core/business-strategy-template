@@ -465,22 +465,22 @@ jack-roberts	https://www.youtube.com/watch?v=weoV4dm-X1A (YouTube, 2026-07-27; �
 jack-roberts	https://www.youtube.com/watch?v=weoV4dm-X1A (YouTube, 2026-07-27; мнение автора)	карточка брифа скилла	результат	Trust the work	action		none	цель доверия (портфолио); действие — lead-request или message
 claude-design	../claude-design/06-design-process/01-brief-and-questions.md	§2 (признаки описания)	тип приложения	«сайт + личный кабинет»	site_type	saas-marketing-site	related	два пакета с общим DESIGN.md: сайт (site) + web-app (ux, ui)
 claude-design	../claude-design/06-design-process/01-brief-and-questions.md	§2 (признаки описания)	тип приложения	«сайт-история, кино-скролл, 3D-мир»	macrostructure	scroll-story	related	у брифа холста: landing + decisions.motion: cinematic; уровень — L2 (creative)
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	01-hero-product	slot	model-3d	related	в блоке hero-media
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	02-icon-series	slot	icon	related	3D-иконки фич
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	03-device-mockup	slot	screenshot	related	мокап устройства
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	04-abstract-sculpture	slot	model-3d	related	hero без продукта
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	05-scroll-showcase	block	feature-spotlight	related	раскрытие по прокрутке; роль story или product-demo
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	06-logo-3d-particles	slot	model-3d	related	
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	07-lowpoly-diorama	slot	scene-3d	related	
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	08-sequence-video-alpha	slot	video	related	видео с альфой вместо реалтайма
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	09-glass-product	slot	model-3d	related	
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	10-instance-field	slot	scene-3d	related	паттерн «город данных»
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	11-shader-background	slot	background	related	шейдерный фон без Blender
-blender	../blender/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	12-model-viewer-ar	block	interactive-demo	related	покрутить и «поставить на стол»
-blender	../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Продать/объяснить товар (продуктовый лендинг, e-commerce)	page_type	landing-product	broader	e-commerce — вне рамок
-blender	../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Бренд/SaaS без физического товара	page_type	landing-saas	related	
-blender	../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Кампания, запуск, портфолио студии (опыт и есть продукт)	page_type	landing-campaign	related	
-blender	../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Кампания, запуск, портфолио студии (опыт и есть продукт)	site_type	portfolio-site	related	
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	01-hero-product	slot	model-3d	related	в блоке hero-media
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	02-icon-series	slot	icon	related	3D-иконки фич
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	03-device-mockup	slot	screenshot	related	мокап устройства
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	04-abstract-sculpture	slot	model-3d	related	hero без продукта
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	05-scroll-showcase	block	feature-spotlight	related	раскрытие по прокрутке; роль story или product-demo
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	06-logo-3d-particles	slot	model-3d	related	
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	07-lowpoly-diorama	slot	scene-3d	related	
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	08-sequence-video-alpha	slot	video	related	видео с альфой вместо реалтайма
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	09-glass-product	slot	model-3d	related	
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	10-instance-field	slot	scene-3d	related	паттерн «город данных»
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	11-shader-background	slot	background	related	шейдерный фон без Blender
+3d	../3d/12-recipes/00-how-to-use.md	§1 (дерево «задача страницы → рецепт»)	рецепт	12-model-viewer-ar	block	interactive-demo	related	покрутить и «поставить на стол»
+3d	../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Продать/объяснить товар (продуктовый лендинг, e-commerce)	page_type	landing-product	broader	e-commerce — вне рамок
+3d	../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Бренд/SaaS без физического товара	page_type	landing-saas	related	
+3d	../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Кампания, запуск, портфолио студии (опыт и есть продукт)	page_type	landing-campaign	related	
+3d	../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md	§7 (цель страницы)	цель	Кампания, запуск, портфолио студии (опыт и есть продукт)	site_type	portfolio-site	related	
 ux	../ux/01-foundations/03-frameworks-domain-to-screens.md	§4 (CTA-матрица OOUX)	CTA	CTA (роль × объект × действие)	action		none	омоним: на сайте CTA — призыв (slot cta-primary), действия посетителя — пространство action
 hallmark	https://github.com/Nutlope/hallmark (skills/hallmark/references/macrostructures.md)	The 21 macrostructures — index	macrostructure	01 · Bento Grid	macrostructure	bento-grid	equal	MIT; id — kebab-case названия; свод и «когда брать» — site 03/01 §4
 hallmark	https://github.com/Nutlope/hallmark (skills/hallmark/references/macrostructures.md)	The 21 macrostructures — index	macrostructure	02 · Long Document	macrostructure	long-document	equal	MIT; id — kebab-case названия; свод и «когда брать» — site 03/01 §4

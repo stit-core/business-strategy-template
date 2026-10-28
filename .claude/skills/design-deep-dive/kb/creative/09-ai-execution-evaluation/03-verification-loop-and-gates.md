@@ -98,7 +98,7 @@ F) [S20] [S21].
 |---|---|---|
 | вес, LCP, CLS, TBT страницы | зеркала EG-PERF-05/06, EG-WEIGHT-08/09 | site `page_gates.py` (владелец) |
 | пауза петли на 6-й с, reduce первого экрана, F83 | EG-A11Y-01, 05, 23 | ai-media `page_accept.py` |
-| 3D: вызовы в кадре, DPR, первый кадр модели | EG-3D-01 (ручной вызов) | blender 09/05 §7.2 (11 порогов) |
+| 3D: вызовы в кадре, DPR, первый кадр модели | EG-3D-01 (ручной вызов) | 3d 09/05 §7.2 (11 порогов) |
 | приметы K3 (`K3-*`, `--allow`) | `cliche:*` в `marketing_audit.py` | kimi `k3_checks.py` |
 | маркеры ИИ-лендинга (AIL, B/S/D) | — (не дублируем) | site SG-CONTENT-06, `ai-landing-markers.yaml` |
 | эффектность | рубрика `04` | — |
@@ -524,7 +524,7 @@ Industries) + 5 страниц K3 (прогон шёл на момент зап�
 - [S23] web.dev, «Cumulative Layout Shift (CLS)», https://web.dev/articles/cls — снято 2026-09-25; `hadRecentInput` 500 мс, transform без сдвигов.
 - [S24] W3C, «Understanding SC 2.3.1: Three Flashes or Below Threshold» (WCAG 2.2), https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html — снято 2026-09-25.
 - [S25] Awwwards, «Development award guidelines» (Google Doc) — снято 2026-09-25: пауза для анимации > 5 с, контент без JS.
-- [S26] blender, `../blender/09-web-runtime/05-performance-a11y-fallbacks.md` §7.2 — 11 порогов страницы с 3D.
+- [S26] 3d, `../3d/09-web-runtime/05-performance-a11y-fallbacks.md` §7.2 — 11 порогов страницы с 3D.
 - [S27] kimi, `../kimi-research/99-raw/tools/k3_checks.py` — приметы K3 и `--allow`.
 - [S28] K/01, `99-raw/experiments/K/01-marketing-vs-consumer/` — профиль на живых страницах.
 - [S29] K/00, K/02 — `99-raw/experiments/K/00-smoke/`, `02-gates-lab/`.

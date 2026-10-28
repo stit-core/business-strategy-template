@@ -149,8 +149,8 @@ GEO здесь — техника: доступ ИИ-ботов, HTML без JS,
 
 ### 3.1. Почему
 
-- ИИ-боты OpenAI, Anthropic, Perplexity получают HTML и JS не исполняют — так пишет blender со ссылкой на Web Almanac 2025 и
-  Vercel (`../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md §6.1`); документации самих платформ о
+- ИИ-боты OpenAI, Anthropic, Perplexity получают HTML и JS не исполняют — так пишет 3d со ссылкой на Web Almanac 2025 и
+  Vercel (`../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md §6.1`); документации самих платформ о
   рендеринге нет; Google: «not all bots can run JavaScript» [S28]; Bing: «Avoid… Hiding critical content behind client-side
   rendering… Content that cannot be reliably rendered may not be… selected for grounding» [S15]; Яндекс рендерит JS только
   по бета-опции [S29]. `[документация]` + `[спорно]` (прямого заявления OpenAI и Anthropic о JS нет)
@@ -453,7 +453,7 @@ forms» [S9]; meta-externalfetcher [S19]. Cloudflare выделил их в кл
 ## Открытые вопросы и противоречия
 
 1. **Исполняют ли OpenAI, Anthropic, Perplexity JS** — прямых заявлений нет; опора — Google («not all bots can run
-   JavaScript» [S28]), Bing [S15] и blender (Web Almanac 2025 со ссылкой на Vercel и MERJ, 2024) — первоисточник Vercel и MERJ
+   JavaScript» [S28]), Bing [S15] и 3d (Web Almanac 2025 со ссылкой на Vercel и MERJ, 2024) — первоисточник Vercel и MERJ
    не открыт. `[спорно]`
 2. **Пускают ли российские антиботы** (Qrator, DDoS-Guard, Servicepipe) ИИ-ботов по спискам и что видят зарубежные боты на
    сайтах с сертификатом НУЦ — живая фаза (логи, запрос с зарубежного адреса).

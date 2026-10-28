@@ -59,7 +59,7 @@ stack:
   notes: "секвенция по видимости после LCP; видео-скраб с частыми ключевыми кадрами (-g 4)"
 assets:
   - {slot: hero-visual, ladder: image, source: real, task_codes: [IMG-HERO-PHOTO, IMG-CUTOUT], budget_kb: 150}
-  - {slot: sequence, ladder: video, source: real, task_codes: [VID-I2V-PRODUCT], blender_recipe: "../blender/12-recipes/08-sequence-video-alpha.md", budget_kb: 4000}
+  - {slot: sequence, ladder: video, source: real, task_codes: [VID-I2V-PRODUCT], recipe_3d: "../3d/12-recipes/08-sequence-video-alpha.md", budget_kb: 4000}
   - {slot: steam, ladder: video, source: generate, task_codes: [VID-CINEMAGRAPH], budget_kb: 300}
 copy:
   promise: "одно утро — четыре минуты"

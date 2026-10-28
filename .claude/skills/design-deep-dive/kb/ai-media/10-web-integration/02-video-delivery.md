@@ -5,7 +5,7 @@
 (петли «рябь», подбор CRF по сохранению движения, альфа-ассеты, секвенция), J/08 (две петли + прожектор), J/09 (прокрутка:
 секвенция против перемотки GOP 1/8/96) · источников: 9, целиком или нужными разделами (WCAG 2.2.2 Understanding, web.dev «Video
 performance» и «LCP», caniuse `hevc`/`av1`, Archibald «Video with alpha transparency» 2024, код и журнал LCP Chromium, фильтры
-ffmpeg) + файлы базы I, A, blender A/06, L · Chromium 153 CfT, Google Chrome 153, Chromium 152, WebKit (Playwright 26.6) ·
+ffmpeg) + файлы базы I, A, 3d A/06, L · Chromium 153 CfT, Google Chrome 153, Chromium 152, WebKit (Playwright 26.6) ·
 ffmpeg 7.1.5 (SVT-AV1 2.3.0, libx264, libx265, libvpx-vp9). Кодирование и петли — I (`../09-video-pipeline/01–03`); здесь —
 только то, что решается на странице, и то, что всплыло только в браузере.
 
@@ -66,7 +66,7 @@ ffmpeg 7.1.5 (SVT-AV1 2.3.0, libx264, libx265, libvpx-vp9). Кодировани
 | VP9 WebM, VP9-alpha | играет (альфа есть) | играет | «probably» |
 | HEVC `hvc1`/`hev1`/Main10 | `canPlayType` "", MediaCapabilities false, `DEMUXER_ERROR_NO_SUPPORTED_STREAMS` | «probably», supported/smooth/powerEfficient = true, **кадр чёрный** | «probably» |
 
-`[проверено]` Так объясняется спор базы: blender A/06 («probably») запускал Chromium с GPU-флагами, A (`01/02` §1 «не играет»)
+`[проверено]` Так объясняется спор базы: 3d A/06 («probably») запускал Chromium с GPU-флагами, A (`01/02` §1 «не играет»)
 — без; оба правы для своих условий. caniuse (23.09.2026): HEVC — 17,5 % полной и 74,8 % частичной поддержки (Chrome — только
 при аппаратном декодере: macOS, Android, Windows с HW, Linux через VAAPI), AV1 — 79,3 % + 15 % (Safari — только с аппаратным
 AV1: iPhone 15 Pro, M3) [S3] → **H.264 обязателен** (все Safari без аппаратного AV1), HEVC — только для альфы.
@@ -298,7 +298,7 @@ python3 -c "from PIL import Image; im=Image.open('poster.png').convert('RGB'); i
 
 - Шейдер: цвет — `texture(t, (x, y·0,5))`, альфа — яркость `(x, 0,5 + y·0,5)`, выход премультиплицирован; фильтрация LINEAR с
   отступом полтекселя от середины (без «перетекания» альфы в цвет; NEAREST ступенчат при масштабировании) `[проверено]`.
-- Сборка stacked (I `09/02` §4; blender `05` §3.15): `[0:v]format=pix_fmts=yuva444p[m];[m]split[a][b];[b]alphaextract[al];[a]format=rgb24[rgb];[rgb][al]vstack`
+- Сборка stacked (I `09/02` §4; 3d `05` §3.15): `[0:v]format=pix_fmts=yuva444p[m];[m]split[a][b];[b]alphaextract[al];[a]format=rgb24[rgb];[rgb][al]vstack`
   + полные теги BT.709 (§2) — альфа-половина серая, матрица на неё не влияет, но цветная половина — да.
 - Приём «парящий объект» (W5, I `09/02` §5): подложка AVIF + stacked-объект + HTML-текст + параллакс слоёв по прокрутке
   (`animation-timeline: scroll(root)`, только `no-preference` и `@supports`) — страница 03.
@@ -396,8 +396,8 @@ python3 -c "from PIL import Image; im=Image.open('poster.png').convert('RGB'); i
   — см. `01-images-delivery.md` [S1][S2].
 - [S6] web.dev «Largest Contentful Paint (LCP)» (кэш) — `<video>`: время постера или первого кадра, что раньше.
 - [S7] ffmpeg 7.1.5 — фильтры `setparams`, `scale` (`out_color_matrix`), `alphaextract`, `vstack` (проверены опытом).
-- База: I `../09-video-pipeline/01` §3, `02` §4–§5, `03` §1–§8; A `../01-web-assets-landscape/01` §5, `02` §7, §9; blender
-  `../../blender/01-web-3d-landscape/05-blender-deliverables-map.md` §3.14–3.15 и `99-raw/experiments/A/06`;
+- База: I `../09-video-pipeline/01` §3, `02` §4–§5, `03` §1–§8; A `../01-web-assets-landscape/01` §5, `02` §7, §9; 3d
+  `../../3d/01-web-3d-landscape/05-blender-deliverables-map.md` §3.14–3.15 и `99-raw/experiments/A/06`;
   L `../12-legal-provenance/02` §5.3; D2 `../05-prompting/04-video-prompting.md` §4.3 (звук).
 - Опыты: `99-raw/experiments/J/02-codecs`, `J/04-video-page`, `J/05-assets` (results_video*.json, results_crf_sweep.json,
   results_alpha.json, results_scroll.json), `J/08-effects`, `J/09-scroll`, `J/06-pages-measure`.

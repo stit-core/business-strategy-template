@@ -408,7 +408,7 @@ u2netp — 0,10–0,12 с инференса, 0,72 ГБ RSS; isnet-general-use �
 - Источники: [S27] («Depth-Anything-V2-Small model is under the Apache-2.0 license. Depth-Anything-V2-Base/Large/Giant models
   are under the CC-BY-NC-4.0 license»), [S28] (таблица лицензий DA3), [S29] (AMLR: «"Research Purposes" does not include any
   commercial exploitation, product development or use in any commercial product or service»), [S47] (теги HF).
-- Для сайтов (граф ассетов №5 «2.5D-глубина» и blender `01` §9.5): локально — DA-V2 Small ONNX (готов, §10); если нужна
+- Для сайтов (граф ассетов №5 «2.5D-глубина» и 3d `01` §9.5): локально — DA-V2 Small ONNX (готов, §10); если нужна
   геометрически точнее — DA3Mono-Large (Apache 2.0; ONNX-сборку не искал) [не проверено]; видео-глубина — Video-Depth-Anything
   Small (Apache 2.0 по тегу HF) или fal `fal-ai/depth-anything-video` $0,04/с (3,36 ₽/с) [S43][S47].
 - **В браузере**: `onnx-community/depth-anything-v2-small` сделан для Transformers.js (`pipeline('depth-estimation', …)`) —

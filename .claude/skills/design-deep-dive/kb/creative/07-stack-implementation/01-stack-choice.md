@@ -8,7 +8,7 @@ lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1, @
 @barba/core 2.10.3, astro 7.3.5, next 16.3.6, vite 8.3.1, react 19.3.0. Машиночитаемо — `stack.yaml`; паттерны кода — `02-implementation-patterns.md`.
 
 Границы: список и цена эффектов — F (`../06-effects-catalog/`); правила движения и reduce — E (`../05-motion/`); 3D-рантайм в
-деталях — `../../blender/01-web-3d-landscape/03-runtime-landscape.md` и `09-web-runtime/*`; ворота страницы — site.
+деталях — `../../3d/01-web-3d-landscape/03-runtime-landscape.md` и `09-web-runtime/*`; ворота страницы — site.
 
 ## Выжимка для агента
 
@@ -44,7 +44,7 @@ lottie-web 5.13.0, @lottiefiles/dotlottie-web 0.80.0, @rive-app/canvas 2.43.1, @
     (`native: true` — поверх VT, плагины head и a11y) или `<ClientRouter />` на Astro; Barba 2.10.3 без релизов с 2024-08 —
     только на существующих сайтах → §5. [документация: S11–S13]
 13. **Один шейдерный фон — не three.js**: `@paper-design/shaders` 5,9 КБ br или свой шейдер на OGL (10,8 КБ) / WebGL2; three — при
-    3D (blender); pixi.js 8 (120 КБ, TBT 116 мс) — только 2D-сцены с тысячами спрайтов → §6.1. [проверено]
+    3D (3d); pixi.js 8 (120 КБ, TBT 116 мс) — только 2D-сцены с тысячами спрайтов → §6.1. [проверено]
 14. **Lottie: для одной-двух небольших анимаций — `lottie-web` light** (41,6 КБ br, без wasm); dotLottie (12,2 КБ + wasm 379 КБ br)
     — когда анимаций много или нужен Worker; у dotLottie рендер на главном потоке стоит ≈ 0,95 с скрипта за 3 с проигрывания при
     CPU ×4 → `DotLottieWorker`; wasm dotLottie и Rive по умолчанию — с jsDelivr/unpkg → `setWasmUrl()` на свой домен → §6.2. [проверено]
@@ -95,7 +95,7 @@ minify, production → brotli q11; страница в Chromium 153 headless, CP
 | WebGL | three 0.186 (куб, 1 кадр) · pixi 8.21 (Application + прямоугольник) | 107,7 · 119,9 | — | 49 · 116 | 144–225 |
 | no-code | Unicorn SDK 2.2.14 (без сцены, с jsDelivr) · Spline runtime 2.0.57 (Application без сцены) | 42,4 · 833,4 | — | — · 82 | — · 241 |
 
-Unicorn — вес SDK снят в памяти без запуска; TBT главной unicorn.studio 254–1 158 мс — замер blender (`blender 01/01` §5.7).
+Unicorn — вес SDK снят в памяти без запуска; TBT главной unicorn.studio 254–1 158 мс — замер 3d (`3d 01/01` §5.7).
 Theatre core (30,1 КБ, TBT 20) без экспорта состояния studio падает с ошибкой — см. §7. Полная таблица — `summary.md` опыта.
 
 Выводы:
@@ -141,7 +141,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 | `shader-bg`, `holo-shader-bg` | запрещено (WebGL) | paper-shaders или свой GLSL на OGL/WebGL2, 1 контекст | то же; three, если есть 3D | CSS-градиент или постер |
 | `video-loop-hero`, `cinemagraph` | синемаграф ≤ 300 КБ (`quiet-loop`) | `<video muted loop playsinline poster>` + пауза | то же | постер |
 | `video-scrub`, `image-sequence` | — | — | canvas + GSAP ST (или прогресс ScrollTimeline) | постер |
-| `3d-object`, `3d-scene` | — | предрендер, model-viewer, three hero-GLB (blender) | three + ST (+ Lenis); R3F на React | постер/видео |
+| `3d-object`, `3d-scene` | — | предрендер, model-viewer, three hero-GLB (3d) | three + ST (+ Lenis); R3F на React | постер/видео |
 | `cursor-accent`, `magnetic-cta` | — | свой pointermove + rAF или `gsap.quickTo` | то же | системное поведение |
 | `custom-cursor` | — | запрещено | `gsap.quickTo`/свой damp | системный курсор |
 | `view-transition` | — | same-document VT | то же | мгновенная смена |
@@ -217,7 +217,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 - Где Motion лучше GSAP: сайт уже на React/Next (`motion/react` ≈ +36 КБ br к React), продуктовые главные (C: Stripe, Linear,
   Vercel, Apple — React/Next + Motion, без GSAP и Lenis), микродвижение без таймлайнов [данные: C].
 - Ограничения: `splitText` — только Motion+ (разовая оплата, установка по токену) → агенту недоступен; three.js и vgpu через
-  `motion/three` (`threeEffect`) — «Motion+ early access», хотя код в публичном пакете 13.4.3 — поправка к `blender 01/03`
+  `motion/three` (`threeEffect`) — «Motion+ early access», хотя код в публичном пакете 13.4.3 — поправка к `3d 01/03`
   п.25 («Motion 13 — только DOM/SVG») [документация: S5; проверено: типы пакета].
 - WAAPI (`el.animate`) — 0 КБ, Baseline с 2020; для одиночных JS-анимаций без библиотек (раскрытие, счётчик, магнит).
 - anime.js 4.5.0 (MIT, 12,6 КБ br, TBT 0; ветка 5.0 в бете) — живая альтернатива GSAP-ядру; своих scroll-сцен уровня
@@ -277,8 +277,8 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 
 ### 6.1. WebGL без 3D и с 3D
 
-- **3D** — стек и бюджеты blender: three r186 `WebGLRenderer` + GLTFLoader, R3F 9 + drei на React, model-viewer 4.3.1 для витрины
-  с AR (`blender 01/03` §12, `09/05`) — здесь не повторяется. На 2026-09-24 вышел three 0.186.1 (патч); куб на three — 107,7 КБ br,
+- **3D** — стек и бюджеты 3d: three r186 `WebGLRenderer` + GLTFLoader, R3F 9 + drei на React, model-viewer 4.3.1 для витрины
+  с AR (`3d 01/03` §12, `09/05`) — здесь не повторяется. На 2026-09-24 вышел three 0.186.1 (патч); куб на three — 107,7 КБ br,
   TBT 49 мс [проверено].
 - **Один шейдерный фон** (аврора, mesh, перелив): `@paper-design/shaders` 0.0.81 (Apache-2.0, 27 релизов за 12 мес.; 5,9 КБ br,
   TBT 0 [0–38]) или свой фрагментный шейдер на OGL 1.0.11 (Unlicense, 10,8 КБ, TBT 4; релизов нет с 2025-01) или на голом
@@ -316,7 +316,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 ### 6.3. No-code-рантаймы: Spline, Unicorn Studio
 
 - **Spline** (`@splinetool/runtime` 2.0.57, 192 релиза за 12 мес.; лицензия в npm не указана): 833,4 КБ br, TBT 82 мс уже при
-  `Application` без сцены (сцена и `physics.wasm` 419 КБ — сверху, `blender 01/03` §8); экспорт кода — архивом на свой хостинг;
+  `Application` без сцены (сцена и `physics.wasm` 419 КБ — сверху, `3d 01/03` §8); экспорт кода — архивом на свой хостинг;
   анимации и события — только в экспорте Vanilla JS и React [проверено: G/01; документация: S17].
 - **Unicorn Studio**: SDK «~50kb gzipped» (наш замер 49,6 gzip / 42,4 br, v2.2.14) — с `cdn.jsdelivr.net/gh/hiunicornstudio/…`; сцена —
   с серверов Unicorn, свой JSON (`data-us-project-src`) — только тариф Legend; есть `data-us-lazyload`, `-fps`, `-dpi` (1,5),
@@ -362,7 +362,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 - **Правило site**: H1, текст, цены, условия, CTA, навигация `<a href>`, canonical, JSON-LD и OG — в HTML ответа сервера; ИИ-боты
   OpenAI, Anthropic, Perplexity JS не исполняют (прямого заявления платформ нет — `[спорно]` у site), Яндекс рендерит JS по
   бета-опции Вебмастера → любой стек подачи — надстройка над готовым HTML (`../../site-research/07-seo-geo-performance-analytics/
-  01-seo-google-yandex.md` §1.3, `02-geo-ai-search.md` §3). Текст в canvas не индексируется и не становится LCP (`blender 01/02` §6.1).
+  01-seo-google-yandex.md` §1.3, `02-geo-ai-search.md` §3). Текст в canvas не индексируется и не становится LCP (`3d 01/02` §6.1).
 - **Выбор по типу проекта** (версии npm 2026-09-24):
 
 | Проект | Стек | Почему | Данные |
@@ -510,7 +510,7 @@ Id эффектов — временные `treatment.v0` (`x-effect-ids-v0`; к
 - [S21] Framer: https://www.framer.com/academy/lessons/custom-code; https://www.framer.com/developers/custom-code. Тарифы — не из первоисточника.
 - [S22] greensock/gsap-skills (aed9cfd, 2026-04-21, MIT, 15 642★) — клон `99-raw/cache/repos/greensock__gsap-skills/`. Вендор.
 - [S23] npm registry (47 пакетов) и GitHub API (20 репозиториев), 2026-09-24 — `99-raw/experiments/G/00-registry/`. Данные.
-- [S24] blender: `01-web-3d-landscape/03-runtime-landscape.md` §1, §8–12; `09-web-runtime/03-scroll-interaction-animation.md` §1–3; `01/01` §5.7; `01/02` §6.1.
+- [S24] 3d: `01-web-3d-landscape/03-runtime-landscape.md` §1, §8–12; `09-web-runtime/03-scroll-interaction-animation.md` §1–3; `01/01` §5.7; `01/02` §6.1.
 - [S25] kimi: `07-brief-handoff/02-task-package.md` §8.1.
 - [S26] site: `07-seo-geo-performance-analytics/01` §1.3, `02` §3, `budgets.yaml`; `06-multipage-ia/01` §4.5; `site-brief.schema.json` (`constraints`).
 - [S27] C: `../03-live-sites-measured/sites.csv` (49 десктоп), `01-effects-sites-measured.md`. [S28] A: `../01-creative-direction/ambition-levels.yaml` v0.1.

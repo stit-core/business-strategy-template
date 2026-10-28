@@ -13,7 +13,7 @@
    (как в контракте тройки). → §2 [практика] (соглашение базы)
 3. **Id не переименовывается**: устаревший получает `status: deprecated` и `replaced_by`; удалять нельзя. → §2 [практика]
 4. **Ссылка на чужой id — с префиксом**: `block:hero-media`, `slot:headline`, `section-role:faq`, `page-type:landing-saas`;
-   чужие пространства — `effect:` (creative), `copy-rule:` и `fact:` (text), `task:` (ai-media), `recipe:` (blender). → §2 [практика] (контракт §3 п. 15)
+   чужие пространства — `effect:` (creative), `copy-rule:` и `fact:` (text), `task:` (ai-media), `recipe:` (3d). → §2 [практика] (контракт §3 п. 15)
 5. **Новый id** — только через заметку «## Для B» (волна 1) или «## Для J» (волны 2–3) с определением в одну строку;
    до решения — пометка `(новый id)` и `status: proposed`. → §3 [_common.md, метод п.11]
 6. **Роль ≠ блок**: `section_role` — работа секции в сюжете (порядок — C), `block` — анатомия и набор слотов (карточка — E);
@@ -58,7 +58,7 @@ kimi (`site.sections[].id` — свободные) и временный сло�
 | text | `slot` (правила по id), `section_role`, `page_type`, `awareness`, `traffic_*` |
 | creative | `block` (варианты и эффекты по id), `section_role`, `ambition_level`, слоты `treatment` |
 | ai-media | `page_type` → свой enum (crosswalk), `section_role` → поле `section`, медиа-`slot` |
-| blender | слоты `3d`, `block` (hero-media, feature-spotlight, interactive-demo) |
+| 3d | слоты `3d`, `block` (hero-media, feature-spotlight, interactive-demo) |
 | kimi | `site.sections[].id` ← `section_role` или `block`; `project.type` ← `site_type` |
 
 ## 2. Принципы словаря
@@ -72,7 +72,7 @@ kimi (`site.sections[].id` — свободные) и временный сло�
 - **Префиксы ссылок** (`ref_prefixes` в YAML): `site-type:`, `page-type:`, `section-role:`, `block-family:`, `block:`,
   `slot-kind:`, `slot:`, `macrostructure:`, `action:`, `awareness:`, `traffic-temperature:`, `traffic-source:`,
   `jurisdiction:`, `ambition:`. Чужие (`foreign_prefixes`): `effect:`, `treatment:` (creative), `copy-rule:`, `fact:` (text),
-  `task:` (ai-media), `recipe:` (blender), `event:` (P), `req:` (I). В YAML и TSV допустима короткая ссылка на раздел соседа
+  `task:` (ai-media), `recipe:` (3d), `event:` (P), `req:` (I). В YAML и TSV допустима короткая ссылка на раздел соседа
   `<база>:<папка>-<файл>#<§>` (контракт §3 п.15).
 - **Одинаковая строка в двух пространствах** допустима, если блок — каноническая реализация роли (`faq` — роль и блок,
   `footer`, `header`, `lead-form`, `cta-band`, `article-body`); префикс снимает двусмысленность.
@@ -182,7 +182,7 @@ kimi (`site.sections[].id` — свободные) и временный сло�
 - `media` (17): `hero-visual`, `background`, `photo`, `product-photo`, `screenshot`, `illustration`, `icon`, `logo` (клиента,
   партнёра, СМИ — не генерировать), `brand-logo`, `avatar`, `video`, `diagram`, `cover-image`, `document-image`, `map`,
   `og-image`, `favicon`. Коды задач (`task:IMG-HERO-PHOTO` …) и план ассетов — ai-media (`01-asset-slots-by-page-type.md §8`).
-- `3d` (2): `model-3d`, `scene-3d` → рецепты blender (`recipe:`).
+- `3d` (2): `model-3d`, `scene-3d` → рецепты 3d (`recipe:`).
 - `data` (8): `fact-ref` (любой вид), `testimonial-ref` [testimonial, expert-quote], `client-ref` [client, partner],
   `metric-ref` [metric, rating, research], `price-ref` [price, offer-terms, promo], `case-ref` [case], `person-ref` [person],
   `credential-ref` [award, certificate, press] — виды из `facts.schema.yaml` text (22 вида).
@@ -245,7 +245,7 @@ flow → `document-led` (или `flow-led` — предложение kimi от 
 | ui-ux-pro-max | 34 | 34 паттерна `landing.csv` |
 | schema.org | 23 | 11 подтипов `WebPage` + 10 типов сущностей |
 | relume | 18 | категории библиотеки (неполно: список рисуется скриптом) |
-| blender | 16 | 12 рецептов, 3 цели страницы `01/02` §7 |
+| 3d | 16 | 12 рецептов, 3 цели страницы `01/02` §7 |
 | unbounce | 13 | 13 «типов» лендингов |
 | jack-roberts | 10 | карточка брифа скилла: типы сайта и результаты |
 | claude-design | 9 | словарь брифа холста: `project.type`, `direction.macrostructure`, `site.sections[].id`, `product.primary_action`, признаки описания §2 |
@@ -294,7 +294,7 @@ flow → `document-led` (или `flow-led` — предложение kimi от 
 | kimi `07-brief-handoff/templates/brief.yaml` `site.sections[].id` | свободные id (`how`, `object3d`, `price`, `final_cta` в «Кварце») | id = `section_role` (или `block`), `lint_brief` — проверка по `vocabulary.yaml` | опыт B/03: 4 из 8 id самодельные |
 | kimi `brief.yaml` `project.type` | landing \| webapp | + поле-ссылка `x_site` с `site_type` и `page_type` | тип сайта теряется |
 | kimi `brief.yaml` `direction.macrostructure` | grid-led \| document-led \| poster-led | id `macrostructure` site + `layout_mode` | группа не задаёт форму |
-| blender `12-recipes/00-how-to-use.md` | задачи рецептов без связи со слотами | тег рецепта `slot:model-3d` / `scene-3d` / `background` и `block:` | подбор рецепта по `page-plan` |
+| 3d `12-recipes/00-how-to-use.md` | задачи рецептов без связи со слотами | тег рецепта `slot:model-3d` / `scene-3d` / `background` и `block:` | подбор рецепта по `page-plan` |
 
 ## 8. `vocab_lint.py` в конвейере
 
@@ -358,7 +358,7 @@ flow → `document-led` (или `flow-led` — предложение kimi от 
 - [S6] NN/g «Macro vs. Micro Conversions», 2024-07-19, https://www.nngroup.com/articles/micro-conversions/ — уровни действий.
 - [S7] ai-media `01-web-assets-landscape/01-asset-slots-by-page-type.md` §2.1, §3, §8; `05-prompting/asset-spec.schema.json`; `11-evaluation-qa/rubrics/*.json`; `13-routing-matrix/routing.yaml` (v1, 2026-09-24); `01-web-assets-landscape/sites.csv`.
 - [S8] kimi `07-brief-handoff/templates/brief.yaml`; `05-reviews-practice/03-default-look-k3.md` §3.3; `91-videos/digests/weoV4dm-X1A.md`; `99-raw/experiments/F/03-package-from-description/landing-kvarts/brief.yaml`.
-- [S9] blender `12-recipes/00-how-to-use.md` §1; `01-web-3d-landscape/02-when-3d-budgets-loading.md` §7.
+- [S9] 3d `12-recipes/00-how-to-use.md` §1; `01-web-3d-landscape/02-when-3d-budgets-loading.md` §7.
 - [S10] Hallmark (MIT) `references/macrostructures.md`, `structure.md`, `component-cookbook.md`, `SKILL.md` стр. 286 — https://github.com/Nutlope/hallmark.
 - [S11] ui-ux-pro-max (MIT) `data/landing.csv` — https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.
 - [S12] Relume Library — https://www.relume.io/react/marketing-components, дока «How to use the Relume Webflow Library» (2026-09-24) — мнение вендора, неполно.

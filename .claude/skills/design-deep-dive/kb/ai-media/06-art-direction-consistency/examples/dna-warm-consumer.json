@@ -264,7 +264,7 @@
     "material": "matte ceramic in warm sand #E9DFCF with one park-green #2D7B48 part",
     "camera": "3/4 front view, 30 degrees above, 50mm",
     "accent_share_max": 0.15,
-    "series_passport": "blender/06-materials-lighting-render/02-lighting-camera-composition.md §6"
+    "series_passport": "3d/06-materials-lighting-render/02-lighting-camera-composition.md §6"
   },
   "abstract": {
     "policy": "code-first",

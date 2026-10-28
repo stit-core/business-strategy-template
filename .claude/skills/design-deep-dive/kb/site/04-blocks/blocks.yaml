@@ -4,7 +4,7 @@
 # Как читать. Ключ — id блока словаря (02-site-types/vocabulary.yaml, пространство block). Блок = назначение + набор слотов;
 # раскладка той же анатомии — структурный вариант (variants); визуальные варианты и эффекты — creative по id блока
 # (block-treatments.yaml); правила текста слотов — text (copy-slots.yaml) по id слота (copy-rule:<slot>); медиа —
-# ai-media (план ассетов 01/01 §8, коды task:); 3D — blender (recipe:). Элемент анатомии: id — локальный в блоке (= site_slot_id
+# ai-media (план ассетов 01/01 §8, коды task:); 3D — 3d (recipe:). Элемент анатомии: id — локальный в блоке (= site_slot_id
 # copy-deck и site_slot copy-slots.yaml text), slot — id словаря. required: true | false | if-fact (только при факте) |
 # if-available (при наличии у заказчика) | by-variant (задаёт вариант). Длина текстового слота — класс порядка величины
 # (length_classes), по умолчанию из text_slot_defaults (выведено скриптом из copy-slots.yaml).
@@ -291,7 +291,7 @@ blocks:
       - {id: visual, slot: hero-visual, required: true, media_role: informational, ratio: {desktop: "16:9", mobile: "4:5"}, note: "свой кадр телефона 4:5 или 9:16 (site 03/03 §5.3)"}
       - {id: screenshot, slot: screenshot, required: by-variant, variants: [product-frame], authenticity: real-only, note: "настоящий интерфейс; ИИ-скриншот — нет (ai-media 01/01 §2.1)"}
       - {id: video, slot: video, required: by-variant, variants: [video-loop], note: "петля ≤ 1,5 МБ десктоп, ≤ 600 КБ телефон (ai-media); пауза"}
-      - {id: model, slot: model-3d, required: by-variant, variants: [scene-3d], note: "рецепт blender; постер = visual"}
+      - {id: model, slot: model-3d, required: by-variant, variants: [scene-3d], note: "рецепт 3d; постер = visual"}
       - {id: alt, slot: image-alt, required: true, note: "у декоративного фона alt пустой — тогда слот не нужен"}
     variants:
       - {id: split, name: "Текст и визуал рядом", when: "по умолчанию для продукта и услуги", default: true, first_screen_policy: offer-cta, hallmark: [H2]}
@@ -302,7 +302,7 @@ blocks:
       - {id: scene-3d, name: "3D-объект или сцена", when: "товар с неочевидной формой, кампания L2; LCP — H1 или постер, призыв работает до загрузки 3D", adds: [model], first_screen_policy: offer-cta}
       - {id: illustration, name: "Иллюстрация-центр", when: "абстрактная услуга с сильным рисованным образом (по паспорту стиля)", hallmark: [H9]}
     mobile: {behavior: [reframe, stack], below_60rem: "одна колонка: текст над визуалом или визуал над текстом — одинаково на всех страницах проекта; обрезка «за край экрана» и наклон мокапа снимаются", below_40rem: "кадр 4:5 или 9:16; видео — постер при save-data; призыв выше черты первого экрана; длинные слова H1 — hyphens: auto при lang=ru или дисплей на шаг меньше; неразрывный пробел после предлогов и союзов — правило text (типографика)", never_hide: [headline, cta, hero-proof]}
-    refs: {structure: ["site:03-03#3.1", "site:03-03#5.3"], conversion: ["site:05-01"], budget: ["site:07-03"], seo: ["site:07-01"], a11y: ["site:08-03", "ai-media:10-03"], legal: ["site:08-02"], assets: ["ai-media:01-01#2.2", "ai-media:01-01#8"], blender: ["blender:01-02#7"], creative: ["creative:block-treatments"]}
+    refs: {structure: ["site:03-03#3.1", "site:03-03#5.3"], conversion: ["site:05-01"], budget: ["site:07-03"], seo: ["site:07-01"], a11y: ["site:08-03", "ai-media:10-03"], legal: ["site:08-02"], assets: ["ai-media:01-01#2.2", "ai-media:01-01#8"], 3d: ["3d:01-02#7"], creative: ["creative:block-treatments"]}
     errors: ["ИИ-изображение самого товара или людей-«клиентов» (ai-media 12/04)", "Скриншот интерфейса в hero без оптимизации — медиана LCP 7,5 с у лидеров", "Видео десктопа на телефоне; видео без паузы", "Текст поверх шумного кадра без проверки контраста"]
     evidence: ["LCP по типу hero у 43 лидеров: фото 3,3 с, ИИ-картинка 4,6 с, скриншот 7,5 с, коллаж 12,5 с [данные: ai-media]"]
 
@@ -864,7 +864,7 @@ blocks:
       - {id: story-beat, name: "Бит истории", when: "кампания L2 (scroll-story): кадр и одна фраза, без прямой продажи"}
       - {id: model-3d, name: "3D-объект", when: "форма товара неочевидна; постер того же ракурса", adds: [model]}
     mobile: {behavior: [reframe], below_40rem: "кадр 4:5 или 9:16; текст над или под кадром", never_hide: [title, media]}
-    refs: {structure: ["site:03-01#3.2"], budget: ["site:07-03"], assets: ["ai-media:01-01#8"], blender: ["blender:01-02#7"], creative: ["creative:block-treatments"]}
+    refs: {structure: ["site:03-01#3.2"], budget: ["site:07-03"], assets: ["ai-media:01-01#8"], 3d: ["3d:01-02#7"], creative: ["creative:block-treatments"]}
     errors: ["Три «одних функций крупно» подряд без доказательств", "Текст запечён в кадр"]
 
   benefit-list:
@@ -984,7 +984,7 @@ blocks:
     purpose: "Песочница или конфигуратор: попробовать продукт прямо на странице"
     serves: [product-demo]
     use_when: ["продукт с быстрым результатом без данных посетителя", "товар с вариантами (цвет, комплектация)"]
-    avoid_when: ["демо требует входа — это регистрация", "страница, где задача — быстро прочитать и купить (прайсинг, лиды — blender 01/02 §1.3)"]
+    avoid_when: ["демо требует входа — это регистрация", "страница, где задача — быстро прочитать и купить (прайсинг, лиды — 3d 01/02 §1.3)"]
     html: {element: section, landmark: region, heading: h2, form: true, note: "элементы управления — нативные (<input>, <button>, <select>) с подписями; результат — aria-live=polite; описание функции — текстом в HTML"}
     slots:
       - {id: title, slot: section-title, required: true, heading: h2}
@@ -999,9 +999,9 @@ blocks:
       - {id: messenger-prefill, slot: messenger-prefill, required: false, purpose: "готовое первое сообщение мессенджера: на слот ссылается target.prefill действия с целью-мессенджером"}
     variants:
       - {id: sandbox, name: "Песочница", when: "по умолчанию", default: true}
-      - {id: configurator, name: "Конфигуратор", when: "товар с вариантами; 3D — по рецепту blender", adds: [model]}
+      - {id: configurator, name: "Конфигуратор", when: "товар с вариантами; 3D — по рецепту 3d", adds: [model]}
     mobile: {behavior: [stack], below_40rem: "упрощённые элементы; тяжёлое демо — видео-запись вместо живого", never_hide: [lead, result, cta]}
-    refs: {budget: ["site:07-03"], a11y: ["site:08-03"], events: ["site:07-04"], blender: ["blender:01-02#7"], creative: ["creative:block-treatments"]}
+    refs: {budget: ["site:07-03"], a11y: ["site:08-03"], events: ["site:07-04"], 3d: ["3d:01-02#7"], creative: ["creative:block-treatments"]}
     errors: ["Демо грузится в первом экране и занимает поток (TBT)", "Нет запасного кадра"]
 
   audience-grid:

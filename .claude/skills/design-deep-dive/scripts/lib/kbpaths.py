@@ -46,7 +46,7 @@ SKILL = SCRIPTS.parent                                  # .../.claude/skills/des
 KB = SKILL / "kb"
 ASSETS = SKILL / "assets"
 
-BASES = ("ux", "ui", "site", "text", "creative", "ai-media", "blender", "claude-design")
+BASES = ("ux", "ui", "site", "text", "creative", "ai-media", "3d", "claude-design")
 DOMAINS = BASES + ("lib", "maint", "tests", "project")  # папки scripts/; project — утилиты по файлам docs/projects/
 
 ENV_HOME = "DDD_HOME"
@@ -570,7 +570,7 @@ def _selftest():
     except ValueError:
         check("неизвестная база — ValueError", True)
     check("scripts('ai-media', 'x.py')", scripts("ai-media", "x.py") == SCRIPTS / "ai-media" / "x.py")
-    check("data('blender')", data("blender") == SCRIPTS / "blender" / "data")
+    check("data('3d')", data("3d") == SCRIPTS / "3d" / "data")
     check("домен project: scripts('project')", scripts("project") == SCRIPTS / "project")
     check("repo() — репозиторий скилла: .claude/skills/<скилл> внутри", SKILL == repo(".claude", "skills", SKILL.name))
     check("skill_version() — строка файла VERSION корня скилла (<major>.<minor>.<patch>)",

@@ -554,7 +554,7 @@ def schema_findings(K, ap, c):
             c.add("R-COV-004", "error", ptr, "3D-слот без постера: poster — id строки с постером того же ракурса")
         elif miss in ("three_d", "road"):
             c.add("R-MAT-002", "error", ptr, "у 3D-слота утверждённого плана нет дороги 3D (three_d.road: code · "
-                                             "blender-frame · blender-sequence · hybrid — blender/15-showcase/VERDICT.md §3)")
+                                             "blender-frame · blender-sequence · hybrid — 3d/15-showcase/VERDICT.md §3)")
         else:
             c.add("R-STRUCT-005", "error", ptr, f"форма плана ассетов: {e.message[:300]}")
 

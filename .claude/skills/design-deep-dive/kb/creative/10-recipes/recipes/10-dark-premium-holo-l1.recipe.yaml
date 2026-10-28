@@ -52,7 +52,7 @@ stack:
   js_first_kb_br: 6
   notes: "1 контекст, пауза вне экрана и в скрытой вкладке, reduce — кадр"
 assets:
-  - {slot: hero-visual, ladder: image, source: real, task_codes: [IMG-CUTOUT], blender_recipe: "../blender/12-recipes/09-glass-product.md", budget_kb: 150}
+  - {slot: hero-visual, ladder: image, source: real, task_codes: [IMG-CUTOUT], recipe_3d: "../3d/12-recipes/09-glass-product.md", budget_kb: 150}
   - {slot: background, ladder: shader, source: code, task_codes: [IMG-BG-ABSTRACT], budget_kb: 6}
 copy:
   promise: "видно, где живёт блик"

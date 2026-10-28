@@ -36,7 +36,7 @@ WCAG 2.2.2 — `02` §5, контраст текста на странице —
 
 - Кодирование и петли — I (`../09-video-pipeline/`), картинки — H (`../08-image-post-processing/`), композиция и скрим до вёрстки —
   F (`../06-art-direction-consistency/03`), вектор — G (`../07-vector-svg-icons/`), бюджеты-нормы и замер лидеров — A
-  (`../01-web-assets-landscape/`), право и метка ИИ — L (`../12-legal-provenance/02` §5, §7), 3D и его загрузка — blender
-  (`../../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md`,
-  `../../blender/01-web-3d-landscape/05-blender-deliverables-map.md` §3.13–3.15), доступность движения — ux-research
+  (`../01-web-assets-landscape/`), право и метка ИИ — L (`../12-legal-provenance/02` §5, §7), 3D и его загрузка — 3d
+  (`../../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md`,
+  `../../3d/01-web-3d-landscape/05-blender-deliverables-map.md` §3.13–3.15), доступность движения — ux-research
   (`../../ux/08-accessibility/`, `../../ux/06-feedback-states-motion/03-motion-and-microinteractions.md` §7). Рецепты «бриф → ассет → страница» (M) берут шаблоны из `pages/`.

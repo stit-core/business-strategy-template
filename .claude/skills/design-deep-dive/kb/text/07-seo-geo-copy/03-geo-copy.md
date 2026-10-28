@@ -358,6 +358,6 @@ Record: не нарезать на «bite-sized chunks» [S22: i4jD 17:17], не
 - [S23] B2, `02-strategy-messaging/facts.schema.yaml` (canonical), `03-proof-and-facts.md` §4.2, примеры facts «Отвес», «Кварц». Внутренний стандарт.
 - [S24] D, `../03-corpus-measured/02-measurements.md` §2.4–2.5, §6; `thresholds.yaml` (2026-09-24). `[проверено]`
 - [S25] `../kimi-research/03-prompting/02-community-practice.md` §14 (Hallmark: hero ≤ 7 слов). `[практика]`
-- [S26] `../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md` §6.1 — текст в HTML, ИИ-краулеры без JS.
+- [S26] `../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md` §6.1 — текст в HTML, ИИ-краулеры без JS.
 - [S27] Google, Search Quality Rater Guidelines, версия 11.09.2025 (182 с.) — E-E-A-T, §4.6.5–4.6.6. `[документация]`
 - [S28] Булгакова Л. («Ашманов и партнёры»), «Контент в эпоху нейропоиска: что работает в 2026 году», 2026-04-03. `[мнение вендора]`

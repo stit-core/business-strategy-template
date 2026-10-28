@@ -307,7 +307,7 @@
     "material": "matte light blue-grey ceramic #E3E8EE with one indigo-blue #5469D4 part",
     "camera": "3/4 view from 35 degrees above, 85mm",
     "accent_share_max": 0.15,
-    "series_passport": "blender/06-materials-lighting-render/02-lighting-camera-composition.md §6"
+    "series_passport": "3d/06-materials-lighting-render/02-lighting-camera-composition.md §6"
   },
   "abstract": {
     "policy": "code-first",

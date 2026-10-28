@@ -316,7 +316,7 @@
       "properties": {
         "strategy": {
           "enum": ["same", "simplified", "static", "stacked", "poster", "hidden-decor", "separate-asset"],
-          "description": "same — как на десктопе; simplified — меньше слоёв и частиц, короче путь, DPR ≤ 1,5; static — без движения; stacked — закреплённая сцена → стопка кадров-станций без закрепления; poster — кадр вместо видео или 3D; hidden-decor — декоративное скрыто; separate-asset — свой ассет 9:16 или 4:5 (нативный, не центр-кроп)."
+          "description": "same — как на десктопе; simplified — меньше слоёв и частиц, короче путь, пиксели холста ≤ 1,9 Мпикс (DPR до 2, 3d 16/01); static — без движения; stacked — закреплённая сцена → стопка кадров-станций без закрепления; poster — кадр вместо видео или 3D; hidden-decor — декоративное скрыто; separate-asset — свой ассет 9:16 или 4:5 (нативный, не центр-кроп)."
         },
         "note": {"type": "string", "description": "Что именно меняется (объявить деградацию — higgsfield wow-catalog «declare the degradation in the brief»); при simplified и separate-asset без note — предупреждение spec_check.py (в схеме не требуется ради совместимости с v0)."}
       }

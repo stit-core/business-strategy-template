@@ -3,7 +3,7 @@
 """Проверка перекрёстных ссылок, меток и структуры одной базы знаний `kb/<база>/`: то, чего не делает `refcheck.py`, —
 источники `[S…]`, ролики `[V:…]` по форме, README папок против диска, метки опытов, разделы по номерам папок.
 
-База — папка `kb/<база>/` скилла (ux, ui, site, text, creative, ai-media, blender, claude-design); соседние базы —
+База — папка `kb/<база>/` скилла (ux, ui, site, text, creative, ai-media, 3d, claude-design); соседние базы —
 папки рядом. Обходит `.md` тематических папок `NN-…` (кроме `99-raw/`), файлы `NN-….md` корня базы и корневые
 `README.md`, `PLAN.md`, `CONTRADICTIONS.md` (папки `transcripts/` не разбираются); по умолчанию ещё
 `99-raw/tools/README.md` и `99-raw/phase5/*.md`, если есть, — только для проверок (а) и (ж).
@@ -72,12 +72,13 @@ ROOT_FILES = ["README.md", "PLAN.md", "CONTRADICTIONS.md"]
 SKIP_DIR_NAMES = {"__pycache__", ".git", "transcripts", "node_modules", "assets"}
 # Соседние базы — папки kb/<база>/ рядом с проверяемой. Короткое имя в тексте: «ux 07/06», «ai-media 05/03 §7»,
 # «cd 06/04»; слово text в базе ещё и `slot_kind`, site — часть имён, поэтому text, site и cd распознаются только перед
-# номером папки или опыта («text 03…», «site `05`», «text A/01») или с суффиксом прежнего имени папки `-research`.
+# номером папки или опыта («text 03…», «site `05`», «text A/01») или с суффиксом `-research` у имени папки базы в её
+# источниках; 3d в именах и значениях стоит с дефисом или подчёркиванием («3d-object», «js_3d_kb_br») и словом не считается.
 SHORT_NAMES = {"ux": "ux", "ui": "ui", "site": "site", "text": "text", "creative": "creative", "ai-media": "ai-media",
-               "blender": "blender", "claude-design": "claude-design", "cd": "claude-design"}
+               "3d": "3d", "claude-design": "claude-design", "cd": "claude-design"}
 GUARDED_NAMES = {"text", "site", "cd"}
 # Путь в соседнюю базу: первый сегмент после «../» — имя папки базы или прежнее имя `<имя>-research`
-NB_SEG_RE = re.compile(r"^(?:\.\./)*([a-z][a-z-]*?)(-research)?(?=/|$)")
+NB_SEG_RE = re.compile(r"^(?:\.\./)*([a-z0-9][a-z0-9-]*?)(-research)?(?=/|$)")
 NEIGHBORS = ()          # папки соседних баз — configure()
 NEIGHBOR_SHORT = {}     # короткое имя в тексте → папка соседа — configure()
 NB = ""                 # регулярка короткого имени соседа — configure()
@@ -769,7 +770,7 @@ def target_from_context(root, relpath, filedir, text, last_target, basename_inde
         if found:
             consider(pos, found, "path")
             last_dir = os.path.dirname(found)
-    # соседняя база и папки базы без бэктиков: «ui 07/02 §2.1», «E 13/01 §4.2», «(02/05 §9)», «blender 01 §9.5»
+    # соседняя база и папки базы без бэктиков: «ui 07/02 §2.1», «E 13/01 §4.2», «(02/05 §9)», «3d 01 §9.5»
     chain_nb = None
     for m in re.finditer(r"(?<![\w/`.])(?:(?<![\w-])" + NB + r"(?:-research)?\s+)?(\d\d)/(\d\d)(?![\w/`])", text):
         nbk = m.group(1)

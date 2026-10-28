@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:app-design:site:page-plan:1",
   "title": "page-plan v1 — план одной страницы или шаблона: цель, трафик, форма, секции, слоты, события, подача",
-  "description": "План страницы или шаблона коллекции (владелец — site: 04-blocks, 10-playbooks-contracts). Id — словарь 02-site-types/vocabulary.yaml, блоки и элементы анатомии — 04-blocks/blocks.yaml. Потребители: text (copy deck: section.id → section_id и site_section_id, role → section_role, block → block, текстовый слот id → slot_id, slot → slot_type, anatomy → site_slot_id, group → group; факты — data[].binds), creative (treatment — подсхема creative), ai-media (media[] → план ассетов 01/01 §8), blender (3d[] → рецепты 12-recipes), вход холста (проекция по ключу x-canvas-map: секции, первый экран, навигация, формы, право; статичная часть treatment — по карте treatment). Проверки: форма — эта схема; id — vocab_lint.py; связи (блок есть, слот разрешён блоку, факт есть и разрешён слоту) и подача (spec_check.py plan creative) — site_validate.py.",
+  "description": "План страницы или шаблона коллекции (владелец — site: 04-blocks, 10-playbooks-contracts). Id — словарь 02-site-types/vocabulary.yaml, блоки и элементы анатомии — 04-blocks/blocks.yaml. Потребители: text (copy deck: section.id → section_id и site_section_id, role → section_role, block → block, текстовый слот id → slot_id, slot → slot_type, anatomy → site_slot_id, group → group; факты — data[].binds), creative (treatment — подсхема creative), ai-media (media[] → план ассетов 01/01 §8), 3d (3d[] → рецепты 12-recipes), вход холста (проекция по ключу x-canvas-map: секции, первый экран, навигация, формы, право; статичная часть treatment — по карте treatment). Проверки: форма — эта схема; id — vocab_lint.py; связи (блок есть, слот разрешён блоку, факт есть и разрешён слоту) и подача (spec_check.py plan creative) — site_validate.py.",
   "x-canvas-map": {
     "source": "page-plan",
     "stages": [
@@ -1638,7 +1638,7 @@
         "recipe": {
           "type": "string",
           "pattern": "^recipe:[a-z0-9-]+$",
-          "description": "Рецепт blender 12-recipes (recipe:01-hero-product)."
+          "description": "Рецепт 3d 12-recipes (recipe:01-hero-product)."
         },
         "poster": {
           "type": "string",
@@ -1651,7 +1651,7 @@
             "on-interaction"
           ],
           "default": "on-interaction",
-          "description": "Когда грузится 3D. Первый экран — after-lcp: после LCP и события load, до того — постер. Ниже первого экрана — on-interaction (умолчание): по намерению — первое нажатие, касание, клик или остановка ≥ 2,5 с на разделе, до того — кадр Blender или постер. on-visible — загрузка по видимости даёт длинные кадры прокрутки: только с пометкой риска (ворота EG-PERF-01 creative). Норма — blender 12/15."
+          "description": "Когда грузится 3D. Первый экран — after-lcp: после LCP и события load, до того — постер. Ниже первого экрана — on-interaction (умолчание): по намерению — первое нажатие, касание, клик или остановка ≥ 2,5 с на разделе, до того — кадр Blender или постер. on-visible — загрузка по видимости даёт длинные кадры прокрутки: только с пометкой риска (ворота EG-PERF-01 creative). Норма — 3d 12/15."
         },
         "cta_before_3d": {
           "type": "boolean",

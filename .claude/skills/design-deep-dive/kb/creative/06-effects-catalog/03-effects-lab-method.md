@@ -20,7 +20,7 @@
    перед партией ≥ 3 ГБ памяти; опрос `LOCK_NB` проигрывает очереди соседей (ждал 10 мин). → §4 `[проверено]`
 7. Шрифты в лаборатории — `font-display: block` + `preload`, CLS считать после `document.fonts.ready` (`cls_after_fonts`):
    иначе CLS 0,09–0,16 от подмены шрифта смешивается с CLS эффекта. → §4 `[проверено]`
-8. Вес текста — brotli q11 по отданным сервером байтам (как blender A/03); видео — фактически отданные байты с учётом Range. → §3.1 `[проверено]`
+8. Вес текста — brotli q11 по отданным сервером байтам (как 3d A/03); видео — фактически отданные байты с учётом Range. → §3.1 `[проверено]`
 9. WebKit Playwright ≠ Safari, эмуляция Pixel 7 ≠ телефон, Iris Xe ≠ мобильный GPU: числа — для сравнения эффектов между
    собой; поле — ворота site и живая фаза. → §5 `[проверено]`
 10. iPhone-режим `wkmob` (WebKit, дескриптор iPhone 13) гоняй отдельно: `mouse.wheel` в мобильном WebKit не поддерживается —
@@ -211,7 +211,7 @@
 
 ## Источники
 - [S1] creative C, `99-raw/tools/effects_probe.py` и `03-live-sites-measured/01` §1 — флаги GPU, перехват WebGL, LoAF, порог движения 12/255.
-- [S2] blender F2 `fx_probe.py` (по `09-web-runtime/04` §1) — режим без vsync как относительная цена кадра.
+- [S2] 3d F2 `fx_probe.py` (по `09-web-runtime/04` §1) — режим без vsync как относительная цена кадра.
 - [S3] Playwright 1.63 Python API (device descriptors, `reduced_motion`, CDP session) `[документация]`; Chrome DevTools Protocol
   `Performance.getMetrics`, `Emulation.setCPUThrottlingRate` `[документация]`.
 - [S4] Опыты F: `99-raw/experiments/F/01-pilot`, `02-trace-probe`, `03-batch-A`, `05-batch-BG`, `06-unl`, `08-remeasure`.

@@ -40,4 +40,4 @@
 
 Модели и их возможности — `../04-video-models/`; форма видео-промта — `../05-prompting/04-video-prompting.md` (D2);
 вырез картинок, LUT, бандинг картинок — `../08-image-post-processing/` (H); доставка на страницу — `../10-web-integration/`
-(J) и `../../blender/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15; проверка ассетов — `../11-evaluation-qa/` (K).
+(J) и `../../3d/01-web-3d-landscape/05-blender-deliverables-map.md` §3.15; проверка ассетов — `../11-evaluation-qa/` (K).

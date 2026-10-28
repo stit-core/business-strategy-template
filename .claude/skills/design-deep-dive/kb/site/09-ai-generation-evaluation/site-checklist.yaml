@@ -2636,7 +2636,7 @@ items:
   - id: SITE-PERF-16
     block: PERF
     block_title: "скорость и вес по профилю"
-    text: "3D и эффекты грузятся после LCP и в покое не рисуют кадры; доля 3D — ворота blender, страницу не блокирует"
+    text: "3D и эффекты грузятся после LCP и в покое не рисуют кадры; доля 3D — ворота 3d, страницу не блокирует"
     severity: D
     severity_label: "желательно"
     check_method: [SCR]
@@ -3618,7 +3618,7 @@ items:
   - id: SITE-OUT-11
     block: OUT
     block_title: "ворота выдачи"
-    text: "Ворота эффектов creative и приёмка ассетов ai-media и blender пройдены; чужие байты страницу не блокируют"
+    text: "Ворота эффектов creative и приёмка ассетов ai-media и 3d пройдены; чужие байты страницу не блокируют"
     severity: S
     severity_label: "серьёзно"
     check_method: [LNT]

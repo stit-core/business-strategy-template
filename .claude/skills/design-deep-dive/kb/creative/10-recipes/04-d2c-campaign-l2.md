@@ -68,7 +68,7 @@ ai-media 14 (hero, серии, видео), W2 NYT `[V:yAWFjiaK1Ek]`, basement `
   прогресс по `getBoundingClientRect`, как в примере L2 (рецепт 03 §6); видео-скраб — `<video>` с ключевыми кадрами через каждые
   2–4 кадра (`-g 4`), иначе скраб рвётся `[практика; не проверено]`.
 - Ассеты (ai-media 01-01 §8): hero — `IMG-HERO-PHOTO` или реальная съёмка (банка — реальный пакшот, `IMG-CUTOUT`); секвенция —
-  реальная съёмка или `VID-I2V-PRODUCT` → кадры; пар — `VID-CINEMAGRAPH`; blender — `12-08` (секвенция и альфа-видео), если съёмки нет.
+  реальная съёмка или `VID-I2V-PRODUCT` → кадры; пар — `VID-CINEMAGRAPH`; 3d — `12-08` (секвенция и альфа-видео), если съёмки нет.
   Люди — только реальные (решение заказчика п. 13).
 - Тексты: биты — `section-title` + `body` (≤ 2 строк на станцию), `promo` — `badge` + `disclaimer` со сроком, `email-*` для подписки.
 
@@ -114,5 +114,5 @@ ai-media 14 (hero, серии, видео), W2 NYT `[V:yAWFjiaK1Ek]`, basement `
 - [S2] site — `../../site/10-playbooks-contracts/02-playbooks-landings.md` §5, 2026-09-24.
 - [S3] W2 — `[V:yAWFjiaK1Ek]` (история, лабиринт), `[V:ufHQG7fDLQc]` (скраб, доли, секвенция Boost).
 - [S4] ai-media — `../../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §8; `10-web-integration/pages/05-scroll-sequence.html`.
-- [S5] blender — `../../blender/12-recipes/08-sequence-video-alpha.md`.
+- [S5] 3d — `../../3d/12-recipes/08-sequence-video-alpha.md`.
 - [S6] E — `../05-motion/02-choreography-scroll-transitions.md` §1, §4, §9; H — `cliche-registry.yaml`.

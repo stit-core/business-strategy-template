@@ -68,7 +68,7 @@ protobuf==7.36.2
 flatbuffers==25.12.19
 six==1.17.0
 
-# [media] метрики картинок и видео (scipy: утилиты ai-media и blender/d1lib.py) и обработка картинок моделями
+# [media] метрики картинок и видео (scipy: утилиты ai-media и 3d/d1lib.py) и обработка картинок моделями
 # (удаление фона rembg: u2netp, isnet); модели — install.sh --models
 scipy==1.18.1
 rembg==2.0.85

@@ -24,7 +24,7 @@
 | 4 | план страницы | пример и плейбук site | `page-plan` v1 |
 | 5 | treatment и motion-spec секций | I 09/01 §4, 09/02; `block-treatments.yaml` | overlay + `motion-spec.yaml` (spec_check 0 ошибок) |
 | 6 | эффекты и стек | `effects.yaml` (F), `stack.yaml` (G) | `effects[]`, библиотеки с версиями |
-| 7 | ассеты и тексты | коды задач ai-media §8, рецепты blender 12, copy-deck text | план ассетов, copy-deck |
+| 7 | ассеты и тексты | коды задач ai-media §8, рецепты 3d 12, copy-deck text | план ассетов, copy-deck |
 | 8 | сборка | исполнитель (K3 — T7 из `spec_check.py moments`) | страница |
 | 9 | ворота и кадры | `motion_check.py`, `marketing_audit.py`, `page_accept.py` (K, ai-media) | таблица «ворота → значение → порог» |
 

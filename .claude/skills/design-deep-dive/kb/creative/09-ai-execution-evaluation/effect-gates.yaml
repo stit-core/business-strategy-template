@@ -2,7 +2,7 @@
 # Описание и обоснование — 03-verification-loop-and-gates.md §3; итоги на лаборатории эффектов и странице-примере — там же §5.
 #
 # Иерархия (kb/common/owners.md § Правила владения): ворота страницы site (../site/07-seo-geo-performance-analytics/page-gates.yaml
-# v1.2) ВЫШЕ этих; ворота ассетов (ai-media page_accept.py, blender 09/05 §7.2) страницу не блокируют за чужие байты.
+# v1.2) ВЫШЕ этих; ворота ассетов (ai-media page_accept.py, 3d 09/05 §7.2) страницу не блокируют за чужие байты.
 # Здесь — то, что добавляет подача: движение, петли, reduce, фолбэки, вес и цена эффектов. Там, где метрика совпадает с
 # воротами site (LCP, TBT, вес страницы, CLS загрузки), наша строка — «зеркало» с серьёзностью D и полем site: владелец —
 # site, повторного блокера нет.
@@ -28,7 +28,7 @@ levels_source: "01-creative-direction/ambition-levels.yaml (budgets.effects — 
 site_gates: "../site/07-seo-geo-performance-analytics/page-gates.yaml v1.2 (62 строки; page_gates.py v1.2)"
 neighbours:
   ai_media: "../../scripts/ai-media/page_accept.py: вес первого экрана, LCP, CLS, TBT, пауза видео на 6-й с, reduce 0 байт видео и < 0,5 % движения, F83 по буквам и кадрам видео"
-  blender: "../blender/09-web-runtime/05-performance-a11y-fallbacks.md §7.2 — 11 порогов страницы с 3D (site_probe.py + gate_check): вызовы в кадре ≤ 30/60, reduce 0 вызовов и ≤ 0,05 % движения, DPR ≤ 1,5, первый кадр модели ≤ 5000/2000 мс"
+  3d: "../3d/09-web-runtime/05-performance-a11y-fallbacks.md §7.2 — 11 порогов страницы с 3D (site_probe.py + gate_check): вызовы в кадре ≤ 30/60, reduce 0 вызовов и ≤ 0,05 % движения, DPR ≤ 2, пиксели холста ≤ 4,6 Мпикс ПК / 1,9 телефон, первый кадр модели ≤ 5000/2000 мс"
 severity:
   B: "блокер: страница не принимается, пока не исправлено"
   S: "серьёзно: исправить или записать обоснование в page-plan (x-gate-exception: {id, why, who, until})"
@@ -103,7 +103,7 @@ gates:
     op: "<="
     threshold_ref: profile.outcome.tbt_ms_lab.<device>.goal
     severity: D
-    source: "профиль страницы site budgets.yaml outcome.tbt_ms_lab (цель); blender 01/02 §8"
+    source: "профиль страницы site budgets.yaml outcome.tbt_ms_lab (цель); 3d 01/02 §8"
     label: "[документация] + [данные]"
     site: "= SG-PERF-05 (владелец site; у site — S)"
   - id: EG-PERF-06
@@ -136,7 +136,7 @@ gates:
     metric: vitals.lcp_canvas
     op: "false"
     severity: B
-    source: "CRV-AL-04; blender 09/05 §7.2 №1; blender 01/04"
+    source: "CRV-AL-04; 3d 09/05 §7.2 №1; 3d 01/04"
     label: "[проверено] у соседей"
     site: "= SG-PERF-06 (B)"
   - id: EG-PERF-09
@@ -197,9 +197,9 @@ gates:
     op: "<="
     threshold_ref: budgets.effects.js_3d_kb_br
     severity: S
-    source: "ambition-levels.yaml budgets.effects.js_3d_kb_br (L0 0, L1 200/300, L2 250/350); blender 01/03 (three core 109, R3F + drei + post 345 КБ br); wasm декодеров 3D (Draco, Basis, meshopt) — здесь же; wasm-рантаймы подачи 2D — EG-WEIGHT-11"
-    label: "[данные] [спорно] у blender"
-    site: "SG-WEIGHT-08: доля 3D — ворота blender, не страницы"
+    source: "ambition-levels.yaml budgets.effects.js_3d_kb_br (L0 0, L1 200/300, L2 250/350); 3d 01/03 (three core 109, R3F + drei + post 345 КБ br); wasm декодеров 3D (Draco, Basis, meshopt) — здесь же; wasm-рантаймы подачи 2D — EG-WEIGHT-11"
+    label: "[данные] [спорно] у 3d"
+    site: "SG-WEIGHT-08: доля 3D — ворота 3d, не страницы"
   - id: EG-WEIGHT-03
     name: "Число WebGL-контекстов"
     group: weight
@@ -368,7 +368,7 @@ gates:
     op: "<="
     threshold: 0.3
     severity: S
-    source: "creative 05/01 §4.5 (0,3 %/с — по замеру creative 03); blender 09/05 §7.2 №8 (≤ 0,05 % для 3D)"
+    source: "creative 05/01 §4.5 (0,3 %/с — по замеру creative 03); 3d 09/05 §7.2 №8 (≤ 0,05 % для 3D)"
     label: "[данные: creative 03] [гипотеза: порог]"
     site: "строже SG-A11Y-07 (< 0,5 %)"
   - id: EG-A11Y-07
@@ -401,8 +401,8 @@ gates:
     op: "<="
     threshold: 0
     severity: S
-    source: "CRV-AL-01, CRV-AL-10; creative 05/01 §4.5 (0 вызовов WebGL в покое); blender 09/05 §7.2 №8; creative 03: WebGL рисует под reduce у 11 из 12"
-    label: "[проверено] у blender + [данные: creative 03]"
+    source: "CRV-AL-01, CRV-AL-10; creative 05/01 §4.5 (0 вызовов WebGL в покое); 3d 09/05 §7.2 №8; creative 03: WebGL рисует под reduce у 11 из 12"
+    label: "[проверено] у 3d + [данные: creative 03]"
     site: "—"
   - id: EG-A11Y-10
     name: "reduce: текст ниже первого экрана скрыт до прокрутки (появление не отключено)"
@@ -662,7 +662,7 @@ gates:
     metric: derived.hero_blank
     op: "false"
     severity: S
-    source: "CRV-AL-05; creative 06/03 §7.3 (режим nogl: blank_check σ < 2 — кадр однотонный); blender 09/05 §6 (постер = 3D)"
+    source: "CRV-AL-05; creative 06/03 §7.3 (режим nogl: blank_check σ < 2 — кадр однотонный); 3d 09/05 §6 (постер = 3D)"
     label: "[практика] + [проверено]"
     site: "—"
   - id: EG-FB-05
@@ -684,7 +684,7 @@ gates:
     threshold: 0
     severity: D
     where: errors
-    source: "blender 09/05 §7.2 №9"
+    source: "3d 09/05 §7.2 №9"
     label: "[практика]"
     site: "= SG-CONTENT-04 (владелец site)"
 
@@ -753,14 +753,14 @@ gates:
     label: "[практика]"
     site: "—"
   - id: EG-3D-01
-    name: "Страница с 3D проходит ворота blender 09/05 §7.2 (вызовы в кадре, reduce, DPR, первый кадр модели)"
+    name: "Страница с 3D проходит ворота 3d 09/05 §7.2 (вызовы в кадре, reduce, DPR, первый кадр модели)"
     group: neighbour
     auto: false
-    method: "python3 ../../scripts/blender/site_probe.py URL out/ [--mobile] [--reduced-motion] + gate_check (blender 09/05 §7.2)"
-    threshold_text: "11 порогов blender"
+    method: "python3 ../../scripts/3d/site_probe.py URL out/ [--mobile] [--reduced-motion] + gate_check (3d 09/05 §7.2)"
+    threshold_text: "11 порогов 3d"
     severity: D
-    source: "blender 09/05 §7.2; kb/common/owners.md § Правила владения (ворота ассета не блокируют страницу за чужие байты)"
-    label: "[проверено] у blender"
+    source: "3d 09/05 §7.2; kb/common/owners.md § Правила владения (ворота ассета не блокируют страницу за чужие байты)"
+    label: "[проверено] у 3d"
     site: "SG-WEIGHT-08"
   - id: EG-LIVE-01
     name: "Реальный телефон: плавность сцен, Lottie и Rive (память, FPS), нагрев"

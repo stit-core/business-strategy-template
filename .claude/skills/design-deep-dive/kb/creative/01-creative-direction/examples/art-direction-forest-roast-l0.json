@@ -23,7 +23,7 @@
     "brand_expression_mode": "extend",
     "must_keep": ["лесной зелёный #1F4D3A", "золото #C9A227 как второй акцент этикетки", "банка «ЛЕСНАЯ ОБЖАРКА» — настоящий товар (рендер E-10)"],
     "customer_words": ["тёплый, ремесленный, спокойный"],
-    "assets": "рендер банки (blender, свой), кадр утреннего стола у окна (F-04), синемаграф пара 5 с, 3D-иконки фич",
+    "assets": "рендер банки (3d, свой), кадр утреннего стола у окна (F-04), синемаграф пара 5 с, 3D-иконки фич",
     "constraints": ["демо ассетов, а не лендинга", "все утверждения — missing до facts.yaml", "без обещаний о здоровье (meaning boundaries)"]
   },
   "ambition": {
@@ -121,7 +121,7 @@
       "first_viewport": "Весь экран лесного зелёного, банка по центру-справа, заголовок широким гротеском слева, кнопка золотом",
       "imagery": "рендер банки на цветном поле",
       "motion": "без движения на L0; на L2 — банка поворачивается по прокрутке",
-      "risk": "Сплошной тёмный фон тяжелее для чтения длинных блоков; тон-в-тон требует точного цвета рендера (ΔE ≤ 2, blender 06)",
+      "risk": "Сплошной тёмный фон тяжелее для чтения длинных блоков; тон-в-тон требует точного цвета рендера (ΔE ≤ 2, 3d 06)",
       "cost": "средне: точный рендер под цвет поля",
       "level_fit": ["L1", "L2"]
     }
@@ -134,7 +134,7 @@
     "type": {"display": "Commissioner", "text": "Golos Text", "cyrillic_checked": false, "license": "OFL"},
     "composition": ["объект в правой трети, текст слева на ровной стене 45 %", "секции без каскада появления"],
     "surfaces": ["тёплое светлое поле штукатурки — из кадра, а не декоративная «бумага»"],
-    "imagery": {"kinds": ["photo", "3d"], "subject": "утренний стол у окна, банка, чашка, лён, крафт", "source_policy": "рендеры blender и снимки заказчика; генерация по паспорту ai-media", "people_policy": "real-only", "product_policy": "real-photo-only"},
+    "imagery": {"kinds": ["photo", "3d"], "subject": "утренний стол у окна, банка, чашка, лён, крафт", "source_policy": "рендеры 3d и снимки заказчика; генерация по паспорту ai-media", "people_policy": "real-only", "product_policy": "real-photo-only"},
     "theme": "light"
   },
   "motion_system": {
@@ -183,7 +183,7 @@
       "subject_matter": {"domain_props": ["ceramic coffee cup", "green coffee tin", "kraft paper bag", "linen napkin", "pale oak table"], "motifs": ["morning table by a window"], "people_policy": "real-only", "product_policy": "real-photo-only"},
       "materials": ["glazed off-white ceramic", "pale oak", "washed linen", "kraft paper"]
     },
-    "blender": {"role_in_story": "банка — настоящий товар в hero и в карточке", "series_style": "документальный предмет на светлом дубе", "page_background": "#F4EFE6", "materials": ["жесть банки в цвете #1F4D3A", "бумажная этикетка"], "light_mood": "мягкий утренний свет из окна справа", "motion": "нет", "budget": "рендер AVIF ≤ 150 КБ"}
+    "3d": {"role_in_story": "банка — настоящий товар в hero и в карточке", "series_style": "документальный предмет на светлом дубе", "page_background": "#F4EFE6", "materials": ["жесть банки в цвете #1F4D3A", "бумажная этикетка"], "light_mood": "мягкий утренний свет из окна справа", "motion": "нет", "budget": "рендер AVIF ≤ 150 КБ"}
   },
   "lifecycle": {
     "version": "0.1",

@@ -1,7 +1,7 @@
 # 05-motion — движение и хореография маркетинговых страниц (агент E, волна 2)
 
 2026-09-24 · опоры: замер эффектных сайтов C (`../03-live-sites-measured/`), уровни A (`../01-creative-direction/ambition-levels.yaml`),
-WCAG 2.2 Understanding, соседи ui 08, ux 06/03, blender 07/09, ai-media 10, kimi 07/03/05; опыты `99-raw/experiments/E/01–03`.
+WCAG 2.2 Understanding, соседи ui 08, ux 06/03, 3d 07/09, ai-media 10, kimi 07/03/05; опыты `99-raw/experiments/E/01–03`.
 
 ## Файлы
 

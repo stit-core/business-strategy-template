@@ -1,7 +1,7 @@
 # Мудборд и передача референсов: «бриф → запросы → 30–60 референсов → кластеры → 3–5 направлений → выбор → art-direction»
 
 Волна 1 · агент B · 2026-09-24 · источников 13 (ui 11/02, kimi 07/03 и 03/04 T2a–T3c, kimi 04/01 §2.5, Hallmark `study.md`,
-higgsfield `reference-boards.md`, ai-media 06/01, blender 04/04, site-brief и `vocabulary.yaml`, `art-direction.schema.json` A,
+higgsfield `reference-boards.md`, ai-media 06/01, 3d 04/04, site-brief и `vocabulary.yaml`, `art-direction.schema.json` A,
 контракт тройки, условия Dribbble) · опыт B/06 (мудборд из 170 кандидатов Dribbble) · реакция K3 на пакеты референсов —
 `[не проверено]` (фаза тестов kimi).
 
@@ -48,8 +48,8 @@ higgsfield `reference-boards.md`, ai-media 06/01, blender 04/04, site-brief и `
     («черепаха → sexy lady»); hex — из кода. → §5.2 [проверено]
 21. **Чужую работу не подавать генератору картинкой** (img2img, style-ref): это производная работа (Dribbble п. 11 «create
     derivative works»), а референс никогда не становится ассетом (решение 4); генератору — слова и hex. → §5.2 [практика: правило базы]
-22. **blender — текст важнее картинки**: картинка вместо текста ухудшает код у 4 из 5 моделей; из референса — направление
-    (материал, свет, настроение), не размеры. → §5.3 [проверено: blender 03 §2.2, 04/04 §2]
+22. **3d — текст важнее картинки**: картинка вместо текста ухудшает код у 4 из 5 моделей; из референса — направление
+    (материал, свет, настроение), не размеры. → §5.3 [проверено: 3d 03 §2.2, 04/04 §2]
 23. **Выбор — у заказчика, решение записывается** (`chosen`, `chosen_by`, дата); комбинировать направления можно — «human
     nature to combine options». → §1.6 [мнение: ui 11/02 §1.3]
 24. **Доска, которая не отвечает «что сборка скопирует отсюда?», — mood art**: переделать или убрать. → §4.4 [мнение вендора: higgsfield]
@@ -66,7 +66,7 @@ higgsfield `reference-boards.md`, ai-media 06/01, blender 04/04, site-brief и `
 | 5. Мудборд направления | B для A | направление | 3–5 (≤ 12) референсов с ролью, `applies_to`, Take, Do not take, карточкой ДНК | `board <направление>`, `board.md` |
 | 6. Выбор | заказчик | доски 3–5 направлений (HTML + лист) | выбранное (или сочетание), дата | запись `chosen_by` |
 | 7. `art-direction` | A | выбор | `moodboard[]` = `ref:<id>` с ролью и Take / Do not take | схема A `$defs/reference` |
-| 8. Передача | Claude (I, J) | `art-direction` | `refs/` для K3, роли для ai-media и blender, `references[]` брифа | `handoff`, `lib export --format brief` |
+| 8. Передача | Claude (I, J) | `art-direction` | `refs/` для K3, роли для ai-media и 3d, `references[]` брифа | `handoff`, `lib export --format brief` |
 
 ### 1.1. Оси поиска
 
@@ -255,11 +255,11 @@ K3 («сайт по скриншоту» — слабое место K3: Image-t
 - `art-direction` питает паспорт визуала (`../ai-media/06-art-direction-consistency/visual-dna.schema.json`; таблица
   полей — A).
 
-### 5.3. blender
+### 5.3. 3d
 
 Референс-картинка — вместе с текстовым брифом, не вместо него: картинка вместо текста ухудшает код у 4 из 5 моделей
-(`../blender/04-ai-agents-mcp/04-agent-operating-protocol.md` §2, стр. 100–104; число — из `03-research-llm-3d.md` §2.2 той же папки); из референса
-снимают направление — материал, свет, настроение, — а не размеры [проверено: blender]. Роли для 3D — `material`,
+(`../3d/04-ai-agents-mcp/04-agent-operating-protocol.md` §2, стр. 100–104; число — из `03-research-llm-3d.md` §2.2 той же папки); из референса
+снимают направление — материал, свет, настроение, — а не размеры [проверено: 3d]. Роли для 3D — `material`,
 `imagery`, `motion` (для камеры и темпа — запись сайта, не шот).
 
 ### 5.4. Бриф site
@@ -335,7 +335,7 @@ source: creative-library, note}]`; роли `color`, `material`, `imagery`, `eff
 - [S6] higgsfield-ai/skills 0.3.0, `higgsfield-websites/references/reference-boards.md` (доска на секцию, комбинаторный выбор,
   запрет палитр, «what does the build copy from this?»).
 - [S7] ai-media-research `06-art-direction-consistency/01-visual-dna-from-ui.md` §5.2 (референсы с классом), §6.2 (hex — от кода).
-- [S8] blender-research `04-ai-agents-mcp/04-agent-operating-protocol.md` §2 (стр. 100–104: текст важнее картинки).
+- [S8] 3d-research `04-ai-agents-mcp/04-agent-operating-protocol.md` §2 (стр. 100–104: текст важнее картинки).
 - [S9] site-research `../../site/10-playbooks-contracts/schemas/site-brief.schema.json` (`$defs/reference`), `../../site/02-site-types/vocabulary.yaml`
   (`section_role`, 42 значения, draft ред. 2).
 - [S10] creative-research A: `01-creative-direction/art-direction.schema.json` (`directions[]`, `moodboard[]`, `$defs/reference`),

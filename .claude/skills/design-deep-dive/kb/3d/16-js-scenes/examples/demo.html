@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сцены набора</title>
+<link rel="icon" href="data:,">
+<style>
+:root { --bg: #16181D; --raised: #1E2128; --ink: #ECEEF2; --muted: #9AA1AD; --line: rgba(236, 238, 242, 0.14); --header: 72px; }
+@media (max-width: 40rem), (pointer: coarse) { :root { --header: 64px; } }
+html, body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif; }
+header { position: sticky; top: 0; z-index: 20; height: var(--header); display: flex; align-items: center; padding: 0 24px;
+  background: rgba(22, 24, 29, 0.92); border-bottom: 1px solid var(--line); }
+.block { padding: 96px 24px; max-width: 760px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[data-stage] { position: relative; background: var(--bg); }
+[data-window] { position: relative; height: 760px; overflow: hidden; }
+[data-stage][data-mode="beats"] [data-window], [data-stage][data-mode="glide"] [data-window] { position: sticky; top: var(--header); }
+[data-stage-story] [data-window] { position: relative; top: 0; }
+[data-poster], [data-canvas] { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; }
+[data-canvas] { transition: opacity 800ms ease; }
+[data-steps] { position: relative; z-index: 4; margin-top: -760px; pointer-events: none; }
+[data-stage-story] [data-steps] { display: none; }
+[data-cap] { position: absolute; left: 24px; bottom: 96px; max-width: 420px; opacity: 0; visibility: hidden;
+  transition: opacity .45s ease, visibility 0s linear .45s; z-index: 3; }
+[data-cap][data-on] { opacity: 1; visibility: visible; transition: opacity .3s ease .12s, visibility 0s; }
+[data-fill] { display: block; height: 2px; margin-top: 12px; background: var(--ink); transform: scaleX(var(--fill, 0)); transform-origin: left; }
+[data-from] { opacity: 0; transition: opacity .4s; } [data-from][data-on] { opacity: 1; }
+[data-veil] { position: absolute; inset: 0; z-index: 5; pointer-events: none; background: var(--bg); opacity: 0; }
+[data-pause], [data-skip] { position: absolute; z-index: 6; bottom: 24px; height: 44px; border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(22, 24, 29, 0.7); color: var(--ink); }
+[data-pause] { right: 24px; width: 44px; } [data-skip] { right: 80px; padding: 0 16px; }
+[data-rail] { position: absolute; z-index: 5; right: 16px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; }
+[data-dot] { width: 28px; height: 24px; border: 0; background: transparent; color: var(--muted); }
+[data-dot][aria-current="step"] { color: var(--ink); }
+[data-story] { padding: 24px; border-top: 1px solid var(--line); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { [data-canvas], [data-cap] { transition: none; } }
+</style>
+</head>
+<body>
+<header>Набор сцен · пример</header>
+<div class="block"><h1>Статичный блок</h1><p>Между сценами всегда стоит спокойный блок.</p></div>
+
+<section data-stage="template" data-mode="beats" data-beats="0,0.33,0.66,1" data-tempo="3" data-exit="342" data-variant="hero" id="s-beats">
+  <div data-window>
+    <img data-poster src="data:image/gif;base64,R0lGODlhAQABAIAAABYYHf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">
+    <canvas data-canvas aria-hidden="true" hidden></canvas>
+    <p class="visually-hidden">Кольцо света растёт по шагам прокрутки.</p>
+    <div data-caps aria-live="polite">
+      <div data-cap data-k="1"><strong>Шаг 1</strong><p>Кольцо раскрывается.</p><i data-fill></i></div>
+      <div data-cap data-k="2"><strong>Шаг 2</strong><p>Кольцо шире.</p><i data-fill></i></div>
+      <div data-cap data-k="3"><strong>Шаг 3</strong><p>Финал держится.</p><i data-fill></i></div>
+    </div>
+    <nav data-rail aria-label="Шаги сцены"><button data-dot aria-label="Шаг 1">•</button><button data-dot aria-label="Шаг 2">•</button>
+      <button data-dot aria-label="Шаг 3">•</button><button data-dot aria-label="Шаг 4">•</button></nav>
+    <button data-skip type="button">Пропустить</button>
+    <button data-pause type="button" aria-pressed="false" aria-label="Остановить движение сцены" hidden>II</button>
+    <div data-veil aria-hidden="true"></div>
+  </div>
+  <div data-steps>
+    <div data-beat="0" style="height: 593px; padding: 160px 24px 0;"><h2 style="margin: 0;">Заставка сцены</h2><p>Листайте — сцена идёт по шагам</p></div>
+    <div data-beat="1" aria-hidden="true" style="height: 480px;"></div>
+    <div data-beat="2" aria-hidden="true" style="height: 480px;"></div>
+    <div data-beat="3" aria-hidden="true" style="height: 1164px;"></div>
+  </div>
+  <div data-story hidden>Раскадровка: кадры тактов с подписями (в обзоре, при «уменьшить движение» и на программном рендере).</div>
+</section>
+
+<div class="block"><h2>Статичный блок</h2><p>Факты раздела.</p></div>
+
+<section data-stage="template" data-mode="play" data-dur="9" id="s-play">
+  <div data-window style="height: 480px;">
+    <img data-poster src="data:image/gif;base64,R0lGODlhAQABAIAAABYYHf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">
+    <canvas data-canvas aria-hidden="true" hidden></canvas>
+    <p data-from="0.6" data-to="1" style="position: absolute; left: 24px; bottom: 40px; margin: 0; z-index: 3;">Финал полосы</p>
+    <button data-pause type="button" aria-pressed="false" aria-label="Остановить движение сцены" hidden>II</button>
+  </div>
+</section>
+
+<div class="block"><h2>Статичный блок</h2><p>Ещё факты.</p></div>
+
+<section data-stage="template" data-mode="glide" data-pin="2600" data-exit="342" data-tempo="2" id="s-glide">
+  <div data-window>
+    <img data-poster src="data:image/gif;base64,R0lGODlhAQABAIAAABYYHf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">
+    <canvas data-canvas aria-hidden="true" hidden></canvas>
+    <p data-from="0" data-to="0.5" style="position: absolute; left: 24px; bottom: 56px; margin: 0; z-index: 3;">Первая половина пути</p>
+    <p data-from="0.5" data-to="1" style="position: absolute; left: 24px; bottom: 56px; margin: 0; z-index: 3;">Вторая половина пути</p>
+    <button data-skip type="button">Пропустить</button>
+    <button data-pause type="button" aria-pressed="false" aria-label="Остановить движение сцены" hidden>II</button>
+    <div data-veil aria-hidden="true"></div>
+  </div>
+  <div data-story hidden>Раскадровка пути.</div>
+</section>
+
+<div class="block"><h2>Статичный блок</h2><p>Перед длинной сценой — спокойная пауза.</p></div>
+
+<section data-stage="world" data-mode="beats" data-beats="0,0.25,0.5,0.75,1" data-tempo="3" data-exit="342" data-variant="hero" id="s-world">
+  <div data-window>
+    <img data-poster src="data:image/gif;base64,R0lGODlhAQABAIAAABYYHf///yH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="">
+    <canvas data-canvas aria-hidden="true" hidden></canvas>
+    <p class="visually-hidden">Ночной квартал: дома поднимаются волной, камера летит по улице к площади, в которой лежит такой же квартал.</p>
+    <div data-caps aria-live="polite">
+      <div data-cap data-k="1"><strong>Такт 1</strong><p>Дома поднялись.</p><i data-fill></i></div>
+      <div data-cap data-k="2"><strong>Такт 2</strong><p>Пролёт по улице.</p><i data-fill></i></div>
+      <div data-cap data-k="3"><strong>Такт 3</strong><p>Над площадью.</p><i data-fill></i></div>
+      <div data-cap data-k="4"><strong>Такт 4</strong><p>Квартал в квартале.</p><i data-fill></i></div>
+    </div>
+    <nav data-rail aria-label="Шаги сцены"><button data-dot aria-label="Шаг 1">•</button><button data-dot aria-label="Шаг 2">•</button>
+      <button data-dot aria-label="Шаг 3">•</button><button data-dot aria-label="Шаг 4">•</button><button data-dot aria-label="Шаг 5">•</button></nav>
+    <button data-skip type="button">Пропустить</button>
+    <button data-pause type="button" aria-pressed="false" aria-label="Остановить движение сцены" hidden>II</button>
+    <div data-veil aria-hidden="true"></div>
+  </div>
+  <div data-steps>
+    <div data-beat="0" style="height: 593px; padding: 160px 24px 0;"><h2 style="margin: 0;">Длинная сцена-мир</h2><p>Листайте — пять тактов</p></div>
+    <div data-beat="1" aria-hidden="true" style="height: 480px;"></div>
+    <div data-beat="2" aria-hidden="true" style="height: 480px;"></div>
+    <div data-beat="3" aria-hidden="true" style="height: 480px;"></div>
+    <div data-beat="4" aria-hidden="true" style="height: 1164px;"></div>
+  </div>
+  <div data-story hidden>Раскадровка длинной сцены: пять кадров тактов с подписями.</div>
+</section>
+
+<div class="block" style="padding-bottom: 900px;"><h2>Конец страницы</h2></div>
+<script src="scene-template.js"></script>
+<script src="world-template.js"></script>
+<script src="stage-runtime.js"></script>
+<script>window.__rt = new StageRuntime(window.STAGE_SCENES, { header: 72, headerPhone: 64, force3d: /[?&]force3d/.test(location.search) }).mount(document);</script>
+</body>
+</html>

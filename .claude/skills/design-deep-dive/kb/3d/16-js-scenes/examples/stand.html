@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Стенд сцен</title>
+<link rel="icon" href="data:,">
+<style>
+html, body { margin: 0; background: #16181D; }
+#stage { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+#stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c" aria-hidden="true"></canvas></div>
+<script>
+/* Стенд сцен набора: один движок на всё окно, кадр по параметрам адреса — для постеров, раскадровок, листов и замеров.
+   m=<сцена> src=<путь к файлу сцены> p=<0..1> t=<с> hx hy (курсор −1..1) tap=<x,y> pulse=<0..1> mobile rtl variant=<место>
+   bg=<#hex> tex=<путь,путь>; live — сцена живёт сама (замер интервалов кадров 3 с: медиана и p90 — держит ли 60 кадров/с);
+   bench=<n> — цена кадра: n перерисовок redraw() с синхронизацией readPixels в точках ps=0.15,0.5,0.85 (медиана и максимум).
+   Итог — window.__ready, window.__err, window.__perf / window.__bench. Кадр при одинаковых p и t одинаков. */
+(function () {
+  var q = new URLSearchParams(location.search), m = q.get('m') || 'template';
+  var bg = q.get('bg') || '#16181D', live = q.has('live');
+  document.body.style.background = bg;
+  function num(k, d) { return q.has(k) ? parseFloat(q.get(k)) : d; }
+  function fail(msg) { window.__err = msg; window.__ready = true; }
+  var s = document.createElement('script');
+  s.src = (q.get('src') || (m + '.js')) + '?v=' + Date.now();
+  s.onerror = function () { fail('нет файла сцены'); };
+  s.onload = function () {
+    var make = (window.STAGE_SCENES || {})[m];
+    if (!make) { fail('нет сцены ' + m); return; }
+    var cv = document.getElementById('c');
+    var o = { mobile: q.has('mobile'), rtl: q.has('rtl'), variant: q.get('variant') || '', background: bg, preserve: !live, idle: live, driven: true,
+      onStatus: function (st, log) { if (log) { window.__err = st + ': ' + String(log).slice(0, 400); } },
+      onReady: function (eng) { if (!eng) { fail(window.__err || 'движок не собрался'); return; } after(eng, cv); } };
+    var h = make(cv, o);
+    if (!h) { fail('нет WebGL2'); return; }
+    if (!h.pending) { o.onReady(h); }
+  };
+  document.body.appendChild(s);
+  function after(eng, cv) {
+    var list = q.has('tex') ? q.get('tex').split(',') : [], left = list.length;
+    function go() {
+      if (q.has('p')) { eng.scrub(num('p', 0)); }
+      if (q.has('t')) { eng.setTime(num('t', 0)); }
+      if (q.has('hx')) { eng.setHover(num('hx', 0), num('hy', 0), true); }
+      if (q.has('tap')) { var tp = q.get('tap').split(',').map(parseFloat); eng.tap(tp[0] || 0, tp[1] || 0); }
+      if (q.has('pulse')) { eng.pulse(num('pulse', 1)); }
+      eng.redraw();
+      if (q.has('bench')) {
+        var gl = cv.getContext('webgl2'), px = new Uint8Array(4), n = parseInt(q.get('bench'), 10) || 15, res = [];
+        (q.get('ps') || '0.15,0.5,0.85').split(',').map(parseFloat).forEach(function (p) {
+          eng.scrub(p); eng.setTime(num('t', 2.5));
+          for (var w = 0; w < 3; w += 1) { eng.redraw(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); }
+          var ts = [];
+          for (var i = 0; i < n; i += 1) { var a = performance.now(); eng.redraw(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); ts.push(performance.now() - a); }
+          ts.sort(function (x, y) { return x - y; });
+          res.push({ p: p, med: +ts[ts.length >> 1].toFixed(2), max: +ts[ts.length - 1].toFixed(2) });
+        });
+        window.__bench = { frames: res, info: eng.info() }; window.__ready = true; return;
+      }
+      if (live) {
+        var ts2 = [], t0 = performance.now(), last = 0;
+        (function f(now) {
+          if (last) { ts2.push(now - last); } last = now;
+          if (now - t0 < 3000) { requestAnimationFrame(f); return; }
+          ts2.sort(function (a, b) { return a - b; });
+          window.__perf = { median: ts2[ts2.length >> 1], p90: ts2[Math.floor(ts2.length * 0.9)], info: eng.info() }; window.__ready = true;
+        })(performance.now());
+        return;
+      }
+      requestAnimationFrame(function () { requestAnimationFrame(function () { window.__ready = true; }); });
+    }
+    if (!left) { go(); return; }
+    list.forEach(function (src, i) {
+      var im = new Image(); im.crossOrigin = 'anonymous';
+      im.onload = function () { try { eng.setTexture(i, im); } catch (err) { /* без текстуры */ } left -= 1; if (!left) { go(); } };
+      im.onerror = function () { left -= 1; if (!left) { go(); } };
+      im.src = src;
+    });
+  }
+})();
+</script>
+</body>
+</html>

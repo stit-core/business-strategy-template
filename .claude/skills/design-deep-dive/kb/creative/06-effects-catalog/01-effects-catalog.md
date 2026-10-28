@@ -1,14 +1,14 @@
 # Каталог эффектов подачи: реализация, цена, фолбэки, reduce, телефон, клише
 
 Волна 2 · агент F (2026-09-24) и продолжатель F2 (2026-09-24/25) · 59 записей `effects.yaml` (42 лабораторные страницы `lab/<id>/` +
-варианты, 12 внешних ссылок на blender, ai-media и G) · опыты `99-raw/experiments/F/00–16` · Chromium 153.0.8010.12 и WebKit 26.6
+варианты, 12 внешних ссылок на 3d, ai-media и G) · опыты `99-raw/experiments/F/00–16` · Chromium 153.0.8010.12 и WebKit 26.6
 (Playwright 1.63, WebKit 2359; десктоп, reduce, iPhone 13), ANGLE GL на Intel Iris Xe · GSAP 3.15.0, Lenis 1.3.26 · метод
 замеров — `03-effects-lab-method.md`.
 
 ## Выжимка для агента
 
 1. Эффект выбирай из `effects.yaml` по `id`; в `treatment.effects[].ref` пиши `effect:<id>`; запись без `demo` — чужая
-   реализация (blender, ai-media), бери по `external_ref`. → §1.1 `[проверено]`
+   реализация (3d, ai-media), бери по `external_ref`. → §1.1 `[проверено]`
 2. Смотри `level_min` и `limits`: L0 — только CSS-отклик, одно появление, бегущая строка с паузой, статичные градиент и
    зерно, синемаграф; WebGL, закрепление, видео-фон и нативный переход между страницами (`page-transition`, ≤ 400 мс) — с L1;
    свой курсор, плавная прокрутка, горизонталь, переходы страниц на библиотеках — L2 (запреты A `01-creative-direction/03-ambition-levels.md`
@@ -80,7 +80,7 @@
 - F2 (2026-09-25) id не менял, добавил 7: `dialog-entry-exit`, `details-accordion`, `button-expand-label`, `card-flip-3d`,
   `header-shrink-on-scroll` (семейство `micro`, страницы есть) и внешние `lottie-illustration-loop`, `rive-state-interaction`
   (семейство `vector`, цена — G); у `motion-toggle` появилась своя страница; новые варианты — `horizontal-scroll?pin=transform|sticky`.
-- Соседи — по номерам без копирования: `blender:01-01#N.M`, `ai-media:10-03#4.N`; нормы движения — E `05-motion/01` §4–§7.
+- Соседи — по номерам без копирования: `3d:01-01#N.M`, `ai-media:10-03#4.N`; нормы движения — E `05-motion/01` §4–§7.
 
 ### 1.2. Уровни
 | Уровень | Разрешено из каталога (сверх ниже стоящих) | Запрещено уровнем (A §3.1) |
@@ -297,14 +297,14 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 
 ### 4.3. Полоса прогресса (`scroll-driven-progress`)
 - `animation-timeline: scroll(root block)` на `transform: scaleX()`; вне `@supports` полосы нет (`display: none`), а не пустая
-  полоса в нуле (антипример blender 09/03 §3.1 `.bar` с `scaleX(0)`); при reduce остаётся как индикатор положения.
+  полоса в нуле (антипример 3d 09/03 §3.1 `.bar` с `scaleX(0)`); при reduce остаётся как индикатор положения.
 
 ### 4.4. Параллакс слоёв (`parallax-layers`)
 - 4 слоя на `view-timeline` сцены: разница скоростей в демо — 30 % высоты сцены (умолчание лаборатории и рецептов; предел уровня —
   40 %, норма E `05-motion/01` §6.2 и `limits` записи; X-08) (дальний ±9 %, ближний ±4 %, передний ∓3 %), без
   масштаба и поворота крупных слоёв; текст едет со страницей; на телефоне — половина амплитуды (`@keyframes` внутри `@media`).
   Тот же приём с картинками ai-media — `ai-media:10-03#4.4` (24vh на 100vh ≈ 40 % — верхняя граница); глубина из карты —
-  `blender:01-01#9.5`. Клише `cliche:parallax-everything` — не на каждом экране.
+  `3d:01-01#9.5`. Клише `cliche:parallax-everything` — не на каждом экране.
 
 ### 4.5. Линия рисуется прокруткой (`svg-line-draw`)
 - `pathLength="1"` + `stroke-dasharray: 1`, `stroke-dashoffset` 1 → 0 по `view()`; без поддержки — линия целиком;
@@ -426,7 +426,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
   наклон «приправой», а не «вау» `[мнение вендора]`.
 - `hover-distort-dom` (L1): SVG `feTurbulence` + `feDisplacementMap`, `scale` 0 → 26 за 420 мс; фильтр висит на элементе только
   во время анимации (в покое — 0 работы); растеризация фильтра — на процессоре. WebGL-версии (1 вызов на картинку, переходы по
-  карте смещения, искажение от скорости) — `blender:01-01#9.1`, `#9.2`, `#9.4`; клише `cliche:liquid-hover-distortion` —
+  карте смещения, искажение от скорости) — `3d:01-01#9.1`, `#9.2`, `#9.4`; клише `cliche:liquid-hover-distortion` —
   на каждой карточке.
 - `light-sweep` (L0, семейство `image`): наклонная полоса света — отдельный слой поверх кадра внутри его рамки
   (`overflow: hidden`) — один раз проходит по кадру на наведение или фокус с клавиатуры (`:hover`, `:focus-visible`), без петли;
@@ -449,7 +449,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 ### 8.1. Шейдерный фон (`shader-bg`)
 - WebGL2 без библиотек: полноэкранный треугольник по `gl_VertexID` (без буферов), градиентный шум с деформацией домена — дрейф
   непериодический (нет качания 0,2 Гц, E §6.3), палитра — CSS-токены страницы (`getComputedStyle`), дизеринг ±0,5/255;
-  1 вызов на кадр, DPR ≤ 1 (телефон 0,75), `powerPreference: 'low-power'`. Код с three и замер 1,45 мс/кадр — `blender:09-04#2.1`.
+  1 вызов на кадр, DPR ≤ 1 (телефон 0,75), `powerPreference: 'low-power'`. Код с three и замер 1,45 мс/кадр — `3d:09-04#2.1`.
 - Цикл — только при видимости, без паузы и reduce; при reduce — один кадр (0 вызовов); без WebGL — CSS-градиент того же тона
   под canvas (`html[data-fallback=css]`) `[проверено: nogl]`. Движение 2,1 %/с — «дыхание»; скрим под текстом.
 - Клише: `cliche:mesh-gradient-bg` (saturated) и, при пурпуре 270–320° без бренда, `cliche:purple-neon-band` (high).
@@ -462,10 +462,10 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 ### 8.3. «Сияние» (`aurora-css`)
 - 3 «занавеса» — полосы градиента, `filter: blur(48px)`, `mix-blend-mode: screen`, дрейф `transform` 31/41/53 с. Только когда
   сияние — сюжет (северный туризм); клише `cliche:aurora-blobs` (saturated, high — «фиолетовая аврора ИИ-стартапов»). Готовые
-  no-code авроры (Unicorn Studio) — TBT 254–1158 мс (`blender:01-01#5.7`). Цена кадра без vsync — 9,6 мс против 0,45 мс у
+  no-code авроры (Unicorn Studio) — TBT 254–1158 мс (`3d:01-01#5.7`). Цена кадра без vsync — 9,6 мс против 0,45 мс у
   `shader-bg`: CSS-размытие на весь экран в 21 раз дороже шейдера `[проверено]`.
 
-### 8.4. Иридесцентный фон (`holo-shader-bg`) — закрывает висячую ссылку `blender 06/01 §3.5`
+### 8.4. Иридесцентный фон (`holo-shader-bg`) — закрывает висячую ссылку `3d 06/01 §3.5`
 - Оценка глазами F2 (пары «до → после» — `99-raw/experiments/F/14-holo-look/before-after-*.jpg`): первая модель (тонкая плёнка +
   френель) давала тусклые размытые пятна спектра на тёмном — «радугу ИИ» и соседство с `cliche:mesh-gradient-bg`, окно марки — плоский
   бирюзовый градиент, CSS-фольга — оранжевые полосы. Перелив читается материалом, только когда это **узкая яркая полоса со структурой,
@@ -479,7 +479,7 @@ LAB.load(['gsap.min.js', 'SplitText.min.js']).then(() => { gsap.registerPlugin(S
 - Текст: скрим ≥ 0,84 под всей текстовой колонкой (десктоп) или сверху вниз (телефон), полоса в покое — вне колонки (`uOff` 0,18;
   телефон 0,36 — над текстом). Худший контраст из 7 положений полосы по границам текста ≥ 4,5 : 1 (eyebrow в окне марки на
   телефоне — 4,52; H1 ≥ 9,6; лид ≥ 9,4; `contrast.py`) `[проверено]`. Без WebGL — CSS-фольга той же конструкции (`@property --p`).
-- Запрет blender MAT-07 «нет иридесценции в hero» касается рендера (ΔE 4,5–7,9 к Blender), а не веб-шейдера (поправка PLAN).
+- Запрет 3d MAT-07 «нет иридесценции в hero» касается рендера (ΔE 4,5–7,9 к Blender), а не веб-шейдера (поправка PLAN).
 
 ```glsl
 // WebGL2 · 2026-09-25 · [проверено: lab/holo-shader-bg/fx.js] дифракционная полоса (gn — градиентный шум; uTilt — наклон; uOff — положение покоя)
@@ -494,7 +494,7 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 ### 8.5. Зерно (`grain-overlay`) и стыки
 - Статичное: SVG `feTurbulence` тайлом 220 px (0,3 КБ), 6–9 %, `soft-light`, слой под текстом в `isolation: isolate` —
   по сути бесплатно; анимированное (8 шагов/с) — петля с паузой; шум на canvas каждый кадр — антипример (см. таблицу).
-  Бандинг и дозировка — `ai-media:10-03#4.3`; цена CSS-зерна против постобработки — `blender:09-04#9` (0,63 против 1,9 мс).
+  Бандинг и дозировка — `ai-media:10-03#4.3`; цена CSS-зерна против постобработки — `3d:09-04#9` (0,63 против 1,9 мс).
 - Стыки секций (`gradient-seams`) — CSS-градиенты 140 px под навигацию и 96–120 px в цвет следующей секции (`ai-media:10-03#4.2`).
 
 ## 9. Поверхности
@@ -538,14 +538,14 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 
 | id | Уровень | Где реализация и ворота | Клише H |
 |---|---|---|---|
-| `3d-object` | L1 | `blender:01-01#2.1`, `#2.2`; ворота `blender:09-05#7.2` | — |
-| `3d-scene` | L2 | `blender:01-01#4.1`, `blender:09-03#2`; ворота `09-05#7.2` | `cliche:webgl-centerpiece` |
-| `particles-webgl` | L2 | `blender:01-01#6.1`, `#6.2` | `cliche:particle-swarm` |
-| `webgl-image-distortion` | L1 | `blender:01-01#9.1`, `#9.2`, `#9.4` | `cliche:liquid-hover-distortion` |
-| `depth-parallax-25d` | L1 | `ai-media:10-03#4.5`, `blender:01-01#9.5` | — |
-| `alpha-video-object` | L1 | `blender:01-01#15.2`, `ai-media:10-02#7` | — |
-| `video-scrub` / `image-sequence` | L2 | `blender:01-01#15.3`, `#14.1`; `ai-media:10-02#9` | — |
-| `preloader` | L2 (кампания) | правила — E `05-motion/02`; запрет на продуктовых — `blender:01-02#26` | `cliche:preloader` |
+| `3d-object` | L1 | `3d:01-01#2.1`, `#2.2`; ворота `3d:09-05#7.2` | — |
+| `3d-scene` | L2 | `3d:01-01#4.1`, `3d:09-03#2`; ворота `09-05#7.2` | `cliche:webgl-centerpiece` |
+| `particles-webgl` | L2 | `3d:01-01#6.1`, `#6.2` | `cliche:particle-swarm` |
+| `webgl-image-distortion` | L1 | `3d:01-01#9.1`, `#9.2`, `#9.4` | `cliche:liquid-hover-distortion` |
+| `depth-parallax-25d` | L1 | `ai-media:10-03#4.5`, `3d:01-01#9.5` | — |
+| `alpha-video-object` | L1 | `3d:01-01#15.2`, `ai-media:10-02#7` | — |
+| `video-scrub` / `image-sequence` | L2 | `3d:01-01#15.3`, `#14.1`; `ai-media:10-02#9` | — |
+| `preloader` | L2 (кампания) | правила — E `05-motion/02`; запрет на продуктовых — `3d:01-02#26` | `cliche:preloader` |
 
 ## 12. Микровзаимодействия (F2): диалог, аккордеон, кнопка, переворот, шапка
 
@@ -682,9 +682,9 @@ vec3 col = base + mix(spec(ph), ramp(ph), uBrand) * band * .95 * (.9 + .1 * sin(
 - `pinType: 'transform'` убирает CLS, но возможное дрожание на нативной прокрутке документа замером rAF не видно — нужна запись экрана.
 
 ## Источники
-- [S1] blender-research `01-web-3d-landscape/01-effects-catalog.md` (агент A, 2026-09-22/23) — 70 эффектов, §5, §7.4, §9–§10,
+- [S1] 3d-research `01-web-3d-landscape/01-effects-catalog.md` (агент A, 2026-09-22/23) — 70 эффектов, §5, §7.4, §9–§10,
   §14–§15, §18–§19, §22–§23 (прочитаны разделы). Надёжно: замер 33 сайтов + опыты A.
-- [S2] blender-research `09-web-runtime/04-shaders-effects-catalog-impl.md` §1–§2, §9–§10 и `03-scroll-interaction-animation.md`
+- [S2] 3d-research `09-web-runtime/04-shaders-effects-catalog-impl.md` §1–§2, §9–§10 и `03-scroll-interaction-animation.md`
   §3–§4, §7.2, §8 — шейдерный фон, CSS-зерно, SDA, reduce по приёмам (опыты F2, 2026-09-22).
 - [S3] ai-media-research `10-web-integration/03-text-over-media-and-effects.md` §4–§5 (J, 2026-09-23) — прожектор, стыки, зерно,
   параллакс, 2.5D; `02-video-delivery.md` — видео (см. `02-hero-video-background.md`).

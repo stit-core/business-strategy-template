@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:app-design:creative:art-direction:0",
   "title": "art-direction v0 — документ арт-дирекшна сайта (концепция, направления, выбор, визуальный язык, движение, эффекты, решения о приёмах, уровень и бюджет)",
-  "description": "Формат обмена № 5 (kb/common/owners.md § Форматы обмена), владелец — creative. Один документ на сайт (или на мир сайта: маркетинг и продукт — два документа). Питает паспорт визуала ai-media (visual-dna.schema.json) через блок handoff.visual_dna, спецификации blender (handoff.blender) и treatment секций page-plan (effects_by_section, motion_system). Процедура заполнения — 01-concept-and-directions.md; поля и соответствия — 02-art-direction-document.md; уровни — ambition-levels.yaml. Версия v1 — 09-ai-execution-evaluation/art-direction.v1.schema.json. Правила, которые JSON Schema выразить не может (различие направлений по осям, критерии приёмов, соответствие уровню), проверяет ../../scripts/creative/ad_check.py.",
+  "description": "Формат обмена № 5 (kb/common/owners.md § Форматы обмена), владелец — creative. Один документ на сайт (или на мир сайта: маркетинг и продукт — два документа). Питает паспорт визуала ai-media (visual-dna.schema.json) через блок handoff.visual_dna, спецификации 3d (handoff.blender) и treatment секций page-plan (effects_by_section, motion_system). Процедура заполнения — 01-concept-and-directions.md; поля и соответствия — 02-art-direction-document.md; уровни — ambition-levels.yaml. Версия v1 — 09-ai-execution-evaluation/art-direction.v1.schema.json. Правила, которые JSON Schema выразить не может (различие направлений по осям, критерии приёмов, соответствие уровню), проверяет ../../scripts/creative/ad_check.py.",
   "x-version": 0,
   "x-checked": "2026-09-24",
   "x-owner": "creative · 01-creative-direction",
@@ -250,10 +250,10 @@
             "materials": {"type": "array", "description": "→ visual-dna materials."}
           }
         },
-        "blender": {
+        "3d": {
           "type": "object",
           "additionalProperties": false,
-          "description": "→ бриф и паспорт серии blender 04/04 §2–3.",
+          "description": "→ бриф и паспорт серии 3d 04/04 §2–3.",
           "properties": {
             "role_in_story": {"type": "string"},
             "series_style": {"type": "string"},

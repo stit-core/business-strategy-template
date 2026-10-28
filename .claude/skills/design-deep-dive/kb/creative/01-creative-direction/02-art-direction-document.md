@@ -22,8 +22,8 @@
    `lifted_markers` со ссылкой на решение. → §4.1, §5.3 `[проверено]`
 7. **Фон кодом → `abstract.policy: code-first`**; `video.tempo` на L0–L1 `still`/`slow`, на L2 `slow`/`medium`; значения
    `fast` в паспорте нет — не выдумывать. → §4.1 `[проверено]`
-8. **blender получает роль и среду**: `role_in_story`, `series_style`, `page_background` = фон секции, настроение света,
-   бюджет по уровню; физика света и материалов — у blender. → §4.2 `[практика]`
+8. **3d получает роль и среду**: `role_in_story`, `series_style`, `page_background` = фон секции, настроение света,
+   бюджет по уровню; физика света и материалов — у 3d. → §4.2 `[практика]`
 9. **kimi получает проекцию**: тезис → `design_system.style` и `visual_thesis`, оси → `paper`/`display_style`,
    `motion_system.level` → `decisions.motion.level` ≤ `motion_cap`; `cinematic` — только с готовыми роликами или рендером. →
    §4.3 `[документация]`
@@ -60,7 +60,7 @@
 документа, как два паспорта визуала у ai-media 06/01 §1). Документ собирает концепцию, направления и выбор
 (`01-concept-and-directions.md`), уровень и профиль (`ambition-levels.yaml`), решения визуального языка (D), систему
 движения (E), эффекты по секциям (F), решения о приёмах по критериям H — и **питает** паспорт визуала ai-media, бриф и
-паспорт серии blender, пакет kimi и `treatment` секций плана site.
+паспорт серии 3d, пакет kimi и `treatment` секций плана site.
 
 ## 2. Поля (кратко; полностью — схема)
 
@@ -81,7 +81,7 @@
 | `decisions` | приём → use / avoid / twist по пяти критериям H | арт-директор по H | нет |
 | `exclusions` | запретные полосы, маркеры IMG/VID, снятые умолчания L0, `k3_allow`, запреты | арт-директор | нет |
 | `budget` | профиль, крупные траты, исключения с подписью | арт-директор, site P | нет |
-| `handoff` | проекции: `visual_dna`, `blender`; v1 — ещё `generated` (`by`, `at`) | Claude | при `approved` |
+| `handoff` | проекции: `visual_dna`, `3d`; v1 — ещё `generated` (`by`, `at`) | Claude | при `approved` |
 | `lifecycle` | версия major.minor, история, пересмотр ≤ 6 мес., что делать при смене бренда | Claude | всегда |
 
 ## 3. Статусы и правила схемы
@@ -112,16 +112,16 @@
 | `visual_language.surfaces` | `materials` (≤ 8) | материалы мира | подсхема `materials` |
 | `moodboard[]` (роль `color`, `material`, `imagery`) | `references[]` (роли `palette`, `material`, `style`) | только референсы с правами; класс сюжета — ai-media | не проверено |
 
-### 4.2. → blender (`../blender/04-ai-agents-mcp/04-agent-operating-protocol.md` §2–3) [S5]
+### 4.2. → 3d (`../3d/04-ai-agents-mcp/04-agent-operating-protocol.md` §2–3) [S5]
 
-| `art-direction.handoff.blender` | Бриф и паспорт серии blender | Правило |
+| `art-direction.handoff.blender` | Бриф и паспорт серии 3d | Правило |
 |---|---|---|
 | `role_in_story` | «где на странице и какого размера» | роль секции и уровень «вау» решает подача (аудит BLENDER §7) |
 | `series_style` | стиль серии | из территории и `visual_language.imagery` |
 | `page_background` | фон страницы (hex) | = фон секции (`palette.background` или `env_color` паспорта) |
-| `materials`, `light_mood` | материалы, свет (key/fill/rim) | настроение света — подача; физика — blender |
+| `materials`, `light_mood` | материалы, свет (key/fill/rim) | настроение света — подача; физика — 3d |
 | `motion` | анимация и интерактив | из `motion_system` и эффекта секции |
-| `budget` | вес файла, треугольники, вызовы | по `ambition-levels.yaml` (L1: 3D первого экрана ≤ 0,8/1,5 МБ; blender 01/02 §3.1) |
+| `budget` | вес файла, треугольники, вызовы | по `ambition-levels.yaml` (L1: 3D первого экрана ≤ 0,8/1,5 МБ; 3d 01/02 §3.1) |
 
 ### 4.3. → kimi (`../kimi-research/07-brief-handoff/templates/brief.yaml`, `DESIGN.md`) [S6]
 
@@ -199,7 +199,7 @@
 | `avoid` оттенка | `exclusions.forbidden_hues` (+ `except_share_max`, если в полосе бренд) | `visual-dna palette.forbidden_hues` | `ad_check`: акцент в полосе — предупреждение |
 | `avoid` паттерна | `exclusions.bans` — предметно («рамки браузера и телефона», а не «без ИИ-вида») | kimi `design_system.bans`, Do's and Don'ts `DESIGN.md`; `visual-dna exclusions.banned_words` | K (волна 3) |
 | `use`/`twist` приметы K3 | `decisions[].k3_allow` и `exclusions.k3_allow` | `mockup_checks.py --allow`; бриф site `ambition.allow.markers` (C1) | `ad_check`: `--allow` без решения — предупреждение |
-| снятие умолчания L0 соседа | `exclusions.lifted_markers[] {marker, decision_ref}` (пример: `LOOK-BG-WARM` ← `d-warm-field`) | ai-media, blender, ui — только для этого сайта | ссылка на `decisions[].id` |
+| снятие умолчания L0 соседа | `exclusions.lifted_markers[] {marker, decision_ref}` (пример: `LOOK-BG-WARM` ← `d-warm-field`) | ai-media, 3d, ui — только для этого сайта | ссылка на `decisions[].id` |
 | `use` эффекта | `effects_by_section`, `treatment.effects` секции | F (`effects.yaml`), E (motion-spec), I | `ad_check`, `c1_check`: эффект ≤ уровня секции |
 
 ### 5.4. Правила
@@ -221,7 +221,7 @@
   остальных страниц живут в их `page-plan` (`page.budget_profile`).
 - **Не хранит чисел профиля** — одно место правды на слой: «страница» — `../site/07-seo-geo-performance-analytics/budgets.yaml`
   (P; разрешение профиля в 5 шагов: профиль → уровень → исключения типа страницы → «уровень ≤ сайта» и правило лидогенерации →
-  доля 3D по blender, эффекты по creative) [S8]; «подача» — `ambition-levels.yaml` `levels[].budgets.effects` (наш; у P — поле
+  доля 3D по 3d, эффекты по creative) [S8]; «подача» — `ambition-levels.yaml` `levels[].budgets.effects` (наш; у P — поле
   `effects_ref`). Слои и числа — `03-ambition-levels.md` §4.
 - `ad_check.py` сверяет профиль с `inputs.page_type` и уровнем (`budget_profile ≠ page_type@level` — ошибка, случай n13).
 
@@ -246,7 +246,7 @@ LCP-кандидат и то, без чего первый экран не чи�
 ### 6.3. `budget.overrides`: исключение с подписью
 
 ```jsonc
-// art-direction v0 · examples/art-direction-kvarts.json · 2026-09-24 · [проверено: A/01; вес — blender A/03: @google/model-viewer 4.3.1 + three 0.183 = 240 КБ br]
+// art-direction v0 · examples/art-direction-kvarts.json · 2026-09-24 · [проверено: A/01; вес — 3d A/03: @google/model-viewer 4.3.1 + three 0.183 = 240 КБ br]
 "overrides": [{ "metric": "effects.js_3d_kb_br.mobile", "value": 240,
   "why": "model-viewer 4 весит 240 КБ br при потолке 200; грузится только по нажатию «Рассмотреть» и не входит в первый экран",
   "approved_by": "арт-директор (Claude), пример" }]
@@ -263,7 +263,7 @@ LCP-кандидат и то, без чего первый экран не чи�
 6. **Больше двух исключений** на документ — признак неверного уровня или приёма: пересмотреть их `[не проверено]`.
 
 Иерархия ворот (контракт тройки v2 §2) [S1]: ворота страницы (site) выше ворот эффектов (creative, K — `effect-gates.yaml`,
-волна 3) и ассетов (ai-media, blender); ворота ассета не блокируют страницу за чужие байты; доля 3D и видео — ворота
+волна 3) и ассетов (ai-media, 3d); ворота ассета не блокируют страницу за чужие байты; доля 3D и видео — ворота
 соседей (SG-WEIGHT-08, серьёзность D) `[документация: site P v0]`.
 
 ## 7. Жизненный цикл
@@ -387,7 +387,7 @@ LCP-кандидат и то, без чего первый экран не чи�
 10. **Траты без `load`** — всё `eager`, первый экран раздут секвенцией. Лечение: `after-lcp`, `on-interaction`.
 11. **Эффект раньше решения**: `effect:shader-bg` в `effects_by_section` без строки в `decisions`. Лечение: §5.4.
 12. **`cinematic` для K3 без готовых роликов** — исполнитель изображает «кино» анимацией CSS. Лечение: `cinematic` только с
-    роликами ai-media или рендером blender, иначе `expressive` (kimi 07/01 §6.2).
+    роликами ai-media или рендером 3d, иначе `expressive` (kimi 07/01 §6.2).
 13. **Нет даты пересмотра** — через год на сайте «насыщенный» приём как `use`. Лечение: `review_by` ≤ 6 месяцев.
 
 ## Чек-лист
@@ -407,7 +407,7 @@ LCP-кандидат и то, без чего первый экран не чи�
 - CRV-AD-13 В `budget` — id профиля и траты с `load`, без копий чисел профиля?
 - CRV-AD-14 Исключения — только слоя подачи, с компенсацией и подписью; исходов CWV среди них нет?
 - CRV-AD-15 `lifecycle`: версия, история, `review_by` ≤ 6 месяцев, `on_brand_change` заполнены?
-- CRV-AD-16 Проекции для kimi и blender заполнены: тезис, оси, движение, запреты, роль 3D, фон, бюджет?
+- CRV-AD-16 Проекции для kimi и 3d заполнены: тезис, оси, движение, запреты, роль 3D, фон, бюджет?
 - CRV-AD-17 `ad_check.py` — 0 ошибок; предупреждения закрыты решениями или объяснены?
 
 ## Открытые вопросы и противоречия
@@ -430,7 +430,7 @@ LCP-кандидат и то, без чего первый экран не чи�
 - [S2] `PLAN.md` creative-research, 2026-09-24: «Стартовые позиции базы» §2 (пять проверок «приём или клише»), таблица поправок, решения 13 и 19. Гипотезы архитектора.
 - [S3] ai-media-research. `06-art-direction-consistency/01-visual-dna-from-ui.md` и `visual-dna.schema.json` v0.1 (2026-09-23): поля паспорта, «два мира — два паспорта», утверждение человеком.
 - [S4] ai-media-research. `01-web-assets-landscape/03-ai-fit-trust-and-slop.md` §5.2–5.3: 25 маркеров картинок и 18 маркеров видео.
-- [S5] blender-research. `04-ai-agents-mcp/04-agent-operating-protocol.md` §2–3: бриф ассета и паспорт серии; `99-raw/experiments/A/03-bundle-sizes/README.md` (model-viewer 4.3.1 + three 0.183 = 240 КБ br).
+- [S5] 3d-research. `04-ai-agents-mcp/04-agent-operating-protocol.md` §2–3: бриф ассета и паспорт серии; `99-raw/experiments/A/03-bundle-sizes/README.md` (model-viewer 4.3.1 + three 0.183 = 240 КБ br).
 - [S6] kimi-research. `07-brief-handoff/templates/brief.yaml` и шаблон `DESIGN.md` (Google DESIGN.md alpha, lint @google/design.md 0.4.0); `07-brief-handoff/01-from-app-description-to-brief.md` §6.2 (уровни движения); `03-prompting/04-template-library.md` T0, T7; `k3_checks.py` 1.0 (`--allow`).
 - [S7] site-research. `../../site/10-playbooks-contracts/schemas/page-plan.schema.json` (контейнер `treatment{}`), `../../site/10-playbooks-contracts/schemas/site-brief.schema.json`; ответ site на C1.
 - [S8] site-research, агент P. `07-seo-geo-performance-analytics/budgets.yaml` v0 и `page-gates.yaml` v0 (2026-09-24 15:46): профили, `effects_ref`, серьёзность S и B, `x-gate-exception`.

@@ -38,7 +38,7 @@ frames:
   illustrates: 'Та же сцена после светового прохода кодом: своя студия PMREM, пол-циклорама с мягкой тенью, лак
     на белом, сатин алюминия, тон Khronos PBR Neutral.'
   assessment: 'сила: ворота + метрика + один судья. motion_check 0.1.3 L2: B 0 / S 0 / D 0; белый L50 221, L95 247,
-    R−B 2,8 (white_check); craft 4 «уверенный предметный рендер» — один судья J2. В слепой паре blender `z-v2-a`
+    R−B 2,8 (white_check); craft 4 «уверенный предметный рендер» — один судья J2. В слепой паре 3d `z-v2-a`
     эта база v2 проиграла коду v3 (№ 29).'
   look_at: Контактная тень и пол — объект стоит; длинные блики софтбоксов на лаке и трубе; белый нейтральный, не
     бежевый; крышки с точёным профилем.
@@ -101,7 +101,7 @@ frames:
   illustrates: 'L0 лидогенерации «Сдано»: H1 = LCP, векторный план с отметками дефектов и выдержкой из акта, цена,
     один призыв.'
   assessment: 'сила: ворота + голос вслепую. motion_check L0 0/0/0; marketing_audit S 7 → 3 → 0; вес 71 КБ, F83
-    h1 18,4:1. В испытании blender вслепую проиграл изометрии Cycles (№ 31) все 4 пары — годный L0, не лучший.'
+    h1 18,4:1. В испытании 3d вслепую проиграл изометрии Cycles (№ 31) все 4 пары — годный L0, не лучший.'
   look_at: Иерархия H1 → лид → цена → призыв; план векторный и читается, номера отметок совпадают со списком акта;
     декора ради декора нет.
   rubric:
@@ -111,7 +111,7 @@ frames:
   - path: creative-research/99-raw/experiments/J/01-l0-sdano/shots/desk_first.jpg
     sha256: 38e794d23376a9bb4b33077b31c540e79e9209f83ded8737102b895d2dcb6d49
   provenance: 'свой рендер страницы: пример рецепта 01 (creative 10-recipes/examples/l0-sdano), Chromium 153, 1440×900'
-  notes: 'Та же страница — дорога A «Сдано» в blender 15-showcase. Исходник — JPEG: перекодирование в WebP — вторая
+  notes: 'Та же страница — дорога A «Сдано» в 3d 15-showcase. Исходник — JPEG: перекодирование в WebP — вторая
     потеря; по правилу «при сомнении — оригинал» оставлен оригинал. Экономия WebP q94 — 26 КБ, ценой сдвига цвета
     мелких цветных деталей (отметки плана). Кадр 1440×900, оригинал базы байт в байт, 110 КБ.'
 - id: '06'
@@ -613,7 +613,7 @@ frames:
   file: frames/28-zveno-hero-cycles.png
   compressed: false
   pair: bl-zveno-hero
-  base: blender
+  base: 3d
   kind: level
   level: L2
   illustrates: 'Лучший неподвижный кадр L2 «Звено»: Cycles 128 спп, длинные мягкие блики на лаке, точёные крышки,
@@ -622,11 +622,11 @@ frames:
     к странице.'
   look_at: 'Деталь отличает «вау» от «уверенно»: печать поверх лака, крепёж, J1/J2, кабель; белое без пересвета.'
   rubric:
-  - kb/blender/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
-  - kb/blender/15-showcase/KIT.md §4 п. 4–5 (правки против «каталога», цели-числа)
-  - kb/blender/15-showcase/VERDICT.md §4.1, §5
+  - kb/3d/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
+  - kb/3d/15-showcase/KIT.md §4 п. 4–5 (правки против «каталога», цели-числа)
+  - kb/3d/15-showcase/VERDICT.md §4.1, §5
   source:
-  - path: blender-research/15-showcase/zveno/judge/b-blender__hero-best.png
+  - path: 3d-research/15-showcase/zveno/judge/b-blender__hero-best.png
     sha256: 03ba7cf937c8ae03eb30b699bb2431f48c7e6e1a97c400821aa70c86edd0cfc5
   provenance: 'свой рендер: Blender 5.2.2 Cycles 128 спп + OIDN, 1600×1000'
   notes: '3D: оригинал по решению заказчика. Кадр 1600×1000, оригинал базы байт в байт, 1407 КБ.'
@@ -634,7 +634,7 @@ frames:
   file: frames/29-zveno-hero-code.png
   compressed: false
   pair: bl-zveno-hero
-  base: blender
+  base: 3d
   kind: level
   level: L2
   illustrates: 'Тот же кадр кодом (three.js, вид p3): чистая студия, ореол за рукой, отражение основания.'
@@ -642,10 +642,10 @@ frames:
   look_at: Крышки темнее и «синтетичнее», чем у Cycles; на крышках J2/J3 — белые искры-точки (мелкий брак, виден
     при увеличении); фон — намеренное свечение (ΔE 3,0).
   rubric:
-  - kb/blender/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
-  - kb/blender/15-showcase/VERDICT.md §4.1
+  - kb/3d/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
+  - kb/3d/15-showcase/VERDICT.md §4.1
   source:
-  - path: blender-research/15-showcase/zveno/judge/a-code__hero.png
+  - path: 3d-research/15-showcase/zveno/judge/a-code__hero.png
     sha256: 9f1097a24a2411d0e3d84bb2cd10bb05fbfd9846314a165fc3faa36e8e934890
   provenance: 'свой рендер: three.js r186 кодом (дорожка CD), Chromium ANGLE, 1600×1000'
   notes: 'Середина лестницы: «уверенно», не «вау». 3D: оригинал по решению заказчика. Кадр 1600×1000, оригинал базы
@@ -654,7 +654,7 @@ frames:
   file: frames/30-zveno-hero-hybrid-still.png
   compressed: false
   pair: bl-zveno-hero
-  base: blender
+  base: 3d
   kind: defect
   level: L2
   illustrates: 'Гибрид: модель Blender (GLB) под светом three.js — типичный брак дороги C в неподвижном кадре.'
@@ -663,10 +663,10 @@ frames:
   look_at: 'Пересвеченная белая труба, ореол-засветка вокруг руки, серые «стеклянные» крышки: деталь Blender теряется
     при свете кода.'
   rubric:
-  - kb/blender/15-showcase/VERDICT.md §4.1, §5.1
-  - kb/blender/11-evaluation-qa/02-render-critique.md §3
+  - kb/3d/15-showcase/VERDICT.md §4.1, §5.1
+  - kb/3d/11-evaluation-qa/02-render-critique.md §3
   source:
-  - path: blender-research/15-showcase/zveno/judge/c-hybrid__hero.png
+  - path: 3d-research/15-showcase/zveno/judge/c-hybrid__hero.png
     sha256: b7e26546c42fd0bc3c93b576f0d22f6a1ba889363ec251a8f36c523ea5049fae
   provenance: 'свой рендер: GLB из Blender 5.2.2 в three.js r186 (гибрид C), Chromium ANGLE, 1600×1000'
   notes: 'Брак — про стоп-кадр: страницу C целиком (ввод + модель) заказчик вживую выбрал лучшей. Постер гибрида
@@ -676,7 +676,7 @@ frames:
   file: frames/31-sdano-iso-cutaway-first-screen.png
   compressed: false
   pair: sdano-first
-  base: blender
+  base: 3d
   kind: level
   level: L0
   illustrates: 'L0 услуги: изометрия-разрез Cycles с сюжетом — инженер-манекен, лазер, трещина в круге мелом, булавки
@@ -685,10 +685,10 @@ frames:
   look_at: 'Сюжет в одном кадре. Мелкий брак в уровне: подписи площадей бледные на светлом рендере, «С/у 4,1 м²»
     пересечена стеной, на плане 4 отметки из 7.'
   rubric:
-  - kb/blender/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
-  - kb/blender/15-showcase/VERDICT.md §4.3
+  - kb/3d/11-evaluation-qa/06-wow-pairwise-3d.md §5, §7
+  - kb/3d/15-showcase/VERDICT.md §4.3
   source:
-  - path: blender-research/15-showcase/sdano/judge/b-blender__first-screen-desk.png
+  - path: 3d-research/15-showcase/sdano/judge/b-blender__first-screen-desk.png
     sha256: 8b283f7e5c7d8bc67177b3d12a16ce9b75add79bf8aa11702e0c0e6d77ac207d
   provenance: 'свой рендер: Blender 5.2.2 Cycles 128 спп на странице, Chromium 1440×900'
   notes: 'Фигура инженера — безликий белый манекен из примитивов (≈ 60 px), без лица и кистей: оставлена как условный
@@ -698,7 +698,7 @@ frames:
   file: frames/32-sdano-phase1-iso-in-svg-slot.jpg
   compressed: false
   pair: null
-  base: blender
+  base: 3d
   kind: defect
   level: L0
   illustrates: 'Фаза 1: изометрия Blender поставлена в окно векторного плана — на телефоне мельче и мягче вектора.'
@@ -707,10 +707,10 @@ frames:
   look_at: 'Справа (B): подписи ≈ 8 px, «Гостиная 17,8 м²» пересечена стенами, отметки мелкие; слева (A): вектор
     читается. Лист целиком — брак виден только рядом с вектором.'
   rubric:
-  - kb/blender/15-showcase/VERDICT.md §4.3
-  - kb/blender/11-evaluation-qa/02-render-critique.md §3
+  - kb/3d/15-showcase/VERDICT.md §4.3
+  - kb/3d/11-evaluation-qa/02-render-critique.md §3
   source:
-  - path: blender-research/15-showcase/sdano/judge/phase1/sheet__plan-mob.jpg
+  - path: 3d-research/15-showcase/sdano/judge/phase1/sheet__plan-mob.jpg
     sha256: c4c0fc3d6504f9d87a114682094e9fd7ac4be52f24f215e5869e201ea69a6c3c
   provenance: 'свой рендер: кадр Blender 5.2.2 Cycles (B) и SVG (A) на странице, Chromium 390×844 @3; лист дорожки
     SD'
@@ -721,7 +721,7 @@ frames:
   file: frames/33-sdano-beam-off-grey-paper.png
   compressed: false
   pair: bl-sdano-paper
-  base: blender
+  base: 3d
   kind: defect
   level: L1
   illustrates: '«Фонарик инженера» в покое: мягкое плечо тона применено ко всему кадру — белая бумага страницы вокруг
@@ -731,10 +731,10 @@ frames:
   look_at: Светло-серый прямоугольник справа от x ≈ 780 — от шапки до строки цифр; слева страница белая. Сравнить
     с № 34.
   rubric:
-  - kb/blender/12-recipes/16-relight-by-passes.md п. 9
-  - kb/blender/11-evaluation-qa/02-render-critique.md §2 (автопроверки картинки)
+  - kb/3d/12-recipes/16-relight-by-passes.md п. 9
+  - kb/3d/11-evaluation-qa/02-render-critique.md §2 (автопроверки картинки)
   source:
-  - path: blender-research/99-raw/experiments/SD/shots/sd2_c4/c_beam-off.png
+  - path: 3d-research/99-raw/experiments/SD/shots/sd2_c4/c_beam-off.png
     sha256: b32d95d04cb69a7028663240d71b5b7f62924014519d0ff6a04d56e43b8aabab
   provenance: 'свой рендер: кадр Blender Cycles + переосвещение WebGL2 без three (сборка SD2), Chromium 1440×900'
   notes: 'Поодиночке почти невидим; виден в паре или замером. Кодирование без потерь — чтобы замер тона повторялся.
@@ -743,7 +743,7 @@ frames:
   file: frames/34-sdano-beam-off-white-paper.png
   compressed: false
   pair: bl-sdano-paper
-  base: blender
+  base: 3d
   kind: level
   level: L1
   illustrates: 'После правки SD3: полумрак только по маске макета, бумага снова #fff.'
@@ -751,9 +751,9 @@ frames:
     OK, motion_check L1 0/0/0 (SD4).'
   look_at: Фон вокруг плана белый, затемнён только сам макет; подсказка «Наведите курсор…» на месте.
   rubric:
-  - kb/blender/12-recipes/16-relight-by-passes.md п. 9
+  - kb/3d/12-recipes/16-relight-by-passes.md п. 9
   source:
-  - path: blender-research/99-raw/experiments/SD/shots/sd3_c10/c_beam-off.png
+  - path: 3d-research/99-raw/experiments/SD/shots/sd3_c10/c_beam-off.png
     sha256: 4d30788597e38ea0a57f00edd6036966b93946c158c46b33ad3ebb7def220569
   provenance: 'свой рендер: кадр Blender Cycles + переосвещение WebGL2 без three (сборка SD3), Chromium 1440×900'
   notes: '3D: оригинал по решению заказчика. Кадр 1440×900, оригинал базы байт в байт, 263 КБ.'
@@ -761,7 +761,7 @@ frames:
   file: frames/35-zveno-cap-anisotropy-no-tangent.jpg
   compressed: false
   pair: null
-  base: blender
+  base: 3d
   kind: defect
   level: L2
   illustrates: 'Анизотропия точёных крышек в GLB без атрибута TANGENT: three строит направление из производных UV
@@ -771,11 +771,11 @@ frames:
   look_at: Левая колонка — радиальный «веер» на крышках J2 и J1; правая — ровный точёный металл после возврата TANGENT.
     Подписи в углу («без/с TANGENT») отрисовались квадратами — кириллицы не было в шрифте листа.
   rubric:
-  - kb/blender/README.md правило 76
-  - kb/blender/12-recipes/15-hybrid-blender-code.md
-  - kb/blender/11-evaluation-qa/05-master-checklist.md §7 (EXP)
+  - kb/3d/README.md правило 76
+  - kb/3d/12-recipes/15-hybrid-blender-code.md
+  - kb/3d/11-evaluation-qa/05-master-checklist.md §7 (EXP)
   source:
-  - path: blender-research/99-raw/experiments/Z/out/c_judge_tan/cap_compare.jpg
+  - path: 3d-research/99-raw/experiments/Z/out/c_judge_tan/cap_compare.jpg
     sha256: bdcbdd7bcfc1fcdc1abb6f2d00181645eced10560a8175b8591a04cd7237e218
   provenance: 'свой рендер: GLB из Blender 5.2.2 в three.js r186 (гибрид C), Chromium; лист сравнения Z3'
   notes: 'Лист целиком: «до» и «после» в одном кадре. 3D: оригинал по решению заказчика. Кадр 1280×880, оригинал
@@ -784,7 +784,7 @@ frames:
   file: frames/36-keyboard-ktx2-etc1s-lilac.webp
   compressed: false
   pair: null
-  base: blender
+  base: 3d
   kind: defect
   level: L1
   illustrates: 'Атлас надписей в KTX2 ETC1S: почти-серые колпачки (tab, caps) уходят в сиреневый.'
@@ -793,20 +793,20 @@ frames:
   look_at: 'Ряд 1 (KTX2) против ряда 3 (Cycles — эталон цвета): клавиши tab и caps сиреневые; ряд 2 (WebP) — как
     эталон.'
   rubric:
-  - kb/blender/12-recipes/15-hybrid-blender-code.md п. 6 (WebP по умолчанию)
-  - kb/blender/README.md правило 41, реестр T9
+  - kb/3d/12-recipes/15-hybrid-blender-code.md п. 6 (WebP по умолчанию)
+  - kb/3d/README.md правило 41, реестр T9
   source:
-  - path: blender-research/15-showcase/keyboard/gallery/c-webp-atlas.webp
+  - path: 3d-research/15-showcase/keyboard/gallery/c-webp-atlas.webp
     sha256: 03574659bdd0c392ac443118b703dd4d2543aef2a5a15610a24fa22bdececc54
   provenance: 'свой рендер: GLB из Blender (гибрид C) в three.js r186 при двух упаковках + кадр Cycles; лист галереи
     1200×750'
-  notes: 'Добор (галерея приёмов blender). WebP базы скопирован без перекодирования. 3D: оригинал по решению заказчика.
+  notes: 'Добор (галерея приёмов 3d). WebP базы скопирован без перекодирования. 3D: оригинал по решению заказчика.
     Кадр 1200×750, оригинал базы байт в байт, 34 КБ.'
 - id: '37'
   file: frames/37-c1-laptop-first-try-gradient.png
   compressed: false
   pair: bl-c1-laptop
-  base: blender
+  base: 3d
   kind: defect
   level: n/a
   illustrates: 'Ноутбук «с первой попытки» (Claude Opus без протокола): градиент на экране и чистая геометрия —
@@ -817,11 +817,11 @@ frames:
   look_at: 'На листе видов масштаб не виден вообще: кадр строится по габариту. Градиент — единственное видимое отличие,
     и он исчезнет после экспорта.'
   rubric:
-  - kb/blender/11-evaluation-qa/02-render-critique.md §3, §4.2 (опыт J/02)
-  - kb/blender/11-evaluation-qa/01-scene-geometry-checks.md §3 (паспорт и размеры)
-  - kb/blender/11-evaluation-qa/05-master-checklist.md §3 (GEO), §7 (EXP)
+  - kb/3d/11-evaluation-qa/02-render-critique.md §3, §4.2 (опыт J/02)
+  - kb/3d/11-evaluation-qa/01-scene-geometry-checks.md §3 (паспорт и размеры)
+  - kb/3d/11-evaluation-qa/05-master-checklist.md §3 (GEO), §7 (EXP)
   source:
-  - path: blender-research/99-raw/experiments/C1/11-naive-first-try/out/opus/views_laptop/sheet.png
+  - path: 3d-research/99-raw/experiments/C1/11-naive-first-try/out/opus/views_laptop/sheet.png
     sha256: f0afa6ab8c59efdeb83ef99083a3545b8626ad18628b9e14f83a4524ac51b002
   provenance: 'свой рендер: Blender 5.2.2, скрипт Claude Opus без протокола (C1/11), render_views — 4 ракурса'
   notes: 'Главный известный риск судьи: «богаче» = брак, невидимый на картинке. 3D: оригинал по решению заказчика.
@@ -830,7 +830,7 @@ frames:
   file: frames/38-c1-laptop-protocol.png
   compressed: false
   pair: bl-c1-laptop
-  base: blender
+  base: 3d
   kind: level
   level: n/a
   illustrates: 'Тот же ноутбук по протоколу: паспорт, реальные размеры, детали мешем, аудит, GLB.'
@@ -839,10 +839,10 @@ frames:
   look_at: Экран — плоская заливка-заглушка (честно экспортируется); крышка и петля соединены; на картинке «беднее»
     № 37.
   rubric:
-  - kb/blender/11-evaluation-qa/02-render-critique.md §3, §4.2
-  - kb/blender/11-evaluation-qa/01-scene-geometry-checks.md §3
+  - kb/3d/11-evaluation-qa/02-render-critique.md §3, §4.2
+  - kb/3d/11-evaluation-qa/01-scene-geometry-checks.md §3
   source:
-  - path: blender-research/99-raw/experiments/C1/12-protocol-objects/out/views_laptop/sheet.png
+  - path: 3d-research/99-raw/experiments/C1/12-protocol-objects/out/views_laptop/sheet.png
     sha256: e95dcda85c1d6ffdf6116429c0794a2193a3a56e127c28aed65f6548ec5aa1fb
   provenance: 'свой рендер: Blender 5.2.2 по протоколу (C1/12), render_views — 4 ракурса'
   notes: 'Уровень кандидата № 48; брак № 48 (первая попытка Sonnet с разлетевшимися плитами) заменён вариантом Opus
@@ -852,7 +852,7 @@ frames:
   file: frames/39-c1-mug-first-try-coffee.png
   compressed: false
   pair: bl-c1-mug
-  base: blender
+  base: 3d
   kind: defect
   level: n/a
   illustrates: 'Кружка «с первой попытки» (Claude Opus): глянец, кофе внутри — «богаче для hero».'
@@ -860,10 +860,10 @@ frames:
     выбрал её в обоих порядках.'
   look_at: На картинке брака нет — он в габарите и паспорте; кофе и глянец — повод выбрать «на глаз».
   rubric:
-  - kb/blender/11-evaluation-qa/02-render-critique.md §4.2
-  - kb/blender/11-evaluation-qa/01-scene-geometry-checks.md §3
+  - kb/3d/11-evaluation-qa/02-render-critique.md §4.2
+  - kb/3d/11-evaluation-qa/01-scene-geometry-checks.md §3
   source:
-  - path: blender-research/99-raw/experiments/C1/11-naive-first-try/out/opus/views_mug/sheet.png
+  - path: 3d-research/99-raw/experiments/C1/11-naive-first-try/out/opus/views_mug/sheet.png
     sha256: 55d43e95760ada0fed030231e2bcbaa85e534f7ffa42130f6caf9c3042c51613
   provenance: 'свой рендер: Blender 5.2.2, скрипт Claude Opus без протокола (C1/11), render_views — 4 ракурса'
   notes: 'Добор «сверх лимита» (§11): «кружка 2,2 м — брак, невидимый на листе». 3D: оригинал по решению заказчика.
@@ -872,7 +872,7 @@ frames:
   file: frames/40-c1-mug-protocol.png
   compressed: false
   pair: bl-c1-mug
-  base: blender
+  base: 3d
   kind: level
   level: n/a
   illustrates: 'Кружка по протоколу: 0,119 × 0,082 × 0,095 м, матовая керамика, полость, ручка.'
@@ -880,10 +880,10 @@ frames:
     scene_check — review (не fail).'
   look_at: 'Честная кружка без «истории»: судья по вкусу выбрал бы № 39.'
   rubric:
-  - kb/blender/11-evaluation-qa/02-render-critique.md §4.2
-  - kb/blender/11-evaluation-qa/01-scene-geometry-checks.md §3
+  - kb/3d/11-evaluation-qa/02-render-critique.md §4.2
+  - kb/3d/11-evaluation-qa/01-scene-geometry-checks.md §3
   source:
-  - path: blender-research/99-raw/experiments/C1/12-protocol-objects/out/views_mug/sheet.png
+  - path: 3d-research/99-raw/experiments/C1/12-protocol-objects/out/views_mug/sheet.png
     sha256: 22027d0caaedcd1ab5c0b00e9a34514b026a361ab17afbeb22ca663bf3bcace6
   provenance: 'свой рендер: Blender 5.2.2 по протоколу (C1/12), render_views — 4 ракурса'
   notes: '3D: оригинал по решению заказчика. Кадр 1536×384, оригинал базы байт в байт, 171 КБ.'

@@ -145,7 +145,7 @@ C (`../03-page-structure/01-narratives-and-section-order.md`), блоки — E.
 - **Длина и формы**: длинная у дорогих товаров («как у Apple»: хайлайты, секции-истории, сравнение моделей —
   `../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md §3.2`); `photographic`, `scroll-story`, `catalogue`.
 - **Роли**: `hero`, `product-demo`, `specs`, `benefits`, `comparison` (модели), `testimonials`, `pricing`, `guarantee`,
-  `faq`, `final-cta`. 3D и секвенции — `../blender/12-recipes/00-how-to-use.md §1`.
+  `faq`, `final-cta`. 3D и секвенции — `../3d/12-recipes/00-how-to-use.md §1`.
 - **Право**: сведения о продавце и условия дистанционной продажи (ЗоЗПП; I). Примеры: alice.yandex.ru/station; arc.net.
 
 ### 3.4. `landing-campaign` — кампания, запуск, спецпроект (приоритет 3)
@@ -369,4 +369,4 @@ C (`../03-page-structure/01-narratives-and-section-order.md`), блоки — E.
 - [S18] Hallmark (Nutlope / Together AI, MIT) `references/structure.md`, `macrostructures.md` — https://github.com/Nutlope/hallmark — внешний скилл, механизмы с атрибуцией.
 - [S19] ui-ux-pro-max `data/landing.csv` (MIT) — https://github.com/nextlevelbuilder/ui-ux-pro-max-skill; разбор — опыт B/01.
 - [S20] Корпус text D: `../text-research/03-corpus-measured/corpus.tsv` (177 страниц, 2026-09-24) — примеры страниц; адреса типов вне корпуса проверены curl 2026-09-24 (HTTP 200).
-- [S21] ai-media `../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §3; blender `../blender/01-web-3d-landscape/02-when-3d-budgets-loading.md` §7; kimi `../kimi-research/07-brief-handoff/01-from-app-description-to-brief.md` §2.2, `91-videos/digests/weoV4dm-X1A.md` стр. 196–210 — соседи.
+- [S21] ai-media `../ai-media/01-web-assets-landscape/01-asset-slots-by-page-type.md` §3; 3d `../3d/01-web-3d-landscape/02-when-3d-budgets-loading.md` §7; kimi `../kimi-research/07-brief-handoff/01-from-app-description-to-brief.md` §2.2, `91-videos/digests/weoV4dm-X1A.md` стр. 196–210 — соседи.

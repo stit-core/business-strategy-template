@@ -10,7 +10,7 @@ scope: >-
   Визуальные приметы и приметы движения маркетинговой страницы (цвет, материал и поверхность, фон, 3D, типографика,
   шаблонный хром, композиция как визуал, движение, взаимодействие, подача продукта, образ). Структура и конверсия — site
   (ai-landing-markers.yaml, AIL-*); смысл и текст (тире, словарь штампов, текст надзаголовка) — text (COPY-*); приёмка ассета
-  (IMG-M*, VID-M*) — ai-media; ворота 3D — blender. На стыке запись ссылается на чужой id (поле neighbors) и не дублирует его.
+  (IMG-M*, VID-M*) — ai-media; ворота 3D — 3d. На стыке запись ссылается на чужой id (поле neighbors) и не дублирует его.
 principle: >-
   Клише — не запрет, а приём, выбранный никем: статистическое умолчание генератора или жанра. Приём оправдан, если проходит
   пять проверок (01-cliche-policy.md §1): концепция, бренд, исполнение, эпоха, единственность. Реестр задаёт условия
@@ -71,8 +71,8 @@ clusters:
   # состав кластера = записи с этим id в поле cluster (источник истины — записи; registry_check.py сверяет обе стороны)
   - {id: ai-saas-2024, name_ru: "ИИ-SaaS 2023–2024", members: [purple-neon-band, purple-gradient-hero, gradient-text, neon-glow, pill-announcement-chip, accent-word-headline, overused-display-font, aurora-blobs, mesh-gradient-bg, glassmorphism-panels, dashboard-in-browser-frame, bento-uniform-tiles, logo-orbit-hero, emoji-sparkle-ai, pulsing-cta], source: "ui 11/04 §5; Hallmark anti-patterns Critical; ui 11/01 §18"}
   - {id: editorial-luxe-2025, name_ru: "«редакционный люкс» 2025–2026 (почерк генераторов макетов)", members: [dark-acid-accent, warm-paper, cream-serif-terracotta, broadsheet-hairlines, caps-eyebrow, mono-captions, meta-dots-labels, accent-word-headline, overused-display-font, webgl-centerpiece, dark-pause-section], source: "frontend-design v2–v3 кластеры 1, 2, 3, 5"}
-  - {id: web3-3d-2022, name_ru: "Web3 и ИИ-3D 2021–2025", members: [purple-neon-band, aurora-blobs, iridescent-holo, chrome-liquid-metal, glass-object-pastel, particle-swarm, floating-orbs, synthwave-grid, floating-bob-loop], source: "blender 01/01 §22; ai-media 01/03 IMG-M05, M06; ai-media 11/03 §3.2 п.1"}
-  - {id: studio-awwwards-kit, name_ru: "набор «наградной студии» 2019–2026", members: [section-fade-up, split-text-reveal, custom-cursor-follower, magnetic-button, marquee-strip, liquid-hover-distortion, preloader, smooth-scroll-default, circular-rotating-text, giant-display-type, variable-axis-gimmick, parallax-everything, cursor-watching-eyes], source: "creative 03/01 (частоты); blender 01/01 §22"}
+  - {id: web3-3d-2022, name_ru: "Web3 и ИИ-3D 2021–2025", members: [purple-neon-band, aurora-blobs, iridescent-holo, chrome-liquid-metal, glass-object-pastel, particle-swarm, floating-orbs, synthwave-grid, floating-bob-loop], source: "3d 01/01 §22; ai-media 01/03 IMG-M05, M06; ai-media 11/03 §3.2 п.1"}
+  - {id: studio-awwwards-kit, name_ru: "набор «наградной студии» 2019–2026", members: [section-fade-up, split-text-reveal, custom-cursor-follower, magnetic-button, marquee-strip, liquid-hover-distortion, preloader, smooth-scroll-default, circular-rotating-text, giant-display-type, variable-axis-gimmick, parallax-everything, cursor-watching-eyes], source: "creative 03/01 (частоты); 3d 01/01 §22"}
 id_aliases:
   # прежние id из примеров (01-creative-direction/examples/*.json) → запись реестра; ссылка cliche:<прежний id> остаётся действительной
   latte-art-closeup: category-rut-imagery
@@ -518,7 +518,7 @@ entries:
     replace_with: "сплошная поверхность бренда; двухстоповый CSS-градиент + зерно < 0,1 (Hallmark E7); фото или рендер продукта"
     cluster: [ai-saas-2024, web3-3d-2022]
     k3_allow: null
-    neighbors: ["blender 01/01 §22 «фиолетовая аврора в тёмном герое»", "ai-media 11/03 §3.2 п.1", "Hallmark aurora-blob, gate 29", "site AIL-47 (декоративный слой над призывом — pointer-events: none)"]
+    neighbors: ["3d 01/01 §22 «фиолетовая аврора в тёмном герое»", "ai-media 11/03 §3.2 п.1", "Hallmark aurora-blob, gate 29", "site AIL-47 (декоративный слой над призывом — pointer-events: none)"]
     evidence: ["[консенсус]", "[мнение вендора]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -558,11 +558,11 @@ entries:
     signals:
       eye: "радужная плёнка на абстрактном объекте или фоне"
       metric: "шейдер с fresnel/thin-film или `MeshPhysicalMaterial.iridescence` (DOM, код); hue-разброс > 180° на объекте (MET)"
-      detector: "ai-media IMG-M06 (асет); blender MAT-07 (техника в hero-ассете); внешние детекторы — нет"
+      detector: "ai-media IMG-M06 (асет); 3d MAT-07 (техника в hero-ассете); внешние детекторы — нет"
     detect: {method: [IMG, DOM, JDG], auto: "нет"}
     threshold: "перелив на объекте без связи с продуктом"
     first_seen: "2018 (голо-тренд в графике и упаковке) [практика]"
-    saturated_since: "2021 — Web3 и NFT («хромированный/радужный блоб Web3 2021–2023, ИИ 2024» — blender 01/01 §22) [мнение]; фон Iridescence React Bits — первый снимок 2025-02-11 [данные]"
+    saturated_since: "2021 — Web3 и NFT («хромированный/радужный блоб Web3 2021–2023, ИИ 2024» — 3d 01/01 §22) [мнение]; фон Iridescence React Bits — первый снимок 2025-02-11 [данные]"
     status: saturated
     severity: S
     risk: mid
@@ -572,7 +572,7 @@ entries:
     replace_with: "матовые материалы бренда; предмет из предметной области (ai-media IMG-M06)"
     cluster: [web3-3d-2022]
     k3_allow: null
-    neighbors: ["ai-media 01/03 IMG-M06 (умолчание L0 — снимается решением)", "ai-media 11/03 §3.2", "blender 11/05 MAT-07 (запрет из-за ΔE 4,5–7,9 рендеров, а не вкуса: эталон — веб-вид)", "blender 01/01 §22"]
+    neighbors: ["ai-media 01/03 IMG-M06 (умолчание L0 — снимается решением)", "ai-media 11/03 §3.2", "3d 11/05 MAT-07 (запрет из-за ΔE 4,5–7,9 рендеров, а не вкуса: эталон — веб-вид)", "3d 01/01 §22"]
     evidence: ["[мнение]", "[практика]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -585,21 +585,21 @@ entries:
     signals:
       eye: "металл без предмета"
       metric: "шейдер отражений или envmap-металл на абстрактной форме (код); доля нейтральных бликов (MET)"
-      detector: "ai-media IMG-M06; blender 01/01 §22; внешние детекторы — нет"
+      detector: "ai-media IMG-M06; 3d 01/01 §22; внешние детекторы — нет"
     detect: {method: [IMG, JDG], auto: "нет"}
     threshold: "хромированная абстракция в hero"
     first_seen: "2019–2020 (Y2K-ревайвл в графике) [практика]"
-    saturated_since: "2021 (Web3 2021–2023, ИИ 2024 — blender 01/01 §22) [мнение]; готовые шейдеры: React Bits Liquid Chrome — первый снимок 2025-02-11, Paper Shaders `liquid-metal` (0.0.81) [данные]"
+    saturated_since: "2021 (Web3 2021–2023, ИИ 2024 — 3d 01/01 §22) [мнение]; готовые шейдеры: React Bits Liquid Chrome — первый снимок 2025-02-11, Paper Shaders `liquid-metal` (0.0.81) [данные]"
     status: saturated
     severity: S
     risk: high
     levels: {L0: "нет", L1: "только предмет из металла (продукт)", L2: "по концепции с поворотом"}
     justify_if: "продукт металлический (часы, инструмент, авто, ювелирное), хром показывает материал; или металл — знак бренда"
-    twists: ["реальный металл продукта в рендере blender с брендовым светом", "матовый или патинированный металл вместо зеркального"]
-    replace_with: "матовый материал бренда, NPR (blender 01/01 §22)"
+    twists: ["реальный металл продукта в рендере 3d с брендовым светом", "матовый или патинированный металл вместо зеркального"]
+    replace_with: "матовый материал бренда, NPR (3d 01/01 §22)"
     cluster: [web3-3d-2022]
     k3_allow: null
-    neighbors: ["ai-media 01/03 IMG-M06", "blender 01/01 §22 «хромированный/радужный блоб»"]
+    neighbors: ["ai-media 01/03 IMG-M06", "3d 01/01 §22 «хромированный/радужный блоб»"]
     evidence: ["[мнение]", "[данные]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -612,21 +612,21 @@ entries:
     signals:
       eye: "«абстрактное стекло» вместо продукта"
       metric: "3D-примитив с transmission/refraction (код); пастельный фон (MET)"
-      detector: "blender 01/01 §22; ai-media 11/03 §3.2 п.1 (стеклянный тор); внешние детекторы — нет"
+      detector: "3d 01/01 §22; ai-media 11/03 §3.2 п.1 (стеклянный тор); внешние детекторы — нет"
     detect: {method: [IMG, JDG], auto: "нет"}
     threshold: "стеклянный примитив без связи с продуктом в первом экране"
     first_seen: "2020 [практика]"
-    saturated_since: "2022 (hero SaaS, крипто, ИИ-стартапы — blender 01/01 §22) [мнение]"
+    saturated_since: "2022 (hero SaaS, крипто, ИИ-стартапы — 3d 01/01 §22) [мнение]"
     status: saturated
     severity: S
     risk: high
     levels: {L0: "нет", L1: "нет", L2: "реальный стеклянный продукт"}
-    justify_if: "продукт стеклянный (флакон, посуда, оптика) или данные клиента показаны в стекле (blender: замена «реальный продукт в стекле»)"
-    twists: ["предрендер Cycles с каустиками реального предмета (blender 01/01 §22)"]
+    justify_if: "продукт стеклянный (флакон, посуда, оптика) или данные клиента показаны в стекле (3d: замена «реальный продукт в стекле»)"
+    twists: ["предрендер Cycles с каустиками реального предмета (3d 01/01 §22)"]
     replace_with: "реальный продукт или данные; фото предмета"
     cluster: [web3-3d-2022]
     k3_allow: null
-    neighbors: ["blender 01/01 §22", "ai-media 11/03 §3.2", "ai-media IMG-M06"]
+    neighbors: ["3d 01/01 §22", "ai-media 11/03 §3.2", "ai-media IMG-M06"]
     evidence: ["[мнение]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -666,7 +666,7 @@ entries:
     signals:
       eye: "«технологичность» точками"
       metric: "WebGL Points или canvas с > 1 000 частиц в hero (код, DOM)"
-      detector: "blender 01/01 §22; ai-media 11/03 §3.2 п.1; внешние детекторы — нет"
+      detector: "3d 01/01 §22; ai-media 11/03 §3.2 п.1; внешние детекторы — нет"
     detect: {method: [IMG, DOM], auto: "частично: WebGL — effects_probe.py"}
     threshold: "частицы-декор без смысла в первом экране"
     first_seen: "2015 — particles.js (npm 2015-05-09) [данные]"
@@ -676,11 +676,11 @@ entries:
     risk: mid
     levels: {L0: "нет", L1: "нет", L2: "частицы, которые объясняют (морфинг продукт → схема)"}
     justify_if: "частицы показывают данные или превращение (продукт → схема, пыль → предмет), а не «технологичность»; reduce — кадр"
-    twists: ["частицы — физический материал предмета (мука, пыльца, снег) по концепции", "морфинг в схему продукта (blender 01/01 §22)"]
+    twists: ["частицы — физический материал предмета (мука, пыльца, снег) по концепции", "морфинг в схему продукта (3d 01/01 §22)"]
     replace_with: "без частиц; схема продукта кодом (SVG)"
     cluster: [web3-3d-2022]
     k3_allow: null
-    neighbors: ["blender 01/01 §22 «шар/галактика/логотип из частиц»", "ai-media 11/03 §3.2", "ai-media 01/03 §5.4 («нейросеть из точек»)"]
+    neighbors: ["3d 01/01 §22 «шар/галактика/логотип из частиц»", "ai-media 11/03 §3.2", "ai-media 01/03 §5.4 («нейросеть из точек»)"]
     evidence: ["[мнение]", "[данные: npm]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -774,7 +774,7 @@ entries:
     signals:
       eye: "красиво и пусто: объект крутится сам"
       metric: "WebGL-контекст в первом экране, draw calls > 0 в покое, нет обработчиков ввода на canvas (DOM, effects_probe.py)"
-      detector: "Hallmark: Three.js for a still object; blender BR-02"
+      detector: "Hallmark: Three.js for a still object; 3d BR-02"
     detect: {method: [DOM, IMG, JDG], auto: "частично: webgl, webgl_idle_dc — effects_probe.py"}
     threshold: "3D в первом экране без взаимодействия и без показа продукта"
     first_seen: "2016–2018 (наградные WebGL-студии) [практика]"
@@ -782,15 +782,96 @@ entries:
     status: saturated
     severity: S
     risk: high
-    levels: {L0: "нет (без WebGL)", L1: "один WebGL-контекст по задаче", L2: "сцена по концепции, blender 09/05 бюджеты"}
-    justify_if: "3D показывает продукт, который нельзя показать фото (конфигуратор, разрез, масштаб), или им можно управлять; концепция одной фразой; дерево решений blender 01/02 §7 (BR-02)"
-    twists: ["3D отвечает на прокрутку как сюжет (продукт собирается), а не крутится", "предрендер вместо реалтайма (blender 01/01 2.1) там, где управления нет"]
+    levels: {L0: "нет (без WebGL)", L1: "один WebGL-контекст по задаче", L2: "сцена по концепции, 3d 09/05 бюджеты"}
+    justify_if: "3D показывает продукт, который нельзя показать фото (конфигуратор, разрез, масштаб), или им можно управлять; концепция одной фразой; дерево решений 3d 01/02 §7 (BR-02)"
+    twists: ["3D отвечает на прокрутку как сюжет (продукт собирается), а не крутится", "предрендер вместо реалтайма (3d 01/01 2.1) там, где управления нет"]
     replace_with: "фото или предрендер; 2D-схема кодом"
     cluster: [editorial-luxe-2025]
     k3_allow: null
-    neighbors: ["blender 11/05 BR-02 (умолчание L0)", "blender 01/02 §7 (дерево решений)", "Hallmark: Three.js for a still object"]
+    neighbors: ["3d 11/05 BR-02 (умолчание L0)", "3d 01/02 §7 (дерево решений)", "Hallmark: Three.js for a still object"]
     evidence: ["[данные]", "[консенсус]"]
     checked_at: "2026-09-24"
+    review_by: "2027-03-24"
+
+  - id: liquid-glass
+    aliases: ["liquid glass", "жидкое стекло", "стеклянная линза"]
+    name_ru: "«liquid glass»: стекло с преломлением поверх интерфейса"
+    family: surface
+    sign: "толстое «жидкое» стекло с преломлением и бликом края — плашки, кнопки, линза за курсором или капля поверх контента, а продукт не из стекла"
+    signals:
+      eye: "всё «за стеклом» с преломлением, как в интерфейсе Apple"
+      metric: "шейдер преломления (WebGL) или фильтр смещения поверх контента без связи с продуктом (IMG, JDG)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [IMG, JDG], auto: "нет"}
+    threshold: "преломляющее стекло на интерфейсе или поверх контента, продукт не из стекла"
+    first_seen: "2025 — волна вслед за стеклянным интерфейсом Apple (Liquid Glass; glassmorphism-panels) [консенсус]"
+    saturated_since: "2025–2026 [мнение]"
+    status: saturated
+    severity: S
+    risk: mid
+    levels: {L0: "нет", L1: "нет", L2: "только продукт из стекла (флакон, оптика, посуда)"}
+    justify_if: "продукт из стекла: преломление и каустики показывают предмет (../../3d/16-js-scenes/05-techniques.md §3.11)"
+    twists: ["каустики стеклянного продукта на полу и стенах сцены (../../3d/16-js-scenes/05-techniques.md §3.11)"]
+    replace_with: "сплошные поверхности; стекло — только у продукта из стекла"
+    cluster: []
+    k3_allow: null
+    neighbors: ["../../3d/16-js-scenes/05-techniques.md §8 (клише), §3.11 (каустики стекла)", "glassmorphism-panels (плоское размытие подложки)", "glass-object-pastel (стеклянный примитив в hero)"]
+    evidence: ["[мнение]", "[консенсус]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: hyperspeed-tunnel
+    aliases: ["hyperspeed", "тоннель огней", "световой тоннель", "warp-тоннель"]
+    name_ru: "тоннель огней «hyperspeed»: полёт сквозь световые трассы"
+    family: 3d
+    sign: "камера летит по тоннелю или дороге из светящихся трасс, огни мчатся навстречу — «скорость технологий» в hero"
+    signals:
+      eye: "«скорость» и «будущее» без предмета"
+      metric: "WebGL-сцена с линиями-трассами, бегущими к камере петлёй (REC)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [IMG, REC, JDG], auto: "нет"}
+    threshold: "тоннель или поток огней без данных бизнеса"
+    first_seen: "год не установлен; готовые компоненты-клоны в каталогах компонентов [мнение]"
+    saturated_since: "2025–2026 [мнение]"
+    status: saturated
+    severity: S
+    risk: mid
+    levels: {L0: "нет", L1: "нет", L2: "трассы — данные бизнеса: заказы, маршруты, связи"}
+    justify_if: "каждая трасса — данное бизнеса (заказ, маршрут, связь), а не декор «скорости»; петля с паузой, reduce — кадр"
+    twists: ["линии света по кривым данных (../../3d/16-js-scenes/05-techniques.md §3.3)", "дуги заказов по глобусу — Shopify BFCM (shopify.engineering/how-we-built-shopifys-bfcm-2023-globe) [кейс]"]
+    replace_with: "трассы как данные; схема маршрутов кодом"
+    cluster: []
+    k3_allow: null
+    neighbors: ["../../3d/16-js-scenes/05-techniques.md §8 (клише), §3.3 (линии света с ореолом)", "synthwave-grid (ретро-сетка до горизонта)"]
+    evidence: ["[мнение]", "[кейс]"]
+    checked_at: "2026-10-28"
+    review_by: "2027-03-24"
+
+  - id: fx-stack-ca-grain-vignette
+    aliases: ["CA + зерно + виньетка", "хроматическая аберрация на всём", "киношный пост"]
+    name_ru: "хроматическая аберрация, зерно и виньетка на весь экран всегда"
+    family: surface
+    sign: "весь кадр сцены — со сдвигом каналов по краям, зерном и тёмной виньеткой постоянно, а не в момент перехода"
+    signals:
+      eye: "«киношный» фильтр на всём"
+      metric: "сдвиг каналов RGB у края кадра, зерно и затемнение углов в каждом кадре покоя (IMG)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [IMG, JDG], auto: "нет"}
+    threshold: "три эффекта вместе на весь экран в покое, без перехода"
+    first_seen: "год не установлен; набор пост-эффектов по умолчанию [мнение]"
+    saturated_since: null
+    status: saturated
+    severity: D
+    risk: mid
+    levels: {L0: "нет", L1: "статичное зерно 1–3 % (grain-overlay), без аберрации", L2: "аберрация — только в переходе между сценами; зерно — слабое поверх чистого кадра"}
+    justify_if: "аберрация — событие перехода, а не фильтр кадра; зерно слабое поверх чистого кадра (3d 09/04 выжимка п.18: SOFT_LIGHT ≈ 0,05); виньетка ведёт взгляд к станции"
+    twists: ["аберрация, «тех-смещение» и иней встроены в материалы шва между сценами — Igloo Inc (awwwards.com/igloo-inc-case-study.html) [кейс]"]
+    replace_with: "чистый кадр; один эффект с задачей"
+    cluster: []
+    k3_allow: null
+    neighbors: ["../../3d/16-js-scenes/05-techniques.md §8 (клише)", "grain-overlay (зерно на всём)", "3d 09/04 §9 (пост-лук: зерно поверх чистого кадра, слабо)"]
+    evidence: ["[мнение]", "[кейс]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   # ---------------------------------------------------------------- движение и взаимодействие
@@ -816,7 +897,7 @@ entries:
     replace_with: "контент на месте; одно оркестрованное появление первого экрана (ui 11/04 m28; Hallmark)"
     cluster: [studio-awwwards-kit]
     k3_allow: null
-    neighbors: ["ui 11/04 m28 (на сайте — порог «одинаковое появление > N без системы»)", "ui 08/02 §5.4, 08/03 (на сайте не нарушает 2.2.2 при < 5 с)", "blender 09/03 §3.1 («на каждом блоке — клише»)", "../05-motion/02-choreography-scroll-transitions.md §2 (система появления: 2–3 примитива по ролям; порог одинаковой подписи — там же)"]
+    neighbors: ["ui 11/04 m28 (на сайте — порог «одинаковое появление > N без системы»)", "ui 08/02 §5.4, 08/03 (на сайте не нарушает 2.2.2 при < 5 с)", "3d 09/03 §3.1 («на каждом блоке — клише»)", "../05-motion/02-choreography-scroll-transitions.md §2 (система появления: 2–3 примитива по ролям; порог одинаковой подписи — там же)"]
     evidence: ["[консенсус]", "[данные: появление текста у 35 %, система ≥ 5 элементов у 20 % эффектных сайтов]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -964,23 +1045,50 @@ entries:
     signals:
       eye: "каждая превью «течёт» под курсором"
       metric: "canvas/WebGL поверх ≥ 3 картинок сетки с шейдером смещения (DOM)"
-      detector: "blender 01/01 §22; внешние детекторы — нет"
+      detector: "3d 01/01 §22; внешние детекторы — нет"
     detect: {method: [SCR, IMG], auto: "нет"}
     threshold: "эффект на всех карточках сетки"
     first_seen: "2019 — пик уроков Codrops по искажениям (7 в 2019) [данные]"
-    saturated_since: "2020 (портфолио студий — blender 01/01 §22) [мнение]"
+    saturated_since: "2020 (портфолио студий — 3d 01/01 §22) [мнение]"
     status: dated
     severity: D
     risk: mid
     levels: {L0: "нет", L1: "нет", L2: "один ключевой элемент"}
     justify_if: "искажение — свойство предмета (вода, стекло, жара) и только у одного ключевого элемента"
     twists: ["эффект у одного героя сцены, остальные — статичны"]
-    replace_with: "эффект на 1 ключевом элементе (blender 01/01 §22)"
+    replace_with: "эффект на 1 ключевом элементе (3d 01/01 §22)"
     cluster: [studio-awwwards-kit]
     k3_allow: null
-    neighbors: ["blender 01/01 §22"]
+    neighbors: ["3d 01/01 §22"]
     evidence: ["[мнение]", "[данные]"]
     checked_at: "2026-09-24"
+    review_by: "2027-03-24"
+
+  - id: fluid-cursor-sim
+    aliases: ["жидкость за курсором", "чернила за курсором", "fluid cursor", "splash cursor"]
+    name_ru: "жидкость или «чернила» за курсором"
+    family: interaction
+    sign: "симуляция жидкости на весь экран или в hero: курсор оставляет цветной вихрящийся след краски или дыма"
+    signals:
+      eye: "мышь «рисует краской» по странице"
+      metric: "WebGL-поле скорости, которое каждый кадр пишет след курсора (SCR)"
+      detector: "внешние детекторы — нет"
+    detect: {method: [SCR, IMG], auto: "нет"}
+    threshold: "след жидкости за курсором как декор, без предмета и сюжета"
+    first_seen: "открытая симуляция WebGL-Fluid-Simulation (github.com/PavelDoGreat/WebGL-Fluid-Simulation, MIT) — основа клонов; год не установлен [мнение]"
+    saturated_since: "2025–2026 — готовые компоненты-клоны в каталогах компонентов [мнение]"
+    status: saturated
+    severity: S
+    risk: mid
+    levels: {L0: "нет", L1: "нет", L2: "жидкость — физика предмета по сюжету (кильватер, краска продукта)"}
+    justify_if: "жидкость — физика предмета или сюжета (вода, краска, кильватер), и ведёт её сюжет, а не курсор; бюджет кадра и памяти — 3d 16/05"
+    twists: ["«жидкость от мыши» перепрофилирована в кильватер корабля — OceanX, Unseen (commarts.com/webpicks/oceanx-2025) [кейс]", "обратимая адвекция по сюжету (../../3d/16-js-scenes/05-techniques.md §3.5)"]
+    replace_with: "движение по сюжету; отклик курсора — малым сдвигом света или формы"
+    cluster: []
+    k3_allow: null
+    neighbors: ["../../3d/16-js-scenes/05-techniques.md §8 (клише), §3.5 (обратимая адвекция)", "liquid-hover-distortion (искажение картинок при наведении)", "custom-cursor-follower (свой курсор)"]
+    evidence: ["[мнение]", "[кейс]"]
+    checked_at: "2026-10-28"
     review_by: "2027-03-24"
 
   - id: preloader
@@ -991,7 +1099,7 @@ entries:
     signals:
       eye: "сайт показывает число вместо содержания"
       metric: "LCP-элемент появляется после заставки; H1 и призыв скрыты > 1 с после load (DOM, page_accept «LCP существует»)"
-      detector: "blender 01/01 §22; ai-media 10/02 (экран-заставку не делать); page_accept.py"
+      detector: "3d 01/01 §22; ai-media 10/02 (экран-заставку не делать); page_accept.py"
     detect: {method: [SCR, DOM], auto: "частично: page_accept.py"}
     threshold: "заставка на L0–L1; на L2 — без решения art-direction"
     first_seen: "2012 — уроки Codrops «loading animations» [данные]"
@@ -1002,10 +1110,10 @@ entries:
     levels: {L0: "нет", L1: "нет", L2: "только кампания по явному решению; контент доступен, LCP вне заставки"}
     justify_if: "L2-кампания, заставка — часть сюжета (ворота в мир), длится ≤ 2 с, пропускается, LCP и текст — в HTML"
     twists: ["заставка = первый кадр сцены (без процентов), переходит в hero без разрыва"]
-    replace_with: "контент сразу, тяжёлое — после LCP (blender 01/01 §1.4)"
+    replace_with: "контент сразу, тяжёлое — после LCP (3d 01/01 §1.4)"
     cluster: [studio-awwwards-kit]
     k3_allow: null
-    neighbors: ["blender 01/01 §22; blender 01/02 п.26, 01/04 §7", "ai-media 10/02:167–168", "../06-effects-catalog/effects.yaml#preloader (прелоадер — только L2-кампания)", "[V:J6aNMFZogyk 11:24] (Gridspace: прелоадер «Explore ↓» с заблокированной прокруткой — антипример)"]
+    neighbors: ["3d 01/01 §22; 3d 01/02 п.26, 01/04 §7", "ai-media 10/02:167–168", "../06-effects-catalog/effects.yaml#preloader (прелоадер — только L2-кампания)", "[V:J6aNMFZogyk 11:24] (Gridspace: прелоадер «Explore ↓» с заблокированной прокруткой — антипример)"]
     evidence: ["[консенсус]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -1108,7 +1216,7 @@ entries:
     status: saturated
     severity: S
     risk: high
-    levels: {L0: "реальный скриншот в figure, рамка 1 px", L1: "реальный интерфейс в мокапе blender или фрагмент UI кодом (creative 04/03)", L2: "продукт в движении (запись, секвенция)"}
+    levels: {L0: "реальный скриншот в figure, рамка 1 px", L1: "реальный интерфейс в мокапе 3d или фрагмент UI кодом (creative 04/03)", L2: "продукт в движении (запись, секвенция)"}
     justify_if: "интерфейс настоящий (скриншот заказчика — fact:), рамка — простая линия или реальное устройство (фото, рендер); 01-creative-direction/examples: решение «Окошко» — avoid"
     twists: ["фрагмент живого UI кодом, крупно, без рамки (часть экрана, одно действие)", "реальное устройство в руке или на столе (фото предмета)"]
     replace_with: "реальный кадр интерфейса от заказчика или содержимое без рамки (AIL-17)"
@@ -1181,7 +1289,7 @@ entries:
     signals:
       eye: "образ подошёл бы любой компании категории"
       metric: "—"
-      detector: "ai-media IMG-M07, IMG-M22 (VLM-вопросы); blender 01/01 §22 (глобус с дугами)"
+      detector: "ai-media IMG-M07, IMG-M22 (VLM-вопросы); 3d 01/01 §22 (глобус с дугами)"
     detect: {method: [IMG, JDG, LNT], auto: "нет; LNT — есть ли `concept.rut` в art-direction"}
     threshold: "образ совпадает с колеёй категории, записанной в art-direction (`concept.rut`)"
     first_seen: "всегда (стоковая фотография) [практика]"
@@ -1195,7 +1303,7 @@ entries:
     replace_with: "результат продукта, реальный предмет, реальный пользователь (ai-media 01/03 §5.4)"
     cluster: []
     k3_allow: null
-    neighbors: ["ai-media 01/03 IMG-M07, M08, M22, §5.4", "blender 01/01 §22 (глобус с дугами, изометрическая комната)", "01-creative-direction (`concept.rut` — колея категории)", "site AIL-49"]
+    neighbors: ["ai-media 01/03 IMG-M07, M08, M22, §5.4", "3d 01/01 §22 (глобус с дугами, изометрическая комната)", "01-creative-direction (`concept.rut` — колея категории)", "site AIL-49"]
     evidence: ["[консенсус]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -1208,21 +1316,21 @@ entries:
     signals:
       eye: "«дружелюбный финтех»"
       metric: "—"
-      detector: "blender 01/01 §22, §13.1; ai-media 01/03 §7.2 (Т-Банк, Яндекс 360, Практикум — тренд рунета 2023–2026)"
+      detector: "3d 01/01 §22, §13.1; ai-media 01/03 §7.2 (Т-Банк, Яндекс 360, Практикум — тренд рунета 2023–2026)"
     detect: {method: [IMG, JDG], auto: "нет"}
     threshold: "набор ≥ 3 глянцевых 3D-иконок без собственного стиля серии"
     first_seen: "2020–2021 (SaaS) [мнение]"
-    saturated_since: "2022; в рунете — 2023–2026 [мнение: blender, ai-media]"
+    saturated_since: "2022; в рунете — 2023–2026 [мнение: 3d, ai-media]"
     status: saturated
     severity: D
     risk: mid
-    levels: {L0: "2D-иконки одного набора", L1: "3D в собственном стиле серии (паспорт серии blender)", L2: "то же"}
-    justify_if: "серия в собственном стиле бренда (материал, свет, форма — паспорт серии blender 06/02 §6), матовость 0,5–0,6"
+    levels: {L0: "2D-иконки одного набора", L1: "3D в собственном стиле серии (паспорт серии 3d)", L2: "то же"}
+    justify_if: "серия в собственном стиле бренда (материал, свет, форма — паспорт серии 3d 06/02 §6), матовость 0,5–0,6"
     twists: ["матовые иконки из материала продукта", "плоские иконки с одним объёмным героем"]
-    replace_with: "2D-иконки одного набора или 3D в стиле серии (blender 01/01 §22)"
+    replace_with: "2D-иконки одного набора или 3D в стиле серии (3d 01/01 §22)"
     cluster: []
     k3_allow: null
-    neighbors: ["blender 01/01 §13.1, §22; blender рецепт 02 (глянец 0,35 + coat — сам даёт клише)", "ai-media 01/03 §7.2"]
+    neighbors: ["3d 01/01 §13.1, §22; 3d рецепт 02 (глянец 0,35 + coat — сам даёт клише)", "ai-media 01/03 §7.2"]
     evidence: ["[мнение]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -1357,7 +1465,7 @@ entries:
     replace_with: "эффект с параметрами из art-direction; своя реализация (06-effects-catalog)"
     cluster: []
     k3_allow: null
-    neighbors: ["blender 01/01 откр. вопр. («шаблонность Spline-сцен и no-code-эффектов (Unicorn) — мнение»)", "01-cliche-policy.md §1.3 (исполнение: своя форма, а не пресет)"]
+    neighbors: ["3d 01/01 откр. вопр. («шаблонность Spline-сцен и no-code-эффектов (Unicorn) — мнение»)", "01-cliche-policy.md §1.3 (исполнение: своя форма, а не пресет)"]
     evidence: ["[данные]", "[практика]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -1465,7 +1573,7 @@ entries:
     replace_with: "вес кнопки — размер, заливка, место (ui 11/03 §2.3); микроотклик на наведение"
     cluster: [ai-saas-2024]
     k3_allow: null
-    neighbors: ["blender 07/04 L232, 07/01 L351 «пульсация CTA» (не увязана с 2.2.2)", "../05-motion/03-micro-motion-and-performance.md §1.2 (CTA: импульс по событию, масштаб — там же)", "[V:J6aNMFZogyk 06:17]"]
+    neighbors: ["3d 07/04 L232, 07/01 L351 «пульсация CTA» (не увязана с 2.2.2)", "../05-motion/03-micro-motion-and-performance.md §1.2 (CTA: импульс по событию, масштаб — там же)", "[V:J6aNMFZogyk 06:17]"]
     evidence: ["[стандарт: WCAG 2.2.2, 2.3.1]", "[практика]", "[мнение]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"
@@ -1509,7 +1617,7 @@ entries:
     detect: {method: [DOM, REC], auto: "частично: anim_infinite_idle — effects_probe.py"}
     threshold: "крупный объект качается с периодом короче порога 05-motion/01 §6.3 или без паузы дольше 5 с рядом с текстом"
     first_seen: "2019–2020 (3D-иллюстрации и парящие карточки SaaS) [практика]"
-    saturated_since: "2022 (ИИ-3D hero; рецепт blender 07 «парящий остров», blender 07/04 §5 период 3–4 с) [мнение]"
+    saturated_since: "2022 (ИИ-3D hero; рецепт 3d 07 «парящий остров», 3d 07/04 §5 период 3–4 с) [мнение]"
     status: saturated
     severity: S
     risk: high
@@ -1519,7 +1627,7 @@ entries:
     replace_with: "статичный кадр; движение по событию"
     cluster: [web3-3d-2022]
     k3_allow: null
-    neighbors: ["../05-motion/01-motion-principles-and-access.md §6.3 (одно число для «парения», вестибулярные факторы §6)", "blender 07/04 §5 (3–4 с) против 09/05 п.18 (≥ 10 с) — противоречие закрывает 05-motion/01 §6.3", "blender 01/01 §22 (парящий остров — рецепт 07)"]
+    neighbors: ["../05-motion/01-motion-principles-and-access.md §6.3 (одно число для «парения», вестибулярные факторы §6)", "3d 07/04 §5 (3–4 с) против 09/05 п.18 (≥ 10 с) — противоречие закрывает 05-motion/01 §6.3", "3d 01/01 §22 (парящий остров — рецепт 07)"]
     evidence: ["[исследование: вестибулярная полоса — 05-motion/01 §6]", "[мнение]"]
     checked_at: "2026-09-24"
     review_by: "2027-03-24"

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "urn:app-design:ai-media:visual-dna:0.1",
   "title": "Visual DNA passport (паспорт визуала бренда) v0.1",
-  "description": "Числа и правила изображений бренда: из токенов и стиля UI (derived_from_ui), эталонов (references), разбора сетки брендовых фото сессией Opus (provenance) или арт-дирекции сайта (provenance.art_direction). Куда идёт каждое поле: → промт (style_blocks, palette.image_palette, light, camera, composition, subject_matter, materials, exclusions, references); → постобработка (grade, post); → приёмка (acceptance); иллюстрации — поля системы ui 07/02 и список метафор (его читают экраны кабинета); 3D-серия — материал и доля акцента здесь, камера и свет — паспорт 3D-серии blender 06/02 §6. Проверка: scripts/ai-media/vlm_to_dna.py validate FILE. Описание полей: 06-art-direction-consistency/01-visual-dna-from-ui.md.",
+  "description": "Числа и правила изображений бренда: из токенов и стиля UI (derived_from_ui), эталонов (references), разбора сетки брендовых фото сессией Opus (provenance) или арт-дирекции сайта (provenance.art_direction). Куда идёт каждое поле: → промт (style_blocks, palette.image_palette, light, camera, composition, subject_matter, materials, exclusions, references); → постобработка (grade, post); → приёмка (acceptance); иллюстрации — поля системы ui 07/02 и список метафор (его читают экраны кабинета); 3D-серия — материал и доля акцента здесь, камера и свет — паспорт 3D-серии 3d 06/02 §6. Проверка: scripts/ai-media/vlm_to_dna.py validate FILE. Описание полей: 06-art-direction-consistency/01-visual-dna-from-ui.md.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -874,7 +874,7 @@
     "icon3d": {
       "type": "object",
       "additionalProperties": false,
-      "description": "3D-иконки и объекты серии (ui 12/01 §6.2): поля бренда — материал и доля акцента, цвет среды — palette.env_color. Камера, свет, поля кадра и контактная тень — паспорт 3D-серии blender 06/02 §6 (поле series_passport): один паспорт серии на рендеры Blender и промты генерации.",
+      "description": "3D-иконки и объекты серии (ui 12/01 §6.2): поля бренда — материал и доля акцента, цвет среды — palette.env_color. Камера, свет, поля кадра и контактная тень — паспорт 3D-серии 3d 06/02 §6 (поле series_passport): один паспорт серии на рендеры Blender и промты генерации.",
       "properties": {
         "material": {
           "type": "string",
@@ -892,7 +892,7 @@
         "series_passport": {
           "type": "string",
           "minLength": 3,
-          "description": "Паспорт 3D-серии: путь к файлу паспорта серии проекта (рядом со скриптом Blender) или адрес канона «blender/06-materials-lighting-render/02-lighting-camera-composition.md §6». Оттуда — камера, свет key/fill/rim, мир, вид, фон с ловцом теней и поля кадра по типу (blender 11/05 §5, CAM-02)."
+          "description": "Паспорт 3D-серии: путь к файлу паспорта серии проекта (рядом со скриптом Blender) или адрес канона «3d/06-materials-lighting-render/02-lighting-camera-composition.md §6». Оттуда — камера, свет key/fill/rim, мир, вид, фон с ловцом теней и поля кадра по типу (3d 11/05 §5, CAM-02)."
         }
       }
     },

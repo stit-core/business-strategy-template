@@ -20,7 +20,7 @@ enums:
     genapi: "Gen-API /api/v1/networks/{slug} (mp_client.py); отдельный баланс, GENAPI_BUDGET_TOTAL по умолчанию 0; живой прогон: 30 генераций 384 ₽; цена ступенями по параметрам (cost каталога — минимум), списание по факту"
     local: "локальная утилита на этой машине (0 ₽)"
     code: "код (CSS/SVG/HTML/шейдер/LLM в сессии), 0 ₽"
-    blender: "../blender — детерминированный рендер"
+    blender: "../3d — детерминированный рендер"
     external: "вне доступа: иностранная оплата или нет API (fal, Luma, Recraft напрямую, KIE, Midjourney)"
   legal_flags:
     research: "веса под исследовательской лицензией (Qwen Image 2.1): только черновики и тесты, не финал (12/01 §5, 04 §2 стр. 21)"
@@ -224,7 +224,7 @@ routes:
       - {role: fallback, channel: polza, provider: mie, model: google/gemini-3.1-flash-image-preview, params: {image_resolution: "1K", aspect_ratio: "1:1"}, price_rub: 4.8, final: true}
       - {role: alpha, channel: local, tool: "ровный фон #E8E8E8 → rembg u2netp/isnet по типу края → alpha_check.py halo (08/01)", price_rub: 0, final: true}
       - {role: draft, channel: polza, provider: mie, model: qwen/image-2.1, params: {image_resolution: "1K", aspect_ratio: "1:1", background: transparent, output_format: png, enhance_prompt: false}, price_rub: 3.0, final: false, legal: [research], note: "нативная альфа настоящая (T2: 64 % прозрачных, мягкий край), но лицензия исследовательская — только черновик (ai-media 12/01 §5)"}
-      - {role: exact, channel: blender, tool: "../blender — одинаковые ракурс и свет у десятков иконок", price_rub: 0, final: true}
+      - {role: exact, channel: blender, tool: "../3d — одинаковые ракурс и свет у десятков иконок", price_rub: 0, final: true}
     dialect: {family: gpt-image, format: sections}
     post: ["сетку 2×2 резать, нормализовать поле и тень", "вырез по типу объекта (стекло — хромакей; нативная альфа RouterAI GPT 2.5 на стекле даёт облако фона — H-03)"]
     check: {audit_mode: cutout, rubric: icon3d, extra: "--grid 2x2 --series"}
@@ -602,7 +602,7 @@ routes:
     slots: [hero, cta, section-bg]
     ai_fit: "✅"
     options:
-      - {role: primary, channel: code, tool: "шейдер кодом 6–25 КБ, если хватает (blender 01 §5)", price_rub: 0, final: true}
+      - {role: primary, channel: code, tool: "шейдер кодом 6–25 КБ, если хватает (3d 01 §5)", price_rub: 0, final: true}
       - {role: primary, channel: polza, provider: mie, model: bytedance/seedance-1.5-pro, params: {resolution: "720p", duration: "4", generate_audio: "false", fixed_lens: "true", aspect_ratio: "16:9"}, inputs: {images: 1}, price_rub: 10.5, final: true, note: "по кадру-мастеру (картинка высокого качества → видео): MS-03, VM-01 — спокойное «дыхание» крупной формы; для петли — images A, A (VID-HERO-LOOP)"}
       - {role: alt, channel: polza, provider: mie, model: bytedance/seedance-2-mini, params: {resolution: "480p", duration: "5", generate_audio: "false", aspect_ratio: "16:9"}, price_rub: 12.825, final: true, note: "без кадра-мастера (только промт): звук по умолчанию ВКЛ. и длительность по умолчанию 15 с — явно; images у 2.x — референсы (I-08: SSIM кадра 0 к A 0,60)"}
       - {role: alt, channel: polza, provider: mie, model: bytedance/seedance-2-fast, params: {resolution: "480p", duration: "4", generate_audio: "false", aspect_ratio: "16:9"}, inputs: {images: 1}, price_rub: 41.85, final: false, note: "VM-01: с фразой «Use @Image1 as the first frame.» держит стартовый кадр (SSIM кадра 0 — 0,85), спокойное движение 0,41; 480p за 41,85 ₽ — дорого (1 образец)"}
@@ -736,7 +736,7 @@ routes:
     delivery: video
     legal: {flags: [vendor-mark-keep], policy_rows: ["04 §2 стр. 20"]}
     evidence:
-      - {class: B, src: "blender 01 §14–15, ai-media 09/03 §7 [проверено на синтетике]"}
+      - {class: B, src: "3d 01 §14–15, ai-media 09/03 §7 [проверено на синтетике]"}
       - {class: run, src: "SC-04 (25.09, «рассвет → восход», Seedance 1.5 Pro 720p [A,B] + fixed_lens, 10,5 ₽): кадр 0 = A, последний = B; доставка под мышь и прокрутку — секвенция против короткого GOP"}
     label: "[проверено: кадр 0 = A и последний = B, 1 образец]; доставка — [проверено: Chromium headless]"
     checked: "2026-09-25"

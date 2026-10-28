@@ -9,7 +9,7 @@
 `blocks.yaml`, конверсия, SEO и GEO техника, право сайтов); `../creative/` — подача (арт-дирекшн, визуальный
 язык, движение, эффекты, референсы). Соседи (только чтение): `../ux/` (UX сервисов, микрокопи в
 `07-ux-writing/`), `../ui/` (визуальный слой, типографика), `../ai-media/` (картинки и видео),
-`../blender/` (3D), `../kimi-research/` (исполнитель K3, пакет задачи с `copy.md` и `facts.md`).
+`../3d/` (3D), `../kimi-research/` (исполнитель K3, пакет задачи с `copy.md` и `facts.md`).
 
 ## Зачем
 
@@ -104,7 +104,7 @@
 - `../ai-media/` — текст в картинке и OG-шаблон (`05-prompting/03` §7; `10-web-integration/01` §7), `alt`
   (`10/01` §8), тексты видимой метки ИИ (`12-legal-provenance/02` §7.2), запрет генерировать людей для отзывов
   (`01-web-assets-landscape/03`, `12-legal-provenance/04` §2).
-- `../blender-research/01-web-3d-landscape/01` §1.4, `02` §6.1 — смысловой текст в HTML, не в canvas: ИИ-краулеры
+- `../3d-research/01-web-3d-landscape/01` §1.4, `02` §6.1 — смысловой текст в HTML, не в canvas: ИИ-краулеры
   JS не исполняют.
 - `../kimi-research/07-brief-handoff/templates/` — `copy.md` (тексты дословно, K3 не переписывает), `facts.md` (белый
   список, `Missing`, `Never claim`), `brief.yaml` (`tone_of_voice`, `site.cta`, `site.sections[{id, job}]`, `copy`,
@@ -419,7 +419,7 @@ Hugging Face и `~/.local/bin/llama-mtmd-cli` (проверено 24.09).
 
 Скопировано без изменений 24.09.2026 в `99-raw/tools/` (подробно — `../../scripts/text/README.md`): из
 `../kimi-research/99-raw/tools/` — `fetch.py`, `render_fetch.py`, `yt_dl.py`, `vtt2md.py`, `yt_transcript.py`,
-`site_probe.py`; из `../blender-research/99-raw/tools/` — `transcribe_local.py`. Пути в утилитах считаются от
+`site_probe.py`; из `../3d-research/99-raw/tools/` — `transcribe_local.py`. Пути в утилитах считаются от
 расположения файла; машинные зависимости (node, yt-dlp, модель ASR) — общие для машины. Линтер `ux 07/06` — это
 спецификация в Markdown (словари §1–§6 с регулярными выражениями, формат правила §7), кода нет; автопроверки текста
 UX — `../ux/12-evaluation-checklists/03-automated-checks.md` AC-TXT-01…23.

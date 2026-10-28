@@ -271,7 +271,7 @@ references:
 
 `../../kimi-research/07-brief-handoff/01-from-app-description-to-brief.md` §6.2 (`subtle` — лендинг по умолчанию): для маркетинговой страницы
 `decisions.motion.level` — проекция уровня амбиций (E П11, A `maps_to.kimi`): L0 → `subtle`, L1 → `expressive`, L2 → `cinematic` только с роликами
-16:9 и 9:16 и постерами ai-media или рендером blender, иначе `expressive`; сервисы → `none`. Умолчание заказчика для лендинга — L1 (решение 13)
+16:9 и 9:16 и постерами ai-media или рендером 3d, иначе `expressive`; сервисы → `none`. Умолчание заказчика для лендинга — L1 (решение 13)
 → `expressive` `[практика]`.
 
 ### 6.2. «Разрешённые приметы» → `k3_checks.py --allow`

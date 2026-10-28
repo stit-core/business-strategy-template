@@ -2,7 +2,7 @@
  "$schema": "https://json-schema.org/draft/2020-12/schema",
  "$id": "urn:app-design:creative:art-direction:1",
  "title": "art-direction v1 — документ арт-дирекции поверхности сайта: концепция, территории, направления и выбор, мудборд, визуальный язык, движение, решения о приёмах, запреты, бюджет, проекции соседям, прототип главного эффекта, вариативность",
- "description": "Документ арт-дирекции поверхности сайта (docs/projects/<slug>/design/<surface>/art-direction.json); владелец формата — creative. Один документ на поверхность сайта (мир сайта: маркетинг и продукт — два документа). Питает паспорт визуала ai-media (visual-dna.schema.json) через handoff.visual_dna, бриф 3D blender (handoff.blender) и подачу секций плана страницы (effects_by_section, motion_system); во вход холста — по x-canvas-map. Процедура заполнения — ../01-creative-direction/01-concept-and-directions.md; поля и соответствия — ../01-creative-direction/02-art-direction-document.md; уровни — ../01-creative-direction/ambition-levels.yaml. Правила, которые JSON Schema выразить не может (различие направлений по осям, ссылки на направления, территории и решения, соответствие уровню, ключи --allow), проверяет ../../scripts/creative/ad_check.py ФАЙЛ.",
+ "description": "Документ арт-дирекции поверхности сайта (docs/projects/<slug>/design/<surface>/art-direction.json); владелец формата — creative. Один документ на поверхность сайта (мир сайта: маркетинг и продукт — два документа). Питает паспорт визуала ai-media (visual-dna.schema.json) через handoff.visual_dna, бриф 3D 3d (handoff.blender) и подачу секций плана страницы (effects_by_section, motion_system); во вход холста — по x-canvas-map. Процедура заполнения — ../01-creative-direction/01-concept-and-directions.md; поля и соответствия — ../01-creative-direction/02-art-direction-document.md; уровни — ../01-creative-direction/ambition-levels.yaml. Правила, которые JSON Schema выразить не может (различие направлений по осям, ссылки на направления, территории и решения, соответствие уровню, ключи --allow), проверяет ../../scripts/creative/ad_check.py ФАЙЛ.",
  "x-version": "1.0",
  "x-checked": "2026-09-29",
  "x-owner": "creative · 09-ai-execution-evaluation",
@@ -1500,10 +1500,10 @@
       }
      }
     },
-    "blender": {
+    "3d": {
      "type": "object",
      "additionalProperties": false,
-     "description": "→ бриф и паспорт серии blender 04/04 §2–3.",
+     "description": "→ бриф и паспорт серии 3d 04/04 §2–3.",
      "properties": {
       "role_in_story": {
        "type": "string"

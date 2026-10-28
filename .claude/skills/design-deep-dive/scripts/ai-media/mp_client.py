@@ -7,7 +7,7 @@ Python 3.13, только стандартная библиотека (+ polza_c
 polza-images считаются в бюджет polza вместе с polza.py). Каналы — для генерации картинок, видео и SVG по утверждённому
 плану ассетов. Оценка по рубрике и разбор картинок — не задание канала: их делает отдельная сессия Opus (агент
 design-judge) по пакету asset_audit.py judge-jobs или vlm_to_dna.py build. 3D-генераторы Gen-API не вызываются: 3D —
-Blender и код (kb/blender/10-ai-3d-generation-assets/01-generators-landscape.md §1).
+Blender и код (kb/3d/10-ai-3d-generation-assets/01-generators-landscape.md §1).
 
 Каналы (документация и правила — kb/ai-media/02-providers-platforms/07-multichannel-client.md):
   routerai      POST /api/v1/images — синхронно: data[].b64_json (+ media_type; SVG у векторных Recraft), usage.cost в ₽
@@ -1625,7 +1625,7 @@ GENAPI_EXPLICIT = {"recraft-v4": ("model", "pro")}
 GA_DATA_URI_WARN = ("локальный файл уйдёт data:URI — Gen-API отвечает 422 «должен быть file либо url»: "
                     "выложите файл `polza.py upload ФАЙЛ --live` (TEMP 24 ч) и подставьте URL")
 # 3D-генераторы (сетка, облако точек, анимация скелета) в работе скилла не вызываются: 3D — Blender и код
-# (kb/blender/10-ai-3d-generation-assets/01-generators-landscape.md §1); сеть узнаётся по имени и по форматам выхода каталога
+# (kb/3d/10-ai-3d-generation-assets/01-generators-landscape.md §1); сеть узнаётся по имени и по форматам выхода каталога
 GA_3D_SLUG = re.compile(r"(^|-)3d(-|$)|^(trellis|tripo|rodin|meshy|hi3d|hunyuan-motion)")
 GA_3D_FORMATS = {"glb", "gltf", "obj", "stl", "fbx", "usdz", "ply"}
 
@@ -1707,7 +1707,7 @@ def prep_genapi(ctx: Ctx, prep: Prepared, body: dict):
     params = ctx.ga.params.get(sl) or {}
     if ga_is_3d(sl, params):
         prep.add("error", "path", f"{sl}: 3D-генератор — в работе скилла не вызывается; 3D — Blender и код "
-                                  f"(blender 10/01 §1), поворот и конфигуратор — модель из Blender")
+                                  f"(3d 10/01 §1), поворот и конфигуратор — модель из Blender")
         return
     for k, v in list(body.items()):
         spec = params.get(k)
