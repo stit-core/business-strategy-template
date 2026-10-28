@@ -32,8 +32,8 @@
         цвет с цветом токена — конец растворения слоя, а не свой цвет;
   - одна страница холста на нескольких ширинах (`<Имя>-<ширина>`, части `<Имя>-<ширина>-<N>`) даёт одну находку на
     литерал с перечнем ширин: места складываются, строки — первого артборда, где литерал встретился;
-  - сверяются артборды страниц холста этапа макета («Макет и прототип», «Состояния»); артборды страницы «Направления»
-    — до ДС, их берёт ключ --all-stages.
+  - сверяются артборды страниц холста этапа макета («Макет и прототип», «Состояния»); артборды страниц «Направления»,
+    «Креатив» и «Подача» — до ДС, их берёт ключ --all-stages.
 Находка — литерал со счётом мест, ширинами и строками исходника и ближайшее значение токена (цвет — по OKLab);
 решение по литералу — уровень правки (элемент, компонент, токен) решает заказчик (`references/claude-design.md §
 Правки токенов`).
@@ -1176,7 +1176,7 @@ def main(argv=None):
                 ap.add_argument("source", nargs="+", help="файл .dc.html или папка исходников холста")
                 ap.add_argument("--tokens", action="append", required=True,
                                 help="токены ДС: system.tokens.css, DTCG .json или tokens.json артефакта; повтором")
-                ap.add_argument("--all-stages", action="store_true", help="сверять и страницу «Направления»")
+                ap.add_argument("--all-stages", action="store_true", help="сверять и страницы «Направления», «Креатив» и «Подача»")
             else:
                 ap.add_argument("files", nargs="+")
             ap.add_argument("--json", action="store_true")
@@ -1186,7 +1186,7 @@ def main(argv=None):
                              accept=lambda s: s.design)
         ap.add_argument("--accepted", action="store_true",
                         help="макет принят: литерал вне токенов — пункт C2 приёмки, совет — правка или запись в REVIEW.md")
-        ap.add_argument("--all-stages", action="store_true", help="сверять и страницу «Направления»")
+        ap.add_argument("--all-stages", action="store_true", help="сверять и страницы «Направления», «Креатив» и «Подача»")
         call = docpaths.parse(ap, argv)
         if call.selftest:
             return selftest()

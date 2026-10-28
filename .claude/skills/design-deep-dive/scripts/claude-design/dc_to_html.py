@@ -69,9 +69,10 @@ DC_HREF = re.compile(r"^([^#?]*?)\.dc\.html((?:[?#].*)?)$")
 EVENT_ATTR = re.compile(r"^on[a-z]+$", re.I)
 TIMEOUT_NODE = 60
 
-# Этап страницы холста по её id и имени (протокол § Артефакты проекта: «Направления», «Макет и прототип», у кабинета —
-# «Состояния»); неизвестное имя — макет.
-STAGE_RX = (("directions", re.compile(r"направл|direction|moodboard|мудборд|style[- ]?tile|карточк", re.I)),)
+# Этап страницы холста по её id и имени (протокол § Артефакты проекта: «Направления»; у сайта — «Креатив» и «Подача»
+# этапа art-direction; «Макет и прототип», у кабинета — «Состояния»); неизвестное имя — макет.
+STAGE_RX = (("directions", re.compile(r"направл|direction|moodboard|мудборд|style[- ]?tile|карточк", re.I)),
+            ("treatment", re.compile(r"креатив|creative|подач|treatment", re.I)))
 
 NODE_HARNESS = r"""
 const vm = require('vm');
@@ -599,7 +600,7 @@ def artboard_files(folder, canvas=None):
 
 
 def stage_of(board, canvas):
-    """Этап страницы холста, на которой лежит артборд: directions · mockup."""
+    """Этап страницы холста, на которой лежит артборд: directions · treatment · mockup."""
     if not board or not canvas:
         return "mockup"
     pid = str(board.get("page") or "")
@@ -792,6 +793,10 @@ def selftest():
         root, notes = parse(t)
         check(f"разбор {p.name}: узлы складываются в исходник", "".join(_raw(root)), t)
         check(f"разбор {p.name}: теги закрыты", notes, [])
+    pages = {"p1": "1 · Направления", "p2": "Креатив", "p3": "Подача", "p4": "2 · Макет и прототип", "p5": "Состояния"}
+    check("этап страницы: «Направления» — directions, «Креатив» и «Подача» — treatment, остальные — mockup",
+          [stage_of({"page": p}, {"pages": pages}) for p in sorted(pages)],
+          ["directions", "treatment", "treatment", "mockup", "mockup"])
     if not node_bin():
         print("FAIL нет Node: renderVals() артбордов не посчитать")
         return 1
