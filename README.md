@@ -117,7 +117,7 @@ sibling-checkout'ами:
 | [`project-infra-template-compose`](https://github.com/stit-core/project-infra-template-compose) → `<org>/infra` | runtime проекта (docker-compose на VPS) и операционный хаб: общий план, рассылка агентов по сиблингам, выкатка тегов |
 | [`go-backend-template`](https://github.com/stit-core/go-backend-template) → `<org>/backend` | Go-сервис |
 | [`spa-frontend-template`](https://github.com/stit-core/spa-frontend-template) → `<org>/frontend` | React SPA (кабинет, всё за логином) |
-| [`ssr-frontend-template`](https://github.com/stit-core/ssr-frontend-template) → `<org>/site` | Astro SSR-сайт (индексируемый контент) |
+| [`seo-frontend-template`](https://github.com/stit-core/seo-frontend-template) → `<org>/site` | Astro SEO-сайт (индексируемый контент) |
 | [`telegram-bot-template`](https://github.com/stit-core/telegram-bot-template) → `<org>/<bot>` | Telegram-бот |
 | [`mobile-template`](https://github.com/stit-core/mobile-template) → `<org>/mobile` | KMP-приложение Android + iOS |
 

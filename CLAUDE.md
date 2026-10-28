@@ -27,7 +27,7 @@ sibling-checkout'ами (`../<name>`):
 | `project-infra-template-compose` → `<org>/infra` | runtime проекта (docker-compose на VPS) и операционный хаб |
 | `go-backend-template` → `<org>/backend` | Go-сервис |
 | `spa-frontend-template` → `<org>/frontend` | React SPA (кабинет, всё за логином) |
-| `ssr-frontend-template` → `<org>/site` | Astro SSR-сайт (индексируемый контент) |
+| `seo-frontend-template` → `<org>/site` | Astro SEO-сайт (индексируемый контент) |
 | `telegram-bot-template` → `<org>/<bot>` | Telegram-бот |
 | `mobile-template` → `<org>/mobile` | KMP-приложение Android + iOS |
 
