@@ -15,18 +15,27 @@ source of truth; когда дело дошло до продукта, их чи
 
 ## 0. Форк
 
-1. Gitea (`https://git.stit.tech`) → `stit-core/business-strategy-template` →
+1. Корень проекта — первым: папка `~/git/<org>/` с картой проекта `CLAUDE.md` и
+   общими настройками сессии, по
+   [`docs/reference/project-root.md`](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/project-root.md)
+   шаблона хаба. В неё клонируются все репо проекта, и из неё ведётся вся работа.
+2. Gitea (`https://git.stit.tech`) → `stit-core/business-strategy-template` →
    **Use this template** → `<org>/strategy`.
-2. `git clone git@git.stit.tech:<org>/strategy.git && cd strategy`.
-3. Форкается **первым** в экосистеме: проект стартует здесь. Когда стратегия
-   рождает продукт, остальные форки читают `<org>/strategy` как upstream-аналитику
-   (`docs/README.md § Что docs отдаёт соседям`), а операционный хаб проекта —
-   `<org>/infra` (`docs/README.md § Где это в экосистеме`).
+3. Клон в корень: `git clone git@git.stit.tech:<org>/strategy.git ~/git/<org>/strategy`.
+4. `claude` — в корне проекта: `cd ~/git/<org> && claude`. Перед работой здесь
+   сессия корня читает `CLAUDE.md` этого репо — с ним подхватываются правила и
+   скиллы strategy; дальше вход `/entrypoint` (клиент — `/entrypoint-for-business`).
+   Сессия прямо в `~/git/<org>/strategy` — тоже нормальный режим.
+5. Форкается **первым** в экосистеме: проектирование стартует здесь. Когда
+   стратегия рождает продукт, остальные форки читают `<org>/strategy` как
+   upstream-аналитику (`docs/README.md § Что docs отдаёт соседям`), а программы
+   сквозных задач и выкатка — в хабе `<org>/infra` (`docs/README.md § Где это в
+   экосистеме`).
 
 ## Путь
 
 ```
-0. Use this template → <org>/strategy → клон
+0. Корень ~/git/<org>/ → Use this template → <org>/strategy → клон в корень → claude в корне
    Вход аналитика: /entrypoint — приносишь сырьё, оркестратор маршрутизирует.
                    Прямой вызов исполнителей ниже тоже допустим.
    Вход клиента:   /entrypoint-for-business — одной командой про всё (бизнес,
@@ -56,7 +65,8 @@ source of truth; когда дело дошло до продукта, их чи
    общие ресурсы · джобы · размещение) → /infrastructure-audit
 6. /cross-audit — сквозная семантика между слоями (рой)
 7. готовый репо стратегии (с продуктами, если до них дошло)
-   → продукт спроектирован: дальше хаб <org>/infra (/init-project)
+   → продукт спроектирован: реализация из корня — /init-project в <org>/infra,
+     сквозные задачи — программами хаба <org>/infra
 ```
 
 Это не жёсткая лестница: информация приходит не линейно, оркестратор ведёт по
@@ -246,12 +256,13 @@ interface ↔ services/domain ↔ screen, по каждой поверхност
 и продукты, если до них дошло. Дальше — обычный аналитический флоу по воркфлоу
 (`README.md`), под git-ревью.
 
-Когда продукт спроектирован, следующий шаг — операционный хаб `<org>/infra`:
-`/init-project` читает strategy и поднимает инфру, сквозная задача ведётся
-программой в `.claude/plans/` инфры, агенты из хаба уходят в сиблинги, а соседние
-форки (`<org>/{backend,frontend,site,mobile,infra}` и `<org>/<bot>`) читают
+Когда продукт спроектирован, следующий шаг — реализация из той же сессии корня
+проекта: `/init-project` в `<org>/infra` читает strategy и проектирует инфру,
+сквозная задача ведётся программой в `.claude/plans/` хаба `<org>/infra`, её фазы
+сессия корня ведёт по репо сама или фоновыми агентами, а соседние форки
+(`<org>/{backend,frontend,site,mobile,infra}` и `<org>/<bot>`) читают
 stable-артефакты как upstream (`docs/README.md`). Изменение дизайна по ходу —
-агент из хаба приходит в `../strategy` и работает скиллами этого репо.
+здесь, скиллами этого репо из той же сессии корня.
 
 ## Когда что-то идёт не так
 

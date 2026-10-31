@@ -117,13 +117,13 @@ Claude Design) и на каждом этапе называет, каких пр
 ## Место в экосистеме
 
 Это **design-time source of truth** стратегии (и проектирования продукта, когда он
-нужен) — один из 7 шаблонов `stit-core/*`. Форки одной орги лежат рядом
-sibling-checkout'ами:
+нужен) — один из 7 шаблонов `stit-core/*`. Форки одной орги лежат папками в корне
+проекта `~/git/<org>/`:
 
 | Шаблон → форк | Роль |
 |---|---|
 | `business-strategy-template` → `<org>/strategy` | **этот**: бизнес, AJTBD, SWOT, Карта гипотез, продукты (vision/surface, interface, screens, fsd, telegram-bot-flow, mobile, services + domains, страницы сайта и лендинга, облик продукта), ИТ-периметр |
-| [`project-infra-template-compose`](https://github.com/stit-core/project-infra-template-compose) → `<org>/infra` | runtime проекта (docker-compose на VPS) и операционный хаб: общий план, рассылка агентов по сиблингам, выкатка тегов |
+| [`project-infra-template-compose`](https://github.com/stit-core/project-infra-template-compose) → `<org>/infra` | runtime проекта (docker-compose на VPS) и хаб: программы сквозных задач, выкатка тегов (`make bump`) |
 | [`go-backend-template`](https://github.com/stit-core/go-backend-template) → `<org>/backend` | Go-сервис |
 | [`spa-frontend-template`](https://github.com/stit-core/spa-frontend-template) → `<org>/frontend` | React SPA (кабинет, всё за логином) |
 | [`seo-frontend-template`](https://github.com/stit-core/seo-frontend-template) → `<org>/site` | Astro SEO-сайт (индексируемый контент) |
@@ -132,12 +132,15 @@ sibling-checkout'ами:
 
 Библиотеки: `golibinfra` (Go-киты), `pylibinfra` (Python-киты).
 
-**Флоу.** Проект стартует здесь: форк `Use this template` → `<org>/strategy`,
-аналитик (`/entrypoint`) или клиент (`/entrypoint-for-business`) проектирует всё,
-что можно, до кода. Спроектированный продукт уходит в хаб `<org>/infra`:
-`/init-project` читает strategy и поднимает инфру, а агенты из хаба расходятся по
-сиблингам. Изменение дизайна по ходу — агент из хаба приходит сюда и работает
-скиллами этого репо.
+**Флоу.** Первым заводится корень проекта `~/git/<org>/` — папка с картой проекта
+`CLAUDE.md`, куда клонируются все репо проекта; из корня одной сессией Claude Code
+ведётся вся работа, в каждом репо — его скиллами. Проектирование стартует здесь:
+форк `Use this template` → `<org>/strategy`, аналитик (`/entrypoint`) или клиент
+(`/entrypoint-for-business`) проектирует всё, что можно, до кода. Реализация — из
+корня: `/init-project` в `<org>/infra` читает strategy и проектирует инфру, а
+сквозная задача ведётся программой в хабе `<org>/infra`. Изменение дизайна по
+ходу — здесь, скиллами этого репо из той же сессии корня; прямой заход в этот
+репо — тоже нормальный режим.
 
 Когда стратегия рождает продукт, его stable-артефакты **читают** код-репо (read-only,
 односторонне):
@@ -155,11 +158,17 @@ sibling-checkout'ами:
 
 Полный контракт — [`docs/README.md`](docs/README.md), раздел «Что docs отдаёт соседям».
 Канон карты экосистемы и флоу —
-[`docs/reference/ecosystem.md` шаблона хаба](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/ecosystem.md).
+[`docs/reference/ecosystem.md` шаблона хаба](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/ecosystem.md),
+корня проекта и его `CLAUDE.md` —
+[`docs/reference/project-root.md`](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/project-root.md)
+там же.
 
 ## Путь форка
 
-`Use this template` → `<org>/strategy` → откройте `claude` →
+Сначала — корень проекта `~/git/<org>/` по
+[`docs/reference/project-root.md`](https://github.com/stit-core/project-infra-template-compose/blob/main/docs/reference/project-root.md)
+шаблона хаба, затем `Use this template` → `<org>/strategy` → клон в
+`~/git/<org>/strategy` → откройте `claude` в корне проекта → `/entrypoint`; по шагам —
 [`docs/getting-started.md`](docs/getting-started.md). Рекомендуемый вход — два
 оркестратора `/entrypoint` (аналитик) и `/entrypoint-for-business` (клиент); под
 ними рой deep-dive/audit-исполнителей, прямой вызов которых тоже допустим.
