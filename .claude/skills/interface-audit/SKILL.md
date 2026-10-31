@@ -139,7 +139,7 @@ UX-слой **партиционируется по поверхности**: н
 
 ## `audit-state/<project-slug>/last-report.md`
 
-Отчёт лежит рядом со скиллом, а не в папке interface и не в корне проекта, и скоупится по проекту:
+Отчёт лежит рядом со скиллом, а не в папке interface и не в корне папки продукта, и скоупится по проекту:
 
 ```
 .claude/skills/interface-audit/audit-state/<project-slug>/last-report.md

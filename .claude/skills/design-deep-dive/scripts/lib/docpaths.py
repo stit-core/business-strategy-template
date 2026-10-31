@@ -19,7 +19,7 @@
     и `site`; telegram-bot-flow — у `bot`; mobile — у `mobile`; design/<surface>/ — у `web`, `admin`, `desktop`,
     `embed`; файл возможностей capability/<surface>.md — у каждой;
   - файлы уровня продукта — `facts.yaml` (второй язык — `facts.<lang>.yaml`), `voice.yaml`, `voice.product.yaml`,
-    `voc.yaml` и md продуктового слоя в корне проекта.
+    `voc.yaml` и md продуктового слоя в корне папки продукта.
 
 Общий вызов утилит `project/`:
     <утилита> <команда> <slug> [<surface>] [--repo DIR] [--stage …] [--out DIR] [--json]    команды build и check

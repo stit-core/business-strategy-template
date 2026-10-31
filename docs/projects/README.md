@@ -148,7 +148,7 @@ interface, screen, fsd, telegram-bot-flow и mobile — ещё и **в конт�
 - ❌ Стык между продуктами бизнеса как обычная внешняя `integration`
   (`target: external`) — для соседнего проекта `target: sibling-project`
   + ребро в `project-map.md`.
-- ❌ Домены на корне проекта мимо сервиса. Bounded context живёт внутри
+- ❌ Домены в корне папки продукта мимо сервиса. Bounded context живёт внутри
   сервиса-владельца: `services/<svc>/domains/<ctx>/`.
 - ❌ Размещение (сервер/рантайм) в слоях проекта. «Кто где живёт» — только
   `infrastructure/placement.md`.

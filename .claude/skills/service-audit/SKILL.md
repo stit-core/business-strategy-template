@@ -71,7 +71,7 @@ services ↔ `placement.md` периметра, integration-цепочки че�
      Messaging) — без чтения доменного содержимого;
    - точечные опоры вне слоя: `surface.md`, `integration.md` проекта;
      `docs/projects/infrastructure/shared-platform.md` (существование
-     записей по `provided-by`); листинг `<P>/domains/` на корне проекта
+     записей по `provided-by`); листинг `<P>/domains/` в корне папки продукта
      (контексты мимо сервиса — R-STRUCT-003).
 5. Прочитать ветку state слоя в едином дереве оркестратора
    (`../entrypoint/state/projects/<project-slug>/services/`) — для проверок

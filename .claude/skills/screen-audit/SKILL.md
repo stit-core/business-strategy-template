@@ -287,7 +287,7 @@ args задаёт scope:
 ## `audit-state/<project-slug>/last-report.md`
 
 Отчёт лежит **рядом со скиллом**, не в
-`docs/projects/<project-slug>/screens/` и не в корне проекта, и
+`docs/projects/<project-slug>/screens/` и не в корне папки продукта, и
 скоупится по проекту:
 
 ```

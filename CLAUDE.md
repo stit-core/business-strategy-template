@@ -87,7 +87,7 @@ read-only читают код-репо (`docs/README.md § Что docs отда�
 | [`docs/swot/`](docs/swot/README.md) | за счёт чего возможен следующий шаг | `/swot-deep-dive` | `/swot-audit` |
 | [`docs/hypothesis-map/`](docs/hypothesis-map/README.md) | под какие метрики целимся | `/hypothesis-map-deep-dive` | `/hypothesis-map-audit` |
 | [`projects/<slug>/`](docs/projects/_template/project/README.md) | зачем продукт и для кого (vision, роли и постуры, поверхности и их род, объекты и действия, возможности) | `/project-deep-dive <slug>` | `/project-audit <slug>` |
-| [`…/site/<surface>/`](docs/projects/_template/site/README.md) | как страница сайта или лендинга ведёт к действию: бриф, смысл, карта, план, тексты по слотам (`web` рода `landing` · `site`; факты и голос продукта — `facts.yaml` · `voice*.yaml` в корне проекта) | `/design-deep-dive <slug> [<surface>]` | `/design-audit <slug>` |
+| [`…/site/<surface>/`](docs/projects/_template/site/README.md) | как страница сайта или лендинга ведёт к действию: бриф, смысл, карта, план, тексты по слотам (`web` рода `landing` · `site`; факты и голос продукта — `facts.yaml` · `voice*.yaml` в корне папки продукта) | `/design-deep-dive <slug> [<surface>]` | `/design-audit <slug>` |
 | [`…/interface/<surface>/`](docs/projects/_template/interface/README.md) | как пользователь взаимодействует (ситуации, сценарии, зоны) | `/interface-deep-dive <slug> [<surface>]` | `/interface-audit <slug>` |
 | [`…/screens/<surface>/`](docs/projects/_template/screens/README.md) | как компонуются экраны (карта и маршруты, состояния, тексты интерфейса) | `/screen-deep-dive <slug> [<surface>]` | `/screen-audit <slug>` |
 | [`…/fsd/<surface>/`](docs/projects/_template/fsd/README.md) | как фронт нарезан по слоям FSD (фронтовые поверхности: `web` рода `app`; `admin`, `desktop`, `embed`) | `/fsd-deep-dive <slug> [<surface>]` | `/fsd-audit <slug>` |
@@ -182,7 +182,7 @@ capability — основа остальных слоёв) или несовме
   пишет. В клиент-режиме все темы ведёт клиентский оркестратор (§7).
 - Файлы уровня продукта (`…/facts*.yaml`, `…/voice*.yaml`, `…/voc.yaml`)
   ведёт исполнитель слоя страницы (`/design-deep-dive`); md-файлы в корне
-  проекта — продуктовый слой.
+  папки продукта — продуктовый слой.
 - `…/design/` и подачу секций в планах страниц (`treatment`, `refs.treatment`,
   `refs.asset_plan`) пишет исполнитель слоя дизайна. Вход холста
   `…/design/<surface>/input/`, статичные HTML-копии, манифест `ready.yaml` и
